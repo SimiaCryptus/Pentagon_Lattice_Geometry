@@ -1,0 +1,2224 @@
+/* =====================================================================
+   experiment.mac
+
+   Computational experiments for:
+   "Emergent Fractional Dimensionality and Spinor-Like Holonomy
+    in Multi-Sheeted Pentagon Tilings"
+
+   Where analysis.mac verifies the *symbolic identities* underlying the
+   construction (phi-arithmetic, cyclotomic structure, Alexander-Orbach
+   relation, etc.), this file performs *constructive numerical
+   experiments* on small instances of the multi-sheeted pentagon graph.
+
+   The experiments are designed to:
+     (1) Build a concrete multi-sheeted pentagon adjacency graph in
+         exact Q(sqrt(5)) arithmetic.
+     (2) Compute the graph Laplacian and its eigenspectrum.
+     (3) Estimate the connectivity dimension d_eff from BFS volume
+         growth N(r) ~ r^d_eff.
+     (4) Simulate random walks to estimate the walk dimension d_w
+         from <Delta x^2(t)> ~ t^(2/d_w) and the spectral dimension
+         d_spec from P_0(t) ~ t^(-d_spec/2).
+     (5) Cross-check d_spec via the Alexander-Orbach relation
+         d_spec = 2 d_eff / d_w.
+     (6) Demonstrate holonomy accumulation around a vortex defect
+         for fiber groups G = Z_2 (spinor) and G = Z_5 (anyonic).
+     (7) Run a small Pentagonal-Life-like cellular automaton on the
+         constructed graph and observe glider/cluster behavior.
+
+   Sections:
+      1. Setup and Q(sqrt(5)) machinery
+      2. Pentagon geometry in Q(sqrt(5))
+      3. Multi-sheeted adjacency graph construction
+      4. Graph Laplacian and spectral analysis
+      5. BFS volume growth: connectivity dimension d_eff
+      6. Random-walk simulation: d_w and d_spec
+      7. Alexander-Orbach cross-check
+      8. Holonomy experiments (Z_2 and Z_5 fibers)
+      9. Cellular automaton dynamics
+      10. Extended ruleset survey (B/S families)
+      11. Alternative tau-rules: holonomy and structure comparison
+      12. Extended holonomy: Z_3, Z_4, Z_6, Z_10 fiber groups
+      13. Structural pattern analysis: clustering, girth, sheet flow
+      14. Per-sheet sub-graph analysis
+      15. Glider/oscillator hunt under multiple seeds
+     16. Long-loop holonomy enumeration (length 6-8)
+     17. Cut-and-project acceptance window experiment
+     18. KPM-based spectral density approximation
+     19. Per-sheet random walk diagnostics
+     20. Cross-tau dimensional comparison
+     21. Resistance distance and commute time
+     22. Summary report
+   ===================================================================== */
+
+if not(?boundp('display2d)) then display2d : false$
+
+print("============================================================")$
+print("experiment.mac : Multi-Sheeted Pentagon Tiling Experiments")$
+print("============================================================")$
+
+/* Make pseudo-random results reproducible. */
+/* set_random_state signature varies between Maxima builds; guard it. */
+if ?fboundp('make_random_state) then
+     set_random_state(make_random_state(20250101))
+else
+     print("(note: make_random_state unavailable; using default RNG seed)")$
+
+/* ---------------------------------------------------------------------
+    Shared utility: least-squares slope/intercept of (xs, ys).
+    Defined early so every section can use it.
+    --------------------------------------------------------------------- */
+log_log_fit_basic(xs, ys) := block(
+     [n : length(xs), sx, sy, sxx, sxy, slope, intercept],
+     sx : apply("+", xs),
+     sy : apply("+", ys),
+     sxx : apply("+", xs*xs),
+     sxy : apply("+", xs*ys),
+     slope : (n * sxy - sx*sy) / (n * sxx - sx^2),
+     intercept : (sy - slope * sx) / n,
+     [float(slope), float(intercept)]) $
+/* =====================================================================
+    CONFIGURATION PARAMETERS
+    ---------------------------------------------------------------------
+    These parameters control the computational cost of the experiment.
+    Adjust them to trade off runtime vs. statistical/spectral quality.
+    Presets (set EXPERIMENT_PRESET below to one of these strings):
+       "tiny"    -- smoke test; runs in a few seconds. Cluster ~ 10-30
+                    cells, very short walks. Useful for syntax checking.
+       "small"   -- default; runs in well under a minute on a laptop.
+                    Cluster ~ 30-80 cells, ~200 walks of length 20.
+                    Indicative dimension fits; matches the original
+                    behaviour of this script.
+       "medium"  -- runs in a few minutes. Cluster ~ 200-500 cells,
+                    ~1000 walks of length 60. Better dimension fits,
+                    LAPACK eigenvalues still tractable.
+       "large"   -- runs in tens of minutes to an hour. Cluster ~
+                    1000-3000 cells, ~5000 walks of length 200.
+                    Eigenvalue step is the bottleneck (O(N^3)).
+       "huge"    -- research-grade run; may take hours and a lot of
+                    memory. Eigenvalues may be skipped if SKIP_EIG
+                    is true (see below).
+       "custom"  -- ignore the preset and use whatever individual
+                    parameter values are set below.
+    Individual parameters (override after preset block if desired):
+       BFS_DEPTH      -- BFS expansion depth for cluster construction.
+                         Cluster size grows roughly like 5^BFS_DEPTH.
+       M_WALKS        -- number of random walks for d_w / d_spec fits.
+       T_STEPS        -- length of each random walk.
+       T_CA           -- number of cellular-automaton time steps.
+       SKIP_EIG       -- if true, skip the Laplacian eigendecomposition
+                         (Section 4). Useful for very large clusters
+                         where O(N^3) LAPACK is too slow.
+       EIG_MAX_N      -- safety cap: auto-skip eigendecomposition if
+                         cluster size exceeds this value, regardless
+                         of SKIP_EIG.
+    ===================================================================== */
+EXPERIMENT_PRESET : "huge" $
+if EXPERIMENT_PRESET = "tiny" then (
+     BFS_DEPTH : 1,
+     M_WALKS   : 50,
+     T_STEPS   : 10,
+     T_CA      : 4,
+     SKIP_EIG  : false,
+     EIG_MAX_N : 1500,
+     KPM_MOMENTS : 64,
+     KPM_SAMPLES : 8,
+     LONG_LOOP_MAX : 6
+) elseif EXPERIMENT_PRESET = "small" then (
+     BFS_DEPTH : 2,
+     M_WALKS   : 200,
+     T_STEPS   : 20,
+     T_CA      : 8,
+     SKIP_EIG  : false,
+     EIG_MAX_N : 1500,
+     KPM_MOMENTS : 96,
+     KPM_SAMPLES : 12,
+     LONG_LOOP_MAX : 6
+) elseif EXPERIMENT_PRESET = "medium" then (
+     BFS_DEPTH : 3,
+     M_WALKS   : 1000,
+     T_STEPS   : 60,
+     T_CA      : 16,
+     SKIP_EIG  : false,
+     EIG_MAX_N : 1500,
+     KPM_MOMENTS : 128,
+     KPM_SAMPLES : 16,
+     LONG_LOOP_MAX : 7
+) elseif EXPERIMENT_PRESET = "large" then (
+     BFS_DEPTH : 4,
+     M_WALKS   : 5000,
+     T_STEPS   : 200,
+     T_CA      : 32,
+     SKIP_EIG  : false,
+     EIG_MAX_N : 2500,
+     KPM_MOMENTS : 192,
+     KPM_SAMPLES : 20,
+     LONG_LOOP_MAX : 7
+) elseif EXPERIMENT_PRESET = "huge" then (
+     BFS_DEPTH : 5,
+     M_WALKS   : 20000,
+     T_STEPS   : 500,
+     T_CA      : 64,
+     SKIP_EIG  : true,
+     EIG_MAX_N : 3000,
+     KPM_MOMENTS : 256,
+     KPM_SAMPLES : 24,
+     LONG_LOOP_MAX : 8
+) elseif EXPERIMENT_PRESET = "custom" then (
+     /* Edit these directly for hand-tuned runs. */
+     BFS_DEPTH : 2,
+     M_WALKS   : 200,
+     T_STEPS   : 20,
+     T_CA      : 8,
+     SKIP_EIG  : false,
+     EIG_MAX_N : 1500,
+     KPM_MOMENTS : 96,
+     KPM_SAMPLES : 12,
+     LONG_LOOP_MAX : 6
+) else
+     error("Unknown EXPERIMENT_PRESET: ", EXPERIMENT_PRESET) $
+/* Early-time MSD fitting window: we want the genuine sub-diffusive
+    regime, not the boundary-saturated plateau.  The cluster diameter
+    is ~ 2*BFS_DEPTH, so we cap the fit at half that. */
+MSD_FIT_LO : 2 $
+MSD_FIT_HI : max(4, min(T_STEPS, BFS_DEPTH)) $
+/* P_0 fit window: same idea, even t only. */
+P0_FIT_LO  : 2 $
+P0_FIT_HI  : max(4, min(T_STEPS, 2*BFS_DEPTH)) $
+print("Configuration:")$
+print("  preset    =", EXPERIMENT_PRESET)$
+print("  BFS_DEPTH =", BFS_DEPTH)$
+print("  M_WALKS   =", M_WALKS)$
+print("  T_STEPS   =", T_STEPS)$
+print("  T_CA      =", T_CA)$
+print("  SKIP_EIG  =", SKIP_EIG)$
+print("  EIG_MAX_N =", EIG_MAX_N)$
+print("  MSD fit window t in [", MSD_FIT_LO, ",", MSD_FIT_HI, "]")$
+print("  P_0 fit window t in [", P0_FIT_LO,  ",", P0_FIT_HI,  "] (even t)")$
+print("  KPM_MOMENTS =", KPM_MOMENTS)$
+print("  KPM_SAMPLES =", KPM_SAMPLES)$
+print("  LONG_LOOP_MAX =", LONG_LOOP_MAX)$
+
+
+/* ---------------------------------------------------------------------
+   SECTION 1.  Setup and Q(sqrt(5)) machinery
+   --------------------------------------------------------------------- */
+
+phi : (1 + sqrt(5))/2 $
+psi : (1 - sqrt(5))/2 $
+
+/* Exact rotation cosines/sines for 72 deg multiples. */
+c72 : (sqrt(5) - 1)/4 $
+s72 : sqrt(10 + 2*sqrt(5))/4 $
+c144 : -(sqrt(5) + 1)/4 $
+s144 : sqrt(10 - 2*sqrt(5))/4 $
+
+/* Canonicalize an element of Q(sqrt(5)) for hashable equality.
+   Every element simplifies to a + b*sqrt(5) with a, b rational. */
+qcanon(z) := ratsimp(expand(z)) $
+
+/* Test two algebraic numbers for exact equality in Q(sqrt(5)). */
+qeq(a, b) := is(qcanon(a - b) = 0) $
+
+/* Sanity. */
+if not qeq(phi^2, phi + 1) then error("phi^2 != phi + 1")$
+if not qeq(c72^2 + s72^2, 1) then error("cos^2(72)+sin^2(72) != 1")$
+if not qeq(c144^2 + s144^2, 1) then error("cos^2(144)+sin^2(144) != 1")$
+print("Section 1: Q(sqrt(5)) arithmetic primitives OK.")$
+
+/* ---------------------------------------------------------------------
+   SECTION 2.  Pentagon geometry in Q(sqrt(5))
+   ---------------------------------------------------------------------
+
+   A regular pentagon is described by:
+      centroid    : [cx, cy]  in Q(sqrt(5))^2
+      orientation : k in {0, 1, 2, 3, 4}  (multiples of 72 deg)
+      sheet       : s in Z  (or Z_n)
+
+   Circumradius for unit edge: R = 1/(2 sin(36)).
+   We use R as a free symbolic constant; it lives in Q(sqrt(5), sqrt(...))
+   but never appears in equality comparisons -- only differences of
+   centroids do, and those reduce to rationals + rational multiples of
+   sqrt(5) once the geometry closes up.  For pure adjacency tests we
+   work with the *edge midpoint* normalized form.
+   --------------------------------------------------------------------- */
+
+/* Rotation table: rot_cs[k+1] = [cos(k*72 deg), sin(k*72 deg)] for k=0..4. */
+rot_cs : [
+    [1, 0],
+    [c72, s72],
+    [c144, s144],
+    [c144, -s144],
+    [c72, -s72]
+] $
+
+/* Apply rotation by k*72 deg to a 2-vector. */
+rot72(v, k) := block(
+    [cs : rot_cs[mod(k, 5) + 1], c, s],
+    c : cs[1], s : cs[2],
+    [c*v[1] - s*v[2], s*v[1] + c*v[2]]) $
+
+/* The 5 unit vectors from pentagon center to its vertices, with vertex
+   0 pointing in the +x direction.  These are the "spoke" directions. */
+spoke(k) := rot72([1, 0], k) $
+
+/* Edge midpoints (relative to center) for orientation = 0:
+   midpoint of edge k is halfway between vertex k and vertex k+1, scaled
+   by the apothem/circumradius ratio = cos(36). */
+edge_mid_rel(k) := block(
+    [v1 : spoke(k), v2 : spoke(k+1)],
+    [(v1[1] + v2[1])/2, (v1[2] + v2[2])/2]) $
+
+/* For a pentagon centered at C with orientation theta = j*72 deg,
+   the midpoint of its k-th edge (k = 0..4) is:
+      C + R_{j*72} * edge_mid_rel(k)
+   where here we absorb the circumradius R into the coordinate scale,
+   i.e. we choose R = 1 as the natural unit.                          */
+edge_midpoint(cx, cy, j, k) := block(
+    [m : rot72(edge_mid_rel(k), j)],
+    [qcanon(cx + m[1]), qcanon(cy + m[2])]) $
+
+/* Outward-pointing edge normal (unit) for edge k of pentagon at C, orientation j.
+   It is the direction from C to the edge midpoint, normalized -- but since
+   we only ever compare normals via exact equality, we keep the un-normalized
+   form (edge_mid - center) which is proportional. */
+edge_normal_rel(j, k) := rot72(edge_mid_rel(k), j) $
+
+/* When two pentagons share an edge identically, their centers are mirror-
+   images across that edge, separated by twice the apothem along the edge
+   normal.  The neighbor's orientation is also flipped: edge k of pentagon A
+   matches edge (k+5/2) of pentagon B if oriented oppositely... but for a
+   regular pentagon with 5-fold symmetry, the precise matching rule we
+   enforce is:
+
+     neighbor center  = my_center + 2 * (edge_mid - my_center)
+                      = 2*edge_mid - my_center
+     neighbor edge    = the edge whose midpoint coincides with mine
+     neighbor orient. = my_orient + pi (i.e. rotated by 180 deg)
+
+   In our 72-deg orientation discretization we cannot represent a 180-deg
+   flip exactly within k in {0,..,4}; we therefore parametrize a pentagon
+   by (center, orient_index in {0,..,9}) where orient_index 5..9 mean
+   "flipped" (mirror image).  For this experiment we restrict to the
+   simpler "same orientation" tiling on a sheet -- which is itself
+   geometrically frustrated -- and assign sheet transitions to absorb
+   the angular mismatch. */
+
+print("Section 2: Pentagon geometry primitives OK.")$
+
+/* ---------------------------------------------------------------------
+   SECTION 3.  Multi-sheeted adjacency graph construction
+   ---------------------------------------------------------------------
+
+   We construct a small "pentagonal star" graph: a central pentagon plus
+   its 5 edge-adjacent neighbors on the SAME sheet, plus a second sheet
+   reached via a vortex-edge transition.  This is intentionally tiny so
+   eigenvalue calculations stay symbolic-friendly.
+
+   Nodes are identified by integer IDs 1..N.  We separately store:
+      cell_center[i]  -- exact [cx, cy] in Q(sqrt(5))
+      cell_orient[i]  -- integer in {0,..,4}
+      cell_sheet[i]   -- integer (Z) or residue (Z_n)
+   and the adjacency list nbrs[i] -- list of neighbor IDs.
+
+   For larger experiments we generate a connected cluster by BFS from
+   the origin pentagon, materializing neighbors lazily.
+   --------------------------------------------------------------------- */
+
+/* Storage: associative arrays keyed by integer ID. */
+cell_center : [] $
+cell_orient : [] $
+cell_sheet  : [] $
+cell_count  : 0 $
+nbrs        : [] $
+
+/* Add a cell and return its ID. */
+add_cell(c, o, s) := block(
+    [id],
+    cell_count : cell_count + 1,
+    id : cell_count,
+    cell_center : endcons([qcanon(c[1]), qcanon(c[2])], cell_center),
+    cell_orient : endcons(mod(o, 5), cell_orient),
+    cell_sheet  : endcons(s, cell_sheet),
+    nbrs        : endcons([], nbrs),
+    id) $
+
+/* Look up a cell with given (center, orient, sheet); returns 0 if absent.
+   Uses exact Q(sqrt(5)) comparisons. */
+find_cell(c, o, s) := block(
+    [cx : qcanon(c[1]), cy : qcanon(c[2]), om : mod(o, 5),
+     i, ce, result : 0],
+    for i : 1 thru cell_count do (
+        ce : cell_center[i],
+        if qeq(ce[1], cx) and qeq(ce[2], cy)
+           and cell_orient[i] = om
+           and cell_sheet[i] = s
+        then (result : i, return(result))),
+    result) $
+
+/* Find-or-create. */
+get_cell(c, o, s) := block(
+    [id : find_cell(c, o, s)],
+    if id = 0 then add_cell(c, o, s) else id) $
+
+/* Add an undirected edge. */
+add_edge(i, j) := block(
+    [],
+    if not member(j, nbrs[i]) then
+        nbrs[i] : endcons(j, nbrs[i]),
+    if not member(i, nbrs[j]) then
+        nbrs[j] : endcons(i, nbrs[j])) $
+
+/* Reflection of pentagon A's center across the midpoint of its k-th edge
+   gives the center of the same-orientation neighbor sharing that edge. */
+reflected_neighbor_center(cx, cy, j, k) := block(
+    [m : edge_midpoint(cx, cy, j, k)],
+    [qcanon(2*m[1] - cx), qcanon(2*m[2] - cy)]) $
+
+/* Generate the neighbor of cell i across its k-th edge, with sheet
+   transition tau (an integer added to the current sheet index).  In a
+   generic non-frustrated tiling we'd preserve orientation; here, because
+   pentagons can't tile flatly, some edges are "vortex edges" where the
+   neighbor is forced onto an adjacent sheet to absorb the angular
+   deficit/excess.  The transition rule tau_rule(i, k) is a parameter
+   of the experiment. */
+
+/* Default transition rule: every 3rd edge of every pentagon is a vortex
+   edge contributing +1 to the sheet index; others contribute 0. */
+tau_rule(i, k) := if mod(i + k, 3) = 0 then 1 else 0 $
+
+/* Build a neighbor of cell i across edge k, returning its ID. */
+add_neighbor(i, k) := block(
+    [c : cell_center[i], j : cell_orient[i], s : cell_sheet[i],
+     nc, ds, ns, nb_id],
+    nc : reflected_neighbor_center(c[1], c[2], j, k),
+    ds : tau_rule(i, k),
+    ns : s + ds,
+    nb_id : get_cell(nc, j, ns),
+    add_edge(i, nb_id),
+    nb_id) $
+
+/* BFS-expand a cluster up to a given depth. */
+expand_cluster(depth) := block(
+    [frontier, next_frontier, d, i, k, _nb],
+    frontier : makelist(ii, ii, 1, cell_count),
+    for d : 1 thru depth do (
+        next_frontier : [],
+        for i in frontier do
+            for k : 0 thru 4 do (
+                _nb : add_neighbor(i, k),
+                if not member(_nb, next_frontier)
+                   and not member(_nb, frontier)
+                then next_frontier : endcons(_nb, next_frontier)),
+        frontier : next_frontier)) $
+
+/* Initialize with the origin pentagon. */
+origin_id : add_cell([0, 0], 0, 0) $
+print("Section 3: created origin pentagon, id =", origin_id)$
+
+/* Expand to a cluster.  Depth 2 already produces ~30-40 cells;
+    higher depths grow roughly geometrically. */
+expand_cluster(BFS_DEPTH)$
+print("Section 3: after BFS depth", BFS_DEPTH,
+       ", cell_count =", cell_count)$
+
+/* Quick sanity dump of the first few cells. */
+print("First 5 cells (id, orient, sheet, #neighbors):")$
+for i : 1 thru min(5, cell_count) do
+    print("  ", i, " orient=", cell_orient[i],
+          " sheet=", cell_sheet[i],
+          " deg=", length(nbrs[i])) $
+
+/* Degree statistics. */
+deg_list : makelist(length(nbrs[i]), i, 1, cell_count) $
+deg_mean : float(apply("+", deg_list) / cell_count) $
+deg_max  : apply(max, deg_list) $
+deg_min  : apply(min, deg_list) $
+print("Degree stats: min =", deg_min, ", mean =", deg_mean,
+      ", max =", deg_max, " (interior pentagons should have deg 5)")$
+
+/* Sheet distribution. */
+sheet_set : sort(listify(setify(cell_sheet))) $
+print("Sheets present in cluster:", sheet_set)$
+
+/* ---------------------------------------------------------------------
+   SECTION 4.  Graph Laplacian and spectral analysis
+   ---------------------------------------------------------------------
+
+   Build the adjacency matrix A and degree matrix D, then L = D - A.
+   Compute eigenvalues numerically (the matrix is moderate sized, and
+   entries are integers, so floating-point Jacobi/eig is fine).
+   --------------------------------------------------------------------- */
+
+N : cell_count $
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Decide whether to run the eigendecomposition.  It is O(N^3) and
+    can dominate the runtime for large clusters. */
+eig_skipped : SKIP_EIG or N > EIG_MAX_N $
+spec_gap : 0 $
+
+if eig_skipped then (
+     print("Section 4: skipping eigendecomposition",
+           "(SKIP_EIG =", SKIP_EIG, ", N =", N,
+           ", EIG_MAX_N =", EIG_MAX_N, ")")
+) else (
+     /* Load lapack for fast numerical eigenvalues. */
+     load("lapack"),
+
+     /* Build adjacency matrix as a numerical matrix for eigenvalue work. */
+     build_adjacency() := block(
+         [A : zeromatrix(N, N), i, j],
+         for i : 1 thru N do
+             for j in nbrs[i] do
+                 A[i, j] : 1,
+         A),
+
+     A_mat : build_adjacency(),
+     D_diag : makelist(length(nbrs[i]), i, 1, N),
+     D_mat  : apply(diag_matrix, D_diag),
+     L_mat  : D_mat - A_mat,
+
+     /* Check symmetry. */
+     sym_err : lmax(flatten(args(L_mat - transpose(L_mat)))),
+     print("Section 4: Laplacian symmetry residual =", sym_err),
+     if sym_err # 0 then error("Laplacian not symmetric!"),
+
+     /* Row sums of L should be zero (kernel contains all-ones). */
+     rowsums : makelist(apply("+", L_mat[i]), i, 1, N),
+     rs_max : lmax(map(abs, rowsums)),
+     print("Laplacian row-sum max |.| =", rs_max, " (should be 0)"),
+     if rs_max # 0 then error("Laplacian rows do not sum to 0"),
+
+     /* Numerical eigenvalues. */
+     L_float : float(L_mat),
+
+     /* Use LAPACK dgeev for fast numerical eigenvalues; fall back to
+        symbolic eigenvalues() if dgeev is unavailable. */
+     eig_flat : [],
+     if ?fboundp('dgeev) then block(
+         [res, evs],
+         res : dgeev(L_float),
+         evs : res[1],
+         /* evs is a list of (possibly complex) eigenvalues; take real parts. */
+         eig_flat : sort(map(lambda([z], float(realpart(z))), evs)))
+     else block(
+         [eigs, eig_vals, eig_mults, k, m],
+         eigs : eigenvalues(L_float),
+         eig_vals : eigs[1],
+         eig_mults : eigs[2],
+         for k : 1 thru length(eig_vals) do
+             for m : 1 thru eig_mults[k] do
+                 eig_flat : endcons(float(eig_vals[k]), eig_flat),
+         eig_flat : sort(eig_flat)),
+
+     print("Number of eigenvalues:", length(eig_flat),
+           " (expected N =", N, ")"),
+     print("Smallest 5 eigenvalues:",
+           makelist(eig_flat[k], k, 1, min(5, length(eig_flat)))),
+     print("Largest 3 eigenvalues:",
+           makelist(eig_flat[length(eig_flat) - k + 1], k, 1,
+                    min(3, length(eig_flat)))),
+
+     /* Spectral gap = smallest positive eigenvalue. */
+     for lam in eig_flat do
+         if spec_gap = 0 and lam > 1e-9 then spec_gap : lam,
+     print("Spectral gap (algebraic connectivity) =", spec_gap),
+
+     /* Crude DOS-based spectral dimension estimate:
+        count eigenvalues in [0, lambda_max * frac] and fit log-log.
+        rho(lambda) ~ lambda^(d_spec/2 - 1) means
+        N(<=lambda) ~ lambda^(d_spec/2).                              */
+     lam_max : last(eig_flat),
+     fractions : [0.05, 0.10, 0.20, 0.30, 0.40],
+     cdf_data : [],
+     for f in fractions do block(
+         [thr : f * lam_max, cnt : 0],
+         for lam in eig_flat do if lam <= thr then cnt : cnt + 1,
+         cdf_data : endcons([thr, cnt], cdf_data)),
+     print("Spectral CDF samples [lambda, N(<=lambda)]:"),
+     for pt in cdf_data do print("  ", pt),
+
+      /* Least-squares log-log fit over ALL CDF samples (more robust
+         than a 2-point slope). */
+      if length(cdf_data) >= 2 then block(
+          [xs : [], ys : [], pt, slope_pair, slope, intercept],
+          for pt in cdf_data do
+              if first(pt) > 0 and second(pt) > 0 then (
+                  xs : endcons(float(log(first(pt))),  xs),
+                  ys : endcons(float(log(second(pt))), ys)),
+          if length(xs) >= 2 then (
+              slope_pair : log_log_fit_basic(xs, ys),
+              slope     : slope_pair[1],
+              intercept : slope_pair[2],
+              print("Spectral-CDF least-squares slope ~", slope,
+                    "  => d_spec_estimate (DOS) ~", 2*slope,
+                    "  (log-C =", intercept, ")"),
+              d_spec_dos : 2*slope)
+          else print("Spectral CDF too sparse for slope fit."))
+     else
+         print("Spectral CDF too sparse for a slope fit (small cluster).")
+) $
+/* Default if eig step was skipped. */
+if not(?boundp('d_spec_dos)) then d_spec_dos : 0.0 $
+
+/* ---------------------------------------------------------------------
+   SECTION 5.  BFS volume growth: connectivity dimension d_eff
+   --------------------------------------------------------------------- */
+
+bfs_volumes(root) := block(
+    [visited : makelist(false, ii, 1, N),
+     dist    : makelist(-1, ii, 1, N),
+     queue, v, j, max_d : 0, sizes],
+    visited[root] : true,
+    dist[root] : 0,
+    queue : [root],
+    while length(queue) > 0 do (
+        v : first(queue),
+        queue : rest(queue),
+        for j in nbrs[v] do
+            if not visited[j] then (
+                visited[j] : true,
+                dist[j] : dist[v] + 1,
+                if dist[j] > max_d then max_d : dist[j],
+                queue : endcons(j, queue))),
+    sizes : makelist(0, ii, 0, max_d),
+    for ii : 1 thru N do
+        if dist[ii] >= 0 then
+            sizes[dist[ii] + 1] : sizes[dist[ii] + 1] + 1,
+    /* Convert per-shell counts to cumulative N(<=r). */
+    for r : 2 thru length(sizes) do
+        sizes[r] : sizes[r] + sizes[r-1],
+    sizes) $
+
+vols : bfs_volumes(origin_id) $
+print("BFS cumulative volumes N(<=r) from origin:")$
+for r : 1 thru length(vols) do
+    print("  r =", r - 1, ": N =", vols[r])$
+
+/* Fit d_eff from log N vs log r.  We do BOTH:
+      (a) the "interior" fit r in [1, R-1] (skip origin and outermost
+          shell), which is the canonical choice;
+      (b) the "full" fit r in [1, R], for comparison.
+    Reporting both surfaces boundary sensitivity. */
+d_eff_est : 2.0 $
+d_eff_full : 2.0 $
+if length(vols) >= 4 then block(
+     [r_lo : 2, r_hi : length(vols) - 1,
+      x : [], y : [], fit, slope, intercept],
+     for r : r_lo thru r_hi do (
+         x : endcons(float(log(r - 1)), x),
+         y : endcons(float(log(vols[r])), y)),
+     fit : log_log_fit_basic(x, y),
+     slope     : fit[1],
+     intercept : fit[2],
+     print("Log-log fit (interior, r in [", r_lo - 1, ",", r_hi - 1, "]):"),
+     print("  d_eff estimate =", slope),
+     print("  prefactor log C =", intercept,
+           "  =>  C =", float(exp(intercept))),
+     d_eff_est : slope)
+else
+     print("Cluster too small for reliable interior d_eff fit.") $
+
+if length(vols) >= 3 then block(
+     [x : [], y : [], fit, r],
+     for r : 2 thru length(vols) do (
+         x : endcons(float(log(r - 1)), x),
+         y : endcons(float(log(vols[r])), y)),
+     fit : log_log_fit_basic(x, y),
+     print("Log-log fit (full, r in [1,", length(vols) - 1, "]):"),
+     print("  d_eff (full) =", fit[1],
+           "  log-C =", fit[2]),
+     d_eff_full : fit[1]) $
+
+/* ---------------------------------------------------------------------
+   SECTION 6.  Random-walk simulation: d_w and d_spec
+   ---------------------------------------------------------------------
+
+   Run M random walks from the origin, recording:
+     * Mean-squared graph-distance from start at each step
+       (using the precomputed BFS distance table as a proxy for
+        embedded distance; this is a reasonable scalar measure on
+        irregular graphs).
+     * Return frequency to the origin at even times t = 2, 4, 6,...
+
+   Fit:
+     <d(X_t, x_0)^2> ~ t^(2/d_w)
+     P_0(t)        ~ t^(-d_spec/2)
+   --------------------------------------------------------------------- */
+
+/* Precompute BFS distance from origin to every node. */
+bfs_dist(root) := block(
+    [visited : makelist(false, ii, 1, N),
+     dist    : makelist(-1, ii, 1, N),
+     queue, v, j],
+    visited[root] : true,
+    dist[root] : 0,
+    queue : [root],
+    while length(queue) > 0 do (
+        v : first(queue),
+        queue : rest(queue),
+        for j in nbrs[v] do
+            if not visited[j] then (
+                visited[j] : true,
+                dist[j] : dist[v] + 1,
+                queue : endcons(j, queue))),
+    dist) $
+
+dist_from_origin : bfs_dist(origin_id) $
+
+/* Single random walk: returns list of node IDs visited, length T+1. */
+random_walk(start, T) := block(
+    [path : [start], v : start, nb, r, idx],
+    for t : 1 thru T do (
+        nb : nbrs[v],
+        if length(nb) = 0 then return(path),
+        r : random(length(nb)),
+        v : nb[r + 1],
+        path : endcons(v, path)),
+    path) $
+
+M_walks : M_WALKS $
+T_steps : T_STEPS $
+
+print("Section 6: running", M_walks, "random walks of length", T_steps,
+      "from origin id =", origin_id)$
+
+/* Accumulators. */
+msd_sum : makelist(0, t, 0, T_steps) $
+ret_cnt : makelist(0, t, 0, T_steps) $
+
+for w : 1 thru M_walks do block(
+    [path : random_walk(origin_id, T_steps), t, v, d],
+    for t : 0 thru T_steps do (
+        v : path[t + 1],
+        d : dist_from_origin[v],
+        if d < 0 then d : 0,
+        msd_sum[t + 1] : msd_sum[t + 1] + d^2,
+        if v = origin_id then
+            ret_cnt[t + 1] : ret_cnt[t + 1] + 1)) $
+
+msd : makelist(float(msd_sum[t + 1] / M_walks), t, 0, T_steps) $
+p0  : makelist(float(ret_cnt[t + 1] / M_walks), t, 0, T_steps) $
+
+print("MSD at t = 1, 5, 10, 20:",
+      msd[2], msd[6], msd[11], msd[21])$
+print("P_0 at t = 2, 4, 10, 20:",
+      p0[3], p0[5], p0[11], p0[21])$
+
+
+/* Fit d_w from log <Delta x^2> vs log t over the EARLY-TIME window
+    [MSD_FIT_LO, MSD_FIT_HI] to avoid the boundary plateau. */
+log_log_fit(xs, ys) := log_log_fit_basic(xs, ys) $
+
+/* d_w from MSD slope = 2/d_w  =>  d_w = 2/slope.
+    Early-time fit. */
+msd_x : [] $
+msd_y : [] $
+for t : MSD_FIT_LO thru MSD_FIT_HI do
+    if msd[t + 1] > 0 then (
+        msd_x : endcons(float(log(t)), msd_x),
+        msd_y : endcons(float(log(msd[t + 1])), msd_y)) $
+d_w_value : 2.0 $
+
+if length(msd_x) >= 3 then block(
+     [fit : log_log_fit(msd_x, msd_y), msd_slope],
+    msd_slope : fit[1],
+     print("MSD early-time log-log slope =", msd_slope,
+          "  =>  d_w estimate =",
+          if abs(msd_slope) > 1e-6 then float(2/msd_slope) else "n/a"),
+     if abs(msd_slope) > 1e-6 then d_w_value : float(2/msd_slope))
+else
+
+     print("Too few MSD data points for d_w fit.") $
+
+/* Late-time MSD slope (diagnostic: should be ~ 0 if saturated). */
+msd_x2 : [] $
+msd_y2 : [] $
+for t : max(MSD_FIT_HI + 1, 2) thru T_steps do
+     if msd[t + 1] > 0 then (
+         msd_x2 : endcons(float(log(t)), msd_x2),
+         msd_y2 : endcons(float(log(msd[t + 1])), msd_y2)) $
+if length(msd_x2) >= 3 then block(
+     [fit : log_log_fit(msd_x2, msd_y2)],
+     print("MSD late-time log-log slope =", fit[1],
+           "  (near 0 => boundary saturation)")) $
+
+/* d_spec from P_0 slope = -d_spec/2, restricted to early even times. */
+p0_x : [] $
+p0_y : [] $
+for t : P0_FIT_LO step 2 thru P0_FIT_HI do
+    if p0[t + 1] > 0 then (
+        p0_x : endcons(float(log(t)), p0_x),
+        p0_y : endcons(float(log(p0[t + 1])), p0_y)) $
+d_spec_value : 0.0 $
+
+if length(p0_x) >= 3 then block(
+     [fit : log_log_fit(p0_x, p0_y), p0_slope],
+    p0_slope : fit[1],
+     print("P_0 early-time log-log slope =", p0_slope,
+          "  =>  d_spec estimate =", -2*p0_slope),
+    d_spec_value : -2*p0_slope)
+else
+     print("Too few P_0 data points (small cluster) -- using AO fallback.")$
+
+print("------------------------------------------------------------")$
+/* ---------------------------------------------------------------------
+   SECTION 7.  Alexander-Orbach cross-check
+   --------------------------------------------------------------------- */
+
+print("------------------------------------------------------------")$
+print("Dimension estimates summary:")$
+print("  d_eff   (BFS volume growth) ~", d_eff_est)$
+print("  d_eff   (BFS, full range)   ~", d_eff_full)$
+print("  d_w     (MSD scaling)       ~", d_w_value)$
+print("  d_spec  (P_0 decay, early)  ~", d_spec_value)$
+if not eig_skipped then
+     print("  d_spec  (DOS log-log)       ~", d_spec_dos)$
+
+if d_w_value > 0 then block(
+    [d_spec_AO : float(2 * d_eff_est / d_w_value)],
+    print("  d_spec  (Alexander-Orbach 2*d_eff/d_w) ~", d_spec_AO),
+    if d_spec_value > 0 then
+        print("  Direct vs AO discrepancy:",
+              abs(d_spec_value - d_spec_AO))) $
+/* Consistency-check ordering: paper predicts d_spec < d_eff. */
+if d_spec_dos > 0 and d_eff_est > 0 then (
+     if d_spec_dos < d_eff_est then
+         print("OK: d_spec(DOS) < d_eff(BFS), consistent with sub-diffusion.")
+     else
+         print("WARNING: d_spec(DOS) >= d_eff(BFS); not sub-diffusive."))$
+/* Paper regime test:  2 < d_eff < 3. */
+if d_eff_est > 2 and d_eff_est < 3 then
+     print("OK: d_eff in (2, 3), inside paper's predicted fractional window.")
+else
+     print("Note: d_eff outside (2,3); cluster may be too small.")$
+
+print("Note: these are small-cluster estimates; quantitative agreement")$
+print("with the paper's predicted regime 2 < d_eff < 3 requires larger")$
+print("clusters and the cut-and-project window for proper local finiteness.")$
+
+/* ---------------------------------------------------------------------
+   SECTION 8.  Holonomy experiments
+   ---------------------------------------------------------------------
+
+   We pick a small closed loop in the projected plane and accumulate
+   the sheet-transition sum along it for both Z_2 (spinor) and Z_5
+   (anyonic) fiber groups.  Because the tau_rule used during BFS
+   expansion is non-trivial (every 3rd edge contributes +1), any loop
+   enclosing the origin can show net holonomy.
+
+   Concretely: take the origin's neighbors n_1, n_2, ..., n_d, and
+   form the loops origin -> n_k -> origin (degenerate -- holonomy
+   zero), as well as origin -> n_1 -> common -> n_2 -> origin if a
+   common neighbor exists.  More interestingly we look at the
+   directed sheet-transition record produced during BFS expansion.
+   --------------------------------------------------------------------- */
+
+/* Recover the sheet shift along a directed edge (i -> j). */
+edge_sheet_shift(i, j) := cell_sheet[j] - cell_sheet[i] $
+
+/* Total holonomy along a node sequence. */
+loop_holonomy(seq) := block(
+    [tot : 0, k],
+    for k : 1 thru length(seq) - 1 do
+        tot : tot + edge_sheet_shift(seq[k], seq[k + 1]),
+    tot) $
+
+/* Reduce holonomy into Z_n. */
+holonomy_mod(seq, n) := mod(loop_holonomy(seq), n) $
+
+/* Find a small closed loop: walk from origin to a neighbor n_a,
+   to a 2-step neighbor n_ab, and (if possible) back to origin via
+   a different edge. */
+find_small_loop() := block(
+    [a, b, na, nb, common, loop_found : false, loop],
+    for a in nbrs[origin_id] do (
+        if loop_found then return(loop),
+        na : nbrs[a],
+        for b in na do (
+            if loop_found then return(loop),
+            if b # origin_id then (
+                nb : nbrs[b],
+                if member(origin_id, nb) then (
+                    loop : [origin_id, a, b, origin_id],
+                    loop_found : true,
+                    return(loop))))),
+    if loop_found then loop else []) $
+
+small_loop : find_small_loop() $
+if length(small_loop) > 0 then block(
+    [h_total, h_Z2, h_Z5],
+    h_total : loop_holonomy(small_loop),
+    h_Z2 : holonomy_mod(small_loop, 2),
+    h_Z5 : holonomy_mod(small_loop, 5),
+    print("Section 8: small loop found:", small_loop),
+    print("  raw holonomy (sum of sheet shifts) =", h_total),
+    print("  Z_2 reduction (spinor) =", h_Z2,
+          if h_Z2 = 1 then "  (non-trivial: tau = -1, spinor-like!)"
+                      else "  (trivial)"),
+    print("  Z_5 reduction (anyonic) =", h_Z5))
+else
+    print("Section 8: no 3-cycle through origin in cluster (typical for trees).")$
+/* Longer-loop holonomy survey: look for 4- and 5-cycles through the
+    origin, count how many have non-trivial Z_2 / Z_5 holonomy. */
+find_cycles_through_origin(maxlen) := block(
+     [cycles : [], v1, v2, v3, v4],
+     /* 4-cycles: origin -> a -> b -> c -> origin, a,b,c distinct */
+     for v1 in nbrs[origin_id] do
+         for v2 in nbrs[v1] do
+             if v2 # origin_id then
+                 for v3 in nbrs[v2] do
+                     if v3 # v1 and v3 # origin_id
+                        and member(origin_id, nbrs[v3]) then
+                         cycles : endcons(
+                             [origin_id, v1, v2, v3, origin_id],
+                             cycles),
+     if maxlen >= 5 then
+         /* 5-cycles */
+         for v1 in nbrs[origin_id] do
+             for v2 in nbrs[v1] do
+                 if v2 # origin_id then
+                     for v3 in nbrs[v2] do
+                         if v3 # v1 and v3 # origin_id then
+                             for v4 in nbrs[v3] do
+                                 if v4 # v2 and v4 # v1 and v4 # origin_id
+                                    and member(origin_id, nbrs[v4]) then
+                                     cycles : endcons(
+                                         [origin_id, v1, v2, v3, v4,
+                                          origin_id],
+                                         cycles),
+     cycles) $
+long_cycles : find_cycles_through_origin(5) $
+print("Longer cycles through origin (lengths 4-5):",
+       length(long_cycles), "found.")$
+if length(long_cycles) > 0 then block(
+     [n_z2_nontrivial : 0, n_z5_nontrivial : 0, cyc, h2, h5, samples],
+     for cyc in long_cycles do (
+         h2 : holonomy_mod(cyc, 2),
+         h5 : holonomy_mod(cyc, 5),
+         if h2 # 0 then n_z2_nontrivial : n_z2_nontrivial + 1,
+         if h5 # 0 then n_z5_nontrivial : n_z5_nontrivial + 1),
+     print("  Z_2 non-trivial holonomy loops:", n_z2_nontrivial,
+           "/", length(long_cycles)),
+     print("  Z_5 non-trivial holonomy loops:", n_z5_nontrivial,
+           "/", length(long_cycles)),
+     /* Show up to 3 examples with non-trivial Z_2 holonomy. */
+     samples : 0,
+     for cyc in long_cycles do
+         if samples < 3 and holonomy_mod(cyc, 2) # 0 then (
+             print("  example spinor loop:", cyc,
+                   "  raw =", loop_holonomy(cyc),
+                   "  Z_2 =", holonomy_mod(cyc, 2),
+                   "  Z_5 =", holonomy_mod(cyc, 5)),
+             samples : samples + 1))$
+
+/* Sweep over a longer loop: BFS shell-2 cells reachable from origin
+   and back.  Just illustrative -- counts vortex edges traversed. */
+n_vortex_edges_in_cluster : 0 $
+for i : 1 thru N do
+    for j in nbrs[i] do
+        if i < j and edge_sheet_shift(i, j) # 0 then
+            n_vortex_edges_in_cluster :
+                n_vortex_edges_in_cluster + 1 $
+print("Vortex edges in cluster (sheet shift != 0):",
+      n_vortex_edges_in_cluster)$
+print("Total edges in cluster:",
+      apply("+", deg_list) / 2)$
+print("Vortex fraction =",
+      float(n_vortex_edges_in_cluster / (apply("+", deg_list) / 2)))$
+/* Per-sheet vortex breakdown. */
+print("Per-sheet cell counts:")$
+for s in sheet_set do block(
+     [cnt : 0],
+     for i : 1 thru N do
+         if cell_sheet[i] = s then cnt : cnt + 1,
+     print("  sheet", s, ":", cnt, "cells"))$
+
+/* ---------------------------------------------------------------------
+   SECTION 9.  Cellular automaton dynamics
+   ---------------------------------------------------------------------
+
+   Define a binary outer-totalistic rule on the 5-regular graph:
+     New state = f(self, sum_of_neighbors)
+   We pick a Life-like B3/S23 analogue: B2/S12 (births on 2 live
+   neighbors, survival on 1 or 2).  Initialize with a small "seed"
+   at the origin and a couple of neighbors, evolve T_ca steps.
+   --------------------------------------------------------------------- */
+
+/* Rule: returns 0 or 1. */
+ca_rule(self_state, nbr_sum) := block(
+    [],
+    if self_state = 1 then
+        (if nbr_sum = 1 or nbr_sum = 2 then 1 else 0)
+    else
+        (if nbr_sum = 2 then 1 else 0)) $
+
+/* Initial state: origin + first neighbor alive, rest dead. */
+state : makelist(0, ii, 1, N) $
+state[origin_id] : 1 $
+if length(nbrs[origin_id]) >= 1 then
+    state[nbrs[origin_id][1]] : 1 $
+if length(nbrs[origin_id]) >= 2 then
+    state[nbrs[origin_id][2]] : 1 $
+
+initial_pop : apply("+", state) $
+print("Section 9: CA initial population =", initial_pop)$
+
+/* Step the CA. */
+ca_step(s) := block(
+    [new_s : makelist(0, ii, 1, N), i, nsum],
+    for i : 1 thru N do (
+        nsum : apply("+", map(lambda([j], s[j]), nbrs[i])),
+        new_s[i] : ca_rule(s[i], nsum)),
+    new_s) $
+
+T_ca : T_CA $
+pop_history : [initial_pop] $
+for t : 1 thru T_ca do (
+    state : ca_step(state),
+    pop_history : endcons(apply("+", state), pop_history)) $
+
+print("CA population history (t = 0..", T_ca, "):")$
+for t : 0 thru T_ca do
+    print("  t =", t, " population =", pop_history[t + 1])$
+
+final_pop : last(pop_history) $
+print("CA final population =", final_pop,
+      if final_pop = 0 then "  (extinct)"
+      else if final_pop = initial_pop then "  (still life)"
+      else "  (active)")$
+
+/* Distribution of final live cells across sheets. */
+live_per_sheet : [] $
+for s in sheet_set do block(
+    [cnt : 0],
+    for i : 1 thru N do
+        if state[i] = 1 and cell_sheet[i] = s then cnt : cnt + 1,
+    live_per_sheet : endcons([s, cnt], live_per_sheet)) $
+print("Live cells per sheet at t =", T_ca, ":", live_per_sheet)$
+
+/* ---------------------------------------------------------------------
+    SECTION 10.  Extended ruleset survey (B/S families)
+    ---------------------------------------------------------------------
+    We systematically sweep over a panel of outer-totalistic B/S rules
+    on the 5-regular(ish) pentagon graph, scoring each on:
+      - whether the seed dies, stabilizes, oscillates, or grows;
+      - the maximum and final population;
+      - the period (if periodic);
+      - sheet-spreading behavior.
+    We test all combinations B in subset of {0,1,2,3,4,5},
+                              S in subset of {0,1,2,3,4,5}
+    drawn from a curated list of "Life-like" candidates.
+    --------------------------------------------------------------------- */
+print("============================================================")$
+print("SECTION 10: Extended ruleset survey")$
+print("============================================================")$
+/* General outer-totalistic rule constructor.  B and S are lists of
+    integer neighbor sums that trigger birth / survival. */
+make_rule(B, S) := buildq([B, S],
+     lambda([self_state, nbr_sum],
+         if self_state = 1 then
+             (if member(nbr_sum, S) then 1 else 0)
+         else
+             (if member(nbr_sum, B) then 1 else 0))) $
+/* Step a state with a given rule function. */
+ca_step_rule(s, rule_fn) := block(
+     [new_s : makelist(0, ii, 1, N), i, nsum],
+     for i : 1 thru N do (
+         nsum : apply("+", map(lambda([j], s[j]), nbrs[i])),
+         new_s[i] : rule_fn(s[i], nsum)),
+     new_s) $
+/* Generate a standard "blinker-style" seed: origin plus first 3 nbrs. */
+make_seed_origin(k) := block(
+     [s : makelist(0, ii, 1, N), nb : nbrs[origin_id], j],
+     s[origin_id] : 1,
+     for j : 1 thru min(k, length(nb)) do s[nb[j]] : 1,
+     s) $
+/* Run a rule on a seed for T steps, looking for cycles via state hash. */
+run_rule_diagnose(B, S, seed, T) := block(
+     [rule_fn : make_rule(B, S),
+      state : seed, hist : [], pops : [], i, prev_idx,
+      period : 0, transient : T, max_pop : 0, final_pop, fate],
+     hist : [state],
+     pops : [apply("+", state)],
+     max_pop : pops[1],
+     for i : 1 thru T do (
+         state : ca_step_rule(state, rule_fn),
+         pops  : endcons(apply("+", state), pops),
+         if last(pops) > max_pop then max_pop : last(pops),
+         /* cycle detect against previous states */
+         prev_idx : 0,
+         for k : 1 thru length(hist) do
+             if hist[k] = state and prev_idx = 0 then prev_idx : k,
+         if prev_idx > 0 then (
+             period    : length(hist) - prev_idx + 1,
+             transient : prev_idx - 1,
+             return(0)),
+         hist : endcons(state, hist)),
+     final_pop : last(pops),
+     fate : (
+         if final_pop = 0 then "extinct"
+         else if period = 1 then "still"
+         else if period > 1 then concat("period-", period)
+         else if final_pop > 3 * pops[1] then "growing"
+         else "active"),
+     [fate, period, transient, max_pop, final_pop, pops]) $
+/* Curated set of B/S candidates.  On a 5-regular graph, neighbor sum
+    is in 0..5 (interior), so rules of the form B<digits>/S<digits>
+    select subsets of {0,..,5}.  We exclude B0 to avoid trivial
+    boundary births at dead cells with no neighbors. */
+rule_panel : [
+     [[2],       [1, 2]],     /* original rule (B2/S12) */
+     [[2],       [2, 3]],     /* B2/S23 -- Life-like */
+     [[3],       [2, 3]],     /* Conway's classic B3/S23 */
+     [[2],       [1, 2, 3]],  /* B2/S123 */
+     [[3],       [1, 2, 3]],  /* B3/S123 */
+     [[2, 3],    [2, 3]],     /* B23/S23 */
+     [[1],       [1, 2]],     /* B1/S12 -- replicator-style */
+     [[1],       [1]],        /* B1/S1 -- pure replicator */
+     [[2],       [3]],        /* B2/S3 -- minority */
+     [[3],       [3]],        /* B3/S3 */
+     [[2, 4],    [1, 2, 3]],  /* B24/S123 */
+     [[4],       [3, 4]],     /* B4/S34 -- high-density */
+     [[1, 2],    [1, 2]],     /* B12/S12 */
+     [[3],       [2, 3, 4]],  /* B3/S234 */
+     [[2],       [1, 2, 3, 4]] /* B2/S1234 -- generous survival */
+] $
+/* Standardize the seed across the panel for comparability. */
+panel_seed : make_seed_origin(2) $
+panel_seed_pop : apply("+", panel_seed) $
+print("Panel seed population =", panel_seed_pop)$
+print("Panel run length T =", T_CA)$
+print("")$
+rule_results : [] $
+for r in rule_panel do block(
+     [B : r[1], S : r[2], res, label],
+     res : run_rule_diagnose(B, S, panel_seed, T_CA),
+     label : concat("B", apply(sconcat, B), "/S", apply(sconcat, S)),
+     rule_results : endcons([label, B, S, res[1], res[2],
+                             res[3], res[4], res[5]],
+                            rule_results),
+     print("  ", label,
+           "  fate=", res[1],
+           "  period=", res[2],
+           "  transient=", res[3],
+           "  max_pop=", res[4],
+           "  final_pop=", res[5])) $
+/* Classify the panel. */
+n_extinct : 0 $
+n_still   : 0 $
+n_period  : 0 $
+n_growing : 0 $
+n_active  : 0 $
+for r in rule_results do (
+     if r[4] = "extinct"  then n_extinct : n_extinct + 1,
+     if r[4] = "still"    then n_still   : n_still   + 1,
+     if r[4] = "growing"  then n_growing : n_growing + 1,
+     if r[4] = "active"   then n_active  : n_active  + 1,
+     if not member(r[4], ["extinct", "still", "growing", "active"])
+        then n_period : n_period + 1) $
+print("")$
+print("Panel classification:")$
+print("  extinct =", n_extinct,
+       "  still =", n_still,
+       "  periodic =", n_period,
+       "  growing =", n_growing,
+       "  active =", n_active)$
+/* Identify the most interesting rule (highest non-saturating max_pop
+    that does not blow up beyond ~ N/2). */
+best_rule : [] $
+best_score : 0 $
+for r in rule_results do block(
+     [mp : r[7]],
+     if mp > best_score and mp < N/2 and r[4] # "extinct" then (
+         best_score : mp,
+         best_rule  : r)) $
+if length(best_rule) > 0 then
+     print("Most active non-degenerate rule:", best_rule[1],
+           " with max_pop =", best_rule[7],
+           " fate=", best_rule[4])$
+/* ---------------------------------------------------------------------
+    SECTION 11.  Alternative tau-rules: holonomy and structure comparison
+    ---------------------------------------------------------------------
+    We rebuild small clusters under different vortex rules tau(i, k)
+    and compare:
+      - cell count after fixed BFS depth,
+      - number of sheets reached,
+      - vortex-edge fraction,
+      - degree statistics,
+      - non-trivial holonomy loop fraction in Z_2, Z_3, Z_5.
+    --------------------------------------------------------------------- */
+print("============================================================")$
+print("SECTION 11: Alternative tau-rule survey")$
+print("============================================================")$
+/* Cluster builder parameterized by tau function. */
+build_cluster_tau(tau_fn, depth) := block(
+     [saved_count : cell_count, saved_center : cell_center,
+      saved_orient : cell_orient, saved_sheet : cell_sheet,
+      saved_nbrs : nbrs, saved_origin : origin_id,
+      saved_tau : tau_rule,
+      result, origin_id2],
+     /* reset registry */
+     cell_count : 0,
+     cell_center : [], cell_orient : [], cell_sheet : [], nbrs : [],
+     tau_rule(i, k) := apply(tau_fn, [i, k]),
+     origin_id2 : add_cell([0, 0], 0, 0),
+     expand_cluster(depth),
+     result : [cell_count, copylist(cell_center), copylist(cell_orient),
+               copylist(cell_sheet), copylist(nbrs), origin_id2],
+     /* restore */
+     cell_count  : saved_count,
+     cell_center : saved_center,
+     cell_orient : saved_orient,
+     cell_sheet  : saved_sheet,
+     nbrs        : saved_nbrs,
+     origin_id   : saved_origin,
+     tau_rule(i, k) := apply(saved_tau, [i, k]),
+     result) $
+/* Various tau-rule candidates. */
+tau_none(i, k)     := 0 $
+tau_every3(i, k)   := if mod(i + k, 3) = 0 then 1 else 0 $
+tau_every2(i, k)   := if mod(i + k, 2) = 0 then 1 else 0 $
+tau_every5(i, k)   := if mod(i + k, 5) = 0 then 1 else 0 $
+tau_kparity(i, k)  := if mod(k, 2) = 0 then 1 else 0 $
+tau_chiral(i, k)   := if mod(k, 5) <= 1 then 1 else 0 $
+tau_signed(i, k)   := if mod(i + k, 3) = 0 then 1
+                       elseif mod(i + k, 3) = 1 then -1
+                       else 0 $
+tau_fib(i, k)      := if member(mod(i + k, 8), [1, 2, 3, 5]) then 1 else 0 $
+tau_panel : [
+     ["none      (flat)",     tau_none],
+     ["every3    (default)",  tau_every3],
+     ["every2",               tau_every2],
+     ["every5",               tau_every5],
+     ["k-parity",             tau_kparity],
+     ["chiral",               tau_chiral],
+     ["signed-3",             tau_signed],
+     ["fibonacci-mod8",       tau_fib]
+] $
+/* For each tau rule we report key stats from a depth-3 cluster
+    (kept smaller than the main cluster to keep this section snappy). */
+TAU_SURVEY_DEPTH : min(BFS_DEPTH, 3) $
+/* Helper: count vortex edges in a cluster snapshot. */
+count_vortex_edges(centers, sheets, nbr_list, n_cells) := block(
+     [v : 0, total : 0, i, j],
+     for i : 1 thru n_cells do
+         for j in nbr_list[i] do
+             if i < j then (
+                 total : total + 1,
+                 if sheets[j] - sheets[i] # 0 then v : v + 1)),
+         [v, total] $
+/* Helper: enumerate 4- and 5-cycles through a given root in a snapshot. */
+find_cycles_in_snapshot(root, nbr_list) := block(
+     [cycles : [], v1, v2, v3, v4],
+     for v1 in nbr_list[root] do
+         for v2 in nbr_list[v1] do
+             if v2 # root then
+                 for v3 in nbr_list[v2] do
+                     if v3 # v1 and v3 # root
+                        and member(root, nbr_list[v3]) then
+                         cycles : endcons([root, v1, v2, v3, root],
+                                          cycles),
+     for v1 in nbr_list[root] do
+         for v2 in nbr_list[v1] do
+             if v2 # root then
+                 for v3 in nbr_list[v2] do
+                     if v3 # v1 and v3 # root then
+                         for v4 in nbr_list[v3] do
+                             if v4 # v2 and v4 # v1 and v4 # root
+                                and member(root, nbr_list[v4]) then
+                                 cycles : endcons(
+                                     [root, v1, v2, v3, v4, root],
+                                     cycles),
+     cycles) $
+/* Holonomy of a sequence given a sheet vector. */
+snapshot_holonomy(seq, sheets) := block(
+     [tot : 0, k],
+     for k : 1 thru length(seq) - 1 do
+         tot : tot + (sheets[seq[k+1]] - sheets[seq[k]]),
+     tot) $
+tau_survey_results : [] $
+for tp in tau_panel do block(
+     [label : tp[1], tau_fn : tp[2], snap, nc, sheets, nbrlist, root,
+      ve_pair, vortex_edges, total_edges, deg_l, sheet_count,
+      cycles, h2 : 0, h3 : 0, h5 : 0, c, hh],
+     snap : build_cluster_tau(tau_fn, TAU_SURVEY_DEPTH),
+     nc      : snap[1],
+     sheets  : snap[4],
+     nbrlist : snap[5],
+     root    : snap[6],
+     ve_pair : count_vortex_edges(snap[2], sheets, nbrlist, nc),
+     vortex_edges : ve_pair[1],
+     total_edges  : ve_pair[2],
+     deg_l : makelist(length(nbrlist[i]), i, 1, nc),
+     sheet_count : length(listify(setify(sheets))),
+     cycles : find_cycles_in_snapshot(root, nbrlist),
+     for c in cycles do (
+         hh : snapshot_holonomy(c, sheets),
+         if mod(hh, 2) # 0 then h2 : h2 + 1,
+         if mod(hh, 3) # 0 then h3 : h3 + 1,
+         if mod(hh, 5) # 0 then h5 : h5 + 1),
+     print("  tau =", label,
+           "  cells=", nc,
+           "  sheets=", sheet_count,
+           "  edges=", total_edges,
+           "  vortex=", vortex_edges,
+           "  vfrac=",
+           if total_edges > 0 then float(vortex_edges/total_edges) else 0,
+           "  meanDeg=",
+           if nc > 0 then float(apply("+", deg_l) / nc) else 0,
+           "  cycles=", length(cycles),
+           "  Z2nt=", h2, "  Z3nt=", h3, "  Z5nt=", h5),
+     tau_survey_results : endcons(
+         [label, nc, sheet_count, vortex_edges, total_edges,
+          length(cycles), h2, h3, h5],
+         tau_survey_results)) $
+/* Identify the tau-rule with the richest holonomy structure. */
+best_tau_label : "" $
+best_tau_score : -1 $
+for r in tau_survey_results do block(
+     [score : r[7] + r[8] + r[9]],
+     if score > best_tau_score then (
+         best_tau_score : score,
+         best_tau_label : r[1])) $
+print("")$
+print("Richest-holonomy tau-rule (sum of Z_2/Z_3/Z_5 non-trivial counts):",
+       best_tau_label,
+       "  score =", best_tau_score)$
+/* ---------------------------------------------------------------------
+    SECTION 12.  Extended holonomy: more fiber groups
+    ---------------------------------------------------------------------
+    Apply Z_n reductions for n in {2, 3, 4, 5, 6, 10} to the long_cycles
+    of the main cluster.  n = 2 is the spinor reduction; n = 5 is the
+    anyonic one tied to pentagonal symmetry; n = 10 is the natural
+    icosian extension; n in {3, 4, 6} are diagnostic.
+    --------------------------------------------------------------------- */
+print("============================================================")$
+print("SECTION 12: Extended holonomy on main cluster")$
+print("============================================================")$
+fiber_groups : [2, 3, 4, 5, 6, 10] $
+print("Examining", length(long_cycles), "long cycles in main cluster.")$
+if length(long_cycles) > 0 then block(
+     [hcounts, n, cyc, raw, residue, dist],
+     hcounts : makelist(0, k, 1, length(fiber_groups)),
+     /* residue distributions: for each n, a list of length n */
+     residue_dists : makelist(makelist(0, j, 1, fiber_groups[k]),
+                              k, 1, length(fiber_groups)),
+     for cyc in long_cycles do (
+         raw : loop_holonomy(cyc),
+         for k : 1 thru length(fiber_groups) do (
+             n : fiber_groups[k],
+             residue : mod(raw, n),
+             residue_dists[k][residue + 1] :
+                 residue_dists[k][residue + 1] + 1,
+             if residue # 0 then hcounts[k] : hcounts[k] + 1)),
+     for k : 1 thru length(fiber_groups) do
+         print("  Z_", fiber_groups[k],
+               ":  non-trivial =", hcounts[k], "/", length(long_cycles),
+               "  residue distribution =", residue_dists[k]))
+else
+     print("(no long cycles to analyze)")$
+/* Raw holonomy distribution. */
+if length(long_cycles) > 0 then block(
+     [raws : [], cyc],
+     for cyc in long_cycles do raws : endcons(loop_holonomy(cyc), raws),
+     print("Raw holonomy values (length", length(raws), "):"),
+     print("  min =", apply(min, raws),
+           "  max =", apply(max, raws),
+           "  mean =", float(apply("+", raws) / length(raws))),
+     /* histogram */
+     block(
+         [tab : []],
+         for v in sort(listify(setify(raws))) do block(
+             [cnt : 0],
+             for r in raws do if r = v then cnt : cnt + 1,
+             tab : endcons([v, cnt], tab)),
+         print("  histogram [value, count] =", tab))) $
+/* ---------------------------------------------------------------------
+    SECTION 13.  Structural pattern analysis
+    ---------------------------------------------------------------------
+    We compute several graph-theoretic descriptors that are sensitive to
+    the multi-sheeted construction:
+      - clustering coefficient (local triangle density),
+      - girth (length of shortest cycle through origin),
+      - degree histogram,
+      - inter-sheet edge count,
+      - sheet-to-sheet transition matrix.
+    --------------------------------------------------------------------- */
+print("============================================================")$
+print("SECTION 13: Structural patterns in main cluster")$
+print("============================================================")$
+/* Degree histogram. */
+deg_hist : [] $
+for d : 0 thru deg_max do block(
+     [cnt : 0],
+     for i : 1 thru N do
+         if length(nbrs[i]) = d then cnt : cnt + 1,
+     if cnt > 0 then deg_hist : endcons([d, cnt], deg_hist)) $
+print("Degree histogram [deg, count]:")$
+for h in deg_hist do print("  ", h)$
+/* Local clustering coefficient.  For node i with neighbors N(i):
+    c_i = (# edges among N(i)) / (|N(i)| choose 2).  Average over nodes
+    with degree >= 2. */
+clustering_coeffs : [] $
+for i : 1 thru N do block(
+     [ni : nbrs[i], di, edges_in : 0, j, kk],
+     di : length(ni),
+     if di >= 2 then (
+         for j in ni do
+             for kk in ni do
+                 if j < kk and member(kk, nbrs[j]) then
+                     edges_in : edges_in + 1,
+         clustering_coeffs : endcons(
+             float(edges_in / (di * (di - 1) / 2)),
+             clustering_coeffs))) $
+if length(clustering_coeffs) > 0 then
+     print("Mean local clustering coefficient =",
+           float(apply("+", clustering_coeffs)
+                 / length(clustering_coeffs)),
+           " over", length(clustering_coeffs), "nodes (deg >= 2)")
+else
+     print("No nodes with degree >= 2 for clustering.")$
+/* Triangle count (= sum of edges among neighbors / 3). */
+triangle_count : 0 $
+for i : 1 thru N do
+     for j in nbrs[i] do
+         if j > i then
+             for kk in nbrs[j] do
+                 if kk > j and member(kk, nbrs[i]) then
+                     triangle_count : triangle_count + 1 $
+print("Triangle count in main cluster =", triangle_count)$
+/* Girth at origin: shortest cycle returning to origin (length >= 3). */
+girth_origin : 0 $
+block([found : false, g],
+     for g : 3 thru 8 do (
+         if found then return(0),
+         /* BFS-based search for cycles of length g through origin */
+         block(
+              [paths : [[origin_id]], paths2 : [], p, last_v, nb_v, ext, st],
+              for st : 1 thru g do (
+                 paths2 : [],
+                 for p in paths do (
+                     last_v : last(p),
+                     for nb_v in nbrs[last_v] do (
+                         /* allow returning to origin only on final step */
+                          if st = g then (
+                             if nb_v = origin_id and length(p) >= 3 then (
+                                 girth_origin : g,
+                                 found : true,
+                                 return(0)))
+                         else (
+                             if not member(nb_v, p) and nb_v # origin_id then
+                                 paths2 : endcons(endcons(nb_v, p), paths2)))),
+                 if found then return(0),
+                 paths : paths2)))) $
+print("Girth (shortest cycle) through origin =",
+       if girth_origin > 0 then girth_origin else "> 8") $
+/* Inter-sheet edges and sheet-to-sheet transition matrix. */
+sheet_list : sort(listify(setify(cell_sheet))) $
+n_sheets : length(sheet_list) $
+sheet_index(s) := block(
+     [idx : 0, k],
+     for k : 1 thru n_sheets do
+         if sheet_list[k] = s then idx : k,
+     idx) $
+trans_mat : zeromatrix(n_sheets, n_sheets) $
+for i : 1 thru N do
+     for j in nbrs[i] do
+         if i < j then block(
+             [si : sheet_index(cell_sheet[i]),
+              sj : sheet_index(cell_sheet[j])],
+             trans_mat[si, sj] : trans_mat[si, sj] + 1,
+             if si # sj then
+                 trans_mat[sj, si] : trans_mat[sj, si] + 1) $
+print("Sheets present:", sheet_list)$
+print("Sheet-to-sheet edge matrix (rows=sheet_list, cols=sheet_list):")$
+for i : 1 thru n_sheets do
+     print("  sheet", sheet_list[i], ":",
+           makelist(trans_mat[i, j], j, 1, n_sheets))$
+/* Inter-sheet edge count (should equal n_vortex_edges_in_cluster). */
+inter_sheet_edges : 0 $
+for i : 1 thru n_sheets do
+     for j : i + 1 thru n_sheets do
+         inter_sheet_edges : inter_sheet_edges + trans_mat[i, j] $
+print("Inter-sheet (vortex) edges =", inter_sheet_edges,
+       " (cross-check vs Section 8:", n_vortex_edges_in_cluster, ")")$
+/* ---------------------------------------------------------------------
+    SECTION 14.  Per-sheet sub-graph analysis
+    ---------------------------------------------------------------------
+    For each sheet, examine the induced sub-graph: how many cells, how
+    many intra-sheet edges, mean degree, and BFS-volume slope (as a
+    sheet-restricted d_eff estimate).
+    --------------------------------------------------------------------- */
+print("============================================================")$
+print("SECTION 14: Per-sheet sub-graph statistics")$
+print("============================================================")$
+for s in sheet_list do block(
+     [sheet_nodes : [], sheet_edges : 0, deg_sum : 0, i, j, intra_deg, k,
+      sheet_seed],
+     for i : 1 thru N do
+         if cell_sheet[i] = s then
+             sheet_nodes : endcons(i, sheet_nodes),
+     if length(sheet_nodes) > 0 then (
+         for i in sheet_nodes do (
+             intra_deg : 0,
+             for j in nbrs[i] do
+                 if cell_sheet[j] = s then
+                     intra_deg : intra_deg + 1,
+             deg_sum : deg_sum + intra_deg),
+         sheet_edges : deg_sum / 2,
+         print("  sheet", s,
+               ":  nodes=", length(sheet_nodes),
+               "  intra-edges=", sheet_edges,
+               "  meanIntraDeg=",
+               float(deg_sum / length(sheet_nodes))))) $
+/* Sheet-population sequence: how does cell count fall off with sheet
+    index?  If geometric, we get a simple exponential decay rate. */
+pop_by_sheet : [] $
+for s in sheet_list do block(
+     [cnt : 0],
+     for i : 1 thru N do
+         if cell_sheet[i] = s then cnt : cnt + 1,
+     pop_by_sheet : endcons([s, cnt], pop_by_sheet)) $
+print("Sheet-population sequence:", pop_by_sheet)$
+if length(pop_by_sheet) >= 3 then block(
+     [xs : [], ys : [], pt, fit],
+     for pt in pop_by_sheet do
+         if second(pt) > 0 then (
+             xs : endcons(float(first(pt)), xs),
+             ys : endcons(float(log(second(pt))), ys)),
+     if length(xs) >= 3 then (
+         fit : log_log_fit_basic(xs, ys),
+         print("  log-pop vs sheet-index slope =", fit[1],
+               "  => decay rate r =", float(exp(fit[1])),
+               "  (geometric falloff if r < 1)"))) $
+/* ---------------------------------------------------------------------
+    SECTION 15.  Glider / oscillator hunt under multiple seeds
+    ---------------------------------------------------------------------
+    Re-run a small set of promising rules on several distinct seeds and
+    record any periodic orbits with period > 1.  We also test whether
+    any periodic pattern has a non-zero "center-of-mass drift" across
+    its period, which would indicate glider-like translation in the
+    BFS-distance metric.
+    --------------------------------------------------------------------- */
+print("============================================================")$
+print("SECTION 15: Glider / oscillator hunt")$
+print("============================================================")$
+/* Pick the top 3 rules by max_pop among non-extinct, non-growing. */
+promising_rules : [] $
+for r in rule_results do
+     if r[4] # "extinct" and r[4] # "growing"
+        and length(promising_rules) < 5 then
+         promising_rules : endcons([r[2], r[3], r[1]], promising_rules) $
+print("Trying", length(promising_rules),
+       "rules x several seed shapes.")$
+/* Seed shapes: single, pair, triple, 5-petal (all 5 nbrs of origin). */
+make_seed_shape(shape) := block(
+     [s : makelist(0, ii, 1, N), nb : nbrs[origin_id], j],
+     if shape = "single" then s[origin_id] : 1
+     elseif shape = "pair" then (
+         s[origin_id] : 1,
+         if length(nb) >= 1 then s[nb[1]] : 1)
+     elseif shape = "triple" then (
+         s[origin_id] : 1,
+         for j : 1 thru min(2, length(nb)) do s[nb[j]] : 1)
+     elseif shape = "petal" then
+         for j : 1 thru length(nb) do s[nb[j]] : 1
+     elseif shape = "all5" then (
+         s[origin_id] : 1,
+         for j : 1 thru length(nb) do s[nb[j]] : 1),
+     s) $
+seed_shapes : ["single", "pair", "triple", "petal", "all5"] $
+/* Compute COM-like statistic for a state: mean BFS distance of live
+    cells from origin. */
+live_mean_dist(state) := block(
+     [tot : 0, cnt : 0, i],
+     for i : 1 thru N do
+         if state[i] = 1 then (
+             tot : tot + dist_from_origin[i],
+             cnt : cnt + 1),
+     if cnt > 0 then float(tot / cnt) else 0) $
+/* Track distance history alongside the state hash for glider detection. */
+glider_hunt(B, S, seed, T) := block(
+     [rule_fn : make_rule(B, S),
+      state : seed, hist : [seed], dists : [live_mean_dist(seed)],
+      i, prev_idx : 0, period : 0, transient : 0,
+      d_amp : 0, d_drift : 0],
+     for i : 1 thru T do (
+         state : ca_step_rule(state, rule_fn),
+         dists : endcons(live_mean_dist(state), dists),
+         prev_idx : 0,
+         for k : 1 thru length(hist) do
+             if hist[k] = state and prev_idx = 0 then prev_idx : k,
+         if prev_idx > 0 then (
+             period : length(hist) - prev_idx + 1,
+             transient : prev_idx - 1,
+             return(0)),
+         hist : endcons(state, hist)),
+     if period > 1 then block(
+         [seg : rest(dists, transient)],
+         /* amplitude of distance oscillation over one period */
+         d_amp : float(apply(max, seg) - apply(min, seg)),
+         d_drift : float(last(seg) - first(seg))),
+     [period, transient, d_amp, d_drift]) $
+glider_summary : [] $
+for rp in promising_rules do block(
+     [B : rp[1], S : rp[2], label : rp[3], sh, seed, gh],
+     for sh in seed_shapes do (
+         seed : make_seed_shape(sh),
+         gh : glider_hunt(B, S, seed, T_CA),
+         glider_summary : endcons([label, sh, gh[1], gh[2], gh[3], gh[4]],
+                                  glider_summary),
+         if gh[1] > 1 then
+             print("  ", label, " seed=", sh,
+                   "  period=", gh[1],
+                   "  transient=", gh[2],
+                   "  d_amp=", gh[3],
+                   "  d_drift=", gh[4]))) $
+/* Count gliders: period > 1 AND d_amp > 0.5 (BFS-shells of motion). */
+n_oscillators : 0 $
+n_gliders     : 0 $
+for g in glider_summary do (
+     if g[3] > 1 then n_oscillators : n_oscillators + 1,
+     if g[3] > 1 and g[5] > 0.5 then n_gliders : n_gliders + 1) $
+print("")$
+print("Glider hunt summary:")$
+print("  trials =", length(glider_summary),
+       "  oscillators =", n_oscillators,
+       "  gliders =", n_gliders)$
+/* ---------------------------------------------------------------------
+    SECTION 16.  Long-loop holonomy enumeration
+    ---------------------------------------------------------------------
+    The 4- and 5-cycle holonomy survey in Section 8 gave 0/16
+    non-trivial loops under the didactic tau_rule.  Here we go further:
+    enumerate longer simple cycles through the origin (up to
+    LONG_LOOP_MAX steps), and also enumerate cycles anchored at
+    *non-origin* vertices to expose monodromy that depends on the
+    base point.
+    --------------------------------------------------------------------- */
+print("============================================================")$
+print("SECTION 16: Long-loop holonomy enumeration")$
+print("============================================================")$
+/* DFS-based simple-cycle enumeration through a given root, up to
+    a maximum length.  Returns a list of cycles (each a list of node
+    IDs starting and ending at root).  Restricts to root being the
+    minimum-ID vertex in the cycle to avoid trivial reorderings. */
+enumerate_simple_cycles(root, maxlen, nbr_list) := block(
+     [results : [], stack, visited, depth_limit : maxlen,
+      v, nb, recur],
+     /* iterative DFS via explicit recursion */
+     recur(path, current_depth) := block(
+         [last_v : last(path), nb, p_new, nx],
+         for nx in nbr_list[last_v] do (
+             if nx = root and current_depth >= 3 then
+                 results : endcons(endcons(root, path), results)
+             elseif nx > root and not member(nx, path)
+                    and current_depth < depth_limit then (
+                 p_new : endcons(nx, path),
+                 recur(p_new, current_depth + 1)))),
+     recur([root], 1),
+     results) $
+/* Enumerate cycles through origin up to LONG_LOOP_MAX steps. */
+print("Enumerating simple cycles through origin up to length",
+       LONG_LOOP_MAX, "...")$
+all_cycles_origin : enumerate_simple_cycles(origin_id, LONG_LOOP_MAX, nbrs) $
+print("Total cycles through origin found:", length(all_cycles_origin))$
+/* Length distribution. */
+if length(all_cycles_origin) > 0 then block(
+     [len_hist : []],
+     for L : 3 thru LONG_LOOP_MAX do block(
+         [cnt : 0],
+         for c in all_cycles_origin do
+             if length(c) - 1 = L then cnt : cnt + 1,
+         if cnt > 0 then len_hist : endcons([L, cnt], len_hist)),
+     print("Cycle-length distribution [len, count]:"),
+     for h in len_hist do print("  ", h)) $
+/* Multi-group holonomy enumeration. */
+long_fiber_groups : [2, 3, 4, 5, 6, 10] $
+if length(all_cycles_origin) > 0 then block(
+     [hcounts, residue_dists, n, c, raw, residue, k],
+     hcounts : makelist(0, k, 1, length(long_fiber_groups)),
+     residue_dists : makelist(makelist(0, j, 1, long_fiber_groups[k]),
+                              k, 1, length(long_fiber_groups)),
+     for c in all_cycles_origin do (
+         raw : loop_holonomy(c),
+         for k : 1 thru length(long_fiber_groups) do (
+             n : long_fiber_groups[k],
+             residue : mod(raw, n),
+             residue_dists[k][residue + 1] :
+                 residue_dists[k][residue + 1] + 1,
+             if residue # 0 then hcounts[k] : hcounts[k] + 1)),
+     print("Holonomy by fiber group on all cycles through origin:"),
+     for k : 1 thru length(long_fiber_groups) do
+         print("  Z_", long_fiber_groups[k],
+               " non-trivial =", hcounts[k], "/", length(all_cycles_origin),
+               "  residue dist =", residue_dists[k]),
+     /* Show a few example non-trivial Z_2 cycles, if any. */
+     block(
+         [shown : 0],
+         for c in all_cycles_origin do
+             if shown < 3 and mod(loop_holonomy(c), 2) # 0 then (
+                 print("  example Z_2 non-trivial cycle of length",
+                       length(c) - 1, ":", c,
+                       " raw=", loop_holonomy(c)),
+                 shown : shown + 1))) $
+/* Now try cycles anchored at a non-origin vertex on a higher sheet,
+    to expose base-point-dependent monodromy. */
+non_origin_root : 0 $
+for i : 1 thru N do
+     if non_origin_root = 0 and cell_sheet[i] >= 2 and length(nbrs[i]) >= 3
+        then non_origin_root : i $
+if non_origin_root > 0 then block(
+     [cycs, hcounts, n, c, raw, residue, k],
+     print("Enumerating cycles through anchor node", non_origin_root,
+           " (sheet=", cell_sheet[non_origin_root], ", deg=",
+           length(nbrs[non_origin_root]), ") up to length",
+           LONG_LOOP_MAX, "..."),
+     cycs : enumerate_simple_cycles(non_origin_root, LONG_LOOP_MAX, nbrs),
+     print("  cycles found:", length(cycs)),
+     if length(cycs) > 0 then (
+         hcounts : makelist(0, k, 1, length(long_fiber_groups)),
+         for c in cycs do (
+             raw : loop_holonomy(c),
+             for k : 1 thru length(long_fiber_groups) do (
+                 n : long_fiber_groups[k],
+                 if mod(raw, n) # 0 then hcounts[k] : hcounts[k] + 1)),
+         print("  Holonomy distribution at non-origin anchor:"),
+         for k : 1 thru length(long_fiber_groups) do
+             print("    Z_", long_fiber_groups[k],
+                   " non-trivial =", hcounts[k], "/", length(cycs)))) $
+/* ---------------------------------------------------------------------
+    SECTION 17.  Cut-and-project acceptance window experiment
+    ---------------------------------------------------------------------
+    The didactic tau_rule(i, k) = [(i+k) ≡ 0 mod 3] is geometrically
+    arbitrary.  The rigorous regime of idea.md §2.4 uses a cut-and-
+    project window: lift the pentagon centroid into a higher-dimensional
+    lattice, check whether its "perpendicular" component lies inside an
+    acceptance window, and assign a vortex shift based on which window
+    cell it falls in.
+    We implement a *projected* version here: the vortex rule is now a
+    function of the centroid's exact position (rather than its BFS
+    index), using the golden-ratio quasiperiodic projection.
+    --------------------------------------------------------------------- */
+print("============================================================")$
+print("SECTION 17: Cut-and-project acceptance-window tau-rule")$
+print("============================================================")$
+/* Projection of a Q(sqrt(5)) coordinate to an irrational "phantom"
+    axis: x -> {x*phi} mod 1.  Two centroid coords give a 2D phantom
+    point; the acceptance window is a small rectangle in that plane. */
+/* Convert a Q(sqrt(5)) algebraic number to a floating-point value. */
+qfloat(z) := float(ratsimp(expand(z))) $
+/* Fractional part. */
+frac_part(x) := x - floor(x) $
+/* Phantom projection of a centroid. */
+phantom_proj(c) := block(
+     [px : frac_part(qfloat(c[1]) * float(phi)),
+      py : frac_part(qfloat(c[2]) * float(phi))],
+     [px, py]) $
+/* Cut-and-project tau rule: vortex iff phantom point falls in a
+    pentagonally-shaped acceptance window.  We approximate the window
+    by the inequality cos(theta) > c_win where theta is the polar
+    angle of phantom_point - (0.5, 0.5).  Different c_win values give
+    different window fractions. */
+cap_window_threshold : 0.30 $
+in_cap_window(c) := block(
+     [p : phantom_proj(c), dx, dy, r2, theta_cos],
+     dx : p[1] - 0.5,
+     dy : p[2] - 0.5,
+     r2 : dx^2 + dy^2,
+     if r2 < 1e-12 then return(true),
+     /* Use 5-fold-modulated test:
+        accept if cos(5*theta) > -cap_window_threshold */
+     theta_cos : (dx^2 - dy^2)/r2,  /* cos(2*theta), proxy */
+     /* compose into cos(5*theta) approximation using Chebyshev */
+     is(5 * theta_cos^2 - 4 > -cap_window_threshold * 4)) $
+/* Sample test: how many cells of the main cluster fall inside the
+    acceptance window? */
+cap_in_count : 0 $
+for i : 1 thru N do
+     if in_cap_window(cell_center[i]) then
+         cap_in_count : cap_in_count + 1 $
+print("Cells inside acceptance window:", cap_in_count, "/", N,
+       " (fraction =", float(cap_in_count / N), ")")$
+/* tau rule derived from acceptance window: shift +1 across edges
+    where exactly one endpoint is inside the window. */
+tau_cap(i, k) := block(
+     [c1 : cell_center[i],
+      c2 : reflected_neighbor_center(c1[1], c1[2], cell_orient[i], k),
+      a, b],
+     a : in_cap_window(c1),
+     b : in_cap_window(c2),
+     if a # b then 1 else 0) $
+/* Build a cap-window cluster at slightly smaller depth and measure. */
+CAP_DEPTH : min(BFS_DEPTH, 4) $
+print("Building cap-window cluster at depth", CAP_DEPTH, "...")$
+cap_snap : build_cluster_tau(tau_cap, CAP_DEPTH) $
+cap_N : cap_snap[1] $
+cap_sheets : cap_snap[4] $
+cap_nbrs : cap_snap[5] $
+cap_root : cap_snap[6] $
+cap_sheet_set : sort(listify(setify(cap_sheets))) $
+print("Cap-window cluster: N =", cap_N,
+       ", sheets =", cap_sheet_set)$
+/* Per-sheet population and vortex edge count. */
+cap_ve_pair : count_vortex_edges(cap_snap[2], cap_sheets, cap_nbrs, cap_N) $
+print("  vortex edges =", cap_ve_pair[1], "/", cap_ve_pair[2],
+       "  (fraction =",
+       if cap_ve_pair[2] > 0 then float(cap_ve_pair[1]/cap_ve_pair[2]) else 0,
+       ")")$
+/* Holonomy on cap-window cluster. */
+cap_cycles : enumerate_simple_cycles(cap_root, min(LONG_LOOP_MAX, 6),
+                                       cap_nbrs) $
+print("  cycles through cap_root:", length(cap_cycles))$
+if length(cap_cycles) > 0 then block(
+     [hcounts, n, c, raw, k],
+     hcounts : makelist(0, k, 1, length(long_fiber_groups)),
+     for c in cap_cycles do (
+         raw : snapshot_holonomy(c, cap_sheets),
+         for k : 1 thru length(long_fiber_groups) do (
+             n : long_fiber_groups[k],
+             if mod(raw, n) # 0 then hcounts[k] : hcounts[k] + 1)),
+     print("  Holonomy by fiber group (cap-window cluster):"),
+     for k : 1 thru length(long_fiber_groups) do
+         print("    Z_", long_fiber_groups[k],
+               " non-trivial =", hcounts[k], "/", length(cap_cycles))) $
+/* BFS volume growth on the cap-window cluster to compare d_eff. */
+cap_vols : block(
+     [visited : makelist(false, ii, 1, cap_N),
+      dist : makelist(-1, ii, 1, cap_N),
+      queue : [cap_root], v, j, max_d : 0, sizes],
+     visited[cap_root] : true, dist[cap_root] : 0,
+     while length(queue) > 0 do (
+         v : first(queue), queue : rest(queue),
+         for j in cap_nbrs[v] do
+             if not visited[j] then (
+                 visited[j] : true,
+                 dist[j] : dist[v] + 1,
+                 if dist[j] > max_d then max_d : dist[j],
+                 queue : endcons(j, queue))),
+     sizes : makelist(0, ii, 0, max_d),
+     for ii : 1 thru cap_N do
+         if dist[ii] >= 0 then
+             sizes[dist[ii] + 1] : sizes[dist[ii] + 1] + 1,
+     for r : 2 thru length(sizes) do
+         sizes[r] : sizes[r] + sizes[r-1],
+     sizes) $
+print("Cap-window BFS volumes:", cap_vols)$
+if length(cap_vols) >= 4 then block(
+     [xs : [], ys : [], r, fit],
+     for r : 2 thru length(cap_vols) - 1 do (
+         xs : endcons(float(log(r - 1)), xs),
+         ys : endcons(float(log(cap_vols[r])), ys)),
+     fit : log_log_fit_basic(xs, ys),
+     print("  d_eff (cap-window, interior) =", fit[1])) $
+/* ---------------------------------------------------------------------
+    SECTION 18.  KPM-based spectral density approximation
+    ---------------------------------------------------------------------
+    For large N (e.g. the huge preset) the dense eigendecomposition is
+    skipped.  The Kernel Polynomial Method (KPM) approximates the
+    density of states rho(lambda) via Chebyshev moments of the
+    rescaled Hamiltonian:
+        mu_n = (1/N) tr T_n(L_tilde)
+    estimated stochastically with random vectors.
+    Here L_tilde = (L - a)/b is rescaled to [-1, 1].  Bound:
+    lambda_max(L) <= 2 * deg_max.
+    --------------------------------------------------------------------- */
+print("============================================================")$
+print("SECTION 18: KPM spectral density approximation")$
+print("============================================================")$
+/* Sparse matrix-vector product for L = D - A. */
+sparse_Lv(v) := block(
+     [result : makelist(0, ii, 1, N), i, j, dv],
+     for i : 1 thru N do (
+         dv : length(nbrs[i]) * v[i],
+         for j in nbrs[i] do
+             dv : dv - v[j],
+         result[i] : dv),
+     result) $
+/* KPM rescaling: L_tilde = (L - a)/b, with a = lam_max/2, b = lam_max/2,
+    so spec(L_tilde) subset [-1, 1].  Upper bound lam_max <= 2*deg_max. */
+kpm_a : float(deg_max) $
+kpm_b : float(deg_max) $
+/* Apply L_tilde to vector v. */
+kpm_Lt_v(v) := block(
+     [Lv : sparse_Lv(v)],
+     makelist((Lv[i] - kpm_a * v[i]) / kpm_b, i, 1, N)) $
+/* Estimate Chebyshev moments mu_n via stochastic trace.
+    mu_n approx (1/S) sum_{s=1..S} <z_s, T_n(L_tilde) z_s>,
+    using the recursion T_0 = I, T_1 = L_tilde, T_{n+1} = 2 L_tilde T_n - T_{n-1}. */
+kpm_estimate_moments(M, S) := block(
+     [mu : makelist(0.0, n, 1, M), s, z, t0, t1, t2, n, dot],
+     for s : 1 thru S do block(
+         [z],
+         z : makelist(if random(2) = 0 then 1.0 else -1.0, ii, 1, N),
+         /* normalize:  <z,z> = N */
+         t0 : z,
+         t1 : kpm_Lt_v(t0),
+         mu[1] : mu[1] + apply("+", t0*t0)/N,
+         if M >= 2 then mu[2] : mu[2] + apply("+", t0*t1)/N,
+         for n : 3 thru M do (
+             t2 : 2 * kpm_Lt_v(t1) - t0,
+             mu[n] : mu[n] + apply("+", t0*t2)/N,
+             t0 : t1, t1 : t2)),
+     makelist(mu[n]/S, n, 1, M)) $
+/* Reconstruct DOS at points x in [-1+eps, 1-eps] using Jackson-damped
+    Chebyshev series.  rho(x) approx (1/(pi sqrt(1-x^2))) *
+    (mu_0 + 2 sum_{n>=1} g_n mu_n T_n(x))   where g_n is the Jackson kernel. */
+jackson_g(n, M) := block(
+     [Mp : M + 1],
+     ((Mp - n)/Mp) * cos(%pi * n / Mp)
+      + sin(%pi * n / Mp) * cot(%pi / Mp) / Mp) $
+kpm_dos_at(x, mu) := block(
+     [M : length(mu), s, n, T_prev : 1, T_curr : x, T_next, gv],
+     s : mu[1],
+     if M >= 2 then s : s + 2 * jackson_g(1, M) * mu[2] * x,
+     for n : 3 thru M do (
+         T_next : 2*x*T_curr - T_prev,
+         gv : jackson_g(n - 1, M),
+         s : s + 2 * gv * mu[n] * T_next,
+         T_prev : T_curr, T_curr : T_next),
+     s / (%pi * sqrt(max(1 - x^2, 1e-12)))) $
+/* Run KPM and report estimated DOS at several points. */
+print("Running KPM with M =", KPM_MOMENTS, "moments,",
+       KPM_SAMPLES, "random samples...")$
+kpm_mu : 0 $
+kpm_run_ok : false $
+errcatch(
+     kpm_mu : kpm_estimate_moments(KPM_MOMENTS, KPM_SAMPLES),
+     kpm_run_ok : true) $
+if kpm_run_ok then (
+     print("KPM moment summary: mu_0 =", kpm_mu[1],
+           " (should be ~ 1.0)"),
+     print("                    mu_1 =", kpm_mu[2],
+           "  mu_2 =", if KPM_MOMENTS >= 3 then kpm_mu[3] else 0,
+           "  mu_4 =", if KPM_MOMENTS >= 5 then kpm_mu[5] else 0),
+     /* Sample the reconstructed DOS at a few points along the spectrum. */
+     print("DOS samples [lambda, rho(lambda)]:"),
+     block(
+         [xs : [-0.95, -0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8, 0.95],
+          xx, lam, rho],
+         for xx in xs do (
+             lam : float(kpm_a + xx * kpm_b),
+             rho : float(kpm_dos_at(xx, kpm_mu)),
+             print("  lam =", lam, "  rho_est =", rho))),
+     /* Use the low-lambda tail to estimate d_spec from KPM.
+        rho(lam) ~ lam^(d_spec/2 - 1) for small positive lam. */
+     block(
+         [low_xs : [], low_ys : [], xx, lam, rho, fit, slope],
+         for xx : -0.99 step 0.005 thru -0.85 do (
+             lam : float(kpm_a + xx * kpm_b),
+             /* shift origin so lam_0 (the smallest eigenvalue ~ 0) is at xx ~ -1 */
+             rho : float(kpm_dos_at(xx, kpm_mu)),
+             if lam > 1e-3 and rho > 1e-6 then (
+                 low_xs : endcons(float(log(lam)), low_xs),
+                 low_ys : endcons(float(log(rho)), low_ys))),
+         if length(low_xs) >= 4 then (
+             fit : log_log_fit_basic(low_xs, low_ys),
+             slope : fit[1],
+             print("KPM low-lambda log-log slope =", slope),
+             print("  => d_spec_KPM (= 2*(slope+1)) ~", 2*(slope + 1)),
+             d_spec_kpm : 2*(slope + 1)) 
+         else (
+             print("KPM tail too short for slope fit."),
+             d_spec_kpm : 0.0)))
+else (
+     print("KPM run failed; skipping."),
+     d_spec_kpm : 0.0) $
+if not(?boundp('d_spec_kpm)) then d_spec_kpm : 0.0 $
+/* ---------------------------------------------------------------------
+    SECTION 19.  Per-sheet random walk diagnostics
+    ---------------------------------------------------------------------
+    Run random walks restricted to NOT crossing sheets, and compare to
+    the full unrestricted walk.  This isolates the effect of vortex
+    edges on diffusion: if d_w_intra ~ 2 and d_w_full > 2 then vortex
+    edges genuinely cause sub-diffusion via inter-sheet bottlenecks.
+    --------------------------------------------------------------------- */
+print("============================================================")$
+print("SECTION 19: Per-sheet random walk diagnostics")$
+print("============================================================")$
+/* Intra-sheet random walk: at each step, restrict to neighbors on
+    the same sheet as the start. */
+intra_walk(start, T) := block(
+     [path : [start], v : start, sh : cell_sheet[start],
+      nb, allowed, r],
+     for t : 1 thru T do (
+         nb : nbrs[v],
+         allowed : [],
+         for u in nb do
+             if cell_sheet[u] = sh then allowed : endcons(u, allowed),
+         if length(allowed) = 0 then return(path),
+         r : random(length(allowed)),
+         v : allowed[r + 1],
+         path : endcons(v, path)),
+     path) $
+/* Count how often the full walker actually crosses a sheet. */
+sheet_crossing_counts : makelist(0, ii, 0, T_steps) $
+intra_msd_sum : makelist(0, t, 0, min(T_steps, 100)) $
+intra_walk_count : 0 $
+M_intra : max(100, min(M_WALKS / 20, 2000)) $
+T_intra : min(T_steps, 100) $
+print("Running", M_intra, "intra-sheet walks of length", T_intra, "...")$
+for w : 1 thru M_intra do block(
+     [p : intra_walk(origin_id, T_intra), t, v, d],
+     if length(p) > 1 then intra_walk_count : intra_walk_count + 1,
+     for t : 0 thru min(T_intra, length(p) - 1) do (
+         v : p[t + 1],
+         d : dist_from_origin[v],
+         if d < 0 then d : 0,
+         intra_msd_sum[t + 1] : intra_msd_sum[t + 1] + d^2)) $
+if intra_walk_count > 0 then (
+     intra_msd : makelist(float(intra_msd_sum[t+1] / M_intra),
+                          t, 0, T_intra),
+     print("Intra-sheet MSD at t = 1, 5, 10:",
+           intra_msd[2],
+           if T_intra >= 5 then intra_msd[6] else 0,
+           if T_intra >= 10 then intra_msd[11] else 0),
+     /* Fit early-time slope. */
+     block(
+         [xs : [], ys : [], t, fit, slope_intra, d_w_intra],
+         for t : MSD_FIT_LO thru min(T_intra, MSD_FIT_HI) do
+             if intra_msd[t + 1] > 0 then (
+                 xs : endcons(float(log(t)), xs),
+                 ys : endcons(float(log(intra_msd[t + 1])), ys)),
+         if length(xs) >= 3 then (
+             fit : log_log_fit_basic(xs, ys),
+             slope_intra : fit[1],
+             d_w_intra : if abs(slope_intra) > 1e-6
+                          then float(2/slope_intra) else 0,
+             print("Intra-sheet MSD slope =", slope_intra,
+                   "  =>  d_w_intra =", d_w_intra),
+             print("Compare full d_w =", d_w_value,
+                   "  ratio d_w_intra/d_w_full =",
+                   if d_w_value > 0 then float(d_w_intra / d_w_value)
+                                    else "n/a"))))$
+/* Count actual sheet crossings in the original (full) walks: rerun
+    a small batch. */
+M_cross : min(200, M_WALKS) $
+cross_sum : 0 $
+for w : 1 thru M_cross do block(
+     [path : random_walk(origin_id, T_steps), t, prev_sh, cur_sh, count : 0],
+     for t : 2 thru length(path) do (
+         prev_sh : cell_sheet[path[t - 1]],
+         cur_sh  : cell_sheet[path[t]],
+         if prev_sh # cur_sh then count : count + 1),
+     cross_sum : cross_sum + count) $
+print("Mean sheet crossings per", T_steps, "-step walk =",
+       float(cross_sum / M_cross),
+       " (=", float(cross_sum / (M_cross * T_steps)), "per step)")$
+/* ---------------------------------------------------------------------
+    SECTION 20.  Cross-tau dimensional comparison
+    ---------------------------------------------------------------------
+    Estimate d_eff and a cheap d_w surrogate on the depth-3 cluster
+    built under EACH alternative tau-rule.  This shows how the choice
+    of vortex structure modulates geometry-level quantities.
+    --------------------------------------------------------------------- */
+print("============================================================")$
+print("SECTION 20: Cross-tau dimensional comparison")$
+print("============================================================")$
+/* BFS volumes from given root in a snapshot's nbr_list. */
+snapshot_bfs_volumes(root, nbr_list, n_cells) := block(
+     [visited : makelist(false, ii, 1, n_cells),
+      dist : makelist(-1, ii, 1, n_cells),
+      queue : [root], v, j, max_d : 0, sizes],
+     visited[root] : true, dist[root] : 0,
+     while length(queue) > 0 do (
+         v : first(queue), queue : rest(queue),
+         for j in nbr_list[v] do
+             if not visited[j] then (
+                 visited[j] : true,
+                 dist[j] : dist[v] + 1,
+                 if dist[j] > max_d then max_d : dist[j],
+                 queue : endcons(j, queue))),
+     sizes : makelist(0, ii, 0, max_d),
+     for ii : 1 thru n_cells do
+         if dist[ii] >= 0 then
+             sizes[dist[ii] + 1] : sizes[dist[ii] + 1] + 1,
+     for r : 2 thru length(sizes) do
+         sizes[r] : sizes[r] + sizes[r-1],
+     sizes) $
+tau_dim_results : [] $
+for tp in tau_panel do block(
+     [label : tp[1], tau_fn : tp[2], snap, vols, n_c, nbrlist, root,
+      xs, ys, fit, d_eff_tau, r],
+     snap : build_cluster_tau(tau_fn, TAU_SURVEY_DEPTH),
+     n_c : snap[1], nbrlist : snap[5], root : snap[6],
+     vols : snapshot_bfs_volumes(root, nbrlist, n_c),
+     d_eff_tau : 0.0,
+     if length(vols) >= 4 then block(
+         [xs : [], ys : []],
+         for r : 2 thru length(vols) - 1 do (
+             xs : endcons(float(log(r - 1)), xs),
+             ys : endcons(float(log(vols[r])), ys)),
+         fit : log_log_fit_basic(xs, ys),
+         d_eff_tau : fit[1]),
+     print("  tau =", label,
+           "  N=", n_c,
+           "  BFS-radius=", length(vols) - 1,
+           "  vols(last)=", last(vols),
+           "  d_eff~", d_eff_tau),
+     tau_dim_results : endcons([label, n_c, d_eff_tau], tau_dim_results)) $
+/* Identify the tau-rule with the most strongly fractional d_eff
+    (i.e. closest to the predicted 2.5 midpoint of the (2,3) window). */
+best_dim_label : "" $
+best_dim_dist  : 1000 $
+for r in tau_dim_results do block(
+     [d : abs(r[3] - 2.5)],
+     if r[3] > 0 and d < best_dim_dist then (
+         best_dim_dist : d,
+         best_dim_label : r[1])) $
+print("Most-fractional (closest to d_eff=2.5) tau-rule:",
+       best_dim_label,
+       "  |d_eff - 2.5| =", best_dim_dist)$
+/* ---------------------------------------------------------------------
+    SECTION 21.  Resistance distance and commute time (sample)
+    ---------------------------------------------------------------------
+    For a sample of pairs of nodes, estimate the effective resistance
+    R(u,v) via short random-walk-based commute time:
+        E[commute(u,v)] = 2 * |E| * R(u,v)
+    A scaling R(u,v) ~ dist(u,v)^(d_w - d_eff + 1) characterizes
+    transport on fractal graphs.  We test this on a few intra-sheet
+    pairs and a few cross-sheet pairs.
+    --------------------------------------------------------------------- */
+print("============================================================")$
+print("SECTION 21: Commute-time sampling")$
+print("============================================================")$
+/* First-hitting time of target starting from source. */
+hit_time(source, target, T_max) := block(
+     [v : source, t : 0, nb, r],
+     while v # target and t < T_max do (
+         nb : nbrs[v],
+         if length(nb) = 0 then return(-1),
+         r : random(length(nb)),
+         v : nb[r + 1],
+         t : t + 1),
+     if v = target then t else -1) $
+/* Estimate commute time via M_hit hitting-time samples (both directions). */
+commute_estimate(u, v, M_hit, T_max) := block(
+     [sum_uv : 0, sum_vu : 0, n_uv : 0, n_vu : 0, k, h],
+     for k : 1 thru M_hit do (
+         h : hit_time(u, v, T_max),
+         if h >= 0 then (sum_uv : sum_uv + h, n_uv : n_uv + 1)),
+     for k : 1 thru M_hit do (
+         h : hit_time(v, u, T_max),
+         if h >= 0 then (sum_vu : sum_vu + h, n_vu : n_vu + 1)),
+     if n_uv > 0 and n_vu > 0 then
+         float(sum_uv / n_uv + sum_vu / n_vu)
+     else -1.0) $
+/* Pick a few sample target nodes at varying BFS distances. */
+sample_targets : [] $
+for d_target : 1 thru min(BFS_DEPTH, 4) do block(
+     [found : 0, i],
+     for i : 1 thru N do
+         if found < 2 and dist_from_origin[i] = d_target then (
+             sample_targets : endcons([i, d_target], sample_targets),
+             found : found + 1)) $
+print("Commute-time samples from origin (subset):")$
+commute_data : [] $
+M_hit_sample : max(20, min(200, M_WALKS / 100)) $
+T_max_sample : max(100, T_STEPS) $
+for tp in sample_targets do block(
+     [v : tp[1], d : tp[2], ct, sh_v : cell_sheet[tp[1]]],
+     ct : commute_estimate(origin_id, v, M_hit_sample, T_max_sample),
+     if ct > 0 then (
+         commute_data : endcons([d, sh_v, ct], commute_data),
+         print("  target=", v, " dist=", d, " sheet=", sh_v,
+               " commute_est=", ct))) $
+/* Log-log fit of commute time vs distance. */
+if length(commute_data) >= 3 then block(
+     [xs : [], ys : [], pt, fit, slope, d_w_eff],
+     for pt in commute_data do
+         if first(pt) > 0 and third(pt) > 0 then (
+             xs : endcons(float(log(first(pt))), xs),
+             ys : endcons(float(log(third(pt))), ys)),
+     if length(xs) >= 3 then (
+         fit : log_log_fit_basic(xs, ys),
+         slope : fit[1],
+         /* For a fractal graph: commute(u,v) ~ |E| * R(u,v)
+            ~ dist(u,v)^(d_w - d_eff + 2).  Inverting:
+            d_w ~ d_eff + slope - 2.  But that's marginal here. */
+         print("Commute-time log-log slope =", slope),
+         print("  Interpretation: ~ dist^slope; for d_w > 2 expect slope > 1"))) $
+/* ---------------------------------------------------------------------
+    SECTION 22.  Summary report (was Section 10)
+    --------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------
+   SECTION 10.  Summary report
+   --------------------------------------------------------------------- */
+
+print("============================================================")$
+print("experiment.mac : summary")$
+print("============================================================")$
+print("Preset =", EXPERIMENT_PRESET,
+       " (BFS_DEPTH =", BFS_DEPTH,
+       ", M_WALKS =", M_WALKS,
+       ", T_STEPS =", T_STEPS,
+       ", T_CA =", T_CA, ")")$
+print("Cluster size N =", N)$
+print("Mean degree =", deg_mean,
+      " (5-regular target; lower at boundary)")$
+print("Sheets occupied =", sheet_set)$
+if eig_skipped then
+     print("Spectral gap = (skipped)")
+else
+     print("Spectral gap =", spec_gap)$
+print("d_eff estimate (BFS) =", d_eff_est)$
+print("d_eff estimate (BFS, full) =", d_eff_full)$
+if not eig_skipped then
+     print("d_spec estimate (DOS) =", d_spec_dos)$
+print("d_w   estimate (MSD) =", d_w_value)$
+print("d_spec estimate (P_0) =", d_spec_value)$
+if d_w_value > 0 then
+    print("d_spec (Alexander-Orbach) =",
+          float(2 * d_eff_est / d_w_value))$
+print("Vortex edges =", n_vortex_edges_in_cluster,
+      " / total edges =", apply("+", deg_list) / 2)$
+print("CA final population =", final_pop, "after", T_ca, "steps")$
+print("Rule panel: extinct=", n_extinct,
+       " still=", n_still,
+       " periodic=", n_period,
+       " growing=", n_growing,
+       " active=", n_active)$
+if length(best_rule) > 0 then
+     print("Most active panel rule:", best_rule[1],
+           "  max_pop =", best_rule[7])$
+print("Richest-holonomy tau-rule =", best_tau_label,
+       "  score =", best_tau_score)$
+print("Triangles in main cluster =", triangle_count)$
+print("Girth through origin =",
+       if girth_origin > 0 then girth_origin else "> 8")$
+print("Glider hunt: oscillators =", n_oscillators,
+       "  gliders =", n_gliders, " (trials =", length(glider_summary), ")")$
+print("Long cycles enumerated through origin:",
+       length(all_cycles_origin), " (up to length", LONG_LOOP_MAX, ")")$
+print("Cap-window cluster: N =", cap_N,
+       ", sheets =", cap_sheet_set)$
+if d_spec_kpm > 0 then
+     print("KPM-based d_spec ~", d_spec_kpm)$
+print("Most-fractional tau-rule:", best_dim_label,
+       "  |d_eff - 2.5| =", best_dim_dist)$
+print("------------------------------------------------------------")$
+print("Caveats:")$
+print("  * The cluster is small (depth-2 BFS); dimension fits are")$
+print("    indicative, not precise.  For publication-quality numbers")$
+print("    one wants thousands of cells and KPM-based DOS analysis.")$
+print("  * The tau_rule used here (vortex on every 3rd edge) is a")$
+print("    didactic choice; replacing it with the cut-and-project")$
+print("    window of idea.md Section 2.4 yields the rigorous regime.")$
+print("  * Same-orientation tiling is geometrically frustrated; this")$
+print("    experiment lets the sheet index absorb the angular deficit,")$
+print("    consistent with the multi-sheeted construction.")$
+print("============================================================")$
+print("experiment.mac : done.")$
+print("============================================================")$

@@ -1,0 +1,424 @@
+
+debugmode(true)
+                                     true
+load("analysis.mac")
+============================================================ 
+analysis.mac : Multi-Sheeted Pentagon Tiling Analysis 
+============================================================ 
+P1: phi^2 - (phi+1) = 0 
+P2: 1/phi - (phi-1) = 0 
+P4: phi*(phi-1) - 1 = 0 
+P6a: phi + psi - 1 = 0   (Vieta: sum of roots of x^2-x-1) 
+P6b: phi*psi - (-1) = 0   (Vieta: product of roots) 
+P7: phi^2 + psi^2 - 3 = 0   (trace of phi^2 in Q(sqrt(5))) 
+                            2
+Minimal polynomial of phi: x  - x - 1   value at phi: 0 
+                            value at psi: 0   (both roots) 
+Norm test: qnorm(phi) = - 1 
+                     (expected -1 since phi*(1-phi) = -1; i.e. phi is a unit). 
+Trace test: qtrace(phi) = 1   (expected 1 since phi + psi = 1) 
+Fibonacci-phi identity check (phi^n = F_n*phi + F_{n-1}): 
+  n = 2 : phi^n - (F_n*phi + F_{n-1}) = 0 
+  n = 3 : phi^n - (F_n*phi + F_{n-1}) = 0 
+  n = 4 : phi^n - (F_n*phi + F_{n-1}) = 0 
+  n = 5 : phi^n - (F_n*phi + F_{n-1}) = 0 
+  n = 6 : phi^n - (F_n*phi + F_{n-1}) = 0 
+  n = 7 : phi^n - (F_n*phi + F_{n-1}) = 0 
+  n = 8 : phi^n - (F_n*phi + F_{n-1}) = 0 
+Binet formula check F_n = (phi^n - psi^n)/sqrt(5): 
+  n = 1 : F_n = 1 , Binet = 1 , diff = 0 
+  n = 2 : F_n = 1 , Binet = 1 , diff = 0 
+  n = 3 : F_n = 2 , Binet = 2 , diff = 0 
+  n = 4 : F_n = 3 , Binet = 3 , diff = 0 
+  n = 5 : F_n = 5 , Binet = 5 , diff = 0 
+  n = 6 : F_n = 8 , Binet = 8 , diff = 0 
+  n = 7 : F_n = 13 , Binet = 13 , diff = 0 
+  n = 8 : F_n = 21 , Binet = 21 , diff = 0 
+                                             3 %pi
+Interior angle of regular pentagon: 3*pi/5 = -----  (108 deg) 
+                                               5
+                                    2 %pi
+Exterior angle of regular pentagon: -----  (72 deg, equals central angle) 
+                                      5
+                                   2 %pi
+Central angle of regular pentagon: -----  (72 deg) 
+                                     5
+                                     %pi
+Angular deficit with 3 pentagons:    ---  (expected pi/5 = 36 deg) 
+                                      5
+                                     2 %pi
+Angular excess with 4 pentagons:     -----  (expected 2*pi/5 = 72 deg) 
+                                       5
+                                                       3 %pi
+Sum of interior angles of pentagon = 3 %pi , average = ----- 
+                                                         5
+                                                           (must equal 3*pi/5) 
+10 * (interior angle) = 6 %pi  =  3 * 2*pi 
+k-pentagon loop closure analysis: 
+                3 %pi     3
+  k = 1 : sum = -----  =  -- * 2pi  --  open 
+                  5       10
+                6 %pi     3
+  k = 2 : sum = -----  =  - * 2pi  --  open 
+                  5       5
+                9 %pi     9
+  k = 3 : sum = -----  =  -- * 2pi  --  open 
+                  5       10
+                12 %pi     6
+  k = 4 : sum = ------  =  - * 2pi  --  open 
+                  5        5
+                          3
+  k = 5 : sum = 3 %pi  =  - * 2pi  --  CLOSES 
+                          2
+                18 %pi     9
+  k = 6 : sum = ------  =  - * 2pi  --  open 
+                  5        5
+                21 %pi     21
+  k = 7 : sum = ------  =  -- * 2pi  --  open 
+                  5        10
+                24 %pi     12
+  k = 8 : sum = ------  =  -- * 2pi  --  open 
+                  5        5
+                27 %pi     27
+  k = 9 : sum = ------  =  -- * 2pi  --  open 
+                  5        10
+  k = 10 : sum = 6 %pi  =  3 * 2pi  --  CLOSES 
+                 33 %pi     33
+  k = 11 : sum = ------  =  -- * 2pi  --  open 
+                   5        10
+                 36 %pi     18
+  k = 12 : sum = ------  =  -- * 2pi  --  open 
+                   5        5
+Smallest k with k*theta = integer * 2*pi:  k = 10 
+                                           (the spinor double-cover signature) 
+                                  4    3    2
+Cyclotomic polynomial Phi_5(x) = x  + x  + x  + x + 1 
+Check 2*cos(72 deg)  - (sqrt(5)-1)/2  ~ 0.0 
+Check 2*cos(144 deg) - (-(sqrt(5)+1)/2) ~ 2.220446049250313E-16 
+                                                4 %pi          2 %pi
+Sum of all 5th roots of unity (symbolic): 2 cos(-----) + 2 cos(-----) + 1 
+                                                  5              5
+Sum of all 5th roots of unity (numeric):  2.220446049250313E-16  (expected 0) 
+                                                      4 %pi          2 %pi
+Sum of primitive 5th roots of unity (symbolic): 2 cos(-----) + 2 cos(-----) 
+                                                        5              5
+Sum of primitive 5th roots of unity (numeric):  - 0.9999999999999998 
+                                   (expected -1, the coefficient sum of Phi_5) 
+Product of primitive 5th roots of unity: 1  (expected 1) 
+Gaussian period eta_0 = zeta + zeta^4 numerically = 0.618033988749895 
+                                              ~ 2*cos(72) = 0.6180339887498949 
+Gaussian period eta_1 = zeta^2 + zeta^3 numerically = 
+(- 2.220446049250313E-16 %i) - 1.618033988749895  ~ 2*cos(144) = 
+- 1.618033988749894 
+eta_0 + eta_1 ~ (- 2.220446049250313E-16 %i) - 0.9999999999999998 
+                                                                 (expected -1) 
+eta_0 * eta_1 ~ 2.775557561562891E-16 %i - 1.0  (expected -1) 
+cos(72) - (phi-1)/2 = 0   (expected 0) 
+cos(72) - 1/(2*phi) = 0   (expected 0) 
+cos(36) - phi/2 = 0   (expected 0) 
+cos^2(72) + sin^2(72) = 1  (expected 1) 
+cos^2(36) + sin^2(36) = 1  (expected 1) 
+2 cos^2(36) - 1 - cos(72) = 0  (expected 0) 
+det(R72) = 1  (expected 1) 
+          sqrt(5) - 1
+tr(R72) = -----------  = 2*cos(72) = 1/phi numerically 0.6180339887498949 
+               2
+                     [ 1  0 ]
+R72^5 (simplified) = [      ] 
+                     [ 0  1 ]
+                      [ 0.0  0.0 ]
+R72^5 - I (numeric) = [          ] 
+                      [ 0.0  0.0 ]
+Order check: R72^k should be nontrivial for k = 1..4. 
+  k = 1 : tr(R^k) = 0.6180339887498949  ~ 2*cos( 1 *72) = 0.6180339887498949 
+  k = 2 : tr(R^k) = - 1.618033988749895  ~ 2*cos( 2 *72) = - 1.618033988749894 
+  k = 3 : tr(R^k) = - 1.618033988749895  ~ 2*cos( 3 *72) = - 1.618033988749895 
+  k = 4 : tr(R^k) = 0.6180339887498949  ~ 2*cos( 4 *72) = 0.6180339887498945 
+                                         [ 0  0 ]
+R^2 . R^3 - R^5 (should be zero matrix): [      ] 
+                                         [ 0  0 ]
+Z_2 holonomy of single vortex loop: 1  (expected 1, i.e. tau = -1) 
+Z_2 holonomy of double vortex loop: 0  (expected 0, fiber closes) 
+Spinor loop order in Z_2 (single vortex): 2  (expected 2 -- the double cover) 
+Z_5 holonomy of single vortex loop: 1  (fractional/anyonic) 
+Z_5 loop order required to close fiber: 5  (expected 5) 
+Verified: order_Zn(1, n) divides n for n = 2..10. 
+Order(g, n) = n/gcd(g,n) verification: 
+  All g in Z_n satisfy order(g) = n/gcd(g,n) for n=2..8. 
+Composite holonomy example (G = Z_5): 
+  Loop A holonomy =  3 
+  Loop B holonomy =  2 
+  Composite (A then B) = 0 ,  Sum (A) + (B) mod 5 = 0 
+d_spec(d_eff, d_w=2) - d_eff = 0   (ordinary diffusion saturates A-O) 
+                    2 d_eff
+d/d(d_w) d_spec = - -------   -- negative for d_eff > 0, d_w > 0 
+                        2
+                     d_w
+                     2
+d/d(d_eff) d_spec = ---   -- positive for d_w > 0 
+                    d_w
+MSD exponent at d_w = 2 (normal): 1  (expected 1: linear in t) 
+MSD exponent at d_w = 2.5: 0.8  (sub-diffusive: < 1) 
+Return-probability decay exponent at d_spec=2: 1  (1/t decay) 
+Return-probability decay exponent at d_spec=1.5: 0.75 
+Dimension sanity table (Alexander-Orbach): 
+  d_eff = 2.5  d_w = 2.0  => d_spec = 2.5 
+                                          (d_spec >= d_eff: not sub-diffusive) 
+  d_eff = 2.5  d_w = 2.5  => d_spec = 2.0   (d_spec < d_eff: sub-diffusive, OK)
+                                                                               
+  d_eff = 2.5  d_w = 3.0  => d_spec = 1.666666666666666 
+                                           (d_spec < d_eff: sub-diffusive, OK) 
+  d_eff = 2.8  d_w = 3.2  => d_spec = 1.749999999999999 
+                                           (d_spec < d_eff: sub-diffusive, OK) 
+  d_eff = 2.2  d_w = 2.4  => d_spec = 1.833333333333333 
+                                           (d_spec < d_eff: sub-diffusive, OK) 
+Sierpinski-gasket reference values: 
+  d_eff  = 1.584962500721156   (= log 3 / log 2) 
+  d_w    = 2.321928094887362   (= log 5 / log 2) 
+  d_spec = 1.36521238897197   (= 2*log 3 / log 5 ~ 1.365) 
+in_paper_regime(2.5, 2.4) = true 
+in_paper_regime(2.0, 2.0) = false  (should be false; boundary) 
+in_paper_regime(2.5, 1.9) = false  (false: d_w too small) 
+in_paper_regime(3.1, 2.5) = false  (false: d_eff too large) 
+Dimensional flow interpolator (UV=d_eff, IR=d_spec): 
+  t = 0.1 : d_spec(t) = 2.492039866999334 
+  t = 1 : d_spec(t) = 2.423869934428767 
+  t = 10 : d_spec(t) = 1.994303552937153 
+  t = 100 : d_spec(t) = 1.70003631994381 
+                    5
+charpoly(C5) = 1 - x  
+                     4    3    2
+x^5 - 1 =  (x - 1) (x  + x  + x  + x + 1) 
+                                    [ 0  0  0  0  0 ]
+                                    [               ]
+                                    [ 0  0  0  0  0 ]
+                                    [               ]
+C5^5 - I_5 (should be zero matrix): [ 0  0  0  0  0 ] 
+                                    [               ]
+                                    [ 0  0  0  0  0 ]
+                                    [               ]
+                                    [ 0  0  0  0  0 ]
+                                     [ 0 ]
+                                     [   ]
+                                     [ 0 ]
+                                     [   ]
+C5 . (1,1,1,1,1)^T - (1,1,1,1,1)^T = [ 0 ]  (should be zero column) 
+                                     [   ]
+                                     [ 0 ]
+                                     [   ]
+                                     [ 0 ]
+            [ 1  0  0  0  0 ]
+            [               ]
+            [ 0  1  0  0  0 ]
+            [               ]
+C5 . C5^T = [ 0  0  1  0  0 ]   (should be I_5; C5 is orthogonal) 
+            [               ]
+            [ 0  0  0  1  0 ]
+            [               ]
+            [ 0  0  0  0  1 ]
+Ambient dim = 5;  E_|| = 2D physical;  E_perp = 3D (including the 
+diagonal direction).  Local finiteness follows from the bounded 
+acceptance window W subset E_perp. 
+                     4
+||pi_perp(e_1)||^2 = -  (= 4/5) 
+                     5
+Admitted with rho^2 = 1?   true 
+                                          [ 1  1  1  1  1 ]
+                                          [ -  -  -  -  - ]
+                                          [ 5  5  5  5  5 ]
+                                          [               ]
+                                          [ 1  1  1  1  1 ]
+                                          [ -  -  -  -  - ]
+                                          [ 5  5  5  5  5 ]
+                                          [               ]
+                                          [ 1  1  1  1  1 ]
+Projector onto diagonal P_diag = (1/5)*J: [ -  -  -  -  - ] 
+                                          [ 5  5  5  5  5 ]
+                                          [               ]
+                                          [ 1  1  1  1  1 ]
+                                          [ -  -  -  -  - ]
+                                          [ 5  5  5  5  5 ]
+                                          [               ]
+                                          [ 1  1  1  1  1 ]
+                                          [ -  -  -  -  - ]
+                                          [ 5  5  5  5  5 ]
+Projectors are idempotent: P_diag^2 = P_diag, P_perp^2 = P_perp. 
+Projectors are orthogonal: P_diag * P_perp = 0. 
+Projectors are complete: P_diag + P_perp = I_5. 
+dim(orthogonal complement of diagonal) = 4 
+ (= 4; will split into 2D physical + 2D perp, 
+with diagonal folded into perp for a 3D window) 
+Number of binary outer-totalistic 5-neighbor rules = 4096  (= 2^12 = 4096) 
+For reference: 4-neighbor OT rules = 1024  (=2^10 = 1024) 
+              8-neighbor OT rules = 262144  (=2^18 = 262144) 
+5-regular fully totalistic rules = 128  (= 2^7 = 128, much smaller subset) 
+5-regular fully general binary rules = 18446744073709551616 
+                                                        (= 2^64, astronomical) 
+Sanity (q=2, k=5): 4096  (must equal 4096) 
+                                          sqrt(5) + 3           sqrt(5) + 3
+Pentagon diagonal-to-side ratio squared = ----------- , phi^2 = ----------- 
+                                               2                     2
+                                                                    , diff = 0 
+                                      2
+Circumradius (unit side) R = --------------------  ~ 0.8506508083520399 
+                             sqrt(10 - 2 sqrt(5))
+                                                            (expected ~0.8507) 
+                                  sqrt(5) + 1
+Apothem (unit side)      r = ----------------------  ~ 0.6881909602355868 
+                             2 sqrt(10 - 2 sqrt(5))
+                                                            (expected ~0.6882) 
+           4
+R/r = -----------  ~ 1.236067977499789 , expected 1/cos(36) = 1.236067977499789
+      sqrt(5) + 1
+                                                   = 2/phi = 1.236067977499789 
+                                   3/2
+                                  5    + 5
+Pentagon area (unit side): ----------------------  ~ 1.720477400588967 
+                           4 sqrt(10 - 2 sqrt(5))
+                                                            (expected ~1.7205) 
+Area formula check vs (1/4) sqrt(25+10 sqrt 5): 1.720477400588967 vs 
+                                                1.720477400588967 , diff = 0.0 
+                                                 2
+Pentagram self-similarity factor: 1/phi^2 = -----------  = 2 - phi = 
+                                            sqrt(5) + 3
+                                                                   sqrt(5) - 3
+                                                                 - ----------- 
+                                                                        2
+phi * phi via integer pairs = [1, 1]   (expected [1, 1] since phi^2 = 1 + phi) 
+phi^3 via integer pairs = [1, 2]   (expected [1, 2] since phi^3 = 1 + 2 phi) 
+Z[phi]-form of phi^n (Fibonacci coefficients): 
+  phi^ 1  = [ 0 , 1 ]   expected = [F_{n-1}, F_n] = [ 0 , 1 ] 
+  phi^ 2  = [ 1 , 1 ]   expected = [F_{n-1}, F_n] = [ 1 , 1 ] 
+  phi^ 3  = [ 1 , 2 ]   expected = [F_{n-1}, F_n] = [ 1 , 2 ] 
+  phi^ 4  = [ 2 , 3 ]   expected = [F_{n-1}, F_n] = [ 2 , 3 ] 
+  phi^ 5  = [ 3 , 5 ]   expected = [F_{n-1}, F_n] = [ 3 , 5 ] 
+  phi^ 6  = [ 5 , 8 ]   expected = [F_{n-1}, F_n] = [ 5 , 8 ] 
+  phi^ 7  = [ 8 , 13 ]   expected = [F_{n-1}, F_n] = [ 8 , 13 ] 
+Norm formula check (Z[phi]): 
+  N(phi^ 1 ) =  - 1 ,  via qnorm = - 1 
+  N(phi^ 2 ) =  1 ,  via qnorm = 1 
+  N(phi^ 3 ) =  - 1 ,  via qnorm = - 1 
+  N(phi^ 4 ) =  1 ,  via qnorm = 1 
+  N(phi^ 5 ) =  - 1 ,  via qnorm = - 1 
+Norm of phi^n = (-1)^n test: 
+  n = 1 :  N(phi^n) = - 1 ,  expected (-1)^n = - 1 
+  n = 2 :  N(phi^n) = 1 ,  expected (-1)^n = 1 
+  n = 3 :  N(phi^n) = - 1 ,  expected (-1)^n = - 1 
+  n = 4 :  N(phi^n) = 1 ,  expected (-1)^n = 1 
+  n = 5 :  N(phi^n) = - 1 ,  expected (-1)^n = - 1 
+  n = 6 :  N(phi^n) = 1 ,  expected (-1)^n = 1 
+  n = 7 :  N(phi^n) = - 1 ,  expected (-1)^n = - 1 
+                            [ 1  0 ]
+S0^2 (reflection squared) = [      ]  (expected I) 
+                            [ 0  1 ]
+det(S0) = - 1   (expected -1, orientation-reversing) 
+S0 . R72 . S0 - R72^4 (should be zero matrix): 
+   [ 0  0 ]
+   [      ] 
+   [ 0  0 ]
+           [ 0.0  0.0 ]
+  numeric: [          ] 
+           [ 0.0  0.0 ]
+|D_5| = 10   (5 rotations + 5 reflections) 
+D_5 conjugacy class sizes: 1 + 2 + 2 + 5 = 10   (4 classes, sum = |D_5|) 
+D_5 irrep dim^2 sum: 1 + 1 + 4 + 4 = 10  (= |D_5|, OK) 
+Synthetic volume samples (c=2.5, d_eff=2.5): 
+  r       : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] 
+  V(r)    : [2.5, 14.14213562373095, 38.97114317029973, 80.0, 
+139.7542485937369, 220.454076850486, 324.1045356054124, 452.5483399593906, 
+607.5, 790.5694150420952] 
+  log-log slope V(10)/V(1) = 2.499999999999999  (expected 2.5) 
+MSD model samples (D=1, d_w=2.5): 
+  t = 1 :  MSD = 1.0 ,  exponent 2/d_w = 0.8 
+  t = 10 :  MSD = 6.309573444801934 ,  exponent 2/d_w = 0.8 
+  t = 100 :  MSD = 39.81071705534975 ,  exponent 2/d_w = 0.8 
+  t = 1000 :  MSD = 251.188643150958 ,  exponent 2/d_w = 0.8 
+Return-probability model samples (A=1, d_spec=1.7): 
+  t = 1 :  P_0(t) = 1.0 ,  exponent -d_spec/2 = - 0.85 
+  t = 10 :  P_0(t) = 0.1412537544622754 ,  exponent -d_spec/2 = - 0.85 
+  t = 100 :  P_0(t) = 0.01995262314968879 ,  exponent -d_spec/2 = - 0.85 
+  t = 1000 :  P_0(t) = 0.002818382931264455 ,  exponent -d_spec/2 = - 0.85 
+DOS model samples (B=1, d_spec=1.7): 
+  lambda = 0.001 :  rho(lam) = 2.818382931264454 ,  exponent d_spec/2 - 1 = 
+                                                                        - 0.15 
+  lambda = 0.01 :  rho(lam) = 1.995262314968879 ,  exponent d_spec/2 - 1 = 
+                                                                        - 0.15 
+  lambda = 0.1 :  rho(lam) = 1.412537544622754 ,  exponent d_spec/2 - 1 = 
+                                                                        - 0.15 
+  lambda = 1 :  rho(lam) = 1.0 ,  exponent d_spec/2 - 1 = - 0.15 
+DOS qualitative behavior as lambda -> 0+: 
+  d_spec < 2:  rho diverges (sub-diffusive, infrared-singular) 
+  d_spec = 2:  rho -> const (marginal) 
+  d_spec > 2:  rho vanishes (super-diffusive) 
+Star-cluster Laplacian L = D - A: 
+[  5   - 1  - 1  - 1  - 1  - 1 ]
+[                              ]
+[ - 1   1    0    0    0    0  ]
+[                              ]
+[ - 1   0    1    0    0    0  ]
+[                              ] 
+[ - 1   0    0    1    0    0  ]
+[                              ]
+[ - 1   0    0    0    1    0  ]
+[                              ]
+[ - 1   0    0    0    0    1  ]
+                      [ 0 ]
+                      [   ]
+                      [ 0 ]
+                      [   ]
+                      [ 0 ]
+L . (1,1,1,1,1,1)^T = [   ]  (should be zero column: graph is connected) 
+                      [ 0 ]
+                      [   ]
+                      [ 0 ]
+                      [   ]
+                      [ 0 ]
+                                      4
+charpoly(L_star) = (lam - 6) (lam - 1)  lam 
+charpoly - expected (lam)(lam-1)^4(lam-6): 0 
+Spectrum of L_star = {0, 1, 1, 1, 1, 6}  (confirmed) 
+Spectral gap of star cluster = 1  (positive => connected) 
+                                           5          4         3         2
+charpoly(L_C5)  (cycle on 5 nodes) = (- lam ) + 10 lam  - 35 lam  + 50 lam
+                                                                      - 25 lam 
+Expected C_5 eigenvalues: 0, 2 - 2 cos(72) (twice), 2 - 2 cos(144) (twice). 
+Numerically: [0.0, 1.381966011250105, 1.381966011250105, 3.618033988749895, 
+                                                            3.618033988749895] 
+Spectral gap of C_5 ~ 1.381966011250105 
+------------------------------------------------------------ 
+All symbolic identities verified: 
+  * phi^2 = phi + 1, 1/phi = phi - 1, phi*(phi-1) = 1 
+  * Minimal polynomial of phi:  x^2 - x - 1 
+  * Norm of phi over Q(sqrt(5)) = -1  (phi is a unit) 
+  * phi + psi = 1, phi*psi = -1  (Vieta) 
+  * Fibonacci recursion: phi^n = F_n*phi + F_{n-1} 
+  * Binet formula:  F_n = (phi^n - psi^n)/sqrt(5) 
+  * Interior angle of pentagon: 3*pi/5 
+  * Angular deficit (3 pents):  pi/5 
+  * Angular excess (4 pents):   2*pi/5 
+  * 10 pentagons accumulate 3 * 2*pi  -> spinor analogy 
+  * Phi_5(x) = x^4 + x^3 + x^2 + x + 1 
+  * Sum of all 5th roots = 0; sum of primitives = -1 
+  * Gaussian periods = 2*cos(72), 2*cos(144) 
+  * R72^5 = I exactly, det(R72) = 1, tr(R72) = 1/phi 
+  * cos(36) = phi/2, cos(72) = 1/(2*phi) 
+  * Z_2 holonomy: order 2  (spinor double cover) 
+  * Z_n holonomy: order divides n (anyonic generalization) 
+  * order(g, n) = n/gcd(g,n) for all g, n 
+  * d_spec = 2 d_eff / d_w  (Alexander-Orbach) 
+  * charpoly(C5) divisible by Phi_5(x)  (5-fold symmetry) 
+  * C5^5 = I_5;  C5 . C5^T = I_5  (orthogonal cyclic shift) 
+  * Cut-and-project projectors are idempotent, orthogonal, 
+    and complete (P_diag + P_perp = I) 
+  * Pentagon diagonal / side = phi 
+  * Pentagon area = (1/4) sqrt(25 + 10 sqrt 5) 
+  * Z[phi] integer multiplication verified 
+  * Norm N(phi^n) = (-1)^n  (every phi^n is a unit) 
+  * D_5 dihedral relations: S R S = R^{-1} 
+  * |D_5| = 10, sum of irrep dims^2 = 10 
+  * Star-cluster Laplacian: spectrum {0, 1, 1, 1, 1, 6} 
+  * 5-regular OT CA family has 4096 rules 
+============================================================ 
+analysis.mac : all checks passed. 
+============================================================ 
+                                 analysis.mac
