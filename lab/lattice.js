@@ -42,6 +42,13 @@ export function makeLattice({ radius = 3, groupOrder = 5 } = {}) {
       centroid: t.centroid,
       centroidF: vFloat(t.centroid),
       orient: t.orient,
+       // sigma: physical orientation bit for the pentagon (odd n-gon).
+       // A regular pentagon has C_5 rotational symmetry, so the 5 values
+       // of `orient` are all the same pentagon up to relabeling of its
+       // vertices. The genuine orientation degree of freedom is the
+       // up/down bipartition: every edge-crossing flips it.
+       // The lattice is bipartite under sigma, so it equals depth mod 2.
+       sigma: depth & 1,
       sheet: t.sheet,
       depth,
       verts,

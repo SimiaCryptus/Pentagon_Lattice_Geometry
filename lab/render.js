@@ -319,8 +319,11 @@
           val = t.sheet;
           modulus = Math.max(this.lattice.groupOrder, 1);
         } else if (opts.colorMode === "orient") {
-          val = t.orient;
-          modulus = 5;
+         // For pentagons, the physically meaningful orientation is the
+         // up/down sigma bit, not the 5-valued edge-frame label `orient`.
+         // See lattice.js for the rationale.
+         val = t.sigma;
+         modulus = 2;
         } else if (opts.colorMode === "depth") {
           val = t.depth;
           modulus = Math.max(this.lattice.radius + 1, 1);

@@ -19,9 +19,12 @@
     html.push(kv("Sheet",
       `<span class="pill sheet">s${tile.sheet}</span>
        <span style="color:var(--muted);font-size:11px">mod ${lattice.groupOrder}</span>`));
-    html.push(kv("Orientation",
-      `<span class="pill">o${tile.orient}</span>
-       <span style="color:var(--muted);font-size:11px">× 72°</span>`));
+     html.push(kv("Orientation σ",
+       `<span class="pill">${tile.sigma === 0 ? "↑" : "↓"}</span>
+        <span style="color:var(--muted);font-size:11px">Z₂ bipartition (odd n-gon)</span>`));
+     html.push(kv("Edge frame",
+       `<span class="pill">f${tile.orient}</span>
+        <span style="color:var(--muted);font-size:11px">vertex-labeling ∈ Z₅, not a physical rotation</span>`));
   
     // --- Centroid ---
     html.push(`<div class="section">Centroid</div>`);

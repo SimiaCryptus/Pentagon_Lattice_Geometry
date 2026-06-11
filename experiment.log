@@ -3,375 +3,2820 @@ debugmode(true)
                                      true
 load("experiment.mac")
 ============================================================ 
-experiment.mac : Multi-Sheeted Pentagon Tiling Experiments 
+experiment.mac : Multi-Sheeted N-Gon Tiling Experiments 
 ============================================================ 
+------------------------------------------------------------ 
+PARAMETERIZATION:  N_GON = 5 
+------------------------------------------------------------ 
+  Interior angle = 108.0 deg 
+  Flat-vertex count k_flat = 3 
+  Angular deficit = 36.0 deg 
+  Loop-closure index k_loop = 10 
+  Natural fiber group order = 10 
+  Fiber groups for holonomy survey: [2, 3, 4, 5, 6, 10] 
 Configuration: 
-  preset    = huge 
-  BFS_DEPTH = 5 
-  M_WALKS   = 20000 
-  T_STEPS   = 500 
-  T_CA      = 64 
-  SKIP_EIG  = true 
-  EIG_MAX_N = 3000 
-  MSD fit window t in [ 2 , 5 ] 
-  P_0 fit window t in [ 2 , 10 ] (even t) 
-  KPM_MOMENTS = 256 
-  KPM_SAMPLES = 24 
-  LONG_LOOP_MAX = 8 
+  preset    = medium 
+  TAU_MODE  = signed3 
+  BFS_DEPTH = 3 
+  M_WALKS   = 1000 
+  T_STEPS   = 60 
+  T_CA      = 16 
+  SKIP_EIG  = false 
+  EIG_MAX_N = 1500 
+  MSD fit window t in [ 2 , 4 ] 
+  P_0 fit window t in [ 2 , 6 ] (even t) 
+  KPM_MOMENTS = 128 
+  KPM_SAMPLES = 16 
+  LONG_LOOP_MAX = 7 
+  N_GON = 5 
 Section 1: Q(sqrt(5)) arithmetic primitives OK. 
-Section 2: Pentagon geometry primitives OK. 
-Section 3: created origin pentagon, id = 1 
-Section 3: after BFS depth 5 , cell_count = 712 
+Section 2: N-gon geometry primitives OK (N_GON = 5 ). 
+Section 3: created origin 5 -gon, id = 1   (TAU_MODE = signed3 ) 
+Section 3: after BFS depth 3 , cell_count = 156   (N_GON = 5 ) 
 First 5 cells (id, orient, sheet, #neighbors): 
-   1  orient= 0  sheet= 0  deg= 6 
-   2  orient= 0  sheet= 0  deg= 6 
-   3  orient= 0  sheet= 0  deg= 6 
-   4  orient= 0  sheet= 1  deg= 6 
-   5  orient= 0  sheet= 0  deg= 6 
-Degree stats: min = 1 , mean = 3.764044943820225 , max = 10 
-                                        (interior pentagons should have deg 5) 
-Sheets present in cluster: [0, 1, 2, 3, 4, 5] 
-Section 4: skipping eigendecomposition (SKIP_EIG = true , N = 712 , EIG_MAX_N =
-                                                                        3000 ) 
+   1  orient= 0  sheet= 0  deg= 5  (interior target: 5 ) 
+   2  orient= 0  sheet= - 1  deg= 6  (interior target: 5 ) 
+   3  orient= 0  sheet= 0  deg= 6  (interior target: 5 ) 
+   4  orient= 0  sheet= 1  deg= 6  (interior target: 5 ) 
+   5  orient= 0  sheet= - 1  deg= 6  (interior target: 5 ) 
+Degree stats: min = 1 , mean = 1.987179487179487 , max = 6  (interior 5 
+                                                     -gons should have deg 5 ) 
+Sheets present in cluster: [- 3, - 2, - 1, 0, 1, 2, 3] 
+Section 4: Laplacian symmetry residual = 0 
+Laplacian row-sum max |.| = 0  (should be 0) 
+Number of eigenvalues: 156  (expected N = 156 ) 
+Smallest 5 eigenvalues: [1.576670440969713E-15, 0.02655656676437887, 
+                 0.0265565667643798, 0.02655656676438025, 0.02655656676438025] 
+Largest 3 eigenvalues: [9.162277660168387, 8.589598019575208, 
+                                                            8.589598019575197] 
+Spectral gap (algebraic connectivity) = 0.02655656676437887 
+Spectral CDF samples [lambda, N(<=lambda)]: 
+   [0.4581138830084194, 25] 
+   [0.9162277660168388, 25] 
+   [1.832455532033677, 125] 
+   [2.748683298050516, 125] 
+   [3.664911064067355, 126] 
+Spectral-CDF least-squares slope ~ 0.9536450736271567 
+   => d_spec_estimate (DOS) ~ 1.907290147254313   (log-C = 3.795623095559256 ) 
 BFS cumulative volumes N(<=r) from origin: 
   r = 0 : N = 1 
-  r = 1 : N = 7 
+  r = 1 : N = 6 
   r = 2 : N = 31 
-  r = 3 : N = 107 
-  r = 4 : N = 327 
-  r = 5 : N = 712 
-Log-log fit (interior, r in [ 1 , 4 ]): 
-  d_eff estimate = 2.723876533936081 
-  prefactor log C = 1.796515026707292   =>  C = 6.028601298532713 
-Log-log fit (full, r in [1, 5 ]): 
-  d_eff (full) = 2.880315945587103   log-C = 1.724255092841976 
-Section 6: running 20000 random walks of length 500 from origin id = 1 
-MSD at t = 1, 5, 10, 20: 1.0 11.60355 13.84165 14.69315 
-P_0 at t = 2, 4, 10, 20: 0.16395 0.0597 0.0084 0.0036 
-MSD early-time log-log slope = 1.364992991114656   =>  d_w estimate = 
-                                                             1.465208988631359 
-MSD late-time log-log slope = 0.0109790699893972 
+  r = 3 : N = 156 
+Log-log fit (interior, r in [ 1 , 2 ]): 
+  d_eff estimate = 2.369233809665719 
+  prefactor log C = 1.791759469228055   =>  C = 6.0 
+Log-log fit (full, r in [1, 3 ]): 
+  d_eff (full) = 2.901424256974228   log-C = 1.69231609809373 
+Section 6: running 1000 random walks of length 60 from origin id = 1 
+MSD samples [t, <d^2>]: [[1, 1.0], [5, 7.288], [10, 3.912], [20, 3.852]] 
+P_0 samples [t, P_0(t)]: [[2, 0.159], [4, 0.059], [10, 0.022], [20, 0.037]] 
+MSD early-time log-log slope = 0.2624946305108721   =>  d_w estimate = 
+                                                             7.619203471353154 
+MSD late-time log-log slope = - 0.01668421079506389 
                                                (near 0 => boundary saturation) 
-P_0 early-time log-log slope = - 1.853922352137442   =>  d_spec estimate = 
-                                                             3.707844704274885 
+P_0 early-time log-log slope = - 1.406900310743001   =>  d_spec estimate = 
+                                                             2.813800621486002 
 ------------------------------------------------------------ 
 ------------------------------------------------------------ 
 Dimension estimates summary: 
-  d_eff   (BFS volume growth) ~ 2.723876533936081 
-  d_eff   (BFS, full range)   ~ 2.880315945587103 
-  d_w     (MSD scaling)       ~ 1.465208988631359 
-  d_spec  (P_0 decay, early)  ~ 3.707844704274885 
-  d_spec  (Alexander-Orbach 2*d_eff/d_w) ~ 3.718072377484435 
-  Direct vs AO discrepancy: 0.01022767320954987 
+  d_eff   (BFS volume growth) ~ 2.369233809665719 
+  d_eff   (BFS, full range)   ~ 2.901424256974228 
+  d_w     (MSD scaling)       ~ 7.619203471353154 
+  d_spec  (P_0 decay, early)  ~ 2.813800621486002 
+  d_spec  (DOS log-log)       ~ 1.907290147254313 
+  d_spec  (Alexander-Orbach 2*d_eff/d_w) ~ 0.6219111534620689 
+  Direct vs AO discrepancy: 2.191889468023934 
+OK: d_spec(DOS) < d_eff(BFS), consistent with sub-diffusion. 
 OK: d_eff in (2, 3), inside paper's predicted fractional window. 
 Note: these are small-cluster estimates; quantitative agreement 
 with the paper's predicted regime 2 < d_eff < 3 requires larger 
 clusters and the cut-and-project window for proper local finiteness. 
-Section 8: no 3-cycle through origin in cluster (typical for trees). 
-Longer cycles through origin (lengths 4-5): 16 found. 
-  Z_2 non-trivial holonomy loops: 0 / 16 
-  Z_5 non-trivial holonomy loops: 0 / 16 
-Vortex edges in cluster (sheet shift != 0): 446 
-Total edges in cluster: 1340 
-Vortex fraction = 0.3328358208955224 
+Section 8: no 3-cycle through origin in cluster. 
+Longer cycles through origin (lengths 4-5): 0 found. 
+Vortex edges in cluster (sheet shift != 0): 103 
+Total edges in cluster: 155 
+Vortex fraction = 0.6645161290322581 
 Per-sheet cell counts: 
-  sheet 0 : 196 cells 
-  sheet 1 : 194 cells 
-  sheet 2 : 165 cells 
-  sheet 3 : 110 cells 
-  sheet 4 : 41 cells 
-  sheet 5 : 6 cells 
+  sheet - 3 : 4 cells 
+  sheet - 2 : 20 cells 
+  sheet - 1 : 38 cells 
+  sheet 0 : 47 cells 
+  sheet 1 : 31 cells 
+  sheet 2 : 15 cells 
+  sheet 3 : 1 cells 
+Section 9: CA default rule B 2 /S 1 2   (n_int = 5 ) 
 Section 9: CA initial population = 3 
-CA population history (t = 0.. 64 ): 
+CA population history (t = 0.. 16 ): 
   t = 0  population = 3 
-  t = 1  population = 4 
-  t = 2  population = 4 
-  t = 3  population = 4 
-  t = 4  population = 4 
-  t = 5  population = 4 
-  t = 6  population = 4 
-  t = 7  population = 4 
-  t = 8  population = 4 
-  t = 9  population = 4 
-  t = 10  population = 4 
-  t = 11  population = 4 
-  t = 12  population = 4 
-  t = 13  population = 4 
-  t = 14  population = 4 
-  t = 15  population = 4 
-  t = 16  population = 4 
-  t = 17  population = 4 
-  t = 18  population = 4 
-  t = 19  population = 4 
-  t = 20  population = 4 
-  t = 21  population = 4 
-  t = 22  population = 4 
-  t = 23  population = 4 
-  t = 24  population = 4 
-  t = 25  population = 4 
-  t = 26  population = 4 
-  t = 27  population = 4 
-  t = 28  population = 4 
-  t = 29  population = 4 
-  t = 30  population = 4 
-  t = 31  population = 4 
-  t = 32  population = 4 
-  t = 33  population = 4 
-  t = 34  population = 4 
-  t = 35  population = 4 
-  t = 36  population = 4 
-  t = 37  population = 4 
-  t = 38  population = 4 
-  t = 39  population = 4 
-  t = 40  population = 4 
-  t = 41  population = 4 
-  t = 42  population = 4 
-  t = 43  population = 4 
-  t = 44  population = 4 
-  t = 45  population = 4 
-  t = 46  population = 4 
-  t = 47  population = 4 
-  t = 48  population = 4 
-  t = 49  population = 4 
-  t = 50  population = 4 
-  t = 51  population = 4 
-  t = 52  population = 4 
-  t = 53  population = 4 
-  t = 54  population = 4 
-  t = 55  population = 4 
-  t = 56  population = 4 
-  t = 57  population = 4 
-  t = 58  population = 4 
-  t = 59  population = 4 
-  t = 60  population = 4 
-  t = 61  population = 4 
-  t = 62  population = 4 
-  t = 63  population = 4 
-  t = 64  population = 4 
-CA final population = 4   (active) 
-Live cells per sheet at t = 64 : [[0, 3], [1, 1], [2, 0], [3, 0], [4, 0], 
-                                                                       [5, 0]] 
+  t = 1  population = 3 
+  t = 2  population = 3 
+  t = 3  population = 3 
+  t = 4  population = 3 
+  t = 5  population = 3 
+  t = 6  population = 3 
+  t = 7  population = 3 
+  t = 8  population = 3 
+  t = 9  population = 3 
+  t = 10  population = 3 
+  t = 11  population = 3 
+  t = 12  population = 3 
+  t = 13  population = 3 
+  t = 14  population = 3 
+  t = 15  population = 3 
+  t = 16  population = 3 
+CA final population = 3   (still life) 
+Live cells per sheet at t = 16 : [[- 3, 0], [- 2, 0], [- 1, 1], [0, 2], 
+                                                       [1, 0], [2, 0], [3, 0]] 
 ============================================================ 
 SECTION 10: Extended ruleset survey 
 ============================================================ 
 Panel seed population = 3 
-Panel run length T = 64 
+Panel run length T = 16 
  
-   B2/S12   fate= still   period= 1   transient= 1   max_pop= 4   final_pop= 4 
-   B2/S23   fate= period-2   period= 2   transient= 1   max_pop= 3   final_pop=
-                                                                             2 
+   B2/S12   fate= still   period= 1   transient= 0   max_pop= 3   final_pop= 3 
+   B2/S23   fate= extinct   period= 1   transient= 2   max_pop= 3   final_pop= 
+                                                                             0 
    B3/S23   fate= extinct   period= 1   transient= 2   max_pop= 3   final_pop= 
                                                                              0 
-   B2/S123   fate= still   period= 1   transient= 1   max_pop= 4   final_pop= 4
+   B2/S123   fate= still   period= 1   transient= 0   max_pop= 3   final_pop= 3
                                                                                
    B3/S123   fate= still   period= 1   transient= 0   max_pop= 3   final_pop= 3
                                                                                
-   B23/S23   fate= period-2   period= 2   transient= 1   max_pop= 3 
-                                                                  final_pop= 2 
-   B1/S12   fate= growing   period= 0   transient= 64   max_pop= 348 
-                                                                final_pop= 278 
-   B1/S1   fate= growing   period= 0   transient= 64   max_pop= 275 
-                                                                final_pop= 217 
-   B2/S3   fate= extinct   period= 1   transient= 2   max_pop= 3   final_pop= 0
+   B23/S23   fate= extinct   period= 1   transient= 2   max_pop= 3   final_pop=
+                                                                             0 
+   B1/S12   fate= extinct   period= 1   transient= 5   max_pop= 140 
+                                                                  final_pop= 0 
+   B1/S1   fate= extinct   period= 1   transient= 4   max_pop= 125   final_pop=
+                                                                             0 
+   B2/S3   fate= extinct   period= 1   transient= 1   max_pop= 3   final_pop= 0
                                                                                
    B3/S3   fate= extinct   period= 1   transient= 1   max_pop= 3   final_pop= 0
                                                                                
-   B24/S123   fate= still   period= 1   transient= 1   max_pop= 4   final_pop= 
-                                                                             4 
-   B4/S34   fate= extinct   period= 1   transient= 1   max_pop= 3   final_pop= 
-                                                                             0 
-   B12/S12   fate= growing   period= 0   transient= 64   max_pop= 427 
-                                                                final_pop= 343 
+   B22/S123   fate= still   period= 1   transient= 0   max_pop= 3   final_pop= 
+                                                                             3 
+   B2/S12   fate= still   period= 1   transient= 0   max_pop= 3   final_pop= 3 
+   B12/S12   fate= extinct   period= 1   transient= 5   max_pop= 140 
+                                                                  final_pop= 0 
    B3/S234   fate= extinct   period= 1   transient= 2   max_pop= 3   final_pop=
                                                                              0 
-   B2/S1234   fate= still   period= 1   transient= 1   max_pop= 4   final_pop= 
-                                                                             4 
+   B2/S1234   fate= still   period= 1   transient= 0   max_pop= 3   final_pop= 
+                                                                             3 
  
 Panel classification: 
-  extinct = 5   still = 5   periodic = 2   growing = 3   active = 0 
-Most active non-degenerate rule: B1/S12  with max_pop = 348  fate= growing 
+  extinct = 9   still = 6   periodic = 0   growing = 0   active = 0 
+Most active non-degenerate rule: B2/S12  with max_pop = 3  fate= still 
 ============================================================ 
 SECTION 11: Alternative tau-rule survey 
 ============================================================ 
-  tau = none      (flat)   cells= 56   sheets= 1   edges= done    vortex= done
-                                                              2               1
-                                  done
-                                      1
-   vfrac= if done  > 0 then float(-----) else 0   meanDeg= 3.75   cycles= 20 
-                 2                done
-                                      2
-  Z2nt= 0   Z3nt= 0   Z5nt= 0 
-  tau = every3    (default)   cells= 87   sheets= 4   edges= done    vortex= 
-                                                                 2
+  tau = none      (flat)   cells= 156   sheets= 1   edges= done    vortex= 
+                                                               2
                                        done
                                            1
 done    vfrac= if done  > 0 then float(-----) else 0   meanDeg= 
     1                 2                done
                                            2
-2.873563218390804   cycles= 12   Z2nt= 0   Z3nt= 0   Z5nt= 0 
-  tau = every2   cells= 97   sheets= 4   edges= done    vortex= done    vfrac= 
-                                                    2               1
-                        done
-                            1
-if done  > 0 then float(-----) else 0   meanDeg= 2.783505154639175   cycles= 8 
-       2                done
-                            2
-  Z2nt= 0   Z3nt= 0   Z5nt= 0 
-  tau = every5   cells= 87   sheets= 4   edges= done    vortex= done    vfrac= 
-                                                    2               1
-                        done
-                            1
-if done  > 0 then float(-----) else 0   meanDeg= 2.873563218390804   cycles= 12
-       2                done
-                            2
-   Z2nt= 0   Z3nt= 0   Z5nt= 0 
-  tau = k-parity   cells= 56   sheets= 4   edges= done    vortex= done  
-                                                      2               1
-                                 done
-                                     1
-  vfrac= if done  > 0 then float(-----) else 0   meanDeg= 3.75   cycles= 20 
-                2                done
-                                     2
-  Z2nt= 0   Z3nt= 0   Z5nt= 0 
-  tau = chiral   cells= 56   sheets= 4   edges= done    vortex= done    vfrac= 
-                                                    2               1
-                        done
-                            1
-if done  > 0 then float(-----) else 0   meanDeg= 3.75   cycles= 20   Z2nt= 0 
-       2                done
-                            2
-  Z3nt= 0   Z5nt= 0 
-  tau = signed-3   cells= 121   sheets= 7   edges= done    vortex= done  
+1.987179487179487   cycles= 0   holonomy_nontrivial= [0, 0, 0, 0, 0, 0] 
+  (groups= [2, 3, 4, 5, 6, 10] ) 
+  tau = every3    (default)   cells= 156   sheets= 4   edges= done    vortex= 
+                                                                  2
+                                       done
+                                           1
+done    vfrac= if done  > 0 then float(-----) else 0   meanDeg= 
+    1                 2                done
+                                           2
+1.987179487179487   cycles= 0   holonomy_nontrivial= [0, 0, 0, 0, 0, 0] 
+  (groups= [2, 3, 4, 5, 6, 10] ) 
+  tau = every2   cells= 156   sheets= 4   edges= done    vortex= done    vfrac=
+                                                     2               1
+                         done
+                             1
+ if done  > 0 then float(-----) else 0   meanDeg= 1.987179487179487   cycles= 0
+        2                done
+                             2
+   holonomy_nontrivial= [0, 0, 0, 0, 0, 0]   (groups= [2, 3, 4, 5, 6, 10] ) 
+  tau = every5   cells= 156   sheets= 4   edges= done    vortex= done    vfrac=
+                                                     2               1
+                         done
+                             1
+ if done  > 0 then float(-----) else 0   meanDeg= 1.987179487179487   cycles= 0
+        2                done
+                             2
+   holonomy_nontrivial= [0, 0, 0, 0, 0, 0]   (groups= [2, 3, 4, 5, 6, 10] ) 
+  tau = k-parity   cells= 156   sheets= 4   edges= done    vortex= done  
                                                        2               1
                                  done
                                      1
-  vfrac= if done  > 0 then float(-----) else 0   meanDeg= 2.396694214876033 
+  vfrac= if done  > 0 then float(-----) else 0   meanDeg= 1.987179487179487 
                 2                done
                                      2
-  cycles= 4   Z2nt= 0   Z3nt= 0   Z5nt= 0 
-  tau = fibonacci-mod8   cells= 90   sheets= 4   edges= done    vortex= done  
-                                                            2               1
+  cycles= 0   holonomy_nontrivial= [0, 0, 0, 0, 0, 0]   (groups= 
+[2, 3, 4, 5, 6, 10] ) 
+  tau = chiral   cells= 156   sheets= 4   edges= done    vortex= done    vfrac=
+                                                     2               1
+                         done
+                             1
+ if done  > 0 then float(-----) else 0   meanDeg= 1.987179487179487   cycles= 0
+        2                done
+                             2
+   holonomy_nontrivial= [0, 0, 0, 0, 0, 0]   (groups= [2, 3, 4, 5, 6, 10] ) 
+  tau = signed-3   cells= 156   sheets= 7   edges= done    vortex= done  
+                                                       2               1
                                  done
                                      1
-  vfrac= if done  > 0 then float(-----) else 0   meanDeg= 2.777777777777777 
+  vfrac= if done  > 0 then float(-----) else 0   meanDeg= 1.987179487179487 
                 2                done
                                      2
-  cycles= 12   Z2nt= 0   Z3nt= 0   Z5nt= 0 
+  cycles= 0   holonomy_nontrivial= [0, 0, 0, 0, 0, 0]   (groups= 
+[2, 3, 4, 5, 6, 10] ) 
+  tau = fibonacci-mod8   cells= 156   sheets= 4   edges= done    vortex= done  
+                                                             2               1
+                                 done
+                                     1
+  vfrac= if done  > 0 then float(-----) else 0   meanDeg= 1.987179487179487 
+                2                done
+                                     2
+  cycles= 0   holonomy_nontrivial= [0, 0, 0, 0, 0, 0]   (groups= 
+[2, 3, 4, 5, 6, 10] ) 
+  tau = every-n   cells= 156   sheets= 4   edges= done    vortex= done  
+                                                      2               1
+                                 done
+                                     1
+  vfrac= if done  > 0 then float(-----) else 0   meanDeg= 1.987179487179487 
+                2                done
+                                     2
+  cycles= 0   holonomy_nontrivial= [0, 0, 0, 0, 0, 0]   (groups= 
+[2, 3, 4, 5, 6, 10] ) 
+  tau = signed-n   cells= 156   sheets= 7   edges= done    vortex= done  
+                                                       2               1
+                                 done
+                                     1
+  vfrac= if done  > 0 then float(-----) else 0   meanDeg= 1.987179487179487 
+                2                done
+                                     2
+  cycles= 0   holonomy_nontrivial= [0, 0, 0, 0, 0, 0]   (groups= 
+[2, 3, 4, 5, 6, 10] ) 
+  tau = k-mod-n   cells= 156   sheets= 4   edges= done    vortex= done  
+                                                      2               1
+                                 done
+                                     1
+  vfrac= if done  > 0 then float(-----) else 0   meanDeg= 1.987179487179487 
+                2                done
+                                     2
+  cycles= 0   holonomy_nontrivial= [0, 0, 0, 0, 0, 0]   (groups= 
+[2, 3, 4, 5, 6, 10] ) 
+  tau = chiral-n   cells= 156   sheets= 4   edges= done    vortex= done  
+                                                       2               1
+                                 done
+                                     1
+  vfrac= if done  > 0 then float(-----) else 0   meanDeg= 1.987179487179487 
+                2                done
+                                     2
+  cycles= 0   holonomy_nontrivial= [0, 0, 0, 0, 0, 0]   (groups= 
+[2, 3, 4, 5, 6, 10] ) 
  
 Richest-holonomy tau-rule (sum of Z_2/Z_3/Z_5 non-trivial counts): 
                                                   none      (flat)   score = 0 
 ============================================================ 
 SECTION 12: Extended holonomy on main cluster 
 ============================================================ 
-Examining 16 long cycles in main cluster. 
-  Z_ 2 :  non-trivial = 0 / 16   residue distribution = [16, 0] 
-  Z_ 3 :  non-trivial = 0 / 16   residue distribution = [16, 0, 0] 
-  Z_ 4 :  non-trivial = 0 / 16   residue distribution = [16, 0, 0, 0] 
-  Z_ 5 :  non-trivial = 0 / 16   residue distribution = [16, 0, 0, 0, 0] 
-  Z_ 6 :  non-trivial = 0 / 16   residue distribution = [16, 0, 0, 0, 0, 0] 
-  Z_ 10 :  non-trivial = 0 / 16   residue distribution = 
-                                               [16, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
-Raw holonomy values (length 16 ): 
-  min = 0   max = 0   mean = 0.0 
-  histogram [value, count] = [[0, 16]] 
+Examining 0 long cycles in main cluster. 
+(no long cycles to analyze) 
 ============================================================ 
 SECTION 13: Structural patterns in main cluster 
 ============================================================ 
 Degree histogram [deg, count]: 
-   [1, 179] 
-   [2, 140] 
-   [3, 80] 
-   [4, 29] 
-   [5, 9] 
-   [6, 148] 
-   [7, 91] 
-   [8, 30] 
-   [9, 5] 
-   [10, 1] 
-Mean local clustering coefficient = 0.0  over 533 nodes (deg >= 2) 
+   [1, 125] 
+   [5, 1] 
+   [6, 30] 
+Mean local clustering coefficient = 0.0  over 31 nodes (deg >= 2) 
 Triangle count in main cluster = 0 
-Girth (shortest cycle) through origin = 4 
-Sheets present: [0, 1, 2, 3, 4, 5] 
+Girth (shortest cycle) through origin = > 8 
+Sheets present: [- 3, - 2, - 1, 0, 1, 2, 3] 
 Sheet-to-sheet edge matrix (rows=sheet_list, cols=sheet_list): 
-  sheet 0 : [317, 158, 0, 0, 0, 0] 
-  sheet 1 : [158, 275, 135, 0, 0, 0] 
-  sheet 2 : [0, 135, 210, 105, 0, 0] 
-  sheet 3 : [0, 0, 105, 80, 40, 0] 
-  sheet 4 : [0, 0, 0, 40, 12, 8] 
-  sheet 5 : [0, 0, 0, 0, 8, 0] 
-Inter-sheet (vortex) edges = 446  (cross-check vs Section 8: 446 ) 
+  sheet - 3 : [0, 4, 0, 0, 0, 0, 0] 
+  sheet - 2 : [4, 2, 22, 0, 0, 0, 0] 
+  sheet - 1 : [0, 22, 20, 26, 0, 0, 0] 
+  sheet 0 : [0, 0, 26, 20, 35, 0, 0] 
+  sheet 1 : [0, 0, 0, 35, 8, 15, 0] 
+  sheet 2 : [0, 0, 0, 0, 15, 2, 1] 
+  sheet 3 : [0, 0, 0, 0, 0, 1, 0] 
+Inter-sheet (vortex) edges = 103  (cross-check vs Section 8: 103 ) 
 ============================================================ 
 SECTION 14: Per-sheet sub-graph statistics 
 ============================================================ 
-  sheet 0 :  nodes= 196   intra-edges= 317   meanIntraDeg= 3.23469387755102 
-  sheet 1 :  nodes= 194   intra-edges= 275   meanIntraDeg= 2.835051546391752 
-  sheet 2 :  nodes= 165   intra-edges= 210   meanIntraDeg= 2.545454545454545 
-  sheet 3 :  nodes= 110   intra-edges= 80   meanIntraDeg= 1.454545454545454 
-  sheet 4 :  nodes= 41   intra-edges= 12   meanIntraDeg= 0.5853658536585366 
-  sheet 5 :  nodes= 6   intra-edges= 0   meanIntraDeg= 0.0 
-Sheet-population sequence: [[0, 196], [1, 194], [2, 165], [3, 110], [4, 41], 
-                                                                       [5, 6]] 
-  log-pop vs sheet-index slope = - 0.6428599810056431   => decay rate r = 
-                             0.5257865321634044   (geometric falloff if r < 1) 
+  sheet - 3 :  nodes= 4   intra-edges= 0   meanIntraDeg= 0.0 
+  sheet - 2 :  nodes= 20   intra-edges= 2   meanIntraDeg= 0.2 
+  sheet - 1 :  nodes= 38   intra-edges= 20   meanIntraDeg= 1.052631578947368 
+  sheet 0 :  nodes= 47   intra-edges= 20   meanIntraDeg= 0.851063829787234 
+  sheet 1 :  nodes= 31   intra-edges= 8   meanIntraDeg= 0.5161290322580645 
+  sheet 2 :  nodes= 15   intra-edges= 2   meanIntraDeg= 0.2666666666666666 
+  sheet 3 :  nodes= 1   intra-edges= 0   meanIntraDeg= 0.0 
+Sheet-population sequence: [[- 3, 4], [- 2, 20], [- 1, 38], [0, 47], [1, 31], 
+                                                              [2, 15], [3, 1]] 
+  log-pop vs sheet-index slope = - 0.176351649410874   => decay rate r = 
+                             0.8383231356618291   (geometric falloff if r < 1) 
 ============================================================ 
 SECTION 15: Glider / oscillator hunt 
 ============================================================ 
 Trying 5 rules x several seed shapes. 
-   B2/S12  seed= petal   period= 4   transient= 1   d_amp= 2.0   d_drift= 0.0 
-   B2/S12  seed= all5   period= 4   transient= 2   d_amp= 1.199999999999999 
-                                                                  d_drift= 0.0 
-   B2/S23  seed= triple   period= 2   transient= 1   d_amp= 0.0   d_drift= 0.0 
-   B2/S23  seed= petal   period= 4   transient= 1   d_amp= 2.0   d_drift= 0.0 
-   B2/S23  seed= all5   period= 4   transient= 1   d_amp= 2.0   d_drift= 0.0 
-   B2/S123  seed= petal   period= 4   transient= 1   d_amp= 2.0   d_drift= 0.0 
-   B2/S123  seed= all5   period= 4   transient= 5   d_amp= 0.4583333333333335 
-                                                                  d_drift= 0.0 
-   B23/S23  seed= triple   period= 2   transient= 1   d_amp= 0.0   d_drift= 0.0
-                                                                               
  
 Glider hunt summary: 
-  trials = 25   oscillators = 8   gliders = 5 
+  trials = 25   oscillators = 0   gliders = 0 
 ============================================================ 
 SECTION 16: Long-loop holonomy enumeration 
 ============================================================ 
-Enumerating simple cycles through origin up to length 8 ... 
-Total cycles through origin found: 2356 
-Cycle-length distribution [len, count]: 
-   [4, 12] 
-   [5, 4] 
-   [6, 142] 
-   [7, 206] 
-   [8, 1992] 
-Holonomy by fiber group on all cycles through origin: 
-  Z_ 2  non-trivial = 0 / 2356   residue dist = [2356, 0] 
-  Z_ 3  non-trivial = 0 / 2356   residue dist = [2356, 0, 0] 
-  Z_ 4  non-trivial = 0 / 2356   residue dist = [2356, 0, 0, 0] 
-  Z_ 5  non-trivial = 0 / 2356   residue dist = [2356, 0, 0, 0, 0] 
-  Z_ 6  non-trivial = 0 / 2356   residue dist = [2356, 0, 0, 0, 0, 0] 
-  Z_ 10  non-trivial = 0 / 2356   residue dist = 
-                                             [2356, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
-Enumerating cycles through anchor node 18  (sheet= 2 , deg= 6 ) up to length 8 
+Enumerating simple cycles through origin up to length 7 ... 
+Total cycles through origin found: 0 
+Enumerating cycles through anchor node 19  (sheet= 2 , deg= 6 ) up to length 7 
                                                                            ... 
-  cycles found: 694 
-  Holonomy distribution at non-origin anchor: 
-    Z_ 2  non-trivial = 0 / 694 
-    Z_ 3  non-trivial = 0 / 694 
-    Z_ 4  non-trivial = 0 / 694 
-    Z_ 5  non-trivial = 0 / 694 
-    Z_ 6  non-trivial = 0 / 694 
-    Z_ 10  non-trivial = 0 / 694 
+  cycles found: 0 
 ============================================================ 
 SECTION 17: Cut-and-project acceptance-window tau-rule 
 ============================================================ 
-Cells inside acceptance window: 435 / 712  (fraction = 0.6109550561797753 ) 
-Building cap-window cluster at depth 4 ... 
+Cells inside acceptance window: 96 / 156  (fraction = 0.6153846153846154 ) 
+Building cap-window cluster at depth 3 ... 
 
-rat: replaced -0.4045084971874737 by -31622993/78176338 = -0.4045084971874738
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
 
-rat: replaced 5.23606797749979 by 39088169/7465176 = 5.236067977499793
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
 
-rat: replaced -4.0 by -4/1 = -4.0
-Cap-window cluster: N = 126 , sheets = [0, 1, 2, 3, 4] 
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 0.9510565162951535 by 23284322/24482585 = 0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.4999999999999999 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.538841768587626 by 40433346/26275181 = 1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.618033988749895 by -24157817/14930352 = -1.618033988749897
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 2.220446049250313E-16 by 1/4503599627370496 = 2.220446049250313E-16
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.5000000000000003 by -1/2 = -0.5
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -1.538841768587626 by -40433346/26275181 = -1.538841768587626
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced 1.309016994374947 by 31622993/24157817 = 1.309016994374947
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+
+rat: replaced -0.6180339887498949 by -14930352/24157817 = -0.6180339887498941
+
+rat: replaced -0.9510565162951536 by -23284322/24482585 = -0.9510565162951543
+Cap-window cluster: N = 156 , sheets = [0, 1, 2, 3] 
   vortex edges = done  / done    (fraction = 
                      1       2
                                                         cap_ve_pair
@@ -379,112 +2824,136 @@ Cap-window cluster: N = 126 , sheets = [0, 1, 2, 3, 4]
                                 if done  > 0 then float(------------) else 0 ) 
                                        2                cap_ve_pair
                                                                    2
-  cycles through cap_root: 300 
-  Holonomy by fiber group (cap-window cluster): 
-    Z_ 2  non-trivial = 0 / 300 
-    Z_ 3  non-trivial = 0 / 300 
-    Z_ 4  non-trivial = 0 / 300 
-    Z_ 5  non-trivial = 0 / 300 
-    Z_ 6  non-trivial = 0 / 300 
-    Z_ 10  non-trivial = 0 / 300 
-Cap-window BFS volumes: [1, 6, 21, 56, 126] 
-  d_eff (cap-window, interior) = 2.008794216035562 
+  cycles through cap_root: 0 
+Cap-window BFS volumes: [1, 6, 31, 156] 
+  d_eff (cap-window, interior) = 2.369233809665719 
 ============================================================ 
 SECTION 18: KPM spectral density approximation 
 ============================================================ 
-Running KPM with M = 256 moments, 24 random samples... 
+Running KPM with M = 128 moments, 16 random samples... 
 KPM moment summary: mu_0 = 1.0  (should be ~ 1.0) 
-                    mu_1 = - 0.6233146067415764   mu_2 = - 0.02526217228464416 
-                                                   mu_4 = - 0.1791167940074906 
+                    mu_1 = - 0.6672008547008553   mu_2 = 0.2193732193732193 
+                                                   mu_4 = - 0.1912338204776476 
 DOS samples [lambda, rho(lambda)]: 
-  lam = 0.5   rho_est = 2.338695553060838 
-  lam = 2.0   rho_est = 1.127104164249923 
-  lam = 5.0   rho_est = 0.6023549163006011 
-  lam = 8.0   rho_est = 0.333910603677139 
-  lam = 10.0   rho_est = 0.1314914264459993 
-  lam = 12.0   rho_est = 0.2116608356214577 
-  lam = 15.0   rho_est = 0.206960334274863 
-  lam = 18.0   rho_est = 0.1845409481402878 
-  lam = 19.5   rho_est = - 0.46759818373008 
-KPM low-lambda log-log slope = - 0.6067764633397396 
-  => d_spec_KPM (= 2*(slope+1)) ~ 0.7864470733205209 
+  lam = 0.3000000000000007   rho_est = 2.199724604147937 
+  lam = 1.199999999999999   rho_est = 1.383129416003247 
+  lam = 3.0   rho_est = 0.6290195789541954 
+  lam = 4.8   rho_est = 0.280383275096645 
+  lam = 6.0   rho_est = 0.02726669696765429 
+  lam = 7.2   rho_est = - 0.3946856234345416 
+  lam = 9.0   rho_est = 0.7699059143939172 
+  lam = 10.8   rho_est = - 0.3581345587105735 
+  lam = 11.7   rho_est = - 0.9239234079607277 
+KPM low-tail sample count = 97 
+KPM low-lambda log-log slope = - 0.4595210950256773 
+  => d_spec_KPM (= 2*(slope+1)) ~ 1.080957809948645 
+  KPM tail (lower half) slope = - 0.4883348853932562   d_spec ~ 
+                                                             1.023330229213487 
+  KPM tail (upper half) slope = - 0.3865341857088128   d_spec ~ 
+                                                             1.226931628582374 
+KPM integrated DOS log-log slope = 0.5506088727498311 
+  => d_spec_KPM_CDF (= 2*slope) ~ 1.101217745499662 
 ============================================================ 
 SECTION 19: Per-sheet random walk diagnostics 
 ============================================================ 
-Running 1000 intra-sheet walks of length 100 ... 
-Intra-sheet MSD at t = 1, 5, 10: 1.0 9.774 12.247 
-Intra-sheet MSD slope = 1.278202260375906   =>  d_w_intra = 1.564697592861258 
-Compare full d_w = 1.465208988631359   ratio d_w_intra/d_w_full = 
-                                                             1.067900623734795 
-Mean sheet crossings per 500 -step walk = 164.495  (= 0.32899 per step) 
+Running 100 intra-sheet walks of length 60 ... 
+Intra-sheet MSD at t = 1, 5, 10: 1.0 4.76 2.88 
+Intra-sheet MSD slope = 0.5513011323202274   =>  d_w_intra = 3.627781411554013 
+Compare full d_w = 7.619203471353154   ratio d_w_intra/d_w_full = 
+                                                            0.4761365706000403 
+Mean sheet crossings per 60 -step walk = 39.16  (= 0.6526666666666666 per step)
+                                                                               
 ============================================================ 
 SECTION 20: Cross-tau dimensional comparison 
 ============================================================ 
-  tau = none      (flat)   N= 56   BFS-radius= 3   vols(last)= 56   d_eff~ 
-                                                             1.807354922057604 
-  tau = every3    (default)   N= 87   BFS-radius= 3   vols(last)= 87   d_eff~ 
-                                                             2.058893689053568 
-  tau = every2   N= 97   BFS-radius= 3   vols(last)= 97   d_eff~ 
-                                                             2.169925001442312 
-  tau = every5   N= 87   BFS-radius= 3   vols(last)= 87   d_eff~ 
-                                                             2.058893689053568 
-  tau = k-parity   N= 56   BFS-radius= 3   vols(last)= 56   d_eff~ 
-                                                             1.807354922057604 
-  tau = chiral   N= 56   BFS-radius= 3   vols(last)= 56   d_eff~ 
-                                                             1.807354922057604 
-  tau = signed-3   N= 121   BFS-radius= 3   vols(last)= 121   d_eff~ 
-                                                             2.273018494406416 
-  tau = fibonacci-mod8   N= 90   BFS-radius= 3   vols(last)= 90   d_eff~ 
-                                                             2.058893689053568 
-Most-fractional (closest to d_eff=2.5) tau-rule: signed-3   |d_eff - 2.5| = 
-                                                            0.2269815055935837 
+  tau = none      (flat)   N= 156   BFS-radius= 3   vols(last)= 156   d_eff~ 
+                                                             2.369233809665719 
+  tau = every3    (default)   N= 156   BFS-radius= 3   vols(last)= 156   d_eff~
+                                                             2.369233809665719 
+  tau = every2   N= 156   BFS-radius= 3   vols(last)= 156   d_eff~ 
+                                                             2.369233809665719 
+  tau = every5   N= 156   BFS-radius= 3   vols(last)= 156   d_eff~ 
+                                                             2.369233809665719 
+  tau = k-parity   N= 156   BFS-radius= 3   vols(last)= 156   d_eff~ 
+                                                             2.369233809665719 
+  tau = chiral   N= 156   BFS-radius= 3   vols(last)= 156   d_eff~ 
+                                                             2.369233809665719 
+  tau = signed-3   N= 156   BFS-radius= 3   vols(last)= 156   d_eff~ 
+                                                             2.369233809665719 
+  tau = fibonacci-mod8   N= 156   BFS-radius= 3   vols(last)= 156   d_eff~ 
+                                                             2.369233809665719 
+  tau = every-n   N= 156   BFS-radius= 3   vols(last)= 156   d_eff~ 
+                                                             2.369233809665719 
+  tau = signed-n   N= 156   BFS-radius= 3   vols(last)= 156   d_eff~ 
+                                                             2.369233809665719 
+  tau = k-mod-n   N= 156   BFS-radius= 3   vols(last)= 156   d_eff~ 
+                                                             2.369233809665719 
+  tau = chiral-n   N= 156   BFS-radius= 3   vols(last)= 156   d_eff~ 
+                                                             2.369233809665719 
+Most-fractional (closest to d_eff=2.5) tau-rule: none      (flat) 
+                                            |d_eff - 2.5| = 0.1307661903342802 
 ============================================================ 
 SECTION 21: Commute-time sampling 
 ============================================================ 
 Commute-time samples from origin (subset): 
-  target= 2  dist= 1  sheet= 0  commute_est= 299.8667641325536 
-  target= 3  dist= 1  sheet= 0  commute_est= 284.2993574605964 
-  target= 7  dist= 2  sheet= 0  commute_est= 419.8148148148148 
-  target= 8  dist= 2  sheet= 1  commute_est= 351.5583620359739 
-  target= 26  dist= 3  sheet= 0  commute_est= 424.5878540087754 
-  target= 27  dist= 3  sheet= 0  commute_est= 400.4959633597268 
-  target= 88  dist= 4  sheet= 0  commute_est= 447.6810834425513 
-  target= 89  dist= 4  sheet= 1  commute_est= 460.8336996336996 
-Commute-time log-log slope = 0.3123583923935999 
+  target= 2  dist= 1  sheet= - 1  commute_est= 50.80769230769231 
+  target= 3  dist= 1  sheet= 0  commute_est= 57.54285714285714 
+  target= 7  dist= 2  sheet= - 1  commute_est= 81.11428571428572 
+  target= 8  dist= 2  sheet= 0  commute_est= 72.0 
+  target= 32  dist= 3  sheet= - 2  commute_est= 51.14285714285714 
+  target= 33  dist= 3  sheet= - 1  commute_est= 115.0888888888888 
+Commute-time log-log slope = 0.3379242165639297 
   Interpretation: ~ dist^slope; for d_w > 2 expect slope > 1 
 ============================================================ 
-experiment.mac : summary 
+experiment.mac : summary  (N_GON = 5 ) 
 ============================================================ 
-Preset = huge  (BFS_DEPTH = 5 , M_WALKS = 20000 , T_STEPS = 500 , T_CA = 64 ) 
-Cluster size N = 712 
-Mean degree = 3.764044943820225  (5-regular target; lower at boundary) 
-Sheets occupied = [0, 1, 2, 3, 4, 5] 
-Spectral gap = (skipped) 
-d_eff estimate (BFS) = 2.723876533936081 
-d_eff estimate (BFS, full) = 2.880315945587103 
-d_w   estimate (MSD) = 1.465208988631359 
-d_spec estimate (P_0) = 3.707844704274885 
-d_spec (Alexander-Orbach) = 3.718072377484435 
-Vortex edges = 446  / total edges = 1340 
-CA final population = 4 after 64 steps 
-Rule panel: extinct= 5  still= 5  periodic= 2  growing= 3  active= 0 
-Most active panel rule: B1/S12   max_pop = 348 
+Preset = medium  (BFS_DEPTH = 3 , M_WALKS = 1000 , T_STEPS = 60 , T_CA = 16 ) 
+N_GON = 5   interior angle = 108.0 deg   k_flat = 3   fiber order = 10 
+Cluster size N = 156 
+Mean degree = 1.987179487179487  ( 5 -regular target; lower at boundary) 
+Sheets occupied = [- 3, - 2, - 1, 0, 1, 2, 3] 
+Spectral gap = 0.02655656676437887 
+d_eff estimate (BFS) = 2.369233809665719 
+d_eff estimate (BFS, full) = 2.901424256974228 
+d_spec estimate (DOS) = 1.907290147254313 
+d_w   estimate (MSD) = 7.619203471353154 
+d_spec estimate (P_0) = 2.813800621486002 
+d_spec (Alexander-Orbach) = 0.6219111534620689 
+d_spec (KPM low-lambda)   = 1.080957809948645 
+d_spec (KPM integrated)   = 1.101217745499662 
+Vortex edges = 103  / total edges = 155 
+CA final population = 3 after 16 steps 
+Rule panel: extinct= 9  still= 6  periodic= 0  growing= 0  active= 0 
+Most active panel rule: B2/S12   max_pop = 3 
 Richest-holonomy tau-rule = none      (flat)   score = 0 
 Triangles in main cluster = 0 
-Girth through origin = 4 
-Glider hunt: oscillators = 8   gliders = 5  (trials = 25 ) 
-Long cycles enumerated through origin: 2356  (up to length 8 ) 
-Cap-window cluster: N = 126 , sheets = [0, 1, 2, 3, 4] 
-KPM-based d_spec ~ 0.7864470733205209 
-Most-fractional tau-rule: signed-3   |d_eff - 2.5| = 0.2269815055935837 
+Girth through origin = > 8 
+Glider hunt: oscillators = 0   gliders = 0  (trials = 25 ) 
+Long cycles enumerated through origin: 0  (up to length 7 ) 
+Cap-window cluster: N = 156 , sheets = [0, 1, 2, 3] 
+KPM-based d_spec ~ 1.080957809948645 
+Most-fractional tau-rule: none      (flat)   |d_eff - 2.5| = 0.1307661903342802
+                                                                               
+------------------------------------------------------------ 
+Active TAU_MODE for main cluster: signed3 
+Preset: medium 
+N_GON: 5 
 ------------------------------------------------------------ 
 Caveats: 
-  * The cluster is small (depth-2 BFS); dimension fits are 
-    indicative, not precise.  For publication-quality numbers 
-    one wants thousands of cells and KPM-based DOS analysis. 
-  * The tau_rule used here (vortex on every 3rd edge) is a 
-    didactic choice; replacing it with the cut-and-project 
-    window of idea.md Section 2.4 yields the rigorous regime. 
+  * N_GON controls the polygon type.  Set it at the top of 
+    Section 0 to study triangles (3), squares (4), pentagons 
+    (5), hexagons (6), heptagons (7), etc. 
+  * For n in {3,4,6} the tiling closes flat (deficit=0); the 
+    sheet structure is driven entirely by the tau rule. 
+  * Deeper BFS (depth 6, xhuge preset) gives ~thousands of 
+    cells; dimension fits are improved but still finite-size. 
+  * TAU_MODE controls whether the main cluster uses the 
+    didactic every-n rule, the signed-n rule (richer monodromy), 
+    or the rigorous cut-and-project window of idea.md §2.4. 
+  * KPM spectral analysis (Section 18) is the preferred 
+    method for large clusters where dense eigendecomposition 
+    is infeasible.  Both low-lambda slope and integrated-DOS 
+    slope are reported for cross-validation. 
   * Same-orientation tiling is geometrically frustrated; this 
     experiment lets the sheet index absorb the angular deficit, 
     consistent with the multi-sheeted construction. 

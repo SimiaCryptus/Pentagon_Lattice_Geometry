@@ -3,29 +3,32 @@ debugmode(true)
                                      true
 load("analysis.mac")
 ============================================================ 
-analysis.mac : Multi-Sheeted Pentagon Tiling Analysis 
+analysis.mac : Multi-Sheeted n-gon Tiling Analysis 
 ============================================================ 
-P1: phi^2 - (phi+1) = 0 
-P2: 1/phi - (phi-1) = 0 
-P4: phi*(phi-1) - 1 = 0 
-P6a: phi + psi - 1 = 0   (Vieta: sum of roots of x^2-x-1) 
-P6b: phi*psi - (-1) = 0   (Vieta: product of roots) 
-P7: phi^2 + psi^2 - 3 = 0   (trace of phi^2 in Q(sqrt(5))) 
-                            2
-Minimal polynomial of phi: x  - x - 1   value at phi: 0 
-                            value at psi: 0   (both roots) 
-Norm test: qnorm(phi) = - 1 
-                     (expected -1 since phi*(1-phi) = -1; i.e. phi is a unit). 
-Trace test: qtrace(phi) = 1   (expected 1 since phi + psi = 1) 
-Fibonacci-phi identity check (phi^n = F_n*phi + F_{n-1}): 
-  n = 2 : phi^n - (F_n*phi + F_{n-1}) = 0 
-  n = 3 : phi^n - (F_n*phi + F_{n-1}) = 0 
-  n = 4 : phi^n - (F_n*phi + F_{n-1}) = 0 
-  n = 5 : phi^n - (F_n*phi + F_{n-1}) = 0 
-  n = 6 : phi^n - (F_n*phi + F_{n-1}) = 0 
-  n = 7 : phi^n - (F_n*phi + F_{n-1}) = 0 
-  n = 8 : phi^n - (F_n*phi + F_{n-1}) = 0 
-Binet formula check F_n = (phi^n - psi^n)/sqrt(5): 
+------------------------------------------------------------ 
+RANGE PARAMETERIZATION: 
+  N_GON_MIN  = 3   N_GON_MAX = 12   N_GON_STEP = 1 
+------------------------------------------------------------ 
+[Pentagon] P1: phi^2 - (phi+1) = 0 
+[Pentagon] P2: 1/phi - (phi-1) = 0 
+[Pentagon] P4: phi*(phi-1) - 1 = 0 
+[Pentagon] P6a: phi + psi - 1 = 0   (Vieta: sum of roots of x^2-x-1) 
+[Pentagon] P6b: phi*psi + 1 = 0   (Vieta: product of roots) 
+[Pentagon] P7: phi^2 + psi^2 - 3 = 0   (trace of phi^2 in Q(sqrt 5)) 
+                                       2
+[Pentagon] Minimal polynomial of phi: x  - x - 1   value at phi: 0 
+                                                            ,  value at psi: 0 
+[Pentagon] qnorm(phi) = - 1  (expected -1) 
+[Pentagon] qtrace(phi) = 1  (expected 1) 
+[Pentagon] Fibonacci-phi identity check (phi^n = F_n phi + F_{n-1}): 
+  n = 2 :  diff = 0 
+  n = 3 :  diff = 0 
+  n = 4 :  diff = 0 
+  n = 5 :  diff = 0 
+  n = 6 :  diff = 0 
+  n = 7 :  diff = 0 
+  n = 8 :  diff = 0 
+[Pentagon] Binet formula check F_n = (phi^n - psi^n)/sqrt(5): 
   n = 1 : F_n = 1 , Binet = 1 , diff = 0 
   n = 2 : F_n = 1 , Binet = 1 , diff = 0 
   n = 3 : F_n = 2 , Binet = 2 , diff = 0 
@@ -34,27 +37,468 @@ Binet formula check F_n = (phi^n - psi^n)/sqrt(5):
   n = 6 : F_n = 8 , Binet = 8 , diff = 0 
   n = 7 : F_n = 13 , Binet = 13 , diff = 0 
   n = 8 : F_n = 21 , Binet = 21 , diff = 0 
-                                             3 %pi
-Interior angle of regular pentagon: 3*pi/5 = -----  (108 deg) 
-                                               5
-                                    2 %pi
-Exterior angle of regular pentagon: -----  (72 deg, equals central angle) 
+------------------------------------------------------------ 
+Emergent-dimension framework (n-independent, run once): 
+  d_spec(d_eff, d_w=2) - d_eff = 0   (d_w=2 saturates Alexander-Orbach) 
+                        2 d_eff
+  d/d(d_w)   d_spec = - ------- 
+                            2
+                         d_w
+                       2
+  d/d(d_eff) d_spec = --- 
+                      d_w
+  MSD exponent  2/d_w  at d_w=2.5 = 0.8 
+  P_0(t) decay exponent d_spec/2 at d_spec=1.5 = 0.75 
+Dimension sanity table: 
+  d_eff= 2.5  d_w= 2.0  => d_spec= 2.5   (not sub-diffusive) 
+  d_eff= 2.5  d_w= 2.5  => d_spec= 2.0   (sub-diffusive) 
+  d_eff= 2.5  d_w= 3.0  => d_spec= 1.666666666666666   (sub-diffusive) 
+  d_eff= 2.8  d_w= 3.2  => d_spec= 1.749999999999999   (sub-diffusive) 
+  d_eff= 2.2  d_w= 2.4  => d_spec= 1.833333333333333   (sub-diffusive) 
+Sierpinski-gasket reference: d_eff= 1.584962500721156  d_w= 2.321928094887362 
+                                                      d_spec= 1.36521238897197 
+in_paper_regime(2.5, 2.4) = true  (true expected) 
+in_paper_regime(2.0, 2.0) = false 
+in_paper_regime(2.5, 1.9) = false 
+in_paper_regime(3.1, 2.5) = false 
+Dimensional flow d_spec(t) interpolator (UV=2.5, IR=1.7): 
+  t = 0.1 : d_spec(t) = 2.492039866999334 
+  t = 1 : d_spec(t) = 2.423869934428767 
+  t = 10 : d_spec(t) = 1.994303552937153 
+  t = 100 : d_spec(t) = 1.70003631994381 
+------------------------------------------------------------ 
+Volume-growth and MSD models (n-independent, run once): 
+  Sample r       : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] 
+  Sample V(r)    : [2.5, 14.14213562373095, 38.97114317029973, 80.0, 
+139.7542485937369, 220.454076850486, 324.1045356054124, 452.5483399593906, 
+607.5, 790.5694150420952] 
+  Recovered slope: 2.499999999999999  (expected 2.5) 
+  MSD model (D=1, d_w=2.5): 
+    t = 1 :  MSD = 1.0 
+    t = 10 :  MSD = 6.309573444801934 
+    t = 100 :  MSD = 39.81071705534975 
+    t = 1000 :  MSD = 251.188643150958 
+  P_0(t) model (A=1, d_spec=1.7): 
+    t = 1 :  P_0 = 1.0 
+    t = 10 :  P_0 = 0.1412537544622754 
+    t = 100 :  P_0 = 0.01995262314968879 
+    t = 1000 :  P_0 = 0.002818382931264455 
+  DOS model (B=1, d_spec=1.7): 
+    lambda = 0.001 :  rho = 2.818382931264454 
+    lambda = 0.01 :  rho = 1.995262314968879 
+    lambda = 0.1 :  rho = 1.412537544622754 
+    lambda = 1 :  rho = 1.0 
+------------------------------------------------------------ 
+Spinor / holonomy checks (Z_2, n-independent, run once): 
+[Spinor case G = Z_2]: 
+  single-loop holonomy = 1  (expected 1, i.e. tau = -1) 
+  double-loop holonomy = 0  (expected 0) 
+  spinor loop order   = 2  (expected 2 -- double cover) 
+============================================================ 
+BEGIN SWEEP: n = 3 to 12 step 1 
+============================================================ 
+============================================================ 
+N_GON = 3 
+============================================================ 
+                                    %pi
+Interior angle theta = (n-2)*pi/n = ---  = 60.0 deg 
+                                     3
+                                   2 %pi
+Exterior angle = 2*pi/n          = -----  = 120.0 deg 
+                                     3
+Flat-vertex count k_flat = floor(2*pi/theta) = 6 
+Angular deficit at k_flat copies = 0  = 0.0 deg 
+                                      %pi
+Angular excess at (k_flat+1) copies = ---  = 60.0 deg 
+                                       3
+Smallest k>0 with k*theta = (integer)*2*pi:  k = 6 ,  accumulating  1 
+                                                                    full turns 
+------------------------------------------------------------ 
+[n =  3 ] Angle summary: 
+                            %pi
+  Interior angle  theta   = ---  = 1.047197551196597  rad = 60.0  deg 
+                             3
+                            2 %pi
+  Exterior angle          = -----  = 2.094395102393195  rad 
+                              3
+                            2 %pi
+  Central angle           = -----  = 2.094395102393195  rad 
+                              3
+  Sum of interior angles  = %pi 
+                            %pi
+  Avg interior angle      = --- 
+                             3
+[n =  3 ] k-copy vertex-loop accumulation: 
+                %pi     1
+  k = 1 : sum = ---  =  - * 2pi  --  open 
+                 3      6
+                2 %pi     1
+  k = 2 : sum = -----  =  - * 2pi  --  open 
+                  3       3
+                        1
+  k = 3 : sum = %pi  =  - * 2pi  --  open 
+                        2
+                4 %pi     2
+  k = 4 : sum = -----  =  - * 2pi  --  open 
+                  3       3
+                5 %pi     5
+  k = 5 : sum = -----  =  - * 2pi  --  open 
+                  3       6
+  k = 6 : sum = 2 %pi  =  1 * 2pi  --  CLOSES 
+                7 %pi     7
+  k = 7 : sum = -----  =  - * 2pi  --  open 
+                  3       6
+                8 %pi     4
+  k = 8 : sum = -----  =  - * 2pi  --  open 
+                  3       3
+                          3
+  k = 9 : sum = 3 %pi  =  - * 2pi  --  open 
+                          2
+                 10 %pi     5
+  k = 10 : sum = ------  =  - * 2pi  --  open 
+                   3        3
+                 11 %pi     11
+  k = 11 : sum = ------  =  -- * 2pi  --  open 
+                   3        6
+  k = 12 : sum = 4 %pi  =  2 * 2pi  --  CLOSES 
+Smallest k with full closure: k = 6   (number of full turns = 1 ) 
+------------------------------------------------------------ 
+[n =  3 ] Cyclotomic / roots-of-unity structure: 
+                                    2
+  x^n - 1 factorization = (x - 1) (x  + x + 1) 
+  totient(n) = phi(n)   = 2   (degree of Q[zeta_n] over Q) 
+  Real subfield degree  = 1   (degree of Q(zeta + zeta^{-1}) over Q) 
+  Sum of all n-th roots (numeric) = 0.0  (expected 0 for n >= 2) 
+  Sum of primitive n-th roots (numeric) = - 1.0 ,  Moebius mu(n) = - 1 
+  2*cos(2*pi/n) = - 1  = - 1.0 
+                               (algebraic integer in real cyclotomic subfield) 
+------------------------------------------------------------ 
+[n =  3 ] Rotation matrix R (by exterior angle 2*pi/n): 
+            [     1      sqrt(3) ]
+            [   - -    - ------- ]
+            [     2         2    ]
+  Symbolic: [                    ] 
+            [ sqrt(3)       1    ]
+            [ -------     - -    ]
+            [    2          2    ]
+            [       - 0.5         - 0.8660254037844386 ]
+  Numeric : [                                          ] 
+            [ 0.8660254037844386         - 0.5         ]
+  det(R) = 1  (expected 1) 
+  tr(R) = - 1  = 2 cos(2*pi/n) = - 1.0 
+                 [ 1.0  0.0 ]
+  R^n  numeric = [          ]  (expected I) 
+                 [ 0.0  1.0 ]
+[n =  3 ] R^k traces (should equal 2 cos(2 pi k/n)): 
+  k = 1 : tr(R^k) = - 1.0  ~ 2cos( 1 *2pi/n) = - 1.0 
+  k = 2 : tr(R^k) = - 1.0  ~ 2cos( 2 *2pi/n) = - 1.0 
+  k = 3 : tr(R^k) = 2.0  ~ 2cos( 3 *2pi/n) = 2.0 
+------------------------------------------------------------ 
+[n =  3 ] PRIMARY BASIS VECTORS (unit circumradius, 
+                            vertex 0 at top, CCW): 
+  v[ 0 ] =  [0, 1]  ~  [0.0, 1.0] 
+               sqrt(3)    1
+  v[ 1 ] =  [- -------, - -]  ~  [- 0.8660254037844386, - 0.5] 
+                  2       2
+             sqrt(3)    1
+  v[ 2 ] =  [-------, - -]  ~  [0.8660254037844386, - 0.5] 
+                2       2
+[n =  3 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
+  e[ 1 ] (numeric) =  [- 0.8660254037844386, - 1.5] 
+  e[ 2 ] (numeric) =  [1.732050807568877, 0.0] 
+  e[ 3 ] (numeric) =  [- 0.8660254037844386, 1.5] 
+[n =  3 ] Side length (unit circumradius) s = sqrt(3)  = 1.732050807568877 
+------------------------------------------------------------ 
+[n =  3 ] Holonomy / spinor cover analysis: 
+  Natural single-vortex fiber order = 6 
+  Z_n single-vortex holonomy (n = 6 ) : 1 
+  Required loop count to close fiber : 6 
+[Anyonic case G = Z_n with n = 3 ]: 
+  single-vortex holonomy = 1 
+  loop order required    = 3  (expected 3 ) 
+[n =  3 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
+  All g in Z_n satisfy order(g) = n/gcd(g, n). 
+[n =  3 ] Composite holonomy: Loop A = 0 , Loop B = 1 , Composite = 1 
+                                                               , Sum mod n = 1 
+------------------------------------------------------------ 
+[n =  3 ] Cut-and-project ambient lattice Z^n: 
+  C_n cyclic shift matrix: 
+   [ 0  1  0 ]
+   [         ]
+   [ 0  0  1 ] 
+   [         ]
+   [ 1  0  0 ]
+                       3
+  charpoly(C_n) = 1 - x  
+  C_n^n = I_n verified. 
+  C_n is orthogonal: C_n . C_n^T = I_n. 
+  C_n . (1,...,1)^T - (1,...,1)^T = [ 0  0  0 ]  (should be zero) 
+  Projectors P_diag, P_perp: idempotent, orthogonal, complete. 
+  dim(orthogonal complement of diagonal) = 2  = n - 1 
+[n =  3 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
+  V_ 1  (rotation angle 2 pi * 1 /n = 2.094395102393195 ): 
+    u_ 1  (cos) = [1.0, - 0.5, - 0.5] 
+    w_ 1  (sin) = [0.0, 0.8660254037844386, - 0.8660254037844386] 
+  Physical 2D plane E_|| recommended = V_1. 
+  Perp subspace E_perp = (diagonal) + 0 * 2D pieces + 0 alternating directions 
+                                                           =>  dim(E_perp) = 1 
+                       2
+  ||pi_perp(e_1)||^2 = -  (= (n-1)/n) 
+                       3
+------------------------------------------------------------ 
+[n =  3 ] CA rule-count analysis (degree k = n): 
+  Binary outer-totalistic n-neighbor rules = 256  (= 2^ 8 ) 
+  Binary fully totalistic n-neighbor rules = 32  (= 2^ 5 ) 
+  Binary fully general    n-neighbor rules = 65536  (= 2^(2^ 4 )) 
+  Reference: 4-OT = 1024 , 8-OT = 262144 
+------------------------------------------------------------ 
+[n =  3 ] Polygon geometry (side s = 1): 
+                      1
+  Circumradius R = -------  ~ 0.5773502691896258 
+                   sqrt(3)
+                       1
+  Apothem      r = ---------  ~ 0.2886751345948129 
+                   2 sqrt(3)
+  R/r            = 2  = sec(pi/n) = 2.0 
+                   sqrt(3)
+  Area A         = -------  ~ 0.4330127018922193 
+                      4
+  Diagonals (k-step chord lengths, unit side): 
+    d[ 1 ] = 1  ~ 1.0 
+    d[ 2 ] = 1  ~ 1.0 
+------------------------------------------------------------ 
+[n =  3 ] Dihedral group D_n symmetries: 
+                                   [ 0  0 ]
+  S0 . R . S0 - R^{-1} (symbolic): [      ] 
+                                   [ 0  0 ]
+  S R S = R^{-1} verified. 
+  |D_n| = 6 
+  Conjugacy classes (n odd): 1 + (n-1)/2 + 1 = 3 
+                                   (sum of sizes 1 + (n-1)/2 * 2 + n = 6 = 2n) 
+  Irrep dim^2 sum (n odd): 2 + 2(n-1) = 6 (should = 2n = 6 ) 
+------------------------------------------------------------ 
+[n =  3 ] Graph Laplacians (star and cycle): 
+  Star K_{1, 3 }: spectrum = {0, 1 (multiplicity 2 ), 4 } 
+  Spectral gap = 1 (positive => connected). 
+  Cycle C_ 3  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
+   [0.0, 3.0, 3.0] 
+  Spectral gap of C_ 3  = 3.0 
+  [n = 3 ] iteration complete. 
+============================================================ 
+N_GON = 4 
+============================================================ 
+                                    %pi
+Interior angle theta = (n-2)*pi/n = ---  = 90.0 deg 
+                                     2
+                                   %pi
+Exterior angle = 2*pi/n          = ---  = 90.0 deg 
+                                    2
+Flat-vertex count k_flat = floor(2*pi/theta) = 4 
+Angular deficit at k_flat copies = 0  = 0.0 deg 
+                                      %pi
+Angular excess at (k_flat+1) copies = ---  = 90.0 deg 
+                                       2
+Smallest k>0 with k*theta = (integer)*2*pi:  k = 4 ,  accumulating  1 
+                                                                    full turns 
+------------------------------------------------------------ 
+[n =  4 ] Angle summary: 
+                            %pi
+  Interior angle  theta   = ---  = 1.570796326794896  rad = 90.0  deg 
+                             2
+                            %pi
+  Exterior angle          = ---  = 1.570796326794896  rad 
+                             2
+                            %pi
+  Central angle           = ---  = 1.570796326794896  rad 
+                             2
+  Sum of interior angles  = 2 %pi 
+                            %pi
+  Avg interior angle      = --- 
+                             2
+[n =  4 ] k-copy vertex-loop accumulation: 
+                %pi     1
+  k = 1 : sum = ---  =  - * 2pi  --  open 
+                 2      4
+                        1
+  k = 2 : sum = %pi  =  - * 2pi  --  open 
+                        2
+                3 %pi     3
+  k = 3 : sum = -----  =  - * 2pi  --  open 
+                  2       4
+  k = 4 : sum = 2 %pi  =  1 * 2pi  --  CLOSES 
+                5 %pi     5
+  k = 5 : sum = -----  =  - * 2pi  --  open 
+                  2       4
+                          3
+  k = 6 : sum = 3 %pi  =  - * 2pi  --  open 
+                          2
+                7 %pi     7
+  k = 7 : sum = -----  =  - * 2pi  --  open 
+                  2       4
+  k = 8 : sum = 4 %pi  =  2 * 2pi  --  CLOSES 
+                9 %pi     9
+  k = 9 : sum = -----  =  - * 2pi  --  open 
+                  2       4
+                           5
+  k = 10 : sum = 5 %pi  =  - * 2pi  --  open 
+                           2
+                 11 %pi     11
+  k = 11 : sum = ------  =  -- * 2pi  --  open 
+                   2        4
+  k = 12 : sum = 6 %pi  =  3 * 2pi  --  CLOSES 
+Smallest k with full closure: k = 4   (number of full turns = 1 ) 
+------------------------------------------------------------ 
+[n =  4 ] Cyclotomic / roots-of-unity structure: 
+                                            2
+  x^n - 1 factorization = (x - 1) (x + 1) (x  + 1) 
+  totient(n) = phi(n)   = 2   (degree of Q[zeta_n] over Q) 
+  Real subfield degree  = 1   (degree of Q(zeta + zeta^{-1}) over Q) 
+  Sum of all n-th roots (numeric) = 0.0  (expected 0 for n >= 2) 
+  Sum of primitive n-th roots (numeric) = 0.0 ,  Moebius mu(n) = 0 
+  2*cos(2*pi/n) = 0  = 0.0   (algebraic integer in real cyclotomic subfield) 
+------------------------------------------------------------ 
+[n =  4 ] Rotation matrix R (by exterior angle 2*pi/n): 
+            [ 0  - 1 ]
+  Symbolic: [        ] 
+            [ 1   0  ]
+            [ 0.0  - 1.0 ]
+  Numeric : [            ] 
+            [ 1.0   0.0  ]
+  det(R) = 1  (expected 1) 
+  tr(R) = 0  = 2 cos(2*pi/n) = 0.0 
+                 [ 1.0  0.0 ]
+  R^n  numeric = [          ]  (expected I) 
+                 [ 0.0  1.0 ]
+[n =  4 ] R^k traces (should equal 2 cos(2 pi k/n)): 
+  k = 1 : tr(R^k) = 0.0  ~ 2cos( 1 *2pi/n) = 0.0 
+  k = 2 : tr(R^k) = - 2.0  ~ 2cos( 2 *2pi/n) = - 2.0 
+  k = 3 : tr(R^k) = 0.0  ~ 2cos( 3 *2pi/n) = 0.0 
+  k = 4 : tr(R^k) = 2.0  ~ 2cos( 4 *2pi/n) = 2.0 
+------------------------------------------------------------ 
+[n =  4 ] PRIMARY BASIS VECTORS (unit circumradius, 
+                            vertex 0 at top, CCW): 
+  v[ 0 ] =  [0, 1]  ~  [0.0, 1.0] 
+  v[ 1 ] =  [- 1, 0]  ~  [- 1.0, 0.0] 
+  v[ 2 ] =  [0, - 1]  ~  [0.0, - 1.0] 
+  v[ 3 ] =  [1, 0]  ~  [1.0, 0.0] 
+[n =  4 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
+  e[ 1 ] (numeric) =  [- 1.0, - 1.0] 
+  e[ 2 ] (numeric) =  [1.0, - 1.0] 
+  e[ 3 ] (numeric) =  [1.0, 1.0] 
+  e[ 4 ] (numeric) =  [- 1.0, 1.0] 
+[n =  4 ] Side length (unit circumradius) s = sqrt(2)  = 1.414213562373095 
+------------------------------------------------------------ 
+[n =  4 ] Holonomy / spinor cover analysis: 
+  Natural single-vortex fiber order = 4 
+  Z_n single-vortex holonomy (n = 4 ) : 1 
+  Required loop count to close fiber : 4 
+[Anyonic case G = Z_n with n = 4 ]: 
+  single-vortex holonomy = 1 
+  loop order required    = 4  (expected 4 ) 
+[n =  4 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
+  All g in Z_n satisfy order(g) = n/gcd(g, n). 
+[n =  4 ] Composite holonomy: Loop A = 3 , Loop B = 3 , Composite = 2 
+                                                               , Sum mod n = 2 
+------------------------------------------------------------ 
+[n =  4 ] Cut-and-project ambient lattice Z^n: 
+  C_n cyclic shift matrix: 
+   [ 0  1  0  0 ]
+   [            ]
+   [ 0  0  1  0 ]
+   [            ] 
+   [ 0  0  0  1 ]
+   [            ]
+   [ 1  0  0  0 ]
+                   4
+  charpoly(C_n) = x  - 1 
+  C_n^n = I_n verified. 
+  C_n is orthogonal: C_n . C_n^T = I_n. 
+  C_n . (1,...,1)^T - (1,...,1)^T = [ 0  0  0  0 ]  (should be zero) 
+  Projectors P_diag, P_perp: idempotent, orthogonal, complete. 
+  dim(orthogonal complement of diagonal) = 3  = n - 1 
+[n =  4 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
+  V_ 1  (rotation angle 2 pi * 1 /n = 1.570796326794896 ): 
+    u_ 1  (cos) = [1.0, 0.0, - 1.0, 0.0] 
+    w_ 1  (sin) = [0.0, 1.0, 0.0, - 1.0] 
+  alternating-sign eigenvector (eigenvalue -1) = [1, - 1, 1, - 1] 
+  Physical 2D plane E_|| recommended = V_1. 
+  Perp subspace E_perp = (diagonal) + 0 * 2D pieces + 1 alternating direction 
+                                                           =>  dim(E_perp) = 2 
+                       3
+  ||pi_perp(e_1)||^2 = -  (= (n-1)/n) 
+                       4
+------------------------------------------------------------ 
+[n =  4 ] CA rule-count analysis (degree k = n): 
+  Binary outer-totalistic n-neighbor rules = 1024  (= 2^ 10 ) 
+  Binary fully totalistic n-neighbor rules = 64  (= 2^ 6 ) 
+  Binary fully general    n-neighbor rules = 4294967296  (= 2^(2^ 5 )) 
+  Reference: 4-OT = 1024 , 8-OT = 262144 
+------------------------------------------------------------ 
+[n =  4 ] Polygon geometry (side s = 1): 
+                      1
+  Circumradius R = -------  ~ 0.7071067811865475 
+                   sqrt(2)
+                   1
+  Apothem      r = -  ~ 0.5 
+                   2
+  R/r            = sqrt(2)  = sec(pi/n) = 1.414213562373095 
+  Area A         = 1  ~ 1.0 
+  Diagonals (k-step chord lengths, unit side): 
+    d[ 1 ] = 1  ~ 1.0 
+    d[ 2 ] = sqrt(2)  ~ 1.414213562373095 
+    d[ 3 ] = 1  ~ 1.0 
+------------------------------------------------------------ 
+[n =  4 ] Dihedral group D_n symmetries: 
+                                   [ 0  0 ]
+  S0 . R . S0 - R^{-1} (symbolic): [      ] 
+                                   [ 0  0 ]
+  S R S = R^{-1} verified. 
+  |D_n| = 8 
+  Conjugacy classes (n even): 1 + (n-2)/2 + 1 + 2 = 5 
+                         (sum of sizes 1 + (n-2)/2 * 2 + 1 + 2*(n/2) = 8 = 2n) 
+  Irrep dim^2 sum (n even): 4 + 2(n-2) = 8 (should = 2n = 8 ) 
+------------------------------------------------------------ 
+[n =  4 ] Graph Laplacians (star and cycle): 
+  Star K_{1, 4 }: spectrum = {0, 1 (multiplicity 3 ), 5 } 
+  Spectral gap = 1 (positive => connected). 
+  Cycle C_ 4  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
+   [0.0, 2.0, 4.0, 2.0] 
+  Spectral gap of C_ 4  = 2.0 
+  [n = 4 ] iteration complete. 
+============================================================ 
+N_GON = 5 
+============================================================ 
+                                    3 %pi
+Interior angle theta = (n-2)*pi/n = -----  = 108.0 deg 
                                       5
                                    2 %pi
-Central angle of regular pentagon: -----  (72 deg) 
+Exterior angle = 2*pi/n          = -----  = 72.0 deg 
                                      5
-                                     %pi
-Angular deficit with 3 pentagons:    ---  (expected pi/5 = 36 deg) 
-                                      5
-                                     2 %pi
-Angular excess with 4 pentagons:     -----  (expected 2*pi/5 = 72 deg) 
-                                       5
-                                                       3 %pi
-Sum of interior angles of pentagon = 3 %pi , average = ----- 
-                                                         5
-                                                           (must equal 3*pi/5) 
-10 * (interior angle) = 6 %pi  =  3 * 2*pi 
-k-pentagon loop closure analysis: 
+Flat-vertex count k_flat = floor(2*pi/theta) = 3 
+                                   %pi
+Angular deficit at k_flat copies = ---  = 36.0 deg 
+                                    5
+                                      2 %pi
+Angular excess at (k_flat+1) copies = -----  = 72.0 deg 
+                                        5
+Smallest k>0 with k*theta = (integer)*2*pi:  k = 10 ,  accumulating  3 
+                                                                    full turns 
+------------------------------------------------------------ 
+[n =  5 ] Angle summary: 
+                            3 %pi
+  Interior angle  theta   = -----  = 1.884955592153875  rad = 108.0  deg 
+                              5
+                            2 %pi
+  Exterior angle          = -----  = 1.256637061435917  rad 
+                              5
+                            2 %pi
+  Central angle           = -----  = 1.256637061435917  rad 
+                              5
+  Sum of interior angles  = 3 %pi 
+                            3 %pi
+  Avg interior angle      = ----- 
+                              5
+[n =  5 ] k-copy vertex-loop accumulation: 
                 3 %pi     3
   k = 1 : sum = -----  =  -- * 2pi  --  open 
                   5       10
@@ -68,7 +512,7 @@ k-pentagon loop closure analysis:
   k = 4 : sum = ------  =  - * 2pi  --  open 
                   5        5
                           3
-  k = 5 : sum = 3 %pi  =  - * 2pi  --  CLOSES 
+  k = 5 : sum = 3 %pi  =  - * 2pi  --  open 
                           2
                 18 %pi     9
   k = 6 : sum = ------  =  - * 2pi  --  open 
@@ -89,336 +533,2718 @@ k-pentagon loop closure analysis:
                  36 %pi     18
   k = 12 : sum = ------  =  -- * 2pi  --  open 
                    5        5
-Smallest k with k*theta = integer * 2*pi:  k = 10 
-                                           (the spinor double-cover signature) 
-                                  4    3    2
-Cyclotomic polynomial Phi_5(x) = x  + x  + x  + x + 1 
-Check 2*cos(72 deg)  - (sqrt(5)-1)/2  ~ 0.0 
-Check 2*cos(144 deg) - (-(sqrt(5)+1)/2) ~ 2.220446049250313E-16 
-                                                4 %pi          2 %pi
-Sum of all 5th roots of unity (symbolic): 2 cos(-----) + 2 cos(-----) + 1 
-                                                  5              5
-Sum of all 5th roots of unity (numeric):  2.220446049250313E-16  (expected 0) 
-                                                      4 %pi          2 %pi
-Sum of primitive 5th roots of unity (symbolic): 2 cos(-----) + 2 cos(-----) 
-                                                        5              5
-Sum of primitive 5th roots of unity (numeric):  - 0.9999999999999998 
-                                   (expected -1, the coefficient sum of Phi_5) 
-Product of primitive 5th roots of unity: 1  (expected 1) 
-Gaussian period eta_0 = zeta + zeta^4 numerically = 0.618033988749895 
-                                              ~ 2*cos(72) = 0.6180339887498949 
-Gaussian period eta_1 = zeta^2 + zeta^3 numerically = 
-(- 2.220446049250313E-16 %i) - 1.618033988749895  ~ 2*cos(144) = 
-- 1.618033988749894 
-eta_0 + eta_1 ~ (- 2.220446049250313E-16 %i) - 0.9999999999999998 
-                                                                 (expected -1) 
-eta_0 * eta_1 ~ 2.775557561562891E-16 %i - 1.0  (expected -1) 
-cos(72) - (phi-1)/2 = 0   (expected 0) 
-cos(72) - 1/(2*phi) = 0   (expected 0) 
-cos(36) - phi/2 = 0   (expected 0) 
-cos^2(72) + sin^2(72) = 1  (expected 1) 
-cos^2(36) + sin^2(36) = 1  (expected 1) 
-2 cos^2(36) - 1 - cos(72) = 0  (expected 0) 
-det(R72) = 1  (expected 1) 
-          sqrt(5) - 1
-tr(R72) = -----------  = 2*cos(72) = 1/phi numerically 0.6180339887498949 
-               2
-                     [ 1  0 ]
-R72^5 (simplified) = [      ] 
-                     [ 0  1 ]
-                      [ 0.0  0.0 ]
-R72^5 - I (numeric) = [          ] 
-                      [ 0.0  0.0 ]
-Order check: R72^k should be nontrivial for k = 1..4. 
-  k = 1 : tr(R^k) = 0.6180339887498949  ~ 2*cos( 1 *72) = 0.6180339887498949 
-  k = 2 : tr(R^k) = - 1.618033988749895  ~ 2*cos( 2 *72) = - 1.618033988749894 
-  k = 3 : tr(R^k) = - 1.618033988749895  ~ 2*cos( 3 *72) = - 1.618033988749895 
-  k = 4 : tr(R^k) = 0.6180339887498949  ~ 2*cos( 4 *72) = 0.6180339887498945 
-                                         [ 0  0 ]
-R^2 . R^3 - R^5 (should be zero matrix): [      ] 
-                                         [ 0  0 ]
-Z_2 holonomy of single vortex loop: 1  (expected 1, i.e. tau = -1) 
-Z_2 holonomy of double vortex loop: 0  (expected 0, fiber closes) 
-Spinor loop order in Z_2 (single vortex): 2  (expected 2 -- the double cover) 
-Z_5 holonomy of single vortex loop: 1  (fractional/anyonic) 
-Z_5 loop order required to close fiber: 5  (expected 5) 
-Verified: order_Zn(1, n) divides n for n = 2..10. 
-Order(g, n) = n/gcd(g,n) verification: 
-  All g in Z_n satisfy order(g) = n/gcd(g,n) for n=2..8. 
-Composite holonomy example (G = Z_5): 
-  Loop A holonomy =  3 
-  Loop B holonomy =  2 
-  Composite (A then B) = 0 ,  Sum (A) + (B) mod 5 = 0 
-d_spec(d_eff, d_w=2) - d_eff = 0   (ordinary diffusion saturates A-O) 
-                    2 d_eff
-d/d(d_w) d_spec = - -------   -- negative for d_eff > 0, d_w > 0 
-                        2
-                     d_w
-                     2
-d/d(d_eff) d_spec = ---   -- positive for d_w > 0 
-                    d_w
-MSD exponent at d_w = 2 (normal): 1  (expected 1: linear in t) 
-MSD exponent at d_w = 2.5: 0.8  (sub-diffusive: < 1) 
-Return-probability decay exponent at d_spec=2: 1  (1/t decay) 
-Return-probability decay exponent at d_spec=1.5: 0.75 
-Dimension sanity table (Alexander-Orbach): 
-  d_eff = 2.5  d_w = 2.0  => d_spec = 2.5 
-                                          (d_spec >= d_eff: not sub-diffusive) 
-  d_eff = 2.5  d_w = 2.5  => d_spec = 2.0   (d_spec < d_eff: sub-diffusive, OK)
-                                                                               
-  d_eff = 2.5  d_w = 3.0  => d_spec = 1.666666666666666 
-                                           (d_spec < d_eff: sub-diffusive, OK) 
-  d_eff = 2.8  d_w = 3.2  => d_spec = 1.749999999999999 
-                                           (d_spec < d_eff: sub-diffusive, OK) 
-  d_eff = 2.2  d_w = 2.4  => d_spec = 1.833333333333333 
-                                           (d_spec < d_eff: sub-diffusive, OK) 
-Sierpinski-gasket reference values: 
-  d_eff  = 1.584962500721156   (= log 3 / log 2) 
-  d_w    = 2.321928094887362   (= log 5 / log 2) 
-  d_spec = 1.36521238897197   (= 2*log 3 / log 5 ~ 1.365) 
-in_paper_regime(2.5, 2.4) = true 
-in_paper_regime(2.0, 2.0) = false  (should be false; boundary) 
-in_paper_regime(2.5, 1.9) = false  (false: d_w too small) 
-in_paper_regime(3.1, 2.5) = false  (false: d_eff too large) 
-Dimensional flow interpolator (UV=d_eff, IR=d_spec): 
-  t = 0.1 : d_spec(t) = 2.492039866999334 
-  t = 1 : d_spec(t) = 2.423869934428767 
-  t = 10 : d_spec(t) = 1.994303552937153 
-  t = 100 : d_spec(t) = 1.70003631994381 
-                    5
-charpoly(C5) = 1 - x  
-                     4    3    2
-x^5 - 1 =  (x - 1) (x  + x  + x  + x + 1) 
-                                    [ 0  0  0  0  0 ]
-                                    [               ]
-                                    [ 0  0  0  0  0 ]
-                                    [               ]
-C5^5 - I_5 (should be zero matrix): [ 0  0  0  0  0 ] 
-                                    [               ]
-                                    [ 0  0  0  0  0 ]
-                                    [               ]
-                                    [ 0  0  0  0  0 ]
-                                     [ 0 ]
-                                     [   ]
-                                     [ 0 ]
-                                     [   ]
-C5 . (1,1,1,1,1)^T - (1,1,1,1,1)^T = [ 0 ]  (should be zero column) 
-                                     [   ]
-                                     [ 0 ]
-                                     [   ]
-                                     [ 0 ]
-            [ 1  0  0  0  0 ]
-            [               ]
-            [ 0  1  0  0  0 ]
-            [               ]
-C5 . C5^T = [ 0  0  1  0  0 ]   (should be I_5; C5 is orthogonal) 
-            [               ]
-            [ 0  0  0  1  0 ]
-            [               ]
-            [ 0  0  0  0  1 ]
-Ambient dim = 5;  E_|| = 2D physical;  E_perp = 3D (including the 
-diagonal direction).  Local finiteness follows from the bounded 
-acceptance window W subset E_perp. 
-                     4
-||pi_perp(e_1)||^2 = -  (= 4/5) 
-                     5
-Admitted with rho^2 = 1?   true 
-                                          [ 1  1  1  1  1 ]
-                                          [ -  -  -  -  - ]
-                                          [ 5  5  5  5  5 ]
-                                          [               ]
-                                          [ 1  1  1  1  1 ]
-                                          [ -  -  -  -  - ]
-                                          [ 5  5  5  5  5 ]
-                                          [               ]
-                                          [ 1  1  1  1  1 ]
-Projector onto diagonal P_diag = (1/5)*J: [ -  -  -  -  - ] 
-                                          [ 5  5  5  5  5 ]
-                                          [               ]
-                                          [ 1  1  1  1  1 ]
-                                          [ -  -  -  -  - ]
-                                          [ 5  5  5  5  5 ]
-                                          [               ]
-                                          [ 1  1  1  1  1 ]
-                                          [ -  -  -  -  - ]
-                                          [ 5  5  5  5  5 ]
-Projectors are idempotent: P_diag^2 = P_diag, P_perp^2 = P_perp. 
-Projectors are orthogonal: P_diag * P_perp = 0. 
-Projectors are complete: P_diag + P_perp = I_5. 
-dim(orthogonal complement of diagonal) = 4 
- (= 4; will split into 2D physical + 2D perp, 
-with diagonal folded into perp for a 3D window) 
-Number of binary outer-totalistic 5-neighbor rules = 4096  (= 2^12 = 4096) 
-For reference: 4-neighbor OT rules = 1024  (=2^10 = 1024) 
-              8-neighbor OT rules = 262144  (=2^18 = 262144) 
-5-regular fully totalistic rules = 128  (= 2^7 = 128, much smaller subset) 
-5-regular fully general binary rules = 18446744073709551616 
-                                                        (= 2^64, astronomical) 
-Sanity (q=2, k=5): 4096  (must equal 4096) 
-                                          sqrt(5) + 3           sqrt(5) + 3
-Pentagon diagonal-to-side ratio squared = ----------- , phi^2 = ----------- 
-                                               2                     2
-                                                                    , diff = 0 
-                                      2
-Circumradius (unit side) R = --------------------  ~ 0.8506508083520399 
-                             sqrt(10 - 2 sqrt(5))
-                                                            (expected ~0.8507) 
-                                  sqrt(5) + 1
-Apothem (unit side)      r = ----------------------  ~ 0.6881909602355868 
-                             2 sqrt(10 - 2 sqrt(5))
-                                                            (expected ~0.6882) 
-           4
-R/r = -----------  ~ 1.236067977499789 , expected 1/cos(36) = 1.236067977499789
-      sqrt(5) + 1
-                                                   = 2/phi = 1.236067977499789 
-                                   3/2
-                                  5    + 5
-Pentagon area (unit side): ----------------------  ~ 1.720477400588967 
-                           4 sqrt(10 - 2 sqrt(5))
-                                                            (expected ~1.7205) 
-Area formula check vs (1/4) sqrt(25+10 sqrt 5): 1.720477400588967 vs 
-                                                1.720477400588967 , diff = 0.0 
-                                                 2
-Pentagram self-similarity factor: 1/phi^2 = -----------  = 2 - phi = 
-                                            sqrt(5) + 3
-                                                                   sqrt(5) - 3
-                                                                 - ----------- 
-                                                                        2
-phi * phi via integer pairs = [1, 1]   (expected [1, 1] since phi^2 = 1 + phi) 
-phi^3 via integer pairs = [1, 2]   (expected [1, 2] since phi^3 = 1 + 2 phi) 
-Z[phi]-form of phi^n (Fibonacci coefficients): 
-  phi^ 1  = [ 0 , 1 ]   expected = [F_{n-1}, F_n] = [ 0 , 1 ] 
-  phi^ 2  = [ 1 , 1 ]   expected = [F_{n-1}, F_n] = [ 1 , 1 ] 
-  phi^ 3  = [ 1 , 2 ]   expected = [F_{n-1}, F_n] = [ 1 , 2 ] 
-  phi^ 4  = [ 2 , 3 ]   expected = [F_{n-1}, F_n] = [ 2 , 3 ] 
-  phi^ 5  = [ 3 , 5 ]   expected = [F_{n-1}, F_n] = [ 3 , 5 ] 
-  phi^ 6  = [ 5 , 8 ]   expected = [F_{n-1}, F_n] = [ 5 , 8 ] 
-  phi^ 7  = [ 8 , 13 ]   expected = [F_{n-1}, F_n] = [ 8 , 13 ] 
-Norm formula check (Z[phi]): 
-  N(phi^ 1 ) =  - 1 ,  via qnorm = - 1 
-  N(phi^ 2 ) =  1 ,  via qnorm = 1 
-  N(phi^ 3 ) =  - 1 ,  via qnorm = - 1 
-  N(phi^ 4 ) =  1 ,  via qnorm = 1 
-  N(phi^ 5 ) =  - 1 ,  via qnorm = - 1 
-Norm of phi^n = (-1)^n test: 
-  n = 1 :  N(phi^n) = - 1 ,  expected (-1)^n = - 1 
-  n = 2 :  N(phi^n) = 1 ,  expected (-1)^n = 1 
-  n = 3 :  N(phi^n) = - 1 ,  expected (-1)^n = - 1 
-  n = 4 :  N(phi^n) = 1 ,  expected (-1)^n = 1 
-  n = 5 :  N(phi^n) = - 1 ,  expected (-1)^n = - 1 
-  n = 6 :  N(phi^n) = 1 ,  expected (-1)^n = 1 
-  n = 7 :  N(phi^n) = - 1 ,  expected (-1)^n = - 1 
-                            [ 1  0 ]
-S0^2 (reflection squared) = [      ]  (expected I) 
-                            [ 0  1 ]
-det(S0) = - 1   (expected -1, orientation-reversing) 
-S0 . R72 . S0 - R72^4 (should be zero matrix): 
-   [ 0  0 ]
-   [      ] 
-   [ 0  0 ]
-           [ 0.0  0.0 ]
-  numeric: [          ] 
-           [ 0.0  0.0 ]
-|D_5| = 10   (5 rotations + 5 reflections) 
-D_5 conjugacy class sizes: 1 + 2 + 2 + 5 = 10   (4 classes, sum = |D_5|) 
-D_5 irrep dim^2 sum: 1 + 1 + 4 + 4 = 10  (= |D_5|, OK) 
-Synthetic volume samples (c=2.5, d_eff=2.5): 
-  r       : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] 
-  V(r)    : [2.5, 14.14213562373095, 38.97114317029973, 80.0, 
-139.7542485937369, 220.454076850486, 324.1045356054124, 452.5483399593906, 
-607.5, 790.5694150420952] 
-  log-log slope V(10)/V(1) = 2.499999999999999  (expected 2.5) 
-MSD model samples (D=1, d_w=2.5): 
-  t = 1 :  MSD = 1.0 ,  exponent 2/d_w = 0.8 
-  t = 10 :  MSD = 6.309573444801934 ,  exponent 2/d_w = 0.8 
-  t = 100 :  MSD = 39.81071705534975 ,  exponent 2/d_w = 0.8 
-  t = 1000 :  MSD = 251.188643150958 ,  exponent 2/d_w = 0.8 
-Return-probability model samples (A=1, d_spec=1.7): 
-  t = 1 :  P_0(t) = 1.0 ,  exponent -d_spec/2 = - 0.85 
-  t = 10 :  P_0(t) = 0.1412537544622754 ,  exponent -d_spec/2 = - 0.85 
-  t = 100 :  P_0(t) = 0.01995262314968879 ,  exponent -d_spec/2 = - 0.85 
-  t = 1000 :  P_0(t) = 0.002818382931264455 ,  exponent -d_spec/2 = - 0.85 
-DOS model samples (B=1, d_spec=1.7): 
-  lambda = 0.001 :  rho(lam) = 2.818382931264454 ,  exponent d_spec/2 - 1 = 
-                                                                        - 0.15 
-  lambda = 0.01 :  rho(lam) = 1.995262314968879 ,  exponent d_spec/2 - 1 = 
-                                                                        - 0.15 
-  lambda = 0.1 :  rho(lam) = 1.412537544622754 ,  exponent d_spec/2 - 1 = 
-                                                                        - 0.15 
-  lambda = 1 :  rho(lam) = 1.0 ,  exponent d_spec/2 - 1 = - 0.15 
-DOS qualitative behavior as lambda -> 0+: 
-  d_spec < 2:  rho diverges (sub-diffusive, infrared-singular) 
-  d_spec = 2:  rho -> const (marginal) 
-  d_spec > 2:  rho vanishes (super-diffusive) 
-Star-cluster Laplacian L = D - A: 
-[  5   - 1  - 1  - 1  - 1  - 1 ]
-[                              ]
-[ - 1   1    0    0    0    0  ]
-[                              ]
-[ - 1   0    1    0    0    0  ]
-[                              ] 
-[ - 1   0    0    1    0    0  ]
-[                              ]
-[ - 1   0    0    0    1    0  ]
-[                              ]
-[ - 1   0    0    0    0    1  ]
-                      [ 0 ]
-                      [   ]
-                      [ 0 ]
-                      [   ]
-                      [ 0 ]
-L . (1,1,1,1,1,1)^T = [   ]  (should be zero column: graph is connected) 
-                      [ 0 ]
-                      [   ]
-                      [ 0 ]
-                      [   ]
-                      [ 0 ]
-                                      4
-charpoly(L_star) = (lam - 6) (lam - 1)  lam 
-charpoly - expected (lam)(lam-1)^4(lam-6): 0 
-Spectrum of L_star = {0, 1, 1, 1, 1, 6}  (confirmed) 
-Spectral gap of star cluster = 1  (positive => connected) 
-                                           5          4         3         2
-charpoly(L_C5)  (cycle on 5 nodes) = (- lam ) + 10 lam  - 35 lam  + 50 lam
-                                                                      - 25 lam 
-Expected C_5 eigenvalues: 0, 2 - 2 cos(72) (twice), 2 - 2 cos(144) (twice). 
-Numerically: [0.0, 1.381966011250105, 1.381966011250105, 3.618033988749895, 
-                                                            3.618033988749895] 
-Spectral gap of C_5 ~ 1.381966011250105 
+Smallest k with full closure: k = 10   (number of full turns = 3 ) 
 ------------------------------------------------------------ 
-All symbolic identities verified: 
-  * phi^2 = phi + 1, 1/phi = phi - 1, phi*(phi-1) = 1 
-  * Minimal polynomial of phi:  x^2 - x - 1 
-  * Norm of phi over Q(sqrt(5)) = -1  (phi is a unit) 
-  * phi + psi = 1, phi*psi = -1  (Vieta) 
-  * Fibonacci recursion: phi^n = F_n*phi + F_{n-1} 
-  * Binet formula:  F_n = (phi^n - psi^n)/sqrt(5) 
-  * Interior angle of pentagon: 3*pi/5 
-  * Angular deficit (3 pents):  pi/5 
-  * Angular excess (4 pents):   2*pi/5 
-  * 10 pentagons accumulate 3 * 2*pi  -> spinor analogy 
-  * Phi_5(x) = x^4 + x^3 + x^2 + x + 1 
-  * Sum of all 5th roots = 0; sum of primitives = -1 
-  * Gaussian periods = 2*cos(72), 2*cos(144) 
-  * R72^5 = I exactly, det(R72) = 1, tr(R72) = 1/phi 
-  * cos(36) = phi/2, cos(72) = 1/(2*phi) 
-  * Z_2 holonomy: order 2  (spinor double cover) 
-  * Z_n holonomy: order divides n (anyonic generalization) 
-  * order(g, n) = n/gcd(g,n) for all g, n 
-  * d_spec = 2 d_eff / d_w  (Alexander-Orbach) 
-  * charpoly(C5) divisible by Phi_5(x)  (5-fold symmetry) 
-  * C5^5 = I_5;  C5 . C5^T = I_5  (orthogonal cyclic shift) 
-  * Cut-and-project projectors are idempotent, orthogonal, 
-    and complete (P_diag + P_perp = I) 
-  * Pentagon diagonal / side = phi 
-  * Pentagon area = (1/4) sqrt(25 + 10 sqrt 5) 
-  * Z[phi] integer multiplication verified 
-  * Norm N(phi^n) = (-1)^n  (every phi^n is a unit) 
-  * D_5 dihedral relations: S R S = R^{-1} 
-  * |D_5| = 10, sum of irrep dims^2 = 10 
-  * Star-cluster Laplacian: spectrum {0, 1, 1, 1, 1, 6} 
-  * 5-regular OT CA family has 4096 rules 
+[n =  5 ] Cyclotomic / roots-of-unity structure: 
+                                    4    3    2
+  x^n - 1 factorization = (x - 1) (x  + x  + x  + x + 1) 
+  totient(n) = phi(n)   = 4   (degree of Q[zeta_n] over Q) 
+  Real subfield degree  = 2   (degree of Q(zeta + zeta^{-1}) over Q) 
+  Sum of all n-th roots (numeric) = 2.220446049250313E-16 
+                                                       (expected 0 for n >= 2) 
+  Sum of primitive n-th roots (numeric) = - 0.9999999999999998 
+                                                        ,  Moebius mu(n) = - 1 
+                        2 %pi
+  2*cos(2*pi/n) = 2 cos(-----)  = 0.6180339887498949 
+                          5
+                               (algebraic integer in real cyclotomic subfield) 
+  [Pentagon] 2*cos(72)  - (sqrt 5 - 1)/2  ~ 0.0 
+  [Pentagon] 2*cos(144) - (-(sqrt 5 + 1)/2) ~ 2.220446049250313E-16 
+------------------------------------------------------------ 
+[n =  5 ] Rotation matrix R (by exterior angle 2*pi/n): 
+            [     2 %pi         2 %pi  ]
+            [ cos(-----)  - sin(-----) ]
+            [       5             5    ]
+  Symbolic: [                          ] 
+            [     2 %pi        2 %pi   ]
+            [ sin(-----)   cos(-----)  ]
+            [       5            5     ]
+            [ 0.3090169943749474  - 0.9510565162951535 ]
+  Numeric : [                                          ] 
+            [ 0.9510565162951535   0.3090169943749474  ]
+  det(R) = 1  (expected 1) 
+                2 %pi
+  tr(R) = 2 cos(-----)  = 2 cos(2*pi/n) = 0.6180339887498949 
+                  5
+                 [           1.0            2.375740894749007E-16 ]
+  R^n  numeric = [                                                ] 
+                 [ - 2.375740894749007E-16           1.0          ]
+                                                                  (expected I) 
+[n =  5 ] R^k traces (should equal 2 cos(2 pi k/n)): 
+  k = 1 : tr(R^k) = 0.6180339887498949  ~ 2cos( 1 *2pi/n) = 0.6180339887498949 
+  k = 2 : tr(R^k) = - 1.618033988749895  ~ 2cos( 2 *2pi/n) = 
+                                                           - 1.618033988749894 
+  k = 3 : tr(R^k) = - 1.618033988749895  ~ 2cos( 3 *2pi/n) = 
+                                                           - 1.618033988749895 
+  k = 4 : tr(R^k) = 0.6180339887498947  ~ 2cos( 4 *2pi/n) = 0.6180339887498945 
+  k = 5 : tr(R^k) = 2.0  ~ 2cos( 5 *2pi/n) = 2.0 
+------------------------------------------------------------ 
+[n =  5 ] PRIMARY BASIS VECTORS (unit circumradius, 
+                            vertex 0 at top, CCW): 
+  v[ 0 ] =  [0, 1]  ~  [0.0, 1.0] 
+                 9 %pi       9 %pi
+  v[ 1 ] =  [cos(-----), sin(-----)]  ~  
+                  10          10
+                                    [- 0.9510565162951535, 0.3090169943749475] 
+                 13 %pi       13 %pi
+  v[ 2 ] =  [cos(------), sin(------)]  ~  
+                   10           10
+                                  [- 0.5877852522924733, - 0.8090169943749473] 
+                 17 %pi       17 %pi
+  v[ 3 ] =  [cos(------), sin(------)]  ~  
+                   10           10
+                                    [0.5877852522924729, - 0.8090169943749476] 
+                 21 %pi       21 %pi
+  v[ 4 ] =  [cos(------), sin(------)]  ~  
+                   10           10
+                                      [0.9510565162951536, 0.3090169943749472] 
+[n =  5 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
+  e[ 1 ] (numeric) =  [- 0.9510565162951535, - 0.6909830056250526] 
+  e[ 2 ] (numeric) =  [0.3632712640026803, - 1.118033988749895] 
+  e[ 3 ] (numeric) =  [1.175570504584946, - 2.220446049250313E-16] 
+  e[ 4 ] (numeric) =  [0.3632712640026807, 1.118033988749894] 
+  e[ 5 ] (numeric) =  [- 0.9510565162951536, 0.6909830056250528] 
+                                                    %pi
+[n =  5 ] Side length (unit circumradius) s = 2 sin(---)  = 1.175570504584946 
+                                                     5
+  [Pentagon] cos(72) - (phi-1)/2 = 0 
+  [Pentagon] cos(36) - phi/2     = 0 
+  [Pentagon] cos^2(72) + sin^2(72) = 1 
+  [Pentagon] cos^2(36) + sin^2(36) = 1 
+                                [ 1  0 ]
+  [Pentagon] R72^5 (radcan'd) = [      ] 
+                                [ 0  1 ]
+                                 [ 0.0  0.0 ]
+  [Pentagon] R72^5 - I numeric = [          ] 
+                                 [ 0.0  0.0 ]
+------------------------------------------------------------ 
+[n =  5 ] Holonomy / spinor cover analysis: 
+  Natural single-vortex fiber order = 10 
+  Z_n single-vortex holonomy (n = 10 ) : 1 
+  Required loop count to close fiber : 10 
+[Anyonic case G = Z_n with n = 5 ]: 
+  single-vortex holonomy = 1 
+  loop order required    = 5  (expected 5 ) 
+[n =  5 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
+  All g in Z_n satisfy order(g) = n/gcd(g, n). 
+[n =  5 ] Composite holonomy: Loop A = 3 , Loop B = 2 , Composite = 0 
+                                                               , Sum mod n = 0 
+------------------------------------------------------------ 
+[n =  5 ] Cut-and-project ambient lattice Z^n: 
+  C_n cyclic shift matrix: 
+   [ 0  1  0  0  0 ]
+   [               ]
+   [ 0  0  1  0  0 ]
+   [               ]
+   [ 0  0  0  1  0 ] 
+   [               ]
+   [ 0  0  0  0  1 ]
+   [               ]
+   [ 1  0  0  0  0 ]
+                       5
+  charpoly(C_n) = 1 - x  
+  C_n^n = I_n verified. 
+  C_n is orthogonal: C_n . C_n^T = I_n. 
+  C_n . (1,...,1)^T - (1,...,1)^T = [ 0  0  0  0  0 ]  (should be zero) 
+  Projectors P_diag, P_perp: idempotent, orthogonal, complete. 
+  dim(orthogonal complement of diagonal) = 4  = n - 1 
+[n =  5 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
+  V_ 1  (rotation angle 2 pi * 1 /n = 1.256637061435917 ): 
+    u_ 1  (cos) = [1.0, 0.3090169943749474, - 0.8090169943749473, 
+                                     - 0.8090169943749476, 0.3090169943749472] 
+    w_ 1  (sin) = [0.0, 0.9510565162951535, 0.5877852522924733, 
+                                    - 0.587785252292473, - 0.9510565162951536] 
+  V_ 2  (rotation angle 2 pi * 2 /n = 2.513274122871834 ): 
+    u_ 2  (cos) = [1.0, - 0.8090169943749473, 0.3090169943749472, 
+                                     0.3090169943749477, - 0.8090169943749477] 
+    w_ 2  (sin) = [0.0, 0.5877852522924733, - 0.9510565162951536, 
+                                     0.9510565162951535, - 0.5877852522924728] 
+  Physical 2D plane E_|| recommended = V_1. 
+  Perp subspace E_perp = (diagonal) + 1 * 2D pieces + 0 alternating directions 
+                                                           =>  dim(E_perp) = 3 
+                       4
+  ||pi_perp(e_1)||^2 = -  (= (n-1)/n) 
+                       5
+------------------------------------------------------------ 
+[n =  5 ] CA rule-count analysis (degree k = n): 
+  Binary outer-totalistic n-neighbor rules = 4096  (= 2^ 12 ) 
+  Binary fully totalistic n-neighbor rules = 128  (= 2^ 7 ) 
+  Binary fully general    n-neighbor rules = 18446744073709551616  (= 2^(2^ 6 
+                                                                            )) 
+  [Pentagon] 4096 outer-totalistic rules confirmed. 
+  Reference: 4-OT = 1024 , 8-OT = 262144 
+------------------------------------------------------------ 
+[n =  5 ] Polygon geometry (side s = 1): 
+                       1
+  Circumradius R = ----------  ~ 0.8506508083520399 
+                         %pi
+                   2 sin(---)
+                          5
+                       1
+  Apothem      r = ----------  ~ 0.6881909602355868 
+                         %pi
+                   2 tan(---)
+                          5
+                       %pi
+                   tan(---)
+                        5
+  R/r            = --------  = sec(pi/n) = 1.236067977499789 
+                       %pi
+                   sin(---)
+                        5
+                         %pi
+                   5 cot(---)
+                          5
+  Area A         = ----------  ~ 1.720477400588967 
+                       4
+  Diagonals (k-step chord lengths, unit side): 
+    d[ 1 ] = 1  ~ 1.0 
+                 2 %pi
+             sin(-----)
+                   5
+    d[ 2 ] = ----------  ~ 1.618033988749894 
+                  %pi
+              sin(---)
+                   5
+                 3 %pi
+             sin(-----)
+                   5
+    d[ 3 ] = ----------  ~ 1.618033988749895 
+                  %pi
+              sin(---)
+                   5
+                 4 %pi
+             sin(-----)
+                   5
+    d[ 4 ] = ----------  ~ 1.0 
+                  %pi
+              sin(---)
+                   5
+  [Pentagon] (d/s)^2 = phi^2 confirmed 
+  [Pentagon] pentagram self-similarity: 1/phi^2 = 2 - phi 
+------------------------------------------------------------ 
+[n =  5 ] Dihedral group D_n symmetries: 
+                                   [ 0  0 ]
+  S0 . R . S0 - R^{-1} (symbolic): [      ] 
+                                   [ 0  0 ]
+  S R S = R^{-1} verified. 
+  |D_n| = 10 
+  Conjugacy classes (n odd): 1 + (n-1)/2 + 1 = 4 
+                                  (sum of sizes 1 + (n-1)/2 * 2 + n = 10 = 2n) 
+  Irrep dim^2 sum (n odd): 2 + 2(n-1) = 10 (should = 2n = 10 ) 
+------------------------------------------------------------ 
+[n =  5 ] Graph Laplacians (star and cycle): 
+  Star K_{1, 5 }: spectrum = {0, 1 (multiplicity 4 ), 6 } 
+  Spectral gap = 1 (positive => connected). 
+  Cycle C_ 5  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
+   [0.0, 1.381966011250105, 3.618033988749895, 3.618033988749895, 
+                                                            1.381966011250105] 
+  Spectral gap of C_ 5  = 1.381966011250105 
+                                       5          4         3         2
+  [Pentagon] charpoly(L_{C_5}) = (- lam ) + 10 lam  - 35 lam  + 50 lam
+                                                                      - 25 lam 
+  [n = 5 ] iteration complete. 
 ============================================================ 
-analysis.mac : all checks passed. 
+N_GON = 6 
+============================================================ 
+                                    2 %pi
+Interior angle theta = (n-2)*pi/n = -----  = 120.0 deg 
+                                      3
+                                   %pi
+Exterior angle = 2*pi/n          = ---  = 60.0 deg 
+                                    3
+Flat-vertex count k_flat = floor(2*pi/theta) = 3 
+Angular deficit at k_flat copies = 0  = 0.0 deg 
+                                      2 %pi
+Angular excess at (k_flat+1) copies = -----  = 120.0 deg 
+                                        3
+Smallest k>0 with k*theta = (integer)*2*pi:  k = 3 ,  accumulating  1 
+                                                                    full turns 
+------------------------------------------------------------ 
+[n =  6 ] Angle summary: 
+                            2 %pi
+  Interior angle  theta   = -----  = 2.094395102393195  rad = 120.0  deg 
+                              3
+                            %pi
+  Exterior angle          = ---  = 1.047197551196597  rad 
+                             3
+                            %pi
+  Central angle           = ---  = 1.047197551196597  rad 
+                             3
+  Sum of interior angles  = 4 %pi 
+                            2 %pi
+  Avg interior angle      = ----- 
+                              3
+[n =  6 ] k-copy vertex-loop accumulation: 
+                2 %pi     1
+  k = 1 : sum = -----  =  - * 2pi  --  open 
+                  3       3
+                4 %pi     2
+  k = 2 : sum = -----  =  - * 2pi  --  open 
+                  3       3
+  k = 3 : sum = 2 %pi  =  1 * 2pi  --  CLOSES 
+                8 %pi     4
+  k = 4 : sum = -----  =  - * 2pi  --  open 
+                  3       3
+                10 %pi     5
+  k = 5 : sum = ------  =  - * 2pi  --  open 
+                  3        3
+  k = 6 : sum = 4 %pi  =  2 * 2pi  --  CLOSES 
+                14 %pi     7
+  k = 7 : sum = ------  =  - * 2pi  --  open 
+                  3        3
+                16 %pi     8
+  k = 8 : sum = ------  =  - * 2pi  --  open 
+                  3        3
+  k = 9 : sum = 6 %pi  =  3 * 2pi  --  CLOSES 
+                 20 %pi     10
+  k = 10 : sum = ------  =  -- * 2pi  --  open 
+                   3        3
+                 22 %pi     11
+  k = 11 : sum = ------  =  -- * 2pi  --  open 
+                   3        3
+  k = 12 : sum = 8 %pi  =  4 * 2pi  --  CLOSES 
+Smallest k with full closure: k = 3   (number of full turns = 1 ) 
+------------------------------------------------------------ 
+[n =  6 ] Cyclotomic / roots-of-unity structure: 
+                                            2            2
+  x^n - 1 factorization = (x - 1) (x + 1) (x  - x + 1) (x  + x + 1) 
+  totient(n) = phi(n)   = 2   (degree of Q[zeta_n] over Q) 
+  Real subfield degree  = 1   (degree of Q(zeta + zeta^{-1}) over Q) 
+  Sum of all n-th roots (numeric) = 0.0  (expected 0 for n >= 2) 
+  Sum of primitive n-th roots (numeric) = 1.0 ,  Moebius mu(n) = 1 
+  2*cos(2*pi/n) = 1  = 1.0   (algebraic integer in real cyclotomic subfield) 
+------------------------------------------------------------ 
+[n =  6 ] Rotation matrix R (by exterior angle 2*pi/n): 
+            [    1       sqrt(3) ]
+            [    -     - ------- ]
+            [    2          2    ]
+  Symbolic: [                    ] 
+            [ sqrt(3)      1     ]
+            [ -------      -     ]
+            [    2         2     ]
+            [        0.5          - 0.8660254037844386 ]
+  Numeric : [                                          ] 
+            [ 0.8660254037844386          0.5          ]
+  det(R) = 1  (expected 1) 
+  tr(R) = 1  = 2 cos(2*pi/n) = 1.0 
+                 [ 1.0  0.0 ]
+  R^n  numeric = [          ]  (expected I) 
+                 [ 0.0  1.0 ]
+[n =  6 ] R^k traces (should equal 2 cos(2 pi k/n)): 
+  k = 1 : tr(R^k) = 1.0  ~ 2cos( 1 *2pi/n) = 1.0 
+  k = 2 : tr(R^k) = - 1.0  ~ 2cos( 2 *2pi/n) = - 1.0 
+  k = 3 : tr(R^k) = - 2.0  ~ 2cos( 3 *2pi/n) = - 2.0 
+  k = 4 : tr(R^k) = - 1.0  ~ 2cos( 4 *2pi/n) = - 1.0 
+  k = 5 : tr(R^k) = 1.0  ~ 2cos( 5 *2pi/n) = 1.0 
+  k = 6 : tr(R^k) = 2.0  ~ 2cos( 6 *2pi/n) = 2.0 
+------------------------------------------------------------ 
+[n =  6 ] PRIMARY BASIS VECTORS (unit circumradius, 
+                            vertex 0 at top, CCW): 
+  v[ 0 ] =  [0, 1]  ~  [0.0, 1.0] 
+               sqrt(3)  1
+  v[ 1 ] =  [- -------, -]  ~  [- 0.8660254037844386, 0.5] 
+                  2     2
+               sqrt(3)    1
+  v[ 2 ] =  [- -------, - -]  ~  [- 0.8660254037844386, - 0.5] 
+                  2       2
+  v[ 3 ] =  [0, - 1]  ~  [0.0, - 1.0] 
+             sqrt(3)    1
+  v[ 4 ] =  [-------, - -]  ~  [0.8660254037844386, - 0.5] 
+                2       2
+             sqrt(3)  1
+  v[ 5 ] =  [-------, -]  ~  [0.8660254037844386, 0.5] 
+                2     2
+[n =  6 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
+  e[ 1 ] (numeric) =  [- 0.8660254037844386, - 0.5] 
+  e[ 2 ] (numeric) =  [0.0, - 1.0] 
+  e[ 3 ] (numeric) =  [0.8660254037844386, - 0.5] 
+  e[ 4 ] (numeric) =  [0.8660254037844386, 0.5] 
+  e[ 5 ] (numeric) =  [0.0, 1.0] 
+  e[ 6 ] (numeric) =  [- 0.8660254037844386, 0.5] 
+[n =  6 ] Side length (unit circumradius) s = 1  = 1.0 
+------------------------------------------------------------ 
+[n =  6 ] Holonomy / spinor cover analysis: 
+  Natural single-vortex fiber order = 3 
+  Z_n single-vortex holonomy (n = 3 ) : 1 
+  Required loop count to close fiber : 3 
+[Anyonic case G = Z_n with n = 6 ]: 
+  single-vortex holonomy = 1 
+  loop order required    = 6  (expected 6 ) 
+[n =  6 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
+  All g in Z_n satisfy order(g) = n/gcd(g, n). 
+[n =  6 ] Composite holonomy: Loop A = 3 , Loop B = 1 , Composite = 4 
+                                                               , Sum mod n = 4 
+------------------------------------------------------------ 
+[n =  6 ] Cut-and-project ambient lattice Z^n: 
+  C_n cyclic shift matrix: 
+   [ 0  1  0  0  0  0 ]
+   [                  ]
+   [ 0  0  1  0  0  0 ]
+   [                  ]
+   [ 0  0  0  1  0  0 ]
+   [                  ] 
+   [ 0  0  0  0  1  0 ]
+   [                  ]
+   [ 0  0  0  0  0  1 ]
+   [                  ]
+   [ 1  0  0  0  0  0 ]
+                   6
+  charpoly(C_n) = x  - 1 
+  C_n^n = I_n verified. 
+  C_n is orthogonal: C_n . C_n^T = I_n. 
+  C_n . (1,...,1)^T - (1,...,1)^T = [ 0  0  0  0  0  0 ]  (should be zero) 
+  Projectors P_diag, P_perp: idempotent, orthogonal, complete. 
+  dim(orthogonal complement of diagonal) = 5  = n - 1 
+[n =  6 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
+  V_ 1  (rotation angle 2 pi * 1 /n = 1.047197551196597 ): 
+    u_ 1  (cos) = [1.0, 0.5, - 0.5, - 1.0, - 0.5, 0.5] 
+    w_ 1  (sin) = [0.0, 0.8660254037844386, 0.8660254037844386, 0.0, 
+                                   - 0.8660254037844386, - 0.8660254037844386] 
+  V_ 2  (rotation angle 2 pi * 2 /n = 2.094395102393195 ): 
+    u_ 2  (cos) = [1.0, - 0.5, - 0.5, 1.0, - 0.5, - 0.5] 
+    w_ 2  (sin) = [0.0, 0.8660254037844386, - 0.8660254037844386, 0.0, 
+                                     0.8660254037844386, - 0.8660254037844386] 
+  alternating-sign eigenvector (eigenvalue -1) = [1, - 1, 1, - 1, 1, - 1] 
+  Physical 2D plane E_|| recommended = V_1. 
+  Perp subspace E_perp = (diagonal) + 1 * 2D pieces + 1 alternating direction 
+                                                           =>  dim(E_perp) = 4 
+                       5
+  ||pi_perp(e_1)||^2 = -  (= (n-1)/n) 
+                       6
+------------------------------------------------------------ 
+[n =  6 ] CA rule-count analysis (degree k = n): 
+  Binary outer-totalistic n-neighbor rules = 16384  (= 2^ 14 ) 
+  Binary fully totalistic n-neighbor rules = 256  (= 2^ 8 ) 
+  Binary fully general    n-neighbor rules = 
+                        340282366920938463463374607431768211456  (= 2^(2^ 7 )) 
+  Reference: 4-OT = 1024 , 8-OT = 262144 
+------------------------------------------------------------ 
+[n =  6 ] Polygon geometry (side s = 1): 
+  Circumradius R = 1  ~ 1.0 
+                   sqrt(3)
+  Apothem      r = -------  ~ 0.8660254037844386 
+                      2
+                      2
+  R/r            = -------  = sec(pi/n) = 1.154700538379251 
+                   sqrt(3)
+                    3/2
+                   3
+  Area A         = ----  ~ 2.598076211353315 
+                    2
+  Diagonals (k-step chord lengths, unit side): 
+    d[ 1 ] = 1  ~ 1.0 
+    d[ 2 ] = sqrt(3)  ~ 1.732050807568877 
+    d[ 3 ] = 2  ~ 2.0 
+    d[ 4 ] = sqrt(3)  ~ 1.732050807568877 
+    d[ 5 ] = 1  ~ 1.0 
+------------------------------------------------------------ 
+[n =  6 ] Dihedral group D_n symmetries: 
+                                   [ 0  0 ]
+  S0 . R . S0 - R^{-1} (symbolic): [      ] 
+                                   [ 0  0 ]
+  S R S = R^{-1} verified. 
+  |D_n| = 12 
+  Conjugacy classes (n even): 1 + (n-2)/2 + 1 + 2 = 6 
+                        (sum of sizes 1 + (n-2)/2 * 2 + 1 + 2*(n/2) = 12 = 2n) 
+  Irrep dim^2 sum (n even): 4 + 2(n-2) = 12 (should = 2n = 12 ) 
+------------------------------------------------------------ 
+[n =  6 ] Graph Laplacians (star and cycle): 
+  Star K_{1, 6 }: spectrum = {0, 1 (multiplicity 5 ), 7 } 
+  Spectral gap = 1 (positive => connected). 
+  Cycle C_ 6  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
+   [0.0, 1.0, 3.0, 4.0, 3.0, 1.0] 
+  Spectral gap of C_ 6  = 1.0 
+  [n = 6 ] iteration complete. 
+============================================================ 
+N_GON = 7 
+============================================================ 
+                                    5 %pi
+Interior angle theta = (n-2)*pi/n = -----  = 128.5714285714285 deg 
+                                      7
+                                   2 %pi
+Exterior angle = 2*pi/n          = -----  = 51.42857142857143 deg 
+                                     7
+Flat-vertex count k_flat = floor(2*pi/theta) = 2 
+                                   4 %pi
+Angular deficit at k_flat copies = -----  = 102.8571428571428 deg 
+                                     7
+                                      %pi
+Angular excess at (k_flat+1) copies = ---  = 25.71428571428571 deg 
+                                       7
+Smallest k>0 with k*theta = (integer)*2*pi:  k = 14 ,  accumulating  5 
+                                                                    full turns 
+------------------------------------------------------------ 
+[n =  7 ] Angle summary: 
+                            5 %pi
+  Interior angle  theta   = -----  = 2.243994752564138  rad = 128.5714285714285
+                              7
+                                                                           deg 
+                            2 %pi
+  Exterior angle          = -----  = 0.8975979010256552  rad 
+                              7
+                            2 %pi
+  Central angle           = -----  = 0.8975979010256552  rad 
+                              7
+  Sum of interior angles  = 5 %pi 
+                            5 %pi
+  Avg interior angle      = ----- 
+                              7
+[n =  7 ] k-copy vertex-loop accumulation: 
+                5 %pi     5
+  k = 1 : sum = -----  =  -- * 2pi  --  open 
+                  7       14
+                10 %pi     5
+  k = 2 : sum = ------  =  - * 2pi  --  open 
+                  7        7
+                15 %pi     15
+  k = 3 : sum = ------  =  -- * 2pi  --  open 
+                  7        14
+                20 %pi     10
+  k = 4 : sum = ------  =  -- * 2pi  --  open 
+                  7        7
+                25 %pi     25
+  k = 5 : sum = ------  =  -- * 2pi  --  open 
+                  7        14
+                30 %pi     15
+  k = 6 : sum = ------  =  -- * 2pi  --  open 
+                  7        7
+                          5
+  k = 7 : sum = 5 %pi  =  - * 2pi  --  open 
+                          2
+                40 %pi     20
+  k = 8 : sum = ------  =  -- * 2pi  --  open 
+                  7        7
+                45 %pi     45
+  k = 9 : sum = ------  =  -- * 2pi  --  open 
+                  7        14
+                 50 %pi     25
+  k = 10 : sum = ------  =  -- * 2pi  --  open 
+                   7        7
+                 55 %pi     55
+  k = 11 : sum = ------  =  -- * 2pi  --  open 
+                   7        14
+                 60 %pi     30
+  k = 12 : sum = ------  =  -- * 2pi  --  open 
+                   7        7
+                 65 %pi     65
+  k = 13 : sum = ------  =  -- * 2pi  --  open 
+                   7        14
+  k = 14 : sum = 10 %pi  =  5 * 2pi  --  CLOSES 
+Smallest k with full closure: k = 14   (number of full turns = 5 ) 
+------------------------------------------------------------ 
+[n =  7 ] Cyclotomic / roots-of-unity structure: 
+                                    6    5    4    3    2
+  x^n - 1 factorization = (x - 1) (x  + x  + x  + x  + x  + x + 1) 
+  totient(n) = phi(n)   = 6   (degree of Q[zeta_n] over Q) 
+  Real subfield degree  = 3   (degree of Q(zeta + zeta^{-1}) over Q) 
+  Sum of all n-th roots (numeric) = 4.440892098500626E-16 
+                                                       (expected 0 for n >= 2) 
+  Sum of primitive n-th roots (numeric) = - 0.9999999999999996 
+                                                        ,  Moebius mu(n) = - 1 
+                        2 %pi
+  2*cos(2*pi/n) = 2 cos(-----)  = 1.246979603717467 
+                          7
+                               (algebraic integer in real cyclotomic subfield) 
+------------------------------------------------------------ 
+[n =  7 ] Rotation matrix R (by exterior angle 2*pi/n): 
+            [     2 %pi         2 %pi  ]
+            [ cos(-----)  - sin(-----) ]
+            [       7             7    ]
+  Symbolic: [                          ] 
+            [     2 %pi        2 %pi   ]
+            [ sin(-----)   cos(-----)  ]
+            [       7            7     ]
+            [ 0.6234898018587336  - 0.7818314824680298 ]
+  Numeric : [                                          ] 
+            [ 0.7818314824680298   0.6234898018587336  ]
+  det(R) = 1  (expected 1) 
+                2 %pi
+  tr(R) = 2 cos(-----)  = 2 cos(2*pi/n) = 1.246979603717467 
+                  7
+                 [ 0.9999999999999982         0.0         ]
+  R^n  numeric = [                                        ]  (expected I) 
+                 [        0.0          0.9999999999999982 ]
+[n =  7 ] R^k traces (should equal 2 cos(2 pi k/n)): 
+  k = 1 : tr(R^k) = 1.246979603717467  ~ 2cos( 1 *2pi/n) = 1.246979603717467 
+  k = 2 : tr(R^k) = - 0.4450418679126284  ~ 2cos( 2 *2pi/n) = 
+                                                          - 0.4450418679126287 
+  k = 3 : tr(R^k) = - 1.801937735804838  ~ 2cos( 3 *2pi/n) = 
+                                                           - 1.801937735804838 
+  k = 4 : tr(R^k) = - 1.801937735804838  ~ 2cos( 4 *2pi/n) = 
+                                                           - 1.801937735804838 
+  k = 5 : tr(R^k) = - 0.44504186791263  ~ 2cos( 5 *2pi/n) = 
+                                                          - 0.4450418679126292 
+  k = 6 : tr(R^k) = 1.246979603717465  ~ 2cos( 6 *2pi/n) = 1.246979603717466 
+  k = 7 : tr(R^k) = 1.999999999999996  ~ 2cos( 7 *2pi/n) = 2.0 
+------------------------------------------------------------ 
+[n =  7 ] PRIMARY BASIS VECTORS (unit circumradius, 
+                            vertex 0 at top, CCW): 
+  v[ 0 ] =  [0, 1]  ~  [0.0, 1.0] 
+                 11 %pi       11 %pi
+  v[ 1 ] =  [cos(------), sin(------)]  ~  
+                   14           14
+                                    [- 0.7818314824680298, 0.6234898018587336] 
+                 15 %pi       15 %pi
+  v[ 2 ] =  [cos(------), sin(------)]  ~  
+                   14           14
+                                  [- 0.9749279121818236, - 0.2225209339563142] 
+                 19 %pi       19 %pi
+  v[ 3 ] =  [cos(------), sin(------)]  ~  
+                   14           14
+                                   [- 0.4338837391175583, - 0.900968867902419] 
+                 23 %pi       23 %pi
+  v[ 4 ] =  [cos(------), sin(------)]  ~  
+                   14           14
+                                    [0.4338837391175579, - 0.9009688679024193] 
+                 27 %pi       27 %pi
+  v[ 5 ] =  [cos(------), sin(------)]  ~  
+                   14           14
+                                    [0.9749279121818235, - 0.2225209339563146] 
+                 31 %pi       31 %pi
+  v[ 6 ] =  [cos(------), sin(------)]  ~  
+                   14           14
+                                        [0.78183148246803, 0.6234898018587334] 
+[n =  7 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
+  e[ 1 ] (numeric) =  [- 0.7818314824680298, - 0.3765101981412664] 
+  e[ 2 ] (numeric) =  [- 0.1930964297137938, - 0.8460107358150479] 
+  e[ 3 ] (numeric) =  [0.5410441730642653, - 0.6784479339461047] 
+  e[ 4 ] (numeric) =  [0.8677674782351162, - 2.220446049250313E-16] 
+  e[ 5 ] (numeric) =  [0.5410441730642656, 0.6784479339461046] 
+  e[ 6 ] (numeric) =  [- 0.1930964297137934, 0.846010735815048] 
+  e[ 7 ] (numeric) =  [- 0.78183148246803, 0.3765101981412666] 
+                                                    %pi
+[n =  7 ] Side length (unit circumradius) s = 2 sin(---)  = 0.8677674782351162 
+                                                     7
+------------------------------------------------------------ 
+[n =  7 ] Holonomy / spinor cover analysis: 
+  Natural single-vortex fiber order = 14 
+  Z_n single-vortex holonomy (n = 14 ) : 1 
+  Required loop count to close fiber : 14 
+[Anyonic case G = Z_n with n = 7 ]: 
+  single-vortex holonomy = 1 
+  loop order required    = 7  (expected 7 ) 
+[n =  7 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
+  All g in Z_n satisfy order(g) = n/gcd(g, n). 
+[n =  7 ] Composite holonomy: Loop A = 3 , Loop B = 0 , Composite = 3 
+                                                               , Sum mod n = 3 
+------------------------------------------------------------ 
+[n =  7 ] Cut-and-project ambient lattice Z^n: 
+  C_n cyclic shift matrix: 
+   [ 0  1  0  0  0  0  0 ]
+   [                     ]
+   [ 0  0  1  0  0  0  0 ]
+   [                     ]
+   [ 0  0  0  1  0  0  0 ]
+   [                     ]
+   [ 0  0  0  0  1  0  0 ] 
+   [                     ]
+   [ 0  0  0  0  0  1  0 ]
+   [                     ]
+   [ 0  0  0  0  0  0  1 ]
+   [                     ]
+   [ 1  0  0  0  0  0  0 ]
+                       7
+  charpoly(C_n) = 1 - x  
+  C_n^n = I_n verified. 
+  C_n is orthogonal: C_n . C_n^T = I_n. 
+  C_n . (1,...,1)^T - (1,...,1)^T = [ 0  0  0  0  0  0  0 ]  (should be zero) 
+  Projectors P_diag, P_perp: idempotent, orthogonal, complete. 
+  dim(orthogonal complement of diagonal) = 6  = n - 1 
+[n =  7 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
+  V_ 1  (rotation angle 2 pi * 1 /n = 0.8975979010256552 ): 
+    u_ 1  (cos) = [1.0, 0.6234898018587336, - 0.2225209339563143, 
+- 0.900968867902419, - 0.9009688679024192, - 0.2225209339563146, 
+0.6234898018587334] 
+    w_ 1  (sin) = [0.0, 0.7818314824680298, 0.9749279121818236, 
+0.4338837391175582, - 0.433883739117558, - 0.9749279121818236, 
+- 0.7818314824680299] 
+  V_ 2  (rotation angle 2 pi * 2 /n = 1.79519580205131 ): 
+    u_ 2  (cos) = [1.0, - 0.2225209339563143, - 0.9009688679024192, 
+0.6234898018587334, 0.6234898018587337, - 0.9009688679024189, 
+- 0.2225209339563148] 
+    w_ 2  (sin) = [0.0, 0.9749279121818236, - 0.433883739117558, 
+- 0.7818314824680299, 0.7818314824680296, 0.4338837391175584, 
+- 0.9749279121818235] 
+  V_ 3  (rotation angle 2 pi * 3 /n = 2.692793703076965 ): 
+    u_ 3  (cos) = [1.0, - 0.900968867902419, 0.6234898018587334, 
+- 0.2225209339563141, - 0.2225209339563148, 0.6234898018587339, 
+- 0.9009688679024194] 
+    w_ 3  (sin) = [0.0, 0.4338837391175582, - 0.7818314824680299, 
+0.9749279121818237, - 0.9749279121818235, 0.7818314824680295, 
+- 0.4338837391175575] 
+  Physical 2D plane E_|| recommended = V_1. 
+  Perp subspace E_perp = (diagonal) + 2 * 2D pieces + 0 alternating directions 
+                                                           =>  dim(E_perp) = 5 
+                       6
+  ||pi_perp(e_1)||^2 = -  (= (n-1)/n) 
+                       7
+------------------------------------------------------------ 
+[n =  7 ] CA rule-count analysis (degree k = n): 
+  Binary outer-totalistic n-neighbor rules = 65536  (= 2^ 16 ) 
+  Binary fully totalistic n-neighbor rules = 512  (= 2^ 9 ) 
+  Binary fully general    n-neighbor rules = 
+115792089237316195423570985008687907853269984665640564039457584007913129639936 
+ (= 2^(2^ 8 )) 
+  Reference: 4-OT = 1024 , 8-OT = 262144 
+------------------------------------------------------------ 
+[n =  7 ] Polygon geometry (side s = 1): 
+                       1
+  Circumradius R = ----------  ~ 1.152382435481243 
+                         %pi
+                   2 sin(---)
+                          7
+                       1
+  Apothem      r = ----------  ~ 1.038260698286168 
+                         %pi
+                   2 tan(---)
+                          7
+                       %pi
+                   tan(---)
+                        7
+  R/r            = --------  = sec(pi/n) = 1.109916264174742 
+                       %pi
+                   sin(---)
+                        7
+                         %pi
+                   7 cot(---)
+                          7
+  Area A         = ----------  ~ 3.633912444001589 
+                       4
+  Diagonals (k-step chord lengths, unit side): 
+    d[ 1 ] = 1  ~ 1.0 
+                 2 %pi
+             sin(-----)
+                   7
+    d[ 2 ] = ----------  ~ 1.801937735804838 
+                  %pi
+              sin(---)
+                   7
+                 3 %pi
+             sin(-----)
+                   7
+    d[ 3 ] = ----------  ~ 2.246979603717467 
+                  %pi
+              sin(---)
+                   7
+                 4 %pi
+             sin(-----)
+                   7
+    d[ 4 ] = ----------  ~ 2.246979603717467 
+                  %pi
+              sin(---)
+                   7
+                 5 %pi
+             sin(-----)
+                   7
+    d[ 5 ] = ----------  ~ 1.801937735804838 
+                  %pi
+              sin(---)
+                   7
+                 6 %pi
+             sin(-----)
+                   7
+    d[ 6 ] = ----------  ~ 1.0 
+                  %pi
+              sin(---)
+                   7
+------------------------------------------------------------ 
+[n =  7 ] Dihedral group D_n symmetries: 
+                                   [ 0  0 ]
+  S0 . R . S0 - R^{-1} (symbolic): [      ] 
+                                   [ 0  0 ]
+  S R S = R^{-1} verified. 
+  |D_n| = 14 
+  Conjugacy classes (n odd): 1 + (n-1)/2 + 1 = 5 
+                                  (sum of sizes 1 + (n-1)/2 * 2 + n = 14 = 2n) 
+  Irrep dim^2 sum (n odd): 2 + 2(n-1) = 14 (should = 2n = 14 ) 
+------------------------------------------------------------ 
+[n =  7 ] Graph Laplacians (star and cycle): 
+  Star K_{1, 7 }: spectrum = {0, 1 (multiplicity 6 ), 8 } 
+  Spectral gap = 1 (positive => connected). 
+  Cycle C_ 7  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
+   [0.0, 0.7530203962825328, 2.445041867912628, 3.801937735804838, 
+                     3.801937735804838, 2.445041867912629, 0.7530203962825333] 
+  Spectral gap of C_ 7  = 0.7530203962825328 
+  [n = 7 ] iteration complete. 
+============================================================ 
+N_GON = 8 
+============================================================ 
+                                    3 %pi
+Interior angle theta = (n-2)*pi/n = -----  = 135.0 deg 
+                                      4
+                                   %pi
+Exterior angle = 2*pi/n          = ---  = 45.0 deg 
+                                    4
+Flat-vertex count k_flat = floor(2*pi/theta) = 2 
+                                   %pi
+Angular deficit at k_flat copies = ---  = 90.0 deg 
+                                    2
+                                      %pi
+Angular excess at (k_flat+1) copies = ---  = 45.0 deg 
+                                       4
+Smallest k>0 with k*theta = (integer)*2*pi:  k = 8 ,  accumulating  3 
+                                                                    full turns 
+------------------------------------------------------------ 
+[n =  8 ] Angle summary: 
+                            3 %pi
+  Interior angle  theta   = -----  = 2.356194490192345  rad = 135.0  deg 
+                              4
+                            %pi
+  Exterior angle          = ---  = 0.7853981633974483  rad 
+                             4
+                            %pi
+  Central angle           = ---  = 0.7853981633974483  rad 
+                             4
+  Sum of interior angles  = 6 %pi 
+                            3 %pi
+  Avg interior angle      = ----- 
+                              4
+[n =  8 ] k-copy vertex-loop accumulation: 
+                3 %pi     3
+  k = 1 : sum = -----  =  - * 2pi  --  open 
+                  4       8
+                3 %pi     3
+  k = 2 : sum = -----  =  - * 2pi  --  open 
+                  2       4
+                9 %pi     9
+  k = 3 : sum = -----  =  - * 2pi  --  open 
+                  4       8
+                          3
+  k = 4 : sum = 3 %pi  =  - * 2pi  --  open 
+                          2
+                15 %pi     15
+  k = 5 : sum = ------  =  -- * 2pi  --  open 
+                  4        8
+                9 %pi     9
+  k = 6 : sum = -----  =  - * 2pi  --  open 
+                  2       4
+                21 %pi     21
+  k = 7 : sum = ------  =  -- * 2pi  --  open 
+                  4        8
+  k = 8 : sum = 6 %pi  =  3 * 2pi  --  CLOSES 
+                27 %pi     27
+  k = 9 : sum = ------  =  -- * 2pi  --  open 
+                  4        8
+                 15 %pi     15
+  k = 10 : sum = ------  =  -- * 2pi  --  open 
+                   2        4
+                 33 %pi     33
+  k = 11 : sum = ------  =  -- * 2pi  --  open 
+                   4        8
+                           9
+  k = 12 : sum = 9 %pi  =  - * 2pi  --  open 
+                           2
+                 39 %pi     39
+  k = 13 : sum = ------  =  -- * 2pi  --  open 
+                   4        8
+                 21 %pi     21
+  k = 14 : sum = ------  =  -- * 2pi  --  open 
+                   2        4
+                 45 %pi     45
+  k = 15 : sum = ------  =  -- * 2pi  --  open 
+                   4        8
+  k = 16 : sum = 12 %pi  =  6 * 2pi  --  CLOSES 
+Smallest k with full closure: k = 8   (number of full turns = 3 ) 
+------------------------------------------------------------ 
+[n =  8 ] Cyclotomic / roots-of-unity structure: 
+                                            2        4
+  x^n - 1 factorization = (x - 1) (x + 1) (x  + 1) (x  + 1) 
+  totient(n) = phi(n)   = 4   (degree of Q[zeta_n] over Q) 
+  Real subfield degree  = 2   (degree of Q(zeta + zeta^{-1}) over Q) 
+  Sum of all n-th roots (numeric) = 0.0  (expected 0 for n >= 2) 
+  Sum of primitive n-th roots (numeric) = 0.0 ,  Moebius mu(n) = 0 
+  2*cos(2*pi/n) = sqrt(2)  = 1.414213562373095 
+                               (algebraic integer in real cyclotomic subfield) 
+------------------------------------------------------------ 
+[n =  8 ] Rotation matrix R (by exterior angle 2*pi/n): 
+            [    1          1    ]
+            [ -------  - ------- ]
+            [ sqrt(2)    sqrt(2) ]
+  Symbolic: [                    ] 
+            [    1         1     ]
+            [ -------   -------  ]
+            [ sqrt(2)   sqrt(2)  ]
+            [ 0.7071067811865475  - 0.7071067811865475 ]
+  Numeric : [                                          ] 
+            [ 0.7071067811865475   0.7071067811865475  ]
+  det(R) = 1  (expected 1) 
+  tr(R) = sqrt(2)  = 2 cos(2*pi/n) = 1.414213562373095 
+                 [ 1.0  0.0 ]
+  R^n  numeric = [          ]  (expected I) 
+                 [ 0.0  1.0 ]
+[n =  8 ] R^k traces (should equal 2 cos(2 pi k/n)): 
+  k = 1 : tr(R^k) = 1.414213562373095  ~ 2cos( 1 *2pi/n) = 1.414213562373095 
+  k = 2 : tr(R^k) = 0.0  ~ 2cos( 2 *2pi/n) = 0.0 
+  k = 3 : tr(R^k) = - 1.414213562373095  ~ 2cos( 3 *2pi/n) = 
+                                                           - 1.414213562373095 
+  k = 4 : tr(R^k) = - 2.0  ~ 2cos( 4 *2pi/n) = - 2.0 
+  k = 5 : tr(R^k) = - 1.414213562373095  ~ 2cos( 5 *2pi/n) = 
+                                                           - 1.414213562373095 
+  k = 6 : tr(R^k) = 0.0  ~ 2cos( 6 *2pi/n) = 0.0 
+  k = 7 : tr(R^k) = 1.414213562373095  ~ 2cos( 7 *2pi/n) = 1.414213562373095 
+  k = 8 : tr(R^k) = 2.0  ~ 2cos( 8 *2pi/n) = 2.0 
+------------------------------------------------------------ 
+[n =  8 ] PRIMARY BASIS VECTORS (unit circumradius, 
+                            vertex 0 at top, CCW): 
+  v[ 0 ] =  [0, 1]  ~  [0.0, 1.0] 
+                  1        1
+  v[ 1 ] =  [- -------, -------]  ~  [- 0.7071067811865475, 0.7071067811865475]
+               sqrt(2)  sqrt(2)
+                                                                               
+  v[ 2 ] =  [- 1, 0]  ~  [- 1.0, 0.0] 
+                  1          1
+  v[ 3 ] =  [- -------, - -------]  ~  
+               sqrt(2)    sqrt(2)
+                                  [- 0.7071067811865475, - 0.7071067811865475] 
+  v[ 4 ] =  [0, - 1]  ~  [0.0, - 1.0] 
+                1          1
+  v[ 5 ] =  [-------, - -------]  ~  [0.7071067811865475, - 0.7071067811865475]
+             sqrt(2)    sqrt(2)
+                                                                               
+  v[ 6 ] =  [1, 0]  ~  [1.0, 0.0] 
+                1        1
+  v[ 7 ] =  [-------, -------]  ~  [0.7071067811865475, 0.7071067811865475] 
+             sqrt(2)  sqrt(2)
+[n =  8 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
+  e[ 1 ] (numeric) =  [- 0.7071067811865475, - 0.2928932188134525] 
+  e[ 2 ] (numeric) =  [- 0.2928932188134525, - 0.7071067811865475] 
+  e[ 3 ] (numeric) =  [0.2928932188134525, - 0.7071067811865475] 
+  e[ 4 ] (numeric) =  [0.7071067811865475, - 0.2928932188134525] 
+  e[ 5 ] (numeric) =  [0.7071067811865475, 0.2928932188134525] 
+  e[ 6 ] (numeric) =  [0.2928932188134525, 0.7071067811865475] 
+  e[ 7 ] (numeric) =  [- 0.2928932188134525, 0.7071067811865475] 
+  e[ 8 ] (numeric) =  [- 0.7071067811865475, 0.2928932188134525] 
+                                                    %pi
+[n =  8 ] Side length (unit circumradius) s = 2 sin(---)  = 0.7653668647301796 
+                                                     8
+------------------------------------------------------------ 
+[n =  8 ] Holonomy / spinor cover analysis: 
+  Natural single-vortex fiber order = 8 
+  Z_n single-vortex holonomy (n = 8 ) : 1 
+  Required loop count to close fiber : 8 
+[Anyonic case G = Z_n with n = 8 ]: 
+  single-vortex holonomy = 1 
+  loop order required    = 8  (expected 8 ) 
+[n =  8 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
+  All g in Z_n satisfy order(g) = n/gcd(g, n). 
+[n =  8 ] Composite holonomy: Loop A = 3 , Loop B = 7 , Composite = 2 
+                                                               , Sum mod n = 2 
+------------------------------------------------------------ 
+[n =  8 ] Cut-and-project ambient lattice Z^n: 
+  C_n cyclic shift matrix: 
+   [ 0  1  0  0  0  0  0  0 ]
+   [                        ]
+   [ 0  0  1  0  0  0  0  0 ]
+   [                        ]
+   [ 0  0  0  1  0  0  0  0 ]
+   [                        ]
+   [ 0  0  0  0  1  0  0  0 ]
+   [                        ] 
+   [ 0  0  0  0  0  1  0  0 ]
+   [                        ]
+   [ 0  0  0  0  0  0  1  0 ]
+   [                        ]
+   [ 0  0  0  0  0  0  0  1 ]
+   [                        ]
+   [ 1  0  0  0  0  0  0  0 ]
+                   8
+  charpoly(C_n) = x  - 1 
+  C_n^n = I_n verified. 
+  C_n is orthogonal: C_n . C_n^T = I_n. 
+  C_n . (1,...,1)^T - (1,...,1)^T = [ 0  0  0  0  0  0  0  0 ] 
+                                                              (should be zero) 
+  Projectors P_diag, P_perp: idempotent, orthogonal, complete. 
+  dim(orthogonal complement of diagonal) = 7  = n - 1 
+[n =  8 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
+  V_ 1  (rotation angle 2 pi * 1 /n = 0.7853981633974483 ): 
+    u_ 1  (cos) = [1.0, 0.7071067811865475, 0.0, - 0.7071067811865475, - 1.0, 
+                                - 0.7071067811865475, 0.0, 0.7071067811865475] 
+    w_ 1  (sin) = [0.0, 0.7071067811865475, 1.0, 0.7071067811865475, 0.0, 
+                            - 0.7071067811865475, - 1.0, - 0.7071067811865475] 
+  V_ 2  (rotation angle 2 pi * 2 /n = 1.570796326794896 ): 
+    u_ 2  (cos) = [1.0, 0.0, - 1.0, 0.0, 1.0, 0.0, - 1.0, 0.0] 
+    w_ 2  (sin) = [0.0, 1.0, 0.0, - 1.0, 0.0, 1.0, 0.0, - 1.0] 
+  V_ 3  (rotation angle 2 pi * 3 /n = 2.356194490192345 ): 
+    u_ 3  (cos) = [1.0, - 0.7071067811865475, 0.0, 0.7071067811865475, - 1.0, 
+                                0.7071067811865475, 0.0, - 0.7071067811865475] 
+    w_ 3  (sin) = [0.0, 0.7071067811865475, - 1.0, 0.7071067811865475, 0.0, 
+                              - 0.7071067811865475, 1.0, - 0.7071067811865475] 
+  alternating-sign eigenvector (eigenvalue -1) = 
+                                              [1, - 1, 1, - 1, 1, - 1, 1, - 1] 
+  Physical 2D plane E_|| recommended = V_1. 
+  Perp subspace E_perp = (diagonal) + 2 * 2D pieces + 1 alternating direction 
+                                                           =>  dim(E_perp) = 6 
+                       7
+  ||pi_perp(e_1)||^2 = -  (= (n-1)/n) 
+                       8
+------------------------------------------------------------ 
+[n =  8 ] CA rule-count analysis (degree k = n): 
+  Binary outer-totalistic n-neighbor rules = 262144  (= 2^ 18 ) 
+  Binary fully totalistic n-neighbor rules = 1024  (= 2^ 10 ) 
+  Binary fully general    n-neighbor rules = 134078079299425970995740249982058\
+461274793658205923933777235614437217640300735469768018742981669034276900318581\
+86486050853753882811946569946433649006084096  (= 2^(2^ 9 )) 
+  Reference: 4-OT = 1024 , 8-OT = 262144 
+------------------------------------------------------------ 
+[n =  8 ] Polygon geometry (side s = 1): 
+                       1
+  Circumradius R = ----------  ~ 1.306562964876376 
+                         %pi
+                   2 sin(---)
+                          8
+                       1
+  Apothem      r = ----------  ~ 1.207106781186547 
+                         %pi
+                   2 tan(---)
+                          8
+                       %pi
+                   tan(---)
+                        8
+  R/r            = --------  = sec(pi/n) = 1.082392200292394 
+                       %pi
+                   sin(---)
+                        8
+                         %pi
+  Area A         = 2 cot(---)  ~ 4.82842712474619 
+                          8
+  Diagonals (k-step chord lengths, unit side): 
+    d[ 1 ] = 1  ~ 1.0 
+                    1
+    d[ 2 ] = ----------------  ~ 1.847759065022573 
+                         %pi
+             sqrt(2) sin(---)
+                          8
+                 3 %pi
+             sin(-----)
+                   8
+    d[ 3 ] = ----------  ~ 2.414213562373095 
+                  %pi
+              sin(---)
+                   8
+                1
+    d[ 4 ] = --------  ~ 2.613125929752753 
+                 %pi
+             sin(---)
+                  8
+                 5 %pi
+             sin(-----)
+                   8
+    d[ 5 ] = ----------  ~ 2.414213562373095 
+                  %pi
+              sin(---)
+                   8
+                    1
+    d[ 6 ] = ----------------  ~ 1.847759065022573 
+                         %pi
+             sqrt(2) sin(---)
+                          8
+                 7 %pi
+             sin(-----)
+                   8
+    d[ 7 ] = ----------  ~ 1.0 
+                  %pi
+              sin(---)
+                   8
+------------------------------------------------------------ 
+[n =  8 ] Dihedral group D_n symmetries: 
+                                   [ 0  0 ]
+  S0 . R . S0 - R^{-1} (symbolic): [      ] 
+                                   [ 0  0 ]
+  S R S = R^{-1} verified. 
+  |D_n| = 16 
+  Conjugacy classes (n even): 1 + (n-2)/2 + 1 + 2 = 7 
+                        (sum of sizes 1 + (n-2)/2 * 2 + 1 + 2*(n/2) = 16 = 2n) 
+  Irrep dim^2 sum (n even): 4 + 2(n-2) = 16 (should = 2n = 16 ) 
+------------------------------------------------------------ 
+[n =  8 ] Graph Laplacians (star and cycle): 
+  Star K_{1, 8 }: spectrum = {0, 1 (multiplicity 7 ), 9 } 
+  Spectral gap = 1 (positive => connected). 
+  Cycle C_ 8  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
+   [0.0, 0.5857864376269049, 2.0, 3.414213562373095, 4.0, 3.414213562373095, 
+                                                      2.0, 0.5857864376269049] 
+  Spectral gap of C_ 8  = 0.5857864376269049 
+  [n = 8 ] iteration complete. 
+============================================================ 
+N_GON = 9 
+============================================================ 
+                                    7 %pi
+Interior angle theta = (n-2)*pi/n = -----  = 140.0 deg 
+                                      9
+                                   2 %pi
+Exterior angle = 2*pi/n          = -----  = 40.0 deg 
+                                     9
+Flat-vertex count k_flat = floor(2*pi/theta) = 2 
+                                   4 %pi
+Angular deficit at k_flat copies = -----  = 80.0 deg 
+                                     9
+                                      %pi
+Angular excess at (k_flat+1) copies = ---  = 60.0 deg 
+                                       3
+Smallest k>0 with k*theta = (integer)*2*pi:  k = 18 ,  accumulating  7 
+                                                                    full turns 
+------------------------------------------------------------ 
+[n =  9 ] Angle summary: 
+                            7 %pi
+  Interior angle  theta   = -----  = 2.443460952792061  rad = 140.0  deg 
+                              9
+                            2 %pi
+  Exterior angle          = -----  = 0.6981317007977318  rad 
+                              9
+                            2 %pi
+  Central angle           = -----  = 0.6981317007977318  rad 
+                              9
+  Sum of interior angles  = 7 %pi 
+                            7 %pi
+  Avg interior angle      = ----- 
+                              9
+[n =  9 ] k-copy vertex-loop accumulation: 
+                7 %pi     7
+  k = 1 : sum = -----  =  -- * 2pi  --  open 
+                  9       18
+                14 %pi     7
+  k = 2 : sum = ------  =  - * 2pi  --  open 
+                  9        9
+                7 %pi     7
+  k = 3 : sum = -----  =  - * 2pi  --  open 
+                  3       6
+                28 %pi     14
+  k = 4 : sum = ------  =  -- * 2pi  --  open 
+                  9        9
+                35 %pi     35
+  k = 5 : sum = ------  =  -- * 2pi  --  open 
+                  9        18
+                14 %pi     7
+  k = 6 : sum = ------  =  - * 2pi  --  open 
+                  3        3
+                49 %pi     49
+  k = 7 : sum = ------  =  -- * 2pi  --  open 
+                  9        18
+                56 %pi     28
+  k = 8 : sum = ------  =  -- * 2pi  --  open 
+                  9        9
+                          7
+  k = 9 : sum = 7 %pi  =  - * 2pi  --  open 
+                          2
+                 70 %pi     35
+  k = 10 : sum = ------  =  -- * 2pi  --  open 
+                   9        9
+                 77 %pi     77
+  k = 11 : sum = ------  =  -- * 2pi  --  open 
+                   9        18
+                 28 %pi     14
+  k = 12 : sum = ------  =  -- * 2pi  --  open 
+                   3        3
+                 91 %pi     91
+  k = 13 : sum = ------  =  -- * 2pi  --  open 
+                   9        18
+                 98 %pi     49
+  k = 14 : sum = ------  =  -- * 2pi  --  open 
+                   9        9
+                 35 %pi     35
+  k = 15 : sum = ------  =  -- * 2pi  --  open 
+                   3        6
+                 112 %pi     56
+  k = 16 : sum = -------  =  -- * 2pi  --  open 
+                    9        9
+                 119 %pi     119
+  k = 17 : sum = -------  =  --- * 2pi  --  open 
+                    9        18
+  k = 18 : sum = 14 %pi  =  7 * 2pi  --  CLOSES 
+Smallest k with full closure: k = 18   (number of full turns = 7 ) 
+------------------------------------------------------------ 
+[n =  9 ] Cyclotomic / roots-of-unity structure: 
+                                    2            6    3
+  x^n - 1 factorization = (x - 1) (x  + x + 1) (x  + x  + 1) 
+  totient(n) = phi(n)   = 6   (degree of Q[zeta_n] over Q) 
+  Real subfield degree  = 3   (degree of Q(zeta + zeta^{-1}) over Q) 
+  Sum of all n-th roots (numeric) = 2.220446049250313E-16 
+                                                       (expected 0 for n >= 2) 
+  Sum of primitive n-th roots (numeric) = 2.220446049250313E-16 
+                                                          ,  Moebius mu(n) = 0 
+                        2 %pi
+  2*cos(2*pi/n) = 2 cos(-----)  = 1.532088886237956 
+                          9
+                               (algebraic integer in real cyclotomic subfield) 
+------------------------------------------------------------ 
+[n =  9 ] Rotation matrix R (by exterior angle 2*pi/n): 
+            [     2 %pi         2 %pi  ]
+            [ cos(-----)  - sin(-----) ]
+            [       9             9    ]
+  Symbolic: [                          ] 
+            [     2 %pi        2 %pi   ]
+            [ sin(-----)   cos(-----)  ]
+            [       9            9     ]
+            [ 0.766044443118978   - 0.6427876096865393 ]
+  Numeric : [                                          ] 
+            [ 0.6427876096865393   0.766044443118978   ]
+  det(R) = 1  (expected 1) 
+                2 %pi
+  tr(R) = 2 cos(-----)  = 2 cos(2*pi/n) = 1.532088886237956 
+                  9
+                 [    1.000000000000014     4.567280666993691E-15 ]
+  R^n  numeric = [                                                ] 
+                 [ - 4.567280666993691E-15    1.000000000000014   ]
+                                                                  (expected I) 
+[n =  9 ] R^k traces (should equal 2 cos(2 pi k/n)): 
+  k = 1 : tr(R^k) = 1.532088886237956  ~ 2cos( 1 *2pi/n) = 1.532088886237956 
+  k = 2 : tr(R^k) = 0.3472963553338606  ~ 2cos( 2 *2pi/n) = 0.3472963553338608 
+  k = 3 : tr(R^k) = - 1.0  ~ 2cos( 3 *2pi/n) = - 1.0 
+  k = 4 : tr(R^k) = - 1.879385241571816  ~ 2cos( 4 *2pi/n) = 
+                                                           - 1.879385241571816 
+  k = 5 : tr(R^k) = - 1.879385241571814  ~ 2cos( 5 *2pi/n) = 
+                                                           - 1.879385241571816 
+  k = 6 : tr(R^k) = - 0.9999999999999982  ~ 2cos( 6 *2pi/n) = - 1.0 
+  k = 7 : tr(R^k) = 0.347296355333853  ~ 2cos( 7 *2pi/n) = 0.3472963553338599 
+  k = 8 : tr(R^k) = 1.532088886237964  ~ 2cos( 8 *2pi/n) = 1.532088886237955 
+  k = 9 : tr(R^k) = 2.000000000000028  ~ 2cos( 9 *2pi/n) = 2.0 
+------------------------------------------------------------ 
+[n =  9 ] PRIMARY BASIS VECTORS (unit circumradius, 
+                            vertex 0 at top, CCW): 
+  v[ 0 ] =  [0, 1]  ~  [0.0, 1.0] 
+                 13 %pi       13 %pi
+  v[ 1 ] =  [cos(------), sin(------)]  ~  
+                   18           18
+                                     [- 0.6427876096865394, 0.766044443118978] 
+                 17 %pi       17 %pi
+  v[ 2 ] =  [cos(------), sin(------)]  ~  
+                   18           18
+                                     [- 0.984807753012208, 0.1736481776669307] 
+               sqrt(3)    1
+  v[ 3 ] =  [- -------, - -]  ~  [- 0.8660254037844386, - 0.5] 
+                  2       2
+                 25 %pi       25 %pi
+  v[ 4 ] =  [cos(------), sin(------)]  ~  
+                   18           18
+                                  [- 0.3420201433256694, - 0.9396926207859082] 
+                 29 %pi       29 %pi
+  v[ 5 ] =  [cos(------), sin(------)]  ~  
+                   18           18
+                                     [0.342020143325669, - 0.9396926207859083] 
+             sqrt(3)    1
+  v[ 6 ] =  [-------, - -]  ~  [0.8660254037844386, - 0.5] 
+                2       2
+                 37 %pi       37 %pi
+  v[ 7 ] =  [cos(------), sin(------)]  ~  
+                   18           18
+                                      [0.9848077530122081, 0.1736481776669299] 
+                 41 %pi       41 %pi
+  v[ 8 ] =  [cos(------), sin(------)]  ~  
+                   18           18
+                                      [0.6427876096865396, 0.7660444431189778] 
+[n =  9 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
+  e[ 1 ] (numeric) =  [- 0.6427876096865394, - 0.233955556881022] 
+  e[ 2 ] (numeric) =  [- 0.3420201433256686, - 0.5923962654520474] 
+  e[ 3 ] (numeric) =  [0.1187823492277694, - 0.6736481776669308] 
+  e[ 4 ] (numeric) =  [0.5240052604587693, - 0.4396926207859082] 
+  e[ 5 ] (numeric) =  [0.6840402866513384, - 1.110223024625156E-16] 
+  e[ 6 ] (numeric) =  [0.5240052604587696, 0.4396926207859083] 
+  e[ 7 ] (numeric) =  [0.1187823492277695, 0.6736481776669299] 
+  e[ 8 ] (numeric) =  [- 0.3420201433256685, 0.5923962654520478] 
+  e[ 9 ] (numeric) =  [- 0.6427876096865396, 0.2339555568810222] 
+                                                    %pi
+[n =  9 ] Side length (unit circumradius) s = 2 sin(---)  = 0.6840402866513374 
+                                                     9
+------------------------------------------------------------ 
+[n =  9 ] Holonomy / spinor cover analysis: 
+  Natural single-vortex fiber order = 18 
+  Z_n single-vortex holonomy (n = 18 ) : 1 
+  Required loop count to close fiber : 18 
+[Anyonic case G = Z_n with n = 9 ]: 
+  single-vortex holonomy = 1 
+  loop order required    = 9  (expected 9 ) 
+[n =  9 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
+  All g in Z_n satisfy order(g) = n/gcd(g, n). 
+[n =  9 ] Composite holonomy: Loop A = 3 , Loop B = 7 , Composite = 1 
+                                                               , Sum mod n = 1 
+------------------------------------------------------------ 
+[n =  9 ] Cut-and-project ambient lattice Z^n: 
+  C_n cyclic shift matrix: 
+   [ 0  1  0  0  0  0  0  0  0 ]
+   [                           ]
+   [ 0  0  1  0  0  0  0  0  0 ]
+   [                           ]
+   [ 0  0  0  1  0  0  0  0  0 ]
+   [                           ]
+   [ 0  0  0  0  1  0  0  0  0 ]
+   [                           ]
+   [ 0  0  0  0  0  1  0  0  0 ] 
+   [                           ]
+   [ 0  0  0  0  0  0  1  0  0 ]
+   [                           ]
+   [ 0  0  0  0  0  0  0  1  0 ]
+   [                           ]
+   [ 0  0  0  0  0  0  0  0  1 ]
+   [                           ]
+   [ 1  0  0  0  0  0  0  0  0 ]
+                       9
+  charpoly(C_n) = 1 - x  
+  C_n^n = I_n verified. 
+  C_n is orthogonal: C_n . C_n^T = I_n. 
+  C_n . (1,...,1)^T - (1,...,1)^T = [ 0  0  0  0  0  0  0  0  0 ] 
+                                                              (should be zero) 
+  Projectors P_diag, P_perp: idempotent, orthogonal, complete. 
+  dim(orthogonal complement of diagonal) = 8  = n - 1 
+[n =  9 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
+  V_ 1  (rotation angle 2 pi * 1 /n = 0.6981317007977318 ): 
+    u_ 1  (cos) = [1.0, 0.766044443118978, 0.1736481776669304, - 0.5, 
+- 0.9396926207859083, - 0.9396926207859084, - 0.5, 0.1736481776669299, 
+0.7660444431189778] 
+    w_ 1  (sin) = [0.0, 0.6427876096865393, 0.984807753012208, 
+0.8660254037844386, 0.3420201433256689, - 0.3420201433256686, 
+- 0.8660254037844386, - 0.9848077530122081, - 0.6427876096865396] 
+  V_ 2  (rotation angle 2 pi * 2 /n = 1.396263401595463 ): 
+    u_ 2  (cos) = [1.0, 0.1736481776669304, - 0.9396926207859083, - 0.5, 
+0.7660444431189778, 0.7660444431189781, - 0.5, - 0.9396926207859087, 
+0.1736481776669297] 
+    w_ 2  (sin) = [0.0, 0.984807753012208, 0.3420201433256689, 
+- 0.8660254037844386, - 0.6427876096865396, 0.6427876096865391, 
+0.8660254037844386, - 0.342020143325668, - 0.9848077530122081] 
+  V_ 3  (rotation angle 2 pi * 3 /n = 2.094395102393195 ): 
+    u_ 3  (cos) = [1.0, - 0.5, - 0.5, 1.0, - 0.5, - 0.5, 1.0, - 0.5, - 0.5] 
+    w_ 3  (sin) = [0.0, 0.8660254037844386, - 0.8660254037844386, 0.0, 
+0.8660254037844386, - 0.8660254037844386, 0.0, 0.8660254037844386, 
+- 0.8660254037844386] 
+  V_ 4  (rotation angle 2 pi * 4 /n = 2.792526803190927 ): 
+    u_ 4  (cos) = [1.0, - 0.9396926207859083, 0.7660444431189778, - 0.5, 
+0.1736481776669297, 0.1736481776669307, - 0.5, 0.766044443118979, 
+- 0.9396926207859089] 
+    w_ 4  (sin) = [0.0, 0.3420201433256689, - 0.6427876096865396, 
+0.8660254037844386, - 0.9848077530122081, 0.984807753012208, 
+- 0.8660254037844386, 0.6427876096865381, - 0.3420201433256675] 
+  Physical 2D plane E_|| recommended = V_1. 
+  Perp subspace E_perp = (diagonal) + 3 * 2D pieces + 0 alternating directions 
+                                                           =>  dim(E_perp) = 7 
+                       8
+  ||pi_perp(e_1)||^2 = -  (= (n-1)/n) 
+                       9
+------------------------------------------------------------ 
+[n =  9 ] CA rule-count analysis (degree k = n): 
+  Binary outer-totalistic n-neighbor rules = 1048576  (= 2^ 20 ) 
+  Binary fully totalistic n-neighbor rules = 2048  (= 2^ 11 ) 
+  Binary fully general    n-neighbor rules = 179769313486231590772930519078902\
+473361797697894230657273430081157732675805500963132708477322407536021120113879\
+871393357658789768814416622492847430639474124377767893424865485276302219601246\
+094119453082952085005768838150682342462881473913110540827237163350510684586298\
+239947245938479716304835356329624224137216  (= 2^(2^ 10 )) 
+  Reference: 4-OT = 1024 , 8-OT = 262144 
+------------------------------------------------------------ 
+[n =  9 ] Polygon geometry (side s = 1): 
+                       1
+  Circumradius R = ----------  ~ 1.461902200081543 
+                         %pi
+                   2 sin(---)
+                          9
+                       1
+  Apothem      r = ----------  ~ 1.373738709727311 
+                         %pi
+                   2 tan(---)
+                          9
+                       %pi
+                   tan(---)
+                        9
+  R/r            = --------  = sec(pi/n) = 1.064177772475912 
+                       %pi
+                   sin(---)
+                        9
+                         %pi
+                   9 cot(---)
+                          9
+  Area A         = ----------  ~ 6.181824193772901 
+                       4
+  Diagonals (k-step chord lengths, unit side): 
+    d[ 1 ] = 1  ~ 1.0 
+                 2 %pi
+             sin(-----)
+                   9
+    d[ 2 ] = ----------  ~ 1.879385241571816 
+                  %pi
+              sin(---)
+                   9
+              sqrt(3)
+    d[ 3 ] = ----------  ~ 2.532088886237956 
+                   %pi
+             2 sin(---)
+                    9
+                 4 %pi
+             sin(-----)
+                   9
+    d[ 4 ] = ----------  ~ 2.879385241571817 
+                  %pi
+              sin(---)
+                   9
+                 5 %pi
+             sin(-----)
+                   9
+    d[ 5 ] = ----------  ~ 2.879385241571817 
+                  %pi
+              sin(---)
+                   9
+              sqrt(3)
+    d[ 6 ] = ----------  ~ 2.532088886237956 
+                   %pi
+             2 sin(---)
+                    9
+                 7 %pi
+             sin(-----)
+                   9
+    d[ 7 ] = ----------  ~ 1.879385241571817 
+                  %pi
+              sin(---)
+                   9
+                 8 %pi
+             sin(-----)
+                   9
+    d[ 8 ] = ----------  ~ 1.0 
+                  %pi
+              sin(---)
+                   9
+------------------------------------------------------------ 
+[n =  9 ] Dihedral group D_n symmetries: 
+                                   [ 0  0 ]
+  S0 . R . S0 - R^{-1} (symbolic): [      ] 
+                                   [ 0  0 ]
+  S R S = R^{-1} verified. 
+  |D_n| = 18 
+  Conjugacy classes (n odd): 1 + (n-1)/2 + 1 = 6 
+                                  (sum of sizes 1 + (n-1)/2 * 2 + n = 18 = 2n) 
+  Irrep dim^2 sum (n odd): 2 + 2(n-1) = 18 (should = 2n = 18 ) 
+------------------------------------------------------------ 
+[n =  9 ] Graph Laplacians (star and cycle): 
+  Star K_{1, 9 }: spectrum = {0, 1 (multiplicity 8 ), 10 } 
+  Spectral gap = 1 (positive => connected). 
+  Cycle C_ 9  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
+   [0.0, 0.467911113762044, 1.652703644666139, 3.0, 3.879385241571817, 
+                 3.879385241571817, 3.0, 1.65270364466614, 0.4679111137620444] 
+  Spectral gap of C_ 9  = 0.467911113762044 
+  [n = 9 ] iteration complete. 
+============================================================ 
+N_GON = 10 
+============================================================ 
+                                    4 %pi
+Interior angle theta = (n-2)*pi/n = -----  = 144.0 deg 
+                                      5
+                                   %pi
+Exterior angle = 2*pi/n          = ---  = 36.0 deg 
+                                    5
+Flat-vertex count k_flat = floor(2*pi/theta) = 2 
+                                   2 %pi
+Angular deficit at k_flat copies = -----  = 72.0 deg 
+                                     5
+                                      2 %pi
+Angular excess at (k_flat+1) copies = -----  = 72.0 deg 
+                                        5
+Smallest k>0 with k*theta = (integer)*2*pi:  k = 5 ,  accumulating  2 
+                                                                    full turns 
+------------------------------------------------------------ 
+[n =  10 ] Angle summary: 
+                            4 %pi
+  Interior angle  theta   = -----  = 2.513274122871834  rad = 144.0  deg 
+                              5
+                            %pi
+  Exterior angle          = ---  = 0.6283185307179586  rad 
+                             5
+                            %pi
+  Central angle           = ---  = 0.6283185307179586  rad 
+                             5
+  Sum of interior angles  = 8 %pi 
+                            4 %pi
+  Avg interior angle      = ----- 
+                              5
+[n =  10 ] k-copy vertex-loop accumulation: 
+                4 %pi     2
+  k = 1 : sum = -----  =  - * 2pi  --  open 
+                  5       5
+                8 %pi     4
+  k = 2 : sum = -----  =  - * 2pi  --  open 
+                  5       5
+                12 %pi     6
+  k = 3 : sum = ------  =  - * 2pi  --  open 
+                  5        5
+                16 %pi     8
+  k = 4 : sum = ------  =  - * 2pi  --  open 
+                  5        5
+  k = 5 : sum = 4 %pi  =  2 * 2pi  --  CLOSES 
+                24 %pi     12
+  k = 6 : sum = ------  =  -- * 2pi  --  open 
+                  5        5
+                28 %pi     14
+  k = 7 : sum = ------  =  -- * 2pi  --  open 
+                  5        5
+                32 %pi     16
+  k = 8 : sum = ------  =  -- * 2pi  --  open 
+                  5        5
+                36 %pi     18
+  k = 9 : sum = ------  =  -- * 2pi  --  open 
+                  5        5
+  k = 10 : sum = 8 %pi  =  4 * 2pi  --  CLOSES 
+                 44 %pi     22
+  k = 11 : sum = ------  =  -- * 2pi  --  open 
+                   5        5
+                 48 %pi     24
+  k = 12 : sum = ------  =  -- * 2pi  --  open 
+                   5        5
+                 52 %pi     26
+  k = 13 : sum = ------  =  -- * 2pi  --  open 
+                   5        5
+                 56 %pi     28
+  k = 14 : sum = ------  =  -- * 2pi  --  open 
+                   5        5
+  k = 15 : sum = 12 %pi  =  6 * 2pi  --  CLOSES 
+                 64 %pi     32
+  k = 16 : sum = ------  =  -- * 2pi  --  open 
+                   5        5
+                 68 %pi     34
+  k = 17 : sum = ------  =  -- * 2pi  --  open 
+                   5        5
+                 72 %pi     36
+  k = 18 : sum = ------  =  -- * 2pi  --  open 
+                   5        5
+                 76 %pi     38
+  k = 19 : sum = ------  =  -- * 2pi  --  open 
+                   5        5
+  k = 20 : sum = 16 %pi  =  8 * 2pi  --  CLOSES 
+Smallest k with full closure: k = 5   (number of full turns = 2 ) 
+------------------------------------------------------------ 
+[n =  10 ] Cyclotomic / roots-of-unity structure: 
+                                            4    3    2
+  x^n - 1 factorization = (x - 1) (x + 1) (x  - x  + x  - x + 1)
+                                                          4    3    2
+                                                        (x  + x  + x  + x + 1) 
+  totient(n) = phi(n)   = 4   (degree of Q[zeta_n] over Q) 
+  Real subfield degree  = 2   (degree of Q(zeta + zeta^{-1}) over Q) 
+  Sum of all n-th roots (numeric) = 4.440892098500626E-16 
+                                                       (expected 0 for n >= 2) 
+  Sum of primitive n-th roots (numeric) = 1.0 ,  Moebius mu(n) = 1 
+                        %pi
+  2*cos(2*pi/n) = 2 cos(---)  = 1.618033988749895 
+                         5
+                               (algebraic integer in real cyclotomic subfield) 
+------------------------------------------------------------ 
+[n =  10 ] Rotation matrix R (by exterior angle 2*pi/n): 
+            [     %pi         %pi  ]
+            [ cos(---)  - sin(---) ]
+            [      5           5   ]
+  Symbolic: [                      ] 
+            [     %pi        %pi   ]
+            [ sin(---)   cos(---)  ]
+            [      5          5    ]
+            [ 0.8090169943749475  - 0.5877852522924731 ]
+  Numeric : [                                          ] 
+            [ 0.5877852522924731   0.8090169943749475  ]
+  det(R) = 1  (expected 1) 
+                %pi
+  tr(R) = 2 cos(---)  = 2 cos(2*pi/n) = 1.618033988749895 
+                 5
+                 [           1.0            8.352930824066692E-15 ]
+  R^n  numeric = [                                                ] 
+                 [ - 8.352930824066692E-15           1.0          ]
+                                                                  (expected I) 
+[n =  10 ] R^k traces (should equal 2 cos(2 pi k/n)): 
+  k = 1 : tr(R^k) = 1.618033988749895  ~ 2cos( 1 *2pi/n) = 1.618033988749895 
+  k = 2 : tr(R^k) = 0.6180339887498949  ~ 2cos( 2 *2pi/n) = 0.6180339887498949 
+  k = 3 : tr(R^k) = - 0.6180339887498949  ~ 2cos( 3 *2pi/n) = 
+                                                          - 0.6180339887498947 
+  k = 4 : tr(R^k) = - 1.618033988749895  ~ 2cos( 4 *2pi/n) = 
+                                                           - 1.618033988749894 
+  k = 5 : tr(R^k) = - 2.0  ~ 2cos( 5 *2pi/n) = - 2.0 
+  k = 6 : tr(R^k) = - 1.618033988749893  ~ 2cos( 6 *2pi/n) = 
+                                                           - 1.618033988749895 
+  k = 7 : tr(R^k) = - 0.6180339887498967  ~ 2cos( 7 *2pi/n) = 
+                                                          - 0.6180339887498951 
+  k = 8 : tr(R^k) = 0.6180339887499002  ~ 2cos( 8 *2pi/n) = 0.6180339887498945 
+  k = 9 : tr(R^k) = 1.6180339887499  ~ 2cos( 9 *2pi/n) = 1.618033988749894 
+  k = 10 : tr(R^k) = 2.0  ~ 2cos( 10 *2pi/n) = 2.0 
+------------------------------------------------------------ 
+[n =  10 ] PRIMARY BASIS VECTORS (unit circumradius, 
+                            vertex 0 at top, CCW): 
+  v[ 0 ] =  [0, 1]  ~  [0.0, 1.0] 
+                 7 %pi       7 %pi
+  v[ 1 ] =  [cos(-----), sin(-----)]  ~  
+                  10          10
+                                     [- 0.587785252292473, 0.8090169943749475] 
+                 9 %pi       9 %pi
+  v[ 2 ] =  [cos(-----), sin(-----)]  ~  
+                  10          10
+                                    [- 0.9510565162951535, 0.3090169943749475] 
+                 11 %pi       11 %pi
+  v[ 3 ] =  [cos(------), sin(------)]  ~  
+                   10           10
+                                  [- 0.9510565162951535, - 0.3090169943749477] 
+                 13 %pi       13 %pi
+  v[ 4 ] =  [cos(------), sin(------)]  ~  
+                   10           10
+                                  [- 0.5877852522924733, - 0.8090169943749473] 
+  v[ 5 ] =  [0, - 1]  ~  [0.0, - 1.0] 
+                 17 %pi       17 %pi
+  v[ 6 ] =  [cos(------), sin(------)]  ~  
+                   10           10
+                                    [0.5877852522924729, - 0.8090169943749476] 
+                 19 %pi       19 %pi
+  v[ 7 ] =  [cos(------), sin(------)]  ~  
+                   10           10
+                                    [0.9510565162951535, - 0.3090169943749476] 
+                 21 %pi       21 %pi
+  v[ 8 ] =  [cos(------), sin(------)]  ~  
+                   10           10
+                                      [0.9510565162951536, 0.3090169943749472] 
+                 23 %pi       23 %pi
+  v[ 9 ] =  [cos(------), sin(------)]  ~  
+                   10           10
+                                       [0.587785252292474, 0.8090169943749468] 
+[n =  10 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
+  e[ 1 ] (numeric) =  [- 0.587785252292473, - 0.1909830056250525] 
+  e[ 2 ] (numeric) =  [- 0.3632712640026805, - 0.4999999999999999] 
+  e[ 3 ] (numeric) =  [0.0, - 0.6180339887498952] 
+  e[ 4 ] (numeric) =  [0.3632712640026803, - 0.4999999999999996] 
+  e[ 5 ] (numeric) =  [0.5877852522924733, - 0.1909830056250526] 
+  e[ 6 ] (numeric) =  [0.5877852522924729, 0.1909830056250524] 
+  e[ 7 ] (numeric) =  [0.3632712640026806, 0.4999999999999999] 
+  e[ 8 ] (numeric) =  [1.110223024625156E-16, 0.6180339887498948] 
+  e[ 9 ] (numeric) =  [- 0.3632712640026796, 0.4999999999999996] 
+  e[ 10 ] (numeric) =  [- 0.587785252292474, 0.1909830056250532] 
+                                                     %pi
+[n =  10 ] Side length (unit circumradius) s = 2 sin(---)  = 0.6180339887498948
+                                                     10
+                                                                               
+------------------------------------------------------------ 
+[n =  10 ] Holonomy / spinor cover analysis: 
+  Natural single-vortex fiber order = 5 
+  Z_n single-vortex holonomy (n = 5 ) : 1 
+  Required loop count to close fiber : 5 
+[Anyonic case G = Z_n with n = 10 ]: 
+  single-vortex holonomy = 1 
+  loop order required    = 10  (expected 10 ) 
+[n =  10 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
+  All g in Z_n satisfy order(g) = n/gcd(g, n). 
+[n =  10 ] Composite holonomy: Loop A = 3 , Loop B = 7 , Composite = 0 
+                                                               , Sum mod n = 0 
+------------------------------------------------------------ 
+[n =  10 ] Cut-and-project ambient lattice Z^n: 
+  C_n cyclic shift matrix: 
+   [ 0  1  0  0  0  0  0  0  0  0 ]
+   [                              ]
+   [ 0  0  1  0  0  0  0  0  0  0 ]
+   [                              ]
+   [ 0  0  0  1  0  0  0  0  0  0 ]
+   [                              ]
+   [ 0  0  0  0  1  0  0  0  0  0 ]
+   [                              ]
+   [ 0  0  0  0  0  1  0  0  0  0 ]
+   [                              ] 
+   [ 0  0  0  0  0  0  1  0  0  0 ]
+   [                              ]
+   [ 0  0  0  0  0  0  0  1  0  0 ]
+   [                              ]
+   [ 0  0  0  0  0  0  0  0  1  0 ]
+   [                              ]
+   [ 0  0  0  0  0  0  0  0  0  1 ]
+   [                              ]
+   [ 1  0  0  0  0  0  0  0  0  0 ]
+                   10
+  charpoly(C_n) = x   - 1 
+  C_n^n = I_n verified. 
+  C_n is orthogonal: C_n . C_n^T = I_n. 
+  C_n . (1,...,1)^T - (1,...,1)^T = [ 0  0  0  0  0  0  0  0  0  0 ] 
+                                                              (should be zero) 
+  Projectors P_diag, P_perp: idempotent, orthogonal, complete. 
+  dim(orthogonal complement of diagonal) = 9  = n - 1 
+[n =  10 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
+  V_ 1  (rotation angle 2 pi * 1 /n = 0.6283185307179586 ): 
+    u_ 1  (cos) = [1.0, 0.8090169943749475, 0.3090169943749474, 
+- 0.3090169943749473, - 0.8090169943749473, - 1.0, - 0.8090169943749476, 
+- 0.3090169943749475, 0.3090169943749472, 0.8090169943749473] 
+    w_ 1  (sin) = [0.0, 0.5877852522924731, 0.9510565162951535, 
+0.9510565162951536, 0.5877852522924733, 0.0, - 0.587785252292473, 
+- 0.9510565162951535, - 0.9510565162951536, - 0.5877852522924734] 
+  V_ 2  (rotation angle 2 pi * 2 /n = 1.256637061435917 ): 
+    u_ 2  (cos) = [1.0, 0.3090169943749474, - 0.8090169943749473, 
+- 0.8090169943749476, 0.3090169943749472, 1.0, 0.3090169943749477, 
+- 0.8090169943749472, - 0.8090169943749477, 0.309016994374947] 
+    w_ 2  (sin) = [0.0, 0.9510565162951535, 0.5877852522924733, 
+- 0.587785252292473, - 0.9510565162951536, 0.0, 0.9510565162951535, 
+0.5877852522924734, - 0.5877852522924728, - 0.9510565162951538] 
+  V_ 3  (rotation angle 2 pi * 3 /n = 1.884955592153875 ): 
+    u_ 3  (cos) = [1.0, - 0.3090169943749473, - 0.8090169943749476, 
+0.8090169943749473, 0.3090169943749477, - 1.0, 0.309016994374947, 
+0.8090169943749477, - 0.8090169943749471, - 0.309016994374948] 
+    w_ 3  (sin) = [0.0, 0.9510565162951536, - 0.587785252292473, 
+- 0.5877852522924734, 0.9510565162951535, 0.0, - 0.9510565162951538, 
+0.5877852522924727, 0.5877852522924736, - 0.9510565162951534] 
+  V_ 4  (rotation angle 2 pi * 4 /n = 2.513274122871834 ): 
+    u_ 4  (cos) = [1.0, - 0.8090169943749473, 0.3090169943749472, 
+0.3090169943749477, - 0.8090169943749477, 1.0, - 0.8090169943749471, 
+0.3090169943749468, 0.3090169943749482, - 0.8090169943749479] 
+    w_ 4  (sin) = [0.0, 0.5877852522924733, - 0.9510565162951536, 
+0.9510565162951535, - 0.5877852522924728, 0.0, 0.5877852522924736, 
+- 0.9510565162951538, 0.9510565162951533, - 0.5877852522924725] 
+  alternating-sign eigenvector (eigenvalue -1) = 
+                                      [1, - 1, 1, - 1, 1, - 1, 1, - 1, 1, - 1] 
+  Physical 2D plane E_|| recommended = V_1. 
+  Perp subspace E_perp = (diagonal) + 3 * 2D pieces + 1 alternating direction 
+                                                           =>  dim(E_perp) = 8 
+                       9
+  ||pi_perp(e_1)||^2 = --  (= (n-1)/n) 
+                       10
+------------------------------------------------------------ 
+[n =  10 ] CA rule-count analysis (degree k = n): 
+  Binary outer-totalistic n-neighbor rules = 4194304  (= 2^ 22 ) 
+  Binary fully totalistic n-neighbor rules = 4096  (= 2^ 12 ) 
+  Binary fully general    n-neighbor rules = 323170060713110073007148766886699\
+519604441026697154840321303454275246551388678908931972014115229134636887179609\
+218980194941195591504909210950881523864482831206308773673009960917501977503896\
+521067960576383840675682767922186426197561618380943384761704705816458520363050\
+428875758915410658086075523991239303855219143333896683424206849747865645694948\
+561760353263220580778056593310261927084603141502585928641771167259436037184618\
+573575983511523016459044036976132332872312271256847108202097251571017269313234\
+696785425806566979350459972683529986382155251663894373355436021354332296046453\
+18478604952148193555853611059596230656  (= 2^(2^ 11 )) 
+  Reference: 4-OT = 1024 , 8-OT = 262144 
+------------------------------------------------------------ 
+[n =  10 ] Polygon geometry (side s = 1): 
+                       1
+  Circumradius R = ----------  ~ 1.618033988749895 
+                         %pi
+                   2 sin(---)
+                         10
+                       1
+  Apothem      r = ----------  ~ 1.538841768587627 
+                         %pi
+                   2 tan(---)
+                         10
+                       %pi
+                   tan(---)
+                       10
+  R/r            = --------  = sec(pi/n) = 1.051462224238267 
+                       %pi
+                   sin(---)
+                       10
+                         %pi
+                   5 cot(---)
+                         10
+  Area A         = ----------  ~ 7.694208842938135 
+                       2
+  Diagonals (k-step chord lengths, unit side): 
+    d[ 1 ] = 1  ~ 1.0 
+                 %pi
+             sin(---)
+                  5
+    d[ 2 ] = --------  ~ 1.902113032590307 
+                 %pi
+             sin(---)
+                 10
+                 3 %pi
+             sin(-----)
+                  10
+    d[ 3 ] = ----------  ~ 2.618033988749895 
+                  %pi
+              sin(---)
+                  10
+                 2 %pi
+             sin(-----)
+                   5
+    d[ 4 ] = ----------  ~ 3.077683537175253 
+                  %pi
+              sin(---)
+                  10
+                1
+    d[ 5 ] = --------  ~ 3.23606797749979 
+                 %pi
+             sin(---)
+                 10
+                 3 %pi
+             sin(-----)
+                   5
+    d[ 6 ] = ----------  ~ 3.077683537175253 
+                  %pi
+              sin(---)
+                  10
+                 7 %pi
+             sin(-----)
+                  10
+    d[ 7 ] = ----------  ~ 2.618033988749895 
+                  %pi
+              sin(---)
+                  10
+                 4 %pi
+             sin(-----)
+                   5
+    d[ 8 ] = ----------  ~ 1.902113032590307 
+                  %pi
+              sin(---)
+                  10
+                 9 %pi
+             sin(-----)
+                  10
+    d[ 9 ] = ----------  ~ 1.0 
+                  %pi
+              sin(---)
+                  10
+------------------------------------------------------------ 
+[n =  10 ] Dihedral group D_n symmetries: 
+                                   [ 0  0 ]
+  S0 . R . S0 - R^{-1} (symbolic): [      ] 
+                                   [ 0  0 ]
+  S R S = R^{-1} verified. 
+  |D_n| = 20 
+  Conjugacy classes (n even): 1 + (n-2)/2 + 1 + 2 = 8 
+                        (sum of sizes 1 + (n-2)/2 * 2 + 1 + 2*(n/2) = 20 = 2n) 
+  Irrep dim^2 sum (n even): 4 + 2(n-2) = 20 (should = 2n = 20 ) 
+------------------------------------------------------------ 
+[n =  10 ] Graph Laplacians (star and cycle): 
+  Star K_{1, 10 }: spectrum = {0, 1 (multiplicity 9 ), 11 } 
+  Spectral gap = 1 (positive => connected). 
+  Cycle C_ 10  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
+   [0.0, 0.3819660112501051, 1.381966011250105, 2.618033988749895, 
+3.618033988749895, 4.0, 3.618033988749895, 2.618033988749895, 
+1.381966011250105, 0.3819660112501053] 
+  Spectral gap of C_ 10  = 0.3819660112501051 
+  [n = 10 ] iteration complete. 
+============================================================ 
+N_GON = 11 
+============================================================ 
+                                    9 %pi
+Interior angle theta = (n-2)*pi/n = -----  = 147.2727272727272 deg 
+                                     11
+                                   2 %pi
+Exterior angle = 2*pi/n          = -----  = 32.72727272727273 deg 
+                                    11
+Flat-vertex count k_flat = floor(2*pi/theta) = 2 
+                                   4 %pi
+Angular deficit at k_flat copies = -----  = 65.45454545454546 deg 
+                                    11
+                                      5 %pi
+Angular excess at (k_flat+1) copies = -----  = 81.81818181818182 deg 
+                                       11
+Smallest k>0 with k*theta = (integer)*2*pi:  k = 22 ,  accumulating  9 
+                                                                    full turns 
+------------------------------------------------------------ 
+[n =  11 ] Angle summary: 
+                            9 %pi
+  Interior angle  theta   = -----  = 2.57039398930074  rad = 147.2727272727272 
+                             11
+                                                                           deg 
+                            2 %pi
+  Exterior angle          = -----  = 0.5711986642890533  rad 
+                             11
+                            2 %pi
+  Central angle           = -----  = 0.5711986642890533  rad 
+                             11
+  Sum of interior angles  = 9 %pi 
+                            9 %pi
+  Avg interior angle      = ----- 
+                             11
+[n =  11 ] k-copy vertex-loop accumulation: 
+                9 %pi     9
+  k = 1 : sum = -----  =  -- * 2pi  --  open 
+                 11       22
+                18 %pi     9
+  k = 2 : sum = ------  =  -- * 2pi  --  open 
+                  11       11
+                27 %pi     27
+  k = 3 : sum = ------  =  -- * 2pi  --  open 
+                  11       22
+                36 %pi     18
+  k = 4 : sum = ------  =  -- * 2pi  --  open 
+                  11       11
+                45 %pi     45
+  k = 5 : sum = ------  =  -- * 2pi  --  open 
+                  11       22
+                54 %pi     27
+  k = 6 : sum = ------  =  -- * 2pi  --  open 
+                  11       11
+                63 %pi     63
+  k = 7 : sum = ------  =  -- * 2pi  --  open 
+                  11       22
+                72 %pi     36
+  k = 8 : sum = ------  =  -- * 2pi  --  open 
+                  11       11
+                81 %pi     81
+  k = 9 : sum = ------  =  -- * 2pi  --  open 
+                  11       22
+                 90 %pi     45
+  k = 10 : sum = ------  =  -- * 2pi  --  open 
+                   11       11
+                           9
+  k = 11 : sum = 9 %pi  =  - * 2pi  --  open 
+                           2
+                 108 %pi     54
+  k = 12 : sum = -------  =  -- * 2pi  --  open 
+                   11        11
+                 117 %pi     117
+  k = 13 : sum = -------  =  --- * 2pi  --  open 
+                   11        22
+                 126 %pi     63
+  k = 14 : sum = -------  =  -- * 2pi  --  open 
+                   11        11
+                 135 %pi     135
+  k = 15 : sum = -------  =  --- * 2pi  --  open 
+                   11        22
+                 144 %pi     72
+  k = 16 : sum = -------  =  -- * 2pi  --  open 
+                   11        11
+                 153 %pi     153
+  k = 17 : sum = -------  =  --- * 2pi  --  open 
+                   11        22
+                 162 %pi     81
+  k = 18 : sum = -------  =  -- * 2pi  --  open 
+                   11        11
+                 171 %pi     171
+  k = 19 : sum = -------  =  --- * 2pi  --  open 
+                   11        22
+                 180 %pi     90
+  k = 20 : sum = -------  =  -- * 2pi  --  open 
+                   11        11
+                 189 %pi     189
+  k = 21 : sum = -------  =  --- * 2pi  --  open 
+                   11        22
+  k = 22 : sum = 18 %pi  =  9 * 2pi  --  CLOSES 
+Smallest k with full closure: k = 22   (number of full turns = 9 ) 
+------------------------------------------------------------ 
+[n =  11 ] Cyclotomic / roots-of-unity structure: 
+                                    10    9    8    7    6    5    4    3    2
+  x^n - 1 factorization = (x - 1) (x   + x  + x  + x  + x  + x  + x  + x  + x
+                                                                      + x + 1) 
+  totient(n) = phi(n)   = 10   (degree of Q[zeta_n] over Q) 
+  Real subfield degree  = 5   (degree of Q(zeta + zeta^{-1}) over Q) 
+  Sum of all n-th roots (numeric) = 4.440892098500626E-16 
+                                                       (expected 0 for n >= 2) 
+  Sum of primitive n-th roots (numeric) = - 0.9999999999999996 
+                                                        ,  Moebius mu(n) = - 1 
+                        2 %pi
+  2*cos(2*pi/n) = 2 cos(-----)  = 1.682507065662362 
+                         11
+                               (algebraic integer in real cyclotomic subfield) 
+------------------------------------------------------------ 
+[n =  11 ] Rotation matrix R (by exterior angle 2*pi/n): 
+            [     2 %pi         2 %pi  ]
+            [ cos(-----)  - sin(-----) ]
+            [      11            11    ]
+  Symbolic: [                          ] 
+            [     2 %pi        2 %pi   ]
+            [ sin(-----)   cos(-----)  ]
+            [      11           11     ]
+            [ 0.8412535328311812  - 0.5406408174555976 ]
+  Numeric : [                                          ] 
+            [ 0.5406408174555976   0.8412535328311812  ]
+  det(R) = 1  (expected 1) 
+                2 %pi
+  tr(R) = 2 cos(-----)  = 2 cos(2*pi/n) = 1.682507065662362 
+                 11
+                 [   0.9999999999999716     6.146374487975636E-14 ]
+  R^n  numeric = [                                                ] 
+                 [ - 6.146374487975636E-14   0.9999999999999716   ]
+                                                                  (expected I) 
+[n =  11 ] R^k traces (should equal 2 cos(2 pi k/n)): 
+  k = 1 : tr(R^k) = 1.682507065662362  ~ 2cos( 1 *2pi/n) = 1.682507065662362 
+  k = 2 : tr(R^k) = 0.8308300260037731  ~ 2cos( 2 *2pi/n) = 0.8308300260037729 
+  k = 3 : tr(R^k) = - 0.2846296765465705  ~ 2cos( 3 *2pi/n) = 
+                                                            - 0.28462967654657 
+  k = 4 : tr(R^k) = - 1.30972146789057  ~ 2cos( 4 *2pi/n) = - 1.30972146789057 
+  k = 5 : tr(R^k) = - 1.918985947228996  ~ 2cos( 5 *2pi/n) = 
+                                                           - 1.918985947228994 
+  k = 6 : tr(R^k) = - 1.918985947228996  ~ 2cos( 6 *2pi/n) = 
+                                                           - 1.918985947228995 
+  k = 7 : tr(R^k) = - 1.309721467890568  ~ 2cos( 7 *2pi/n) = - 1.30972146789057
+                                                                               
+  k = 8 : tr(R^k) = - 0.2846296765465723  ~ 2cos( 8 *2pi/n) = 
+                                                          - 0.2846296765465704 
+  k = 9 : tr(R^k) = 0.8308300260037953  ~ 2cos( 9 *2pi/n) = 0.8308300260037737 
+  k = 10 : tr(R^k) = 1.682507065662264  ~ 2cos( 10 *2pi/n) = 1.682507065662361 
+  k = 11 : tr(R^k) = 1.999999999999943  ~ 2cos( 11 *2pi/n) = 2.0 
+------------------------------------------------------------ 
+[n =  11 ] PRIMARY BASIS VECTORS (unit circumradius, 
+                            vertex 0 at top, CCW): 
+  v[ 0 ] =  [0, 1]  ~  [0.0, 1.0] 
+                 15 %pi       15 %pi
+  v[ 1 ] =  [cos(------), sin(------)]  ~  
+                   22           22
+                                    [- 0.5406408174555972, 0.8412535328311814] 
+                 19 %pi       19 %pi
+  v[ 2 ] =  [cos(------), sin(------)]  ~  
+                   22           22
+                                    [- 0.9096319953545184, 0.4154150130018863] 
+                 23 %pi       23 %pi
+  v[ 3 ] =  [cos(------), sin(------)]  ~  
+                   22           22
+                                  [- 0.9898214418809328, - 0.1423148382732849] 
+                 27 %pi       27 %pi
+  v[ 4 ] =  [cos(------), sin(------)]  ~  
+                   22           22
+                                   [- 0.7557495743542584, - 0.654860733945285] 
+                 31 %pi       31 %pi
+  v[ 5 ] =  [cos(------), sin(------)]  ~  
+                   22           22
+                                  [- 0.2817325568414297, - 0.9594929736144974] 
+                 35 %pi       35 %pi
+  v[ 6 ] =  [cos(------), sin(------)]  ~  
+                   22           22
+                                    [0.2817325568414293, - 0.9594929736144975] 
+                 39 %pi       39 %pi
+  v[ 7 ] =  [cos(------), sin(------)]  ~  
+                   22           22
+                                    [0.7557495743542578, - 0.6548607339452856] 
+                 43 %pi       43 %pi
+  v[ 8 ] =  [cos(------), sin(------)]  ~  
+                   22           22
+                                    [0.9898214418809327, - 0.1423148382732853] 
+                 47 %pi       47 %pi
+  v[ 9 ] =  [cos(------), sin(------)]  ~  
+                   22           22
+                                       [0.9096319953545186, 0.415415013001886] 
+                  51 %pi       51 %pi
+  v[ 10 ] =  [cos(------), sin(------)]  ~  
+                    22           22
+                                      [0.5406408174555976, 0.8412535328311812] 
+[n =  11 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
+  e[ 1 ] (numeric) =  [- 0.5406408174555972, - 0.1587464671688185] 
+  e[ 2 ] (numeric) =  [- 0.3689911778989212, - 0.4258385198292951] 
+  e[ 3 ] (numeric) =  [- 0.08018944652641436, - 0.5577298512751713] 
+  e[ 4 ] (numeric) =  [0.2340718675266744, - 0.512545895672] 
+  e[ 5 ] (numeric) =  [0.4740170175128286, - 0.3046322396692124] 
+  e[ 6 ] (numeric) =  [0.563465113682859, - 1.110223024625156E-16] 
+  e[ 7 ] (numeric) =  [0.4740170175128285, 0.3046322396692119] 
+  e[ 8 ] (numeric) =  [0.2340718675266748, 0.5125458956720003] 
+  e[ 9 ] (numeric) =  [- 0.08018944652641413, 0.5577298512751713] 
+  e[ 10 ] (numeric) =  [- 0.368991177898921, 0.4258385198292952] 
+  e[ 11 ] (numeric) =  [- 0.5406408174555976, 0.1587464671688188] 
+                                                     %pi
+[n =  11 ] Side length (unit circumradius) s = 2 sin(---)  = 0.5634651136828593
+                                                     11
+                                                                               
+------------------------------------------------------------ 
+[n =  11 ] Holonomy / spinor cover analysis: 
+  Natural single-vortex fiber order = 22 
+  Z_n single-vortex holonomy (n = 22 ) : 1 
+  Required loop count to close fiber : 22 
+[Anyonic case G = Z_n with n = 11 ]: 
+  single-vortex holonomy = 1 
+  loop order required    = 11  (expected 11 ) 
+[n =  11 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
+  All g in Z_n satisfy order(g) = n/gcd(g, n). 
+[n =  11 ] Composite holonomy: Loop A = 3 , Loop B = 7 , Composite = 10 
+                                                              , Sum mod n = 10 
+------------------------------------------------------------ 
+[n =  11 ] Cut-and-project ambient lattice Z^n: 
+  C_n cyclic shift matrix: 
+   [ 0  1  0  0  0  0  0  0  0  0  0 ]
+   [                                 ]
+   [ 0  0  1  0  0  0  0  0  0  0  0 ]
+   [                                 ]
+   [ 0  0  0  1  0  0  0  0  0  0  0 ]
+   [                                 ]
+   [ 0  0  0  0  1  0  0  0  0  0  0 ]
+   [                                 ]
+   [ 0  0  0  0  0  1  0  0  0  0  0 ]
+   [                                 ]
+   [ 0  0  0  0  0  0  1  0  0  0  0 ] 
+   [                                 ]
+   [ 0  0  0  0  0  0  0  1  0  0  0 ]
+   [                                 ]
+   [ 0  0  0  0  0  0  0  0  1  0  0 ]
+   [                                 ]
+   [ 0  0  0  0  0  0  0  0  0  1  0 ]
+   [                                 ]
+   [ 0  0  0  0  0  0  0  0  0  0  1 ]
+   [                                 ]
+   [ 1  0  0  0  0  0  0  0  0  0  0 ]
+                       11
+  charpoly(C_n) = 1 - x   
+  C_n^n = I_n verified. 
+  C_n is orthogonal: C_n . C_n^T = I_n. 
+  C_n . (1,...,1)^T - (1,...,1)^T = [ 0  0  0  0  0  0  0  0  0  0  0 ] 
+                                                              (should be zero) 
+  Projectors P_diag, P_perp: idempotent, orthogonal, complete. 
+  dim(orthogonal complement of diagonal) = 10  = n - 1 
+[n =  11 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
+  V_ 1  (rotation angle 2 pi * 1 /n = 0.5711986642890533 ): 
+    u_ 1  (cos) = [1.0, 0.8412535328311812, 0.4154150130018864, 
+- 0.142314838273285, - 0.654860733945285, - 0.9594929736144973, 
+- 0.9594929736144975, - 0.6548607339452852, - 0.1423148382732852, 
+0.4154150130018868, 0.8412535328311808] 
+    w_ 1  (sin) = [0.0, 0.5406408174555976, 0.9096319953545183, 
+0.9898214418809328, 0.7557495743542583, 0.28173255684143, 
+- 0.2817325568414294, - 0.7557495743542582, - 0.9898214418809327, 
+- 0.9096319953545182, - 0.5406408174555982] 
+  V_ 2  (rotation angle 2 pi * 2 /n = 1.142397328578106 ): 
+    u_ 2  (cos) = [1.0, 0.4154150130018864, - 0.654860733945285, 
+- 0.9594929736144975, - 0.1423148382732852, 0.8412535328311808, 
+0.8412535328311815, - 0.1423148382732847, - 0.9594929736144974, 
+- 0.6548607339452844, 0.415415013001885] 
+    w_ 2  (sin) = [0.0, 0.9096319953545183, 0.7557495743542583, 
+- 0.2817325568414294, - 0.9898214418809327, - 0.5406408174555982, 
+0.5406408174555971, 0.9898214418809328, 0.2817325568414299, 
+- 0.7557495743542588, - 0.909631995354519] 
+  V_ 3  (rotation angle 2 pi * 3 /n = 1.713595992867159 ): 
+    u_ 3  (cos) = [1.0, - 0.142314838273285, - 0.9594929736144975, 
+0.4154150130018868, 0.8412535328311815, - 0.6548607339452839, 
+- 0.6548607339452844, 0.8412535328311811, 0.4154150130018875, 
+- 0.9594929736144973, - 0.1423148382732883] 
+    w_ 3  (sin) = [0.0, 0.9898214418809328, - 0.2817325568414294, 
+- 0.9096319953545182, 0.5406408174555971, 0.7557495743542594, 
+- 0.7557495743542588, - 0.5406408174555977, 0.9096319953545179, 
+0.2817325568414301, - 0.9898214418809322] 
+  V_ 4  (rotation angle 2 pi * 4 /n = 2.284794657156213 ): 
+    u_ 4  (cos) = [1.0, - 0.654860733945285, - 0.1423148382732852, 
+0.8412535328311815, - 0.9594929736144974, 0.415415013001885, 
+0.4154150130018875, - 0.9594929736144976, 0.841253532831181, 
+- 0.1423148382732869, - 0.6548607339452874] 
+    w_ 4  (sin) = [0.0, 0.7557495743542583, - 0.9898214418809327, 
+0.5406408174555971, 0.2817325568414299, - 0.909631995354519, 
+0.9096319953545179, - 0.2817325568414289, - 0.5406408174555979, 
+0.9898214418809325, - 0.7557495743542563] 
+  V_ 5  (rotation angle 2 pi * 5 /n = 2.855993321445266 ): 
+    u_ 5  (cos) = [1.0, - 0.9594929736144973, 0.8412535328311808, 
+- 0.6548607339452839, 0.415415013001885, - 0.1423148382732854, 
+- 0.1423148382732883, 0.4154150130018877, - 0.6548607339452874, 
+0.8412535328311819, - 0.9594929736144973] 
+    w_ 5  (sin) = [0.0, 0.28173255684143, - 0.5406408174555982, 
+0.7557495743542594, - 0.909631995354519, 0.9898214418809327, 
+- 0.9898214418809322, 0.9096319953545178, - 0.7557495743542563, 
+0.5406408174555965, - 0.2817325568414301] 
+  Physical 2D plane E_|| recommended = V_1. 
+  Perp subspace E_perp = (diagonal) + 4 * 2D pieces + 0 alternating directions 
+                                                           =>  dim(E_perp) = 9 
+                       10
+  ||pi_perp(e_1)||^2 = --  (= (n-1)/n) 
+                       11
+------------------------------------------------------------ 
+[n =  11 ] CA rule-count analysis (degree k = n): 
+  Binary outer-totalistic n-neighbor rules = 16777216  (= 2^ 24 ) 
+  Binary fully totalistic n-neighbor rules = 8192  (= 2^ 13 ) 
+  Binary fully general    n-neighbor rules = 104438888141315250669175271071662\
+438257996424904738378038423348328395390797155745684882681193499755834089010671\
+443926283798757343818579360726323608785136527794595697654370999834036159013438\
+371831442807001185594622637631883939771274567233468434458661749680790870580370\
+407128404874011860911446797778359802900668693897688178778594690563019026094059\
+957945343282346930302669644305902501597239986771421554169383555988529148631823\
+791443449673408781187263949647510018904134900841706167509366833385055103297208\
+826955076998361636941193301521379682583718809183365675122131849284636812555022\
+599830041234478486259567449219461702380650591324561082573183538008760862210283\
+427019769820231316901767800667519548507992163641937028537512478401490715913545\
+998279051339961155179427110683113409058427288427979155484978295432353451706522\
+326906139490598769300212296339568778287894844061600741294567491982305057164237\
+715481632138063104590291613692670834285644073044789997190178146576347322385026\
+725305989979599609079946920177462481771844986745565925017832907047311943316555\
+080756822184657174637329688491281952031745700244092661691087414838507841192980\
+452298185733897764810312608590300130241346718972667321649151113160292078173803\
+3436090243804708340403154190336  (= 2^(2^ 12 )) 
+  Reference: 4-OT = 1024 , 8-OT = 262144 
+------------------------------------------------------------ 
+[n =  11 ] Polygon geometry (side s = 1): 
+                       1
+  Circumradius R = ----------  ~ 1.774732766442111 
+                         %pi
+                   2 sin(---)
+                         11
+                       1
+  Apothem      r = ----------  ~ 1.702843619444624 
+                         %pi
+                   2 tan(---)
+                         11
+                       %pi
+                   tan(---)
+                       11
+  R/r            = --------  = sec(pi/n) = 1.042217116226405 
+                       %pi
+                   sin(---)
+                       11
+                          %pi
+                   11 cot(---)
+                          11
+  Area A         = -----------  ~ 9.365639906945436 
+                        4
+  Diagonals (k-step chord lengths, unit side): 
+    d[ 1 ] = 1  ~ 1.0 
+                 2 %pi
+             sin(-----)
+                  11
+    d[ 2 ] = ----------  ~ 1.918985947228994 
+                  %pi
+              sin(---)
+                  11
+                 3 %pi
+             sin(-----)
+                  11
+    d[ 3 ] = ----------  ~ 2.682507065662362 
+                  %pi
+              sin(---)
+                  11
+                 4 %pi
+             sin(-----)
+                  11
+    d[ 4 ] = ----------  ~ 3.228707415119565 
+                  %pi
+              sin(---)
+                  11
+                 5 %pi
+             sin(-----)
+                  11
+    d[ 5 ] = ----------  ~ 3.513337091666135 
+                  %pi
+              sin(---)
+                  11
+                 6 %pi
+             sin(-----)
+                  11
+    d[ 6 ] = ----------  ~ 3.513337091666135 
+                  %pi
+              sin(---)
+                  11
+                 7 %pi
+             sin(-----)
+                  11
+    d[ 7 ] = ----------  ~ 3.228707415119565 
+                  %pi
+              sin(---)
+                  11
+                 8 %pi
+             sin(-----)
+                  11
+    d[ 8 ] = ----------  ~ 2.682507065662362 
+                  %pi
+              sin(---)
+                  11
+                 9 %pi
+             sin(-----)
+                  11
+    d[ 9 ] = ----------  ~ 1.918985947228994 
+                  %pi
+              sin(---)
+                  11
+                  10 %pi
+              sin(------)
+                    11
+    d[ 10 ] = -----------  ~ 1.000000000000001 
+                   %pi
+               sin(---)
+                   11
+------------------------------------------------------------ 
+[n =  11 ] Dihedral group D_n symmetries: 
+                                   [ 0  0 ]
+  S0 . R . S0 - R^{-1} (symbolic): [      ] 
+                                   [ 0  0 ]
+  S R S = R^{-1} verified. 
+  |D_n| = 22 
+  Conjugacy classes (n odd): 1 + (n-1)/2 + 1 = 7 
+                                  (sum of sizes 1 + (n-1)/2 * 2 + n = 22 = 2n) 
+  Irrep dim^2 sum (n odd): 2 + 2(n-1) = 22 (should = 2n = 22 ) 
+------------------------------------------------------------ 
+[n =  11 ] Graph Laplacians (star and cycle): 
+  Star K_{1, 11 }: spectrum = {0, 1 (multiplicity 10 ), 12 } 
+  Spectral gap = 1 (positive => connected). 
+  Cycle C_ 11  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
+   [0.0, 0.3174929343376376, 1.169169973996227, 2.28462967654657, 
+3.30972146789057, 3.918985947228994, 3.918985947228995, 3.30972146789057, 
+2.28462967654657, 1.169169973996226, 0.3174929343376385] 
+  Spectral gap of C_ 11  = 0.3174929343376376 
+  [n = 11 ] iteration complete. 
+============================================================ 
+N_GON = 12 
+============================================================ 
+                                    5 %pi
+Interior angle theta = (n-2)*pi/n = -----  = 150.0 deg 
+                                      6
+                                   %pi
+Exterior angle = 2*pi/n          = ---  = 30.0 deg 
+                                    6
+Flat-vertex count k_flat = floor(2*pi/theta) = 2 
+                                   %pi
+Angular deficit at k_flat copies = ---  = 60.0 deg 
+                                    3
+                                      %pi
+Angular excess at (k_flat+1) copies = ---  = 90.0 deg 
+                                       2
+Smallest k>0 with k*theta = (integer)*2*pi:  k = 12 ,  accumulating  5 
+                                                                    full turns 
+------------------------------------------------------------ 
+[n =  12 ] Angle summary: 
+                            5 %pi
+  Interior angle  theta   = -----  = 2.617993877991494  rad = 150.0  deg 
+                              6
+                            %pi
+  Exterior angle          = ---  = 0.5235987755982988  rad 
+                             6
+                            %pi
+  Central angle           = ---  = 0.5235987755982988  rad 
+                             6
+  Sum of interior angles  = 10 %pi 
+                            5 %pi
+  Avg interior angle      = ----- 
+                              6
+[n =  12 ] k-copy vertex-loop accumulation: 
+                5 %pi     5
+  k = 1 : sum = -----  =  -- * 2pi  --  open 
+                  6       12
+                5 %pi     5
+  k = 2 : sum = -----  =  - * 2pi  --  open 
+                  3       6
+                5 %pi     5
+  k = 3 : sum = -----  =  - * 2pi  --  open 
+                  2       4
+                10 %pi     5
+  k = 4 : sum = ------  =  - * 2pi  --  open 
+                  3        3
+                25 %pi     25
+  k = 5 : sum = ------  =  -- * 2pi  --  open 
+                  6        12
+                          5
+  k = 6 : sum = 5 %pi  =  - * 2pi  --  open 
+                          2
+                35 %pi     35
+  k = 7 : sum = ------  =  -- * 2pi  --  open 
+                  6        12
+                20 %pi     10
+  k = 8 : sum = ------  =  -- * 2pi  --  open 
+                  3        3
+                15 %pi     15
+  k = 9 : sum = ------  =  -- * 2pi  --  open 
+                  2        4
+                 25 %pi     25
+  k = 10 : sum = ------  =  -- * 2pi  --  open 
+                   3        6
+                 55 %pi     55
+  k = 11 : sum = ------  =  -- * 2pi  --  open 
+                   6        12
+  k = 12 : sum = 10 %pi  =  5 * 2pi  --  CLOSES 
+                 65 %pi     65
+  k = 13 : sum = ------  =  -- * 2pi  --  open 
+                   6        12
+                 35 %pi     35
+  k = 14 : sum = ------  =  -- * 2pi  --  open 
+                   3        6
+                 25 %pi     25
+  k = 15 : sum = ------  =  -- * 2pi  --  open 
+                   2        4
+                 40 %pi     20
+  k = 16 : sum = ------  =  -- * 2pi  --  open 
+                   3        3
+                 85 %pi     85
+  k = 17 : sum = ------  =  -- * 2pi  --  open 
+                   6        12
+                            15
+  k = 18 : sum = 15 %pi  =  -- * 2pi  --  open 
+                            2
+                 95 %pi     95
+  k = 19 : sum = ------  =  -- * 2pi  --  open 
+                   6        12
+                 50 %pi     25
+  k = 20 : sum = ------  =  -- * 2pi  --  open 
+                   3        3
+                 35 %pi     35
+  k = 21 : sum = ------  =  -- * 2pi  --  open 
+                   2        4
+                 55 %pi     55
+  k = 22 : sum = ------  =  -- * 2pi  --  open 
+                   3        6
+                 115 %pi     115
+  k = 23 : sum = -------  =  --- * 2pi  --  open 
+                    6        12
+  k = 24 : sum = 20 %pi  =  10 * 2pi  --  CLOSES 
+Smallest k with full closure: k = 12   (number of full turns = 5 ) 
+------------------------------------------------------------ 
+[n =  12 ] Cyclotomic / roots-of-unity structure: 
+                                            2        2            2
+  x^n - 1 factorization = (x - 1) (x + 1) (x  + 1) (x  - x + 1) (x  + x + 1)
+                                                                   4    2
+                                                                 (x  - x  + 1) 
+  totient(n) = phi(n)   = 4   (degree of Q[zeta_n] over Q) 
+  Real subfield degree  = 2   (degree of Q(zeta + zeta^{-1}) over Q) 
+  Sum of all n-th roots (numeric) = 0.0  (expected 0 for n >= 2) 
+  Sum of primitive n-th roots (numeric) = 0.0 ,  Moebius mu(n) = 0 
+  2*cos(2*pi/n) = sqrt(3)  = 1.732050807568877 
+                               (algebraic integer in real cyclotomic subfield) 
+------------------------------------------------------------ 
+[n =  12 ] Rotation matrix R (by exterior angle 2*pi/n): 
+            [ sqrt(3)      1   ]
+            [ -------    - -   ]
+            [    2         2   ]
+  Symbolic: [                  ] 
+            [    1     sqrt(3) ]
+            [    -     ------- ]
+            [    2        2    ]
+            [ 0.8660254037844386        - 0.5        ]
+  Numeric : [                                        ] 
+            [        0.5          0.8660254037844386 ]
+  det(R) = 1  (expected 1) 
+  tr(R) = sqrt(3)  = 2 cos(2*pi/n) = 1.732050807568877 
+                 [ 1.0  0.0 ]
+  R^n  numeric = [          ]  (expected I) 
+                 [ 0.0  1.0 ]
+[n =  12 ] R^k traces (should equal 2 cos(2 pi k/n)): 
+  k = 1 : tr(R^k) = 1.732050807568877  ~ 2cos( 1 *2pi/n) = 1.732050807568877 
+  k = 2 : tr(R^k) = 1.0  ~ 2cos( 2 *2pi/n) = 1.0 
+  k = 3 : tr(R^k) = 0.0  ~ 2cos( 3 *2pi/n) = 0.0 
+  k = 4 : tr(R^k) = - 1.0  ~ 2cos( 4 *2pi/n) = - 1.0 
+  k = 5 : tr(R^k) = - 1.732050807568877  ~ 2cos( 5 *2pi/n) = 
+                                                           - 1.732050807568877 
+  k = 6 : tr(R^k) = - 2.0  ~ 2cos( 6 *2pi/n) = - 2.0 
+  k = 7 : tr(R^k) = - 1.732050807568877  ~ 2cos( 7 *2pi/n) = 
+                                                           - 1.732050807568877 
+  k = 8 : tr(R^k) = - 1.0  ~ 2cos( 8 *2pi/n) = - 1.0 
+  k = 9 : tr(R^k) = 0.0  ~ 2cos( 9 *2pi/n) = 0.0 
+  k = 10 : tr(R^k) = 1.0  ~ 2cos( 10 *2pi/n) = 1.0 
+  k = 11 : tr(R^k) = 1.732050807568877  ~ 2cos( 11 *2pi/n) = 1.732050807568877 
+  k = 12 : tr(R^k) = 2.0  ~ 2cos( 12 *2pi/n) = 2.0 
+------------------------------------------------------------ 
+[n =  12 ] PRIMARY BASIS VECTORS (unit circumradius, 
+                            vertex 0 at top, CCW): 
+  v[ 0 ] =  [0, 1]  ~  [0.0, 1.0] 
+               1  sqrt(3)
+  v[ 1 ] =  [- -, -------]  ~  [- 0.5, 0.8660254037844386] 
+               2     2
+               sqrt(3)  1
+  v[ 2 ] =  [- -------, -]  ~  [- 0.8660254037844386, 0.5] 
+                  2     2
+  v[ 3 ] =  [- 1, 0]  ~  [- 1.0, 0.0] 
+               sqrt(3)    1
+  v[ 4 ] =  [- -------, - -]  ~  [- 0.8660254037844386, - 0.5] 
+                  2       2
+               1    sqrt(3)
+  v[ 5 ] =  [- -, - -------]  ~  [- 0.5, - 0.8660254037844386] 
+               2       2
+  v[ 6 ] =  [0, - 1]  ~  [0.0, - 1.0] 
+             1    sqrt(3)
+  v[ 7 ] =  [-, - -------]  ~  [0.5, - 0.8660254037844386] 
+             2       2
+             sqrt(3)    1
+  v[ 8 ] =  [-------, - -]  ~  [0.8660254037844386, - 0.5] 
+                2       2
+  v[ 9 ] =  [1, 0]  ~  [1.0, 0.0] 
+              sqrt(3)  1
+  v[ 10 ] =  [-------, -]  ~  [0.8660254037844386, 0.5] 
+                 2     2
+              1  sqrt(3)
+  v[ 11 ] =  [-, -------]  ~  [0.5, 0.8660254037844386] 
+              2     2
+[n =  12 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
+  e[ 1 ] (numeric) =  [- 0.5, - 0.1339745962155614] 
+  e[ 2 ] (numeric) =  [- 0.3660254037844386, - 0.3660254037844386] 
+  e[ 3 ] (numeric) =  [- 0.1339745962155614, - 0.5] 
+  e[ 4 ] (numeric) =  [0.1339745962155614, - 0.5] 
+  e[ 5 ] (numeric) =  [0.3660254037844386, - 0.3660254037844386] 
+  e[ 6 ] (numeric) =  [0.5, - 0.1339745962155614] 
+  e[ 7 ] (numeric) =  [0.5, 0.1339745962155614] 
+  e[ 8 ] (numeric) =  [0.3660254037844386, 0.3660254037844386] 
+  e[ 9 ] (numeric) =  [0.1339745962155614, 0.5] 
+  e[ 10 ] (numeric) =  [- 0.1339745962155614, 0.5] 
+  e[ 11 ] (numeric) =  [- 0.3660254037844386, 0.3660254037844386] 
+  e[ 12 ] (numeric) =  [- 0.5, 0.1339745962155614] 
+                                                     %pi
+[n =  12 ] Side length (unit circumradius) s = 2 sin(---)  = 0.5176380902050415
+                                                     12
+                                                                               
+------------------------------------------------------------ 
+[n =  12 ] Holonomy / spinor cover analysis: 
+  Natural single-vortex fiber order = 12 
+  Z_n single-vortex holonomy (n = 12 ) : 1 
+  Required loop count to close fiber : 12 
+[Anyonic case G = Z_n with n = 12 ]: 
+  single-vortex holonomy = 1 
+  loop order required    = 12  (expected 12 ) 
+[n =  12 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
+  All g in Z_n satisfy order(g) = n/gcd(g, n). 
+[n =  12 ] Composite holonomy: Loop A = 3 , Loop B = 7 , Composite = 10 
+                                                              , Sum mod n = 10 
+------------------------------------------------------------ 
+[n =  12 ] Cut-and-project ambient lattice Z^n: 
+  C_n cyclic shift matrix: 
+   [ 0  1  0  0  0  0  0  0  0  0  0  0 ]
+   [                                    ]
+   [ 0  0  1  0  0  0  0  0  0  0  0  0 ]
+   [                                    ]
+   [ 0  0  0  1  0  0  0  0  0  0  0  0 ]
+   [                                    ]
+   [ 0  0  0  0  1  0  0  0  0  0  0  0 ]
+   [                                    ]
+   [ 0  0  0  0  0  1  0  0  0  0  0  0 ]
+   [                                    ]
+   [ 0  0  0  0  0  0  1  0  0  0  0  0 ]
+   [                                    ] 
+   [ 0  0  0  0  0  0  0  1  0  0  0  0 ]
+   [                                    ]
+   [ 0  0  0  0  0  0  0  0  1  0  0  0 ]
+   [                                    ]
+   [ 0  0  0  0  0  0  0  0  0  1  0  0 ]
+   [                                    ]
+   [ 0  0  0  0  0  0  0  0  0  0  1  0 ]
+   [                                    ]
+   [ 0  0  0  0  0  0  0  0  0  0  0  1 ]
+   [                                    ]
+   [ 1  0  0  0  0  0  0  0  0  0  0  0 ]
+                   12
+  charpoly(C_n) = x   - 1 
+  C_n^n = I_n verified. 
+  C_n is orthogonal: C_n . C_n^T = I_n. 
+  C_n . (1,...,1)^T - (1,...,1)^T = [ 0  0  0  0  0  0  0  0  0  0  0  0 ] 
+                                                              (should be zero) 
+  Projectors P_diag, P_perp: idempotent, orthogonal, complete. 
+  dim(orthogonal complement of diagonal) = 11  = n - 1 
+[n =  12 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
+  V_ 1  (rotation angle 2 pi * 1 /n = 0.5235987755982988 ): 
+    u_ 1  (cos) = [1.0, 0.8660254037844386, 0.5, 0.0, - 0.5, 
+- 0.8660254037844386, - 1.0, - 0.8660254037844386, - 0.5, 0.0, 0.5, 
+0.8660254037844386] 
+    w_ 1  (sin) = [0.0, 0.5, 0.8660254037844386, 1.0, 0.8660254037844386, 0.5, 
+         0.0, - 0.5, - 0.8660254037844386, - 1.0, - 0.8660254037844386, - 0.5] 
+  V_ 2  (rotation angle 2 pi * 2 /n = 1.047197551196597 ): 
+    u_ 2  (cos) = [1.0, 0.5, - 0.5, - 1.0, - 0.5, 0.5, 1.0, 0.5, - 0.5, - 1.0, 
+                                                                   - 0.5, 0.5] 
+    w_ 2  (sin) = [0.0, 0.8660254037844386, 0.8660254037844386, 0.0, 
+- 0.8660254037844386, - 0.8660254037844386, 0.0, 0.8660254037844386, 
+0.8660254037844386, 0.0, - 0.8660254037844386, - 0.8660254037844386] 
+  V_ 3  (rotation angle 2 pi * 3 /n = 1.570796326794896 ): 
+    u_ 3  (cos) = [1.0, 0.0, - 1.0, 0.0, 1.0, 0.0, - 1.0, 0.0, 1.0, 0.0, 
+                                                                   - 1.0, 0.0] 
+    w_ 3  (sin) = [0.0, 1.0, 0.0, - 1.0, 0.0, 1.0, 0.0, - 1.0, 0.0, 1.0, 0.0, 
+                                                                        - 1.0] 
+  V_ 4  (rotation angle 2 pi * 4 /n = 2.094395102393195 ): 
+    u_ 4  (cos) = [1.0, - 0.5, - 0.5, 1.0, - 0.5, - 0.5, 1.0, - 0.5, - 0.5, 
+                                                            1.0, - 0.5, - 0.5] 
+    w_ 4  (sin) = [0.0, 0.8660254037844386, - 0.8660254037844386, 0.0, 
+0.8660254037844386, - 0.8660254037844386, 0.0, 0.8660254037844386, 
+- 0.8660254037844386, 0.0, 0.8660254037844386, - 0.8660254037844386] 
+  V_ 5  (rotation angle 2 pi * 5 /n = 2.617993877991494 ): 
+    u_ 5  (cos) = [1.0, - 0.8660254037844386, 0.5, 0.0, - 0.5, 
+0.8660254037844386, - 1.0, 0.8660254037844386, - 0.5, 0.0, 0.5, 
+- 0.8660254037844386] 
+    w_ 5  (sin) = [0.0, 0.5, - 0.8660254037844386, 1.0, - 0.8660254037844386, 
+        0.5, 0.0, - 0.5, 0.8660254037844386, - 1.0, 0.8660254037844386, - 0.5] 
+  alternating-sign eigenvector (eigenvalue -1) = 
+                              [1, - 1, 1, - 1, 1, - 1, 1, - 1, 1, - 1, 1, - 1] 
+  Physical 2D plane E_|| recommended = V_1. 
+  Perp subspace E_perp = (diagonal) + 4 * 2D pieces + 1 alternating direction 
+                                                          =>  dim(E_perp) = 10 
+                       11
+  ||pi_perp(e_1)||^2 = --  (= (n-1)/n) 
+                       12
+------------------------------------------------------------ 
+[n =  12 ] CA rule-count analysis (degree k = n): 
+  Binary outer-totalistic n-neighbor rules = 67108864  (= 2^ 26 ) 
+  Binary fully totalistic n-neighbor rules = 16384  (= 2^ 14 ) 
+  Binary fully general    n-neighbor rules = 109074813561941592946298424473378\
+286244826416199623269243183278618972133184911929521626423452520198722395729179\
+615702527310987082017718406361097976507755479907890629884219298953860982522804\
+820515969685161359163819677188654260932456012129055390188630101790025253579991\
+720001007960002653583680090529780588095235050163019547565391100531236456001484\
+742603529355124584392891875276869627934408805561751569434994540667782514081490\
+061610592025643850457801332649356583604724240738244281224513151775751916489922\
+636574372243227736807502762788304520650179276170094569916849725787968385173704\
+999690096112051565505011556127149149251534210574896662954703278632150573082843\
+022166497032439613863525162640951616800542762343599630892169144618118740639531\
+066540488573943483287742816740749537099351186875635997039011702182361674945862\
+096985700626361208270671540815706657513728102702231092756491027675916052087830\
+463241104936456875492096732298245918476342738379027244843801852697776494107271\
+561158043469082745933999196141424274141059911742606055648376375631452761136265\
+862838336862115799363802087853767554533678991569423443395566631507008721353547\
+025567031200413072549583450835743965382893607708097855057891296790735278005493\
+562156109079584517295411597292747987752773856000820411855893000477774872776185\
+381351049384058186159865221160596030835640594182118971403786872621948149872760\
+365361629885617482241303348543878532402475141941718301228107820972930353737280\
+457437209522870362277636394529086980625842235514850757103961938744962986680818\
+876966281577815307939317909314364834076173858181956300299442279075495506128881\
+830843007964869323217915876591803556521615711540299212027615560787310793747746\
+684152836298770869945015203123186259420308569383894465706134623670423402682110\
+295895495119708707654618662279629453645162075650935101890602377382153953277620\
+867697858973196633030889330466516943618507835064156833694453005143749131129883\
+436726523859540490427345592872394952522718461740436785475461047437701976802557\
+660588103807727070771794222197709038543858584409549211609985253890397465570394\
+397308609093059696336076752996493841459818570596375456149735582781362383328890\
+630900428801732142480866396267133352800923275835087305961411872378142210146019\
+861574738685509689608918918044133955852482286754111321263879367556765034036297\
+003193002339782846531854723824423202801518968966041882297600081543761065225427\
+016359565087543385114712321422726660540358178146909080657646895058766199718650\
+5665475715792896  (= 2^(2^ 13 )) 
+  Reference: 4-OT = 1024 , 8-OT = 262144 
+------------------------------------------------------------ 
+[n =  12 ] Polygon geometry (side s = 1): 
+                       1
+  Circumradius R = ----------  ~ 1.931851652578136 
+                         %pi
+                   2 sin(---)
+                         12
+                       1
+  Apothem      r = ----------  ~ 1.866025403784438 
+                         %pi
+                   2 tan(---)
+                         12
+                       %pi
+                   tan(---)
+                       12
+  R/r            = --------  = sec(pi/n) = 1.035276180410083 
+                       %pi
+                   sin(---)
+                       12
+                         %pi
+  Area A         = 3 cot(---)  ~ 11.19615242270663 
+                         12
+  Diagonals (k-step chord lengths, unit side): 
+    d[ 1 ] = 1  ~ 1.0 
+                 1
+    d[ 2 ] = ----------  ~ 1.931851652578136 
+                   %pi
+             2 sin(---)
+                   12
+                    1
+    d[ 3 ] = ----------------  ~ 2.732050807568877 
+                         %pi
+             sqrt(2) sin(---)
+                         12
+              sqrt(3)
+    d[ 4 ] = ----------  ~ 3.346065214951231 
+                   %pi
+             2 sin(---)
+                   12
+                 5 %pi
+             sin(-----)
+                  12
+    d[ 5 ] = ----------  ~ 3.732050807568878 
+                  %pi
+              sin(---)
+                  12
+                1
+    d[ 6 ] = --------  ~ 3.863703305156273 
+                 %pi
+             sin(---)
+                 12
+                 7 %pi
+             sin(-----)
+                  12
+    d[ 7 ] = ----------  ~ 3.732050807568878 
+                  %pi
+              sin(---)
+                  12
+              sqrt(3)
+    d[ 8 ] = ----------  ~ 3.346065214951231 
+                   %pi
+             2 sin(---)
+                   12
+                    1
+    d[ 9 ] = ----------------  ~ 2.732050807568877 
+                         %pi
+             sqrt(2) sin(---)
+                         12
+                  1
+    d[ 10 ] = ----------  ~ 1.931851652578136 
+                    %pi
+              2 sin(---)
+                    12
+                  11 %pi
+              sin(------)
+                    12
+    d[ 11 ] = -----------  ~ 1.000000000000001 
+                   %pi
+               sin(---)
+                   12
+------------------------------------------------------------ 
+[n =  12 ] Dihedral group D_n symmetries: 
+                                   [ 0  0 ]
+  S0 . R . S0 - R^{-1} (symbolic): [      ] 
+                                   [ 0  0 ]
+  S R S = R^{-1} verified. 
+  |D_n| = 24 
+  Conjugacy classes (n even): 1 + (n-2)/2 + 1 + 2 = 9 
+                        (sum of sizes 1 + (n-2)/2 * 2 + 1 + 2*(n/2) = 24 = 2n) 
+  Irrep dim^2 sum (n even): 4 + 2(n-2) = 24 (should = 2n = 24 ) 
+------------------------------------------------------------ 
+[n =  12 ] Graph Laplacians (star and cycle): 
+  Star K_{1, 12 }: spectrum = {0, 1 (multiplicity 11 ), 13 } 
+  Spectral gap = 1 (positive => connected). 
+  Cycle C_ 12  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
+   [0.0, 0.2679491924311228, 1.0, 2.0, 3.0, 3.732050807568877, 4.0, 
+                         3.732050807568877, 3.0, 2.0, 1.0, 0.2679491924311228] 
+  Spectral gap of C_ 12  = 0.2679491924311228 
+  [n = 12 ] iteration complete. 
+------------------------------------------------------------ 
+[Pentagon-specific] Z[phi] integer arithmetic: 
+  phi^2 = [1,1], phi^3 = [1,2] (Fibonacci pairs). 
+  phi^n = [F_{n-1}, F_n] verified for n = 1..7. 
+  Z[phi] norm formula N(a+b phi) = a^2 + ab - b^2 verified. 
+  N(phi^n) = (-1)^n verified for n = 1..7 (phi^n a unit). 
+------------------------------------------------------------ 
+SWEEP SUMMARY TABLE 
+  Range: n = 3 to 12 step 1 
+------------------------------------------------------------ 
+pad_right("n",4) | pad_right("theta(deg)",12) | pad_right("k_flat",7) | pad_ri\
+ght("deficit(deg)",13) | pad_right("k_close",8) | pad_right("turns",6) | pad_r\
+ight("phi(n)",7) | pad_right("Area",8) | pad_right("R",8) | pad_right("OT_rule\
+s",12) | pad_right("C_n_gap",9) 
+----+-------------+--------+--------------+---------+-------+--------+--------\
+-+---------+-------------+---------- 
+pad_right("3",4) | pad_right("60.0",12) | pad_right("6",7) | pad_right("0.0",1\
+3) | pad_right("6",8) | pad_right("1",6) | pad_right("2",7) | pad_right("0.433\
+0127018922193",8) | pad_right("0.5773502691896258",8) | pad_right("256",12) | \
+pad_right("3.0",9) 
+pad_right("4",4) | pad_right("90.0",12) | pad_right("4",7) | pad_right("0.0",1\
+3) | pad_right("4",8) | pad_right("1",6) | pad_right("2",7) | pad_right("1.0",\
+8) | pad_right("0.7071067811865475",8) | pad_right("1024",12) | pad_right("2.0\
+",9) 
+pad_right("5",4) | pad_right("108.0",12) | pad_right("3",7) | pad_right("36.0"\
+,13) | pad_right("10",8) | pad_right("3",6) | pad_right("4",7) | pad_right("1.\
+720477400588967",8) | pad_right("0.8506508083520399",8) | pad_right("4096",12)\
+ | pad_right("1.381966011250105",9) 
+pad_right("6",4) | pad_right("120.0",12) | pad_right("3",7) | pad_right("0.0",\
+13) | pad_right("3",8) | pad_right("1",6) | pad_right("2",7) | pad_right("2.59\
+8076211353315",8) | pad_right("1.0",8) | pad_right("16384",12) | pad_right("1.\
+0",9) 
+pad_right("7",4) | pad_right("128.5714285714285",12) | pad_right("2",7) | pad_\
+right("102.8571428571428",13) | pad_right("14",8) | pad_right("5",6) | pad_rig\
+ht("6",7) | pad_right("3.633912444001589",8) | pad_right("1.152382435481243",8\
+) | pad_right("65536",12) | pad_right("0.7530203962825328",9) 
+pad_right("8",4) | pad_right("135.0",12) | pad_right("2",7) | pad_right("90.0"\
+,13) | pad_right("8",8) | pad_right("3",6) | pad_right("4",7) | pad_right("4.8\
+2842712474619",8) | pad_right("1.306562964876376",8) | pad_right("262144",12) \
+| pad_right("0.5857864376269049",9) 
+pad_right("9",4) | pad_right("140.0",12) | pad_right("2",7) | pad_right("80.0"\
+,13) | pad_right("18",8) | pad_right("7",6) | pad_right("6",7) | pad_right("6.\
+181824193772901",8) | pad_right("1.461902200081543",8) | pad_right("1048576",1\
+2) | pad_right("0.467911113762044",9) 
+pad_right("10",4) | pad_right("144.0",12) | pad_right("2",7) | pad_right("72.0\
+",13) | pad_right("5",8) | pad_right("2",6) | pad_right("4",7) | pad_right("7.\
+694208842938135",8) | pad_right("1.618033988749895",8) | pad_right("4194304",1\
+2) | pad_right("0.3819660112501051",9) 
+pad_right("11",4) | pad_right("147.2727272727272",12) | pad_right("2",7) | pad\
+_right("65.45454545454546",13) | pad_right("22",8) | pad_right("9",6) | pad_ri\
+ght("10",7) | pad_right("9.365639906945436",8) | pad_right("1.774732766442111"\
+,8) | pad_right("16777216",12) | pad_right("0.3174929343376376",9) 
+pad_right("12",4) | pad_right("150.0",12) | pad_right("2",7) | pad_right("60.0\
+",13) | pad_right("12",8) | pad_right("5",6) | pad_right("4",7) | pad_right("1\
+1.19615242270663",8) | pad_right("1.931851652578136",8) | pad_right("67108864"\
+,12) | pad_right("0.2679491924311228",9) 
+------------------------------------------------------------ 
+Summary of verified identities and structural facts: 
+ [Generalized, swept over n = 3 to 12 ] 
+  * Interior angle theta = (n-2) pi / n 
+  * Exterior angle = central angle = 2 pi / n 
+  * Flat-vertex count k_flat = floor(2 pi / theta) 
+  * Loop-closure index k_loop = 2n / gcd(2n, n-2) 
+  * R(2 pi/n)^n = I; det R = 1; tr R = 2 cos(2 pi / n) 
+  * R^k traces matched 2 cos(2 pi k/n) for k = 1..n 
+  * Primary basis vectors v[k] = (cos, sin)(pi/2 + 2 pi k/n) 
+  * Edge vectors e[k] computed and reported 
+  * Side length s = 2 sin(pi/n) (unit circumradius) 
+  * Z_n holonomy: order(g) = n/gcd(g,n) 
+  * Z_2 (spinor) and Z_n (anyonic) cases both verified 
+  * Alexander-Orbach: d_spec = 2 d_eff / d_w (n-independent) 
+  * charpoly(C_n) divides x^n - 1; C_n is orthogonal 
+  * Real-invariant 2D subspaces V_k of C_n enumerated 
+  * Projectors P_diag, P_perp idempotent, orthogonal, complete 
+  * dim(E_perp) = n - 2 (after taking V_1 as physical plane) 
+  * Outer-totalistic n-neighbor binary rule count = 2^(2(n+1)) 
+  * Diagonals d[k] = sin(k pi/n)/sin(pi/n) 
+  * Area A = (n/4) cot(pi/n) 
+  * Dihedral D_n: |D_n| = 2n, S R S = R^{-1} 
+  * D_n irrep dim^2 sum = 2n (case n even / n odd) 
+  * Star K_{1,n} Laplacian spectrum = {0, 1 x n, n+1} 
+  * Cycle C_n Laplacian eigenvalues = 2 - 2 cos(2 pi k/n) 
+ [Pentagon-specific benchmarks verified] 
+  * phi^2 = phi + 1; phi*(phi-1) = 1; 1/phi = phi - 1 
+  * Fibonacci recursion phi^n = F_n phi + F_{n-1} 
+  * Binet formula F_n = (phi^n - psi^n)/sqrt(5) 
+  * Pentagon diagonal/side = phi 
+  * Pentagram self-similarity: 1/phi^2 = 2 - phi 
+  * Z[phi] arithmetic, N(phi^n) = (-1)^n 
+============================================================ 
+analysis.mac : all checks passed for n = 3 to 12 step 1 
 ============================================================ 
                                  analysis.mac

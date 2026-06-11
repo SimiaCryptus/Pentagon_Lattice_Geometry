@@ -42,19 +42,19 @@
       13. Structural pattern analysis: clustering, girth, sheet flow
       14. Per-sheet sub-graph analysis
       15. Glider/oscillator hunt under multiple seeds
-     16. Long-loop holonomy enumeration (length 6-8)
-     17. Cut-and-project acceptance window experiment
-     18. KPM-based spectral density approximation
-     19. Per-sheet random walk diagnostics
-     20. Cross-tau dimensional comparison
-     21. Resistance distance and commute time
-     22. Summary report
+      16. Long-loop holonomy enumeration (length 6-8)
+      17. Cut-and-project acceptance window experiment
+      18. KPM-based spectral density approximation
+      19. Per-sheet random walk diagnostics
+      20. Cross-tau dimensional comparison
+      21. Resistance distance and commute time
+      22. Summary report
    ===================================================================== */
 
 if not(?boundp('display2d)) then display2d : false$
 
 print("============================================================")$
-print("experiment.mac : Multi-Sheeted Pentagon Tiling Experiments")$
+print("experiment.mac : Multi-Sheeted N-Gon Tiling Experiments")$
 print("============================================================")$
 
 /* Make pseudo-random results reproducible. */
@@ -63,6 +63,54 @@ if ?fboundp('make_random_state) then
      set_random_state(make_random_state(20250101))
 else
      print("(note: make_random_state unavailable; using default RNG seed)")$
+/* =====================================================================
+     SECTION 0.  PARAMETERIZATION
+     ---------------------------------------------------------------------
+     N_GON controls the polygon type for all geometry, holonomy, and CA
+     experiments.  Set it here; everything else follows automatically.
+       n = 3  : equilateral triangle
+       n = 4  : square
+       n = 5  : regular pentagon  (original paper)
+       n = 6  : regular hexagon
+       n = 7  : regular heptagon
+       n = 8  : regular octagon
+       n = 12 : regular dodecagon
+     Note: for n in {3, 4, 6} the tiling closes flat (deficit = 0) so
+     the sheet-transition mechanism is trivial unless a non-zero tau
+     rule is forced.  The most interesting fractional-dimension regime
+     arises for n = 5 (and other n where the angular deficit is an
+     irrational multiple of 2*pi).
+     ===================================================================== */
+N_GON : 5 $   /* <-- change this to study other n-gons */
+/* Sweep override: sweep_ngon.mac may set EXPERIMENT_N_GON_OVERRIDE
+   before batching this file.  Honor it if present. */
+if ?boundp('EXPERIMENT_N_GON_OVERRIDE) then
+    N_GON : EXPERIMENT_N_GON_OVERRIDE $
+if not integerp(N_GON) or N_GON < 3
+    then error("N_GON must be an integer >= 3; got", N_GON)$
+n_int : N_GON $
+print("------------------------------------------------------------")$
+print("PARAMETERIZATION:  N_GON =", N_GON)$
+print("------------------------------------------------------------")$
+/* Derived angular constants. */
+theta_int_n : (n_int - 2)*%pi / n_int $   /* interior angle */
+theta_ext_n : 2*%pi / n_int $             /* exterior / central angle */
+k_flat_n    : floor(2*%pi / theta_int_n) $  /* n-gons around a flat vertex */
+deficit_n   : ratsimp(2*%pi - k_flat_n * theta_int_n) $
+k_loop_close_n : 2*n_int / gcd(2*n_int, n_int - 2) $
+print("  Interior angle =", float(theta_int_n * 180 / %pi), "deg")$
+print("  Flat-vertex count k_flat =", k_flat_n)$
+print("  Angular deficit =", float(deficit_n * 180 / %pi), "deg")$
+print("  Loop-closure index k_loop =", k_loop_close_n)$
+/* Natural fiber group order for this n-gon. */
+FIBER_ORDER_N : k_loop_close_n $
+print("  Natural fiber group order =", FIBER_ORDER_N)$
+/* Holonomy fiber groups to survey (always include 2, n_int, and the
+    natural fiber order; deduplicate and sort). */
+FIBER_GROUPS_DEFAULT : sort(listify(setify(
+     append([2, n_int, FIBER_ORDER_N],
+            if n_int <= 12 then [3, 4, 5, 6, 10] else [])))) $
+print("  Fiber groups for holonomy survey:", FIBER_GROUPS_DEFAULT)$
 
 /* ---------------------------------------------------------------------
     Shared utility: least-squares slope/intercept of (xs, ys).
@@ -98,6 +146,10 @@ log_log_fit_basic(xs, ys) := block(
        "huge"    -- research-grade run; may take hours and a lot of
                     memory. Eigenvalues may be skipped if SKIP_EIG
                     is true (see below).
+      "xhuge"   -- extra-large run: BFS depth 6, longer walks,
+                   more KPM moments. Intended for the upgraded
+                   pipeline (signed/cap tau-rule + KPM spectral
+                   analysis). Hours of runtime; eigenvalues skipped.
        "custom"  -- ignore the preset and use whatever individual
                     parameter values are set below.
     Individual parameters (override after preset block if desired):
@@ -112,8 +164,34 @@ log_log_fit_basic(xs, ys) := block(
        EIG_MAX_N      -- safety cap: auto-skip eigendecomposition if
                          cluster size exceeds this value, regardless
                          of SKIP_EIG.
+      TAU_MODE       -- selects the default vortex rule used in the
+                        main BFS expansion (Section 3) and downstream
+                        analyses.  Values:
+                          "every3"  -- the original didactic rule
+                                       tau(i,k) = [(i+k) ≡ 0 mod 3],
+                                       always +1.
+                          "signed3" -- the signed-3 rule from the
+                                       tau-survey: tau in {-1,0,+1}.
+                                       Produces the largest clusters
+                                       and the most sheets, and gives
+                                       d_eff closest to the predicted
+                                       midpoint 2.5.
+                          "cap"     -- the cut-and-project acceptance
+                                       window rule of Section 17:
+                                       shift +1 iff exactly one
+                                       endpoint lies inside the
+                                       pentagonal acceptance window.
+                                       This is the rigorous regime of
+                                       idea.md §2.4.
     ===================================================================== */
-EXPERIMENT_PRESET : "huge" $
+EXPERIMENT_PRESET : "xhuge" $
+if ?boundp('EXPERIMENT_PRESET_OVERRIDE) then
+    EXPERIMENT_PRESET : EXPERIMENT_PRESET_OVERRIDE $
+/* Default vortex rule for the main cluster.  Set to "signed3" or
+    "cap" to use the upgraded rules instead of the didactic every3. */
+TAU_MODE : "signed3" $
+if ?boundp('EXPERIMENT_TAU_OVERRIDE) then
+    TAU_MODE : EXPERIMENT_TAU_OVERRIDE $
 if EXPERIMENT_PRESET = "tiny" then (
      BFS_DEPTH : 1,
      M_WALKS   : 50,
@@ -164,6 +242,16 @@ if EXPERIMENT_PRESET = "tiny" then (
      KPM_MOMENTS : 256,
      KPM_SAMPLES : 24,
      LONG_LOOP_MAX : 8
+) elseif EXPERIMENT_PRESET = "xhuge" then (
+     BFS_DEPTH : 6,
+     M_WALKS   : 40000,
+     T_STEPS   : 800,
+     T_CA      : 96,
+     SKIP_EIG  : true,
+     EIG_MAX_N : 3000,
+     KPM_MOMENTS : 384,
+     KPM_SAMPLES : 32,
+     LONG_LOOP_MAX : 8
 ) elseif EXPERIMENT_PRESET = "custom" then (
      /* Edit these directly for hand-tuned runs. */
      BFS_DEPTH : 2,
@@ -187,6 +275,7 @@ P0_FIT_LO  : 2 $
 P0_FIT_HI  : max(4, min(T_STEPS, 2*BFS_DEPTH)) $
 print("Configuration:")$
 print("  preset    =", EXPERIMENT_PRESET)$
+print("  TAU_MODE  =", TAU_MODE)$
 print("  BFS_DEPTH =", BFS_DEPTH)$
 print("  M_WALKS   =", M_WALKS)$
 print("  T_STEPS   =", T_STEPS)$
@@ -198,168 +287,214 @@ print("  P_0 fit window t in [", P0_FIT_LO,  ",", P0_FIT_HI,  "] (even t)")$
 print("  KPM_MOMENTS =", KPM_MOMENTS)$
 print("  KPM_SAMPLES =", KPM_SAMPLES)$
 print("  LONG_LOOP_MAX =", LONG_LOOP_MAX)$
-
+print("  N_GON =", N_GON)$
 
 /* ---------------------------------------------------------------------
-   SECTION 1.  Setup and Q(sqrt(5)) machinery
+    SECTION 1.  Setup and field arithmetic machinery
    --------------------------------------------------------------------- */
 
-phi : (1 + sqrt(5))/2 $
-psi : (1 - sqrt(5))/2 $
-
-/* Exact rotation cosines/sines for 72 deg multiples. */
-c72 : (sqrt(5) - 1)/4 $
-s72 : sqrt(10 + 2*sqrt(5))/4 $
-c144 : -(sqrt(5) + 1)/4 $
-s144 : sqrt(10 - 2*sqrt(5))/4 $
-
-/* Canonicalize an element of Q(sqrt(5)) for hashable equality.
-   Every element simplifies to a + b*sqrt(5) with a, b rational. */
+/* Canonicalize an algebraic number for hashable equality. */
 qcanon(z) := ratsimp(expand(z)) $
 
 /* Test two algebraic numbers for exact equality in Q(sqrt(5)). */
 qeq(a, b) := is(qcanon(a - b) = 0) $
 
-/* Sanity. */
-if not qeq(phi^2, phi + 1) then error("phi^2 != phi + 1")$
-if not qeq(c72^2 + s72^2, 1) then error("cos^2(72)+sin^2(72) != 1")$
-if not qeq(c144^2 + s144^2, 1) then error("cos^2(144)+sin^2(144) != 1")$
-print("Section 1: Q(sqrt(5)) arithmetic primitives OK.")$
+/* Pentagon-specific golden-ratio constants (kept for n=5 compatibility
+    and for use in the cut-and-project window of Section 17). */
+phi : (1 + sqrt(5))/2 $
+psi : (1 - sqrt(5))/2 $
+if N_GON = 5 then (
+     c72  : (sqrt(5) - 1)/4,
+     s72  : sqrt(10 + 2*sqrt(5))/4,
+     c144 : -(sqrt(5) + 1)/4,
+     s144 : sqrt(10 - 2*sqrt(5))/4,
+     if not qeq(phi^2, phi + 1) then error("phi^2 != phi + 1"),
+     if not qeq(c72^2 + s72^2, 1) then error("cos^2(72)+sin^2(72) != 1"),
+     if not qeq(c144^2 + s144^2, 1) then error("cos^2(144)+sin^2(144) != 1"),
+     print("Section 1: Q(sqrt(5)) arithmetic primitives OK.")
+) else
+     print("Section 1: generic field arithmetic (N_GON =", N_GON, ").")$
 
 /* ---------------------------------------------------------------------
-   SECTION 2.  Pentagon geometry in Q(sqrt(5))
+    SECTION 2.  N-gon geometry
    ---------------------------------------------------------------------
 
-   A regular pentagon is described by:
+    A regular n-gon is described by:
       centroid    : [cx, cy]  in Q(sqrt(5))^2
-      orientation : k in {0, 1, 2, 3, 4}  (multiples of 72 deg)
+      chirality   : c in {0, 1}   (orientation class under D_n action)
       sheet       : s in Z  (or Z_n)
 
-   Circumradius for unit edge: R = 1/(2 sin(36)).
-   We use R as a free symbolic constant; it lives in Q(sqrt(5), sqrt(...))
-   but never appears in equality comparisons -- only differences of
-   centroids do, and those reduce to rationals + rational multiples of
-   sqrt(5) once the geometry closes up.  For pure adjacency tests we
-   work with the *edge midpoint* normalized form.
+    Circumradius for unit edge: R = 1/(2 sin(pi/n)).
+    We use R as a free symbolic constant; it never appears in equality
+    comparisons -- only differences of centroids do.  For pure adjacency
+    tests we work with the *edge midpoint* normalized form.
+
+    Orientation:  rotating a regular n-gon by 2*pi/n maps it to itself,
+    so multiples-of-2*pi/n rotations are NOT distinguishing labels and
+    must not appear in the cell-identity tuple.  What is distinguishing
+    is *chirality* (handedness), because reflecting across an edge flips
+    the orientation class.
+
+        - For odd n (n = 3, 5, 7, ...): the n-gon has no edge-midpoint
+          symmetry axis, so reflection across an edge does NOT lie in
+          the rotation subgroup of D_n.  The dual graph is bipartite:
+          every edge connects "up" cells (chirality 0) to "down" cells
+          (chirality 1).  Every closed walk on the tiling has even
+          length on the chirality bigraph.
+
+        - For even n (n = 4, 6, 8, ...): the n-gon has an edge-midpoint
+          axis through every edge, so reflection across an edge is
+          realized by a rotation in D_n.  Chirality collapses to a
+          single class.  We carry chirality = 0 trivially.
+
+    The chirality bit also resolves the previous code's silent
+    absorption of the orientation flip into the sheet index, which
+    was conflating two distinct degrees of freedom (geometric
+    handedness and physical sheet monodromy).
    --------------------------------------------------------------------- */
 
-/* Rotation table: rot_cs[k+1] = [cos(k*72 deg), sin(k*72 deg)] for k=0..4. */
-rot_cs : [
-    [1, 0],
-    [c72, s72],
-    [c144, s144],
-    [c144, -s144],
-    [c72, -s72]
-] $
+/* Parity-dependent chirality use:
+    For odd n the bigraph is non-trivial; for even n chirality is
+    a constant 0 and we never enumerate it. */
+CHIRAL_ACTIVE : oddp(n_int) $
 
-/* Apply rotation by k*72 deg to a 2-vector. */
-rot72(v, k) := block(
-    [cs : rot_cs[mod(k, 5) + 1], c, s],
+/* Flip chirality across an edge: for odd n the reflection takes
+    "up" to "down"; for even n it stays the same. */
+flip_chir(c) := if CHIRAL_ACTIVE then mod(c + 1, 2) else 0 $
+
+/* Rotation table: rot_cs[k+1] = [cos(k * 2*pi/n), sin(k * 2*pi/n)]
+    for k = 0 .. n_int-1.  Stored as exact symbolic expressions so that
+    equality comparisons on centroids remain exact. */
+rot_cs : makelist(
+     [qcanon(cos(k * 2*%pi / n_int)),
+      qcanon(sin(k * 2*%pi / n_int))],
+     k, 0, n_int - 1) $
+
+/* Apply rotation by k*(2*pi/n) to a 2-vector. */
+rot_ngon(v, k) := block(
+     [cs : rot_cs[mod(k, n_int) + 1], c, s],
     c : cs[1], s : cs[2],
     [c*v[1] - s*v[2], s*v[1] + c*v[2]]) $
 
-/* The 5 unit vectors from pentagon center to its vertices, with vertex
-   0 pointing in the +x direction.  These are the "spoke" directions. */
-spoke(k) := rot72([1, 0], k) $
+/* The n unit vectors from n-gon center to its vertices, with vertex
+    0 pointing in the +x direction.  These are the "spoke" directions. */
+spoke(k) := rot_ngon([1, 0], k) $
 
 /* Edge midpoints (relative to center) for orientation = 0:
-   midpoint of edge k is halfway between vertex k and vertex k+1, scaled
-   by the apothem/circumradius ratio = cos(36). */
+    midpoint of edge k is halfway between vertex k and vertex k+1. */
 edge_mid_rel(k) := block(
     [v1 : spoke(k), v2 : spoke(k+1)],
     [(v1[1] + v2[1])/2, (v1[2] + v2[2])/2]) $
 
-/* For a pentagon centered at C with orientation theta = j*72 deg,
-   the midpoint of its k-th edge (k = 0..4) is:
-      C + R_{j*72} * edge_mid_rel(k)
-   where here we absorb the circumradius R into the coordinate scale,
-   i.e. we choose R = 1 as the natural unit.                          */
-edge_midpoint(cx, cy, j, k) := block(
-    [m : rot72(edge_mid_rel(k), j)],
-    [qcanon(cx + m[1]), qcanon(cy + m[2])]) $
 
-/* Outward-pointing edge normal (unit) for edge k of pentagon at C, orientation j.
-   It is the direction from C to the edge midpoint, normalized -- but since
-   we only ever compare normals via exact equality, we keep the un-normalized
-   form (edge_mid - center) which is proportional. */
-edge_normal_rel(j, k) := rot72(edge_mid_rel(k), j) $
+/* Canonical edge midpoint for a cell at (cx, cy) with chirality chir.
+    Up-cells (chir = 0) use the base orientation; down-cells (chir = 1)
+    are reflected across the x-axis, which is one realization of the
+    chirality-flipping reflection.  For even n, chir is always 0 and
+    we just use the base orientation. */
+edge_midpoint(cx, cy, chir, k) := block(
+     [m : edge_mid_rel(k), mx, my],
+     mx : m[1],
+     my : if chir = 1 then -m[2] else m[2],
+     [qcanon(cx + mx), qcanon(cy + my)]) $
 
-/* When two pentagons share an edge identically, their centers are mirror-
-   images across that edge, separated by twice the apothem along the edge
-   normal.  The neighbor's orientation is also flipped: edge k of pentagon A
-   matches edge (k+5/2) of pentagon B if oriented oppositely... but for a
-   regular pentagon with 5-fold symmetry, the precise matching rule we
-   enforce is:
+/* (kept for backward-compatible call sites in tau_rule_cap stub) */
+edge_normal_rel(chir, k) := block(
+     [m : edge_mid_rel(k)],
+     if chir = 1 then [m[1], -m[2]] else m) $
 
-     neighbor center  = my_center + 2 * (edge_mid - my_center)
-                      = 2*edge_mid - my_center
-     neighbor edge    = the edge whose midpoint coincides with mine
-     neighbor orient. = my_orient + pi (i.e. rotated by 180 deg)
+/* When two n-gons share an edge, the neighbor's center is the
+    reflection of the current center across that edge midpoint:
+       neighbor center = 2 * edge_mid - my_center
+    Chirality flips across each edge for odd n (bipartite dual graph),
+    and is constant for even n.  The genuine angular deficit, when
+    nonzero, is absorbed into the sheet index via tau_rule.             */
 
-   In our 72-deg orientation discretization we cannot represent a 180-deg
-   flip exactly within k in {0,..,4}; we therefore parametrize a pentagon
-   by (center, orient_index in {0,..,9}) where orient_index 5..9 mean
-   "flipped" (mirror image).  For this experiment we restrict to the
-   simpler "same orientation" tiling on a sheet -- which is itself
-   geometrically frustrated -- and assign sheet transitions to absorb
-   the angular mismatch. */
-
-print("Section 2: Pentagon geometry primitives OK.")$
+print("Section 2: N-gon geometry primitives OK (N_GON =", N_GON, ").")$
+print("  CHIRAL_ACTIVE =", CHIRAL_ACTIVE,
+       if CHIRAL_ACTIVE then " (odd n: bipartite orientation bigraph)"
+                        else " (even n: single orientation class)")$
 
 /* ---------------------------------------------------------------------
    SECTION 3.  Multi-sheeted adjacency graph construction
    ---------------------------------------------------------------------
 
-   We construct a small "pentagonal star" graph: a central pentagon plus
-   its 5 edge-adjacent neighbors on the SAME sheet, plus a second sheet
-   reached via a vortex-edge transition.  This is intentionally tiny so
-   eigenvalue calculations stay symbolic-friendly.
+    We construct a multi-sheeted n-gon adjacency graph by BFS from an
+    origin n-gon.  Each n-gon has n edges; the tau rule determines which
+    edges carry a sheet transition.
 
-   Nodes are identified by integer IDs 1..N.  We separately store:
+    Nodes are identified by integer IDs 1..N.  We store:
       cell_center[i]  -- exact [cx, cy] in Q(sqrt(5))
-      cell_orient[i]  -- integer in {0,..,4}
+       cell_chir[i]    -- chirality bit in {0, 1}; constantly 0 for even n
       cell_sheet[i]   -- integer (Z) or residue (Z_n)
    and the adjacency list nbrs[i] -- list of neighbor IDs.
+    Note: the previous version of this code stored a 5-valued
+    `cell_orient` field representing multiples of 2*pi/n.  That field
+    was geometrically meaningless because rotating a regular n-gon by
+    2*pi/n maps it to itself, so identity should not depend on it.
+    Worse, on a same-orientation tiling the reflection across an edge
+    flips chirality for odd n, but the old code kept orientation fixed,
+    silently absorbing the flip into the sheet index.  The chirality
+    bit below now tracks that geometric degree of freedom explicitly.
 
-   For larger experiments we generate a connected cluster by BFS from
-   the origin pentagon, materializing neighbors lazily.
+    The cluster is generated by BFS from the origin n-gon, materializing
+    neighbors lazily.
    --------------------------------------------------------------------- */
 
 /* Storage: associative arrays keyed by integer ID. */
 cell_center : [] $
-cell_orient : [] $
+cell_chir   : [] $
 cell_sheet  : [] $
 cell_count  : 0 $
 nbrs        : [] $
+/* Hash index: maps a float fingerprint -> list of candidate cell IDs.
+   This turns find_cell from O(N) into O(1) amortized.  We use a
+   Maxima hash array; collisions are resolved by exact qeq check. */
+cell_hash   : 0 $
+cell_hash   : ?make\-hash\-table() $
+/* Float fingerprint of a (center, chirality, sheet) tuple.  Rounded to
+   a fixed grid so exact-equal centers always hash the same. */
+cell_fingerprint(c, chir, s) := block(
+    [fx : float(ratsimp(expand(c[1]))),
+     fy : float(ratsimp(expand(c[2])))],
+    [round(fx * 1048576), round(fy * 1048576), mod(chir, 2), s]) $
 
-/* Add a cell and return its ID. */
-add_cell(c, o, s) := block(
-    [id],
+
+/* Add a cell and return its ID.  The middle argument is chirality. */
+add_cell(c, chir, s) := block(
+    [id, fp],
     cell_count : cell_count + 1,
     id : cell_count,
     cell_center : endcons([qcanon(c[1]), qcanon(c[2])], cell_center),
-    cell_orient : endcons(mod(o, 5), cell_orient),
+    cell_chir   : endcons(mod(chir, 2), cell_chir),
     cell_sheet  : endcons(s, cell_sheet),
     nbrs        : endcons([], nbrs),
+    fp : cell_fingerprint(c, chir, s),
+    block([prev : ?gethash(fp, cell_hash, [])],
+          ?puthash(fp, cell_hash, endcons(id, prev))),
     id) $
 
-/* Look up a cell with given (center, orient, sheet); returns 0 if absent.
+/* Look up a cell with given (center, chirality, sheet); returns 0 if absent.
    Uses exact Q(sqrt(5)) comparisons. */
-find_cell(c, o, s) := block(
-    [cx : qcanon(c[1]), cy : qcanon(c[2]), om : mod(o, 5),
-     i, ce, result : 0],
-    for i : 1 thru cell_count do (
+find_cell(c, chir, s) := block(
+    [fp : cell_fingerprint(c, chir, s),
+     cx, cy, cm : mod(chir, 2), candidates, i, ce, result : 0],
+    candidates : ?gethash(fp, cell_hash, []),
+    if length(candidates) = 0 then return(0),
+    cx : qcanon(c[1]),
+    cy : qcanon(c[2]),
+    for i in candidates do (
         ce : cell_center[i],
         if qeq(ce[1], cx) and qeq(ce[2], cy)
-           and cell_orient[i] = om
+           and cell_chir[i] = cm
            and cell_sheet[i] = s
         then (result : i, return(result))),
     result) $
 
 /* Find-or-create. */
-get_cell(c, o, s) := block(
-    [id : find_cell(c, o, s)],
-    if id = 0 then add_cell(c, o, s) else id) $
+get_cell(c, chir, s) := block(
+    [id : find_cell(c, chir, s)],
+    if id = 0 then add_cell(c, chir, s) else id) $
 
 /* Add an undirected edge. */
 add_edge(i, j) := block(
@@ -369,32 +504,62 @@ add_edge(i, j) := block(
     if not member(i, nbrs[j]) then
         nbrs[j] : endcons(i, nbrs[j])) $
 
-/* Reflection of pentagon A's center across the midpoint of its k-th edge
-   gives the center of the same-orientation neighbor sharing that edge. */
-reflected_neighbor_center(cx, cy, j, k) := block(
-    [m : edge_midpoint(cx, cy, j, k)],
+/* Reflection of n-gon A's center across the midpoint of its k-th edge
+    gives the center of the neighbor sharing that edge.  The neighbor's
+    chirality is the flip of A's chirality (for odd n; identical for
+    even n).  This function returns just the center. */
+reflected_neighbor_center(cx, cy, chir, k) := block(
+    [m : edge_midpoint(cx, cy, chir, k)],
     [qcanon(2*m[1] - cx), qcanon(2*m[2] - cy)]) $
 
 /* Generate the neighbor of cell i across its k-th edge, with sheet
-   transition tau (an integer added to the current sheet index).  In a
-   generic non-frustrated tiling we'd preserve orientation; here, because
-   pentagons can't tile flatly, some edges are "vortex edges" where the
-   neighbor is forced onto an adjacent sheet to absorb the angular
-   deficit/excess.  The transition rule tau_rule(i, k) is a parameter
-   of the experiment. */
+    transition tau (an integer added to the current sheet index).
+    The transition rule tau_rule(i, k) is a parameter of the experiment. */
 
-/* Default transition rule: every 3rd edge of every pentagon is a vortex
-   edge contributing +1 to the sheet index; others contribute 0. */
-tau_rule(i, k) := if mod(i + k, 3) = 0 then 1 else 0 $
+/* Default transition rule: every (n_int)-th edge (by index parity) is a
+    vortex edge contributing +1 to the sheet index; others contribute 0.
+    For n=5 this reproduces the original "every3" didactic rule when
+    combined with the (i+k) mod 3 test.  For general n we use a
+    period-n_int rule: tau = 1 iff (i+k) mod n_int = 0. */
+tau_rule_every3(i, k) :=
+     if mod(i + k, 3) = 0 then 1 else 0 $
+/* General period-n rule (replaces every3 for n != 5). */
+tau_rule_everyn(i, k) :=
+      if mod(i + k, n_int) = 0 then 1 else 0 $
+tau_rule_signed3(i, k) :=
+     if mod(i + k, 3) = 0 then 1
+     elseif mod(i + k, 3) = 1 then -1
+     else 0 $
+/* General signed-n rule. */
+tau_rule_signedn(i, k) :=
+      if mod(i + k, n_int) = 0 then 1
+      elseif mod(i + k, n_int) = 1 then -1
+      else 0 $
+/* The cap-window rule needs `cell_center`, `cell_orient` and the
+    `reflected_neighbor_center` / `in_cap_window` helpers; we define
+    it as a forward declaration here and bind its body after Section 17
+    has defined `in_cap_window`. */
+tau_rule_cap(i, k) := tau_rule_every3(i, k) $   /* placeholder */
+/* Live dispatcher.  Always reads TAU_MODE so it can be retargeted.
+    For n != 5 the "every3" and "signed3" modes fall back to the
+    general period-n variants so the cluster is non-trivial. */
+tau_rule(i, k) :=
+     if TAU_MODE = "signed3" then tau_rule_signed3(i, k)
+      elseif TAU_MODE = "signedn" then tau_rule_signedn(i, k)
+     elseif TAU_MODE = "cap"  then tau_rule_cap(i, k)
+      elseif TAU_MODE = "everyn" then tau_rule_everyn(i, k)
+      else (if n_int = 5 then tau_rule_every3(i, k)
+            else tau_rule_everyn(i, k)) $
 
 /* Build a neighbor of cell i across edge k, returning its ID. */
 add_neighbor(i, k) := block(
-    [c : cell_center[i], j : cell_orient[i], s : cell_sheet[i],
-     nc, ds, ns, nb_id],
-    nc : reflected_neighbor_center(c[1], c[2], j, k),
+    [c : cell_center[i], chir : cell_chir[i], s : cell_sheet[i],
+     nc, ds, ns, nb_id, nchir],
+    nc : reflected_neighbor_center(c[1], c[2], chir, k),
+    nchir : flip_chir(chir),
     ds : tau_rule(i, k),
     ns : s + ds,
-    nb_id : get_cell(nc, j, ns),
+    nb_id : get_cell(nc, nchir, ns),
     add_edge(i, nb_id),
     nb_id) $
 
@@ -405,7 +570,7 @@ expand_cluster(depth) := block(
     for d : 1 thru depth do (
         next_frontier : [],
         for i in frontier do
-            for k : 0 thru 4 do (
+             for k : 0 thru n_int - 1 do (
                 _nb : add_neighbor(i, k),
                 if not member(_nb, next_frontier)
                    and not member(_nb, frontier)
@@ -414,20 +579,76 @@ expand_cluster(depth) := block(
 
 /* Initialize with the origin pentagon. */
 origin_id : add_cell([0, 0], 0, 0) $
-print("Section 3: created origin pentagon, id =", origin_id)$
+print("Section 3: created origin", N_GON, "-gon, id =", origin_id,
+        "  (TAU_MODE =", TAU_MODE, ")")$
+/* If TAU_MODE = "cap", we cannot expand yet because the acceptance
+    window predicate `in_cap_window` is only defined in Section 17.
+    We forward-define a minimal version here so the main cluster can
+    be built up front; Section 17 will override it identically. */
+if TAU_MODE = "cap" then (
+     qfloat_pre(z) := float(ratsimp(expand(z))),
+     frac_part_pre(x) := x - floor(x),
+     phantom_proj_pre(c) := block(
+          /* Use phi for n=5; for other n use 2*cos(2*pi/n) as the
+             irrational projection constant. */
+          [proj_const : if n_int = 5 then float(phi)
+                        else float(2*cos(2*%pi/n_int)),
+           px : frac_part_pre(qfloat_pre(c[1]) * proj_const),
+           py : frac_part_pre(qfloat_pre(c[2]) * proj_const)],
+         [px, py]),
+     cap_window_threshold_pre : 0.30,
+     in_cap_window_pre(c) := block(
+         [p : phantom_proj_pre(c), dx, dy, r2, theta_cos],
+         dx : p[1] - 0.5,
+         dy : p[2] - 0.5,
+         r2 : dx^2 + dy^2,
+         if r2 < 1e-12 then return(true),
+         theta_cos : (dx^2 - dy^2)/r2,
+         is(5 * theta_cos^2 - 4 > -cap_window_threshold_pre * 4)),
+     /* Rebind cap rule body to use the pre-versions. */
+     tau_rule_cap(i, k) := block(
+         [c1 : cell_center[i],
+          c2 : reflected_neighbor_center(c1[1], c1[2], cell_chir[i], k),
+          a, b],
+         a : in_cap_window_pre(c1),
+         b : in_cap_window_pre(c2),
+         if a # b then 1 else 0)
+) $
 
 /* Expand to a cluster.  Depth 2 already produces ~30-40 cells;
     higher depths grow roughly geometrically. */
 expand_cluster(BFS_DEPTH)$
 print("Section 3: after BFS depth", BFS_DEPTH,
-       ", cell_count =", cell_count)$
+        ", cell_count =", cell_count,
+        "  (N_GON =", N_GON, ")")$
 
 /* Quick sanity dump of the first few cells. */
-print("First 5 cells (id, orient, sheet, #neighbors):")$
+print("First 5 cells (id, chirality, sheet, #neighbors):")$
 for i : 1 thru min(5, cell_count) do
-    print("  ", i, " orient=", cell_orient[i],
-          " sheet=", cell_sheet[i],
-          " deg=", length(nbrs[i])) $
+    print("  ", i, " chir=", cell_chir[i],
+           " sheet=", cell_sheet[i],
+           " deg=", length(nbrs[i]),
+           " (interior target:", n_int, ")") $
+
+/* Bipartiteness sanity-check for odd n: every edge should connect
+    chir=0 to chir=1.  For even n, all chir=0. */
+block(
+     [bipartite_violation : 0, mono_violation : 0, i, j],
+     for i : 1 thru cell_count do
+         for j in nbrs[i] do
+             if i < j then (
+                 if CHIRAL_ACTIVE then (
+                     if cell_chir[i] = cell_chir[j] then
+                         bipartite_violation : bipartite_violation + 1)
+                 else (
+                     if cell_chir[i] # 0 or cell_chir[j] # 0 then
+                         mono_violation : mono_violation + 1)),
+     if CHIRAL_ACTIVE then
+         print("Bipartite check (odd n): same-chirality edges =",
+               bipartite_violation, " (should be 0)")
+     else
+         print("Mono-chirality check (even n): non-zero chir =",
+               mono_violation, " (should be 0)"))$
 
 /* Degree statistics. */
 deg_list : makelist(length(nbrs[i]), i, 1, cell_count) $
@@ -435,7 +656,16 @@ deg_mean : float(apply("+", deg_list) / cell_count) $
 deg_max  : apply(max, deg_list) $
 deg_min  : apply(min, deg_list) $
 print("Degree stats: min =", deg_min, ", mean =", deg_mean,
-      ", max =", deg_max, " (interior pentagons should have deg 5)")$
+       ", max =", deg_max,
+       " (interior", N_GON, "-gons should have deg", n_int, ")")$
+
+/* Per-chirality cell counts. */
+if CHIRAL_ACTIVE then block(
+     [c0 : 0, c1 : 0, i],
+     for i : 1 thru cell_count do
+         if cell_chir[i] = 0 then c0 : c0 + 1 else c1 : c1 + 1,
+     print("Chirality distribution: up =", c0, ", down =", c1,
+           " (bipartite ratio ~ 1 expected at large depth)"))$
 
 /* Sheet distribution. */
 sheet_set : sort(listify(setify(cell_sheet))) $
@@ -451,18 +681,6 @@ print("Sheets present in cluster:", sheet_set)$
    --------------------------------------------------------------------- */
 
 N : cell_count $
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Decide whether to run the eigendecomposition.  It is O(N^3) and
     can dominate the runtime for large clusters. */
@@ -712,11 +930,21 @@ for w : 1 thru M_walks do block(
 msd : makelist(float(msd_sum[t + 1] / M_walks), t, 0, T_steps) $
 p0  : makelist(float(ret_cnt[t + 1] / M_walks), t, 0, T_steps) $
 
-print("MSD at t = 1, 5, 10, 20:",
-      msd[2], msd[6], msd[11], msd[21])$
-print("P_0 at t = 2, 4, 10, 20:",
-      p0[3], p0[5], p0[11], p0[21])$
-
+/* Guarded prints: only access indices that exist for this T_steps. */
+block(
+     [sample_ts : [1, 5, 10, 20], t, idx, out : []],
+     for t in sample_ts do (
+         idx : t + 1,
+         if idx <= length(msd) then
+             out : endcons([t, msd[idx]], out)),
+     print("MSD samples [t, <d^2>]:", out))$
+block(
+     [sample_ts : [2, 4, 10, 20], t, idx, out : []],
+     for t in sample_ts do (
+         idx : t + 1,
+         if idx <= length(p0) then
+             out : endcons([t, p0[idx]], out)),
+     print("P_0 samples [t, P_0(t)]:", out))$
 
 /* Fit d_w from log <Delta x^2> vs log t over the EARLY-TIME window
     [MSD_FIT_LO, MSD_FIT_HI] to avoid the boundary plateau. */
@@ -813,17 +1041,11 @@ print("clusters and the cut-and-project window for proper local finiteness.")$
    SECTION 8.  Holonomy experiments
    ---------------------------------------------------------------------
 
-   We pick a small closed loop in the projected plane and accumulate
-   the sheet-transition sum along it for both Z_2 (spinor) and Z_5
-   (anyonic) fiber groups.  Because the tau_rule used during BFS
    expansion is non-trivial (every 3rd edge contributes +1), any loop
    enclosing the origin can show net holonomy.
 
-   Concretely: take the origin's neighbors n_1, n_2, ..., n_d, and
-   form the loops origin -> n_k -> origin (degenerate -- holonomy
-   zero), as well as origin -> n_1 -> common -> n_2 -> origin if a
-   common neighbor exists.  More interestingly we look at the
-   directed sheet-transition record produced during BFS expansion.
+    Concretely: we look for 3-cycles through the origin and report
+    the raw holonomy and its reduction mod each fiber group.
    --------------------------------------------------------------------- */
 
 /* Recover the sheet shift along a directed edge (i -> j). */
@@ -859,20 +1081,19 @@ find_small_loop() := block(
 
 small_loop : find_small_loop() $
 if length(small_loop) > 0 then block(
-    [h_total, h_Z2, h_Z5],
+     [h_total, h_reductions],
     h_total : loop_holonomy(small_loop),
-    h_Z2 : holonomy_mod(small_loop, 2),
-    h_Z5 : holonomy_mod(small_loop, 5),
     print("Section 8: small loop found:", small_loop),
     print("  raw holonomy (sum of sheet shifts) =", h_total),
-    print("  Z_2 reduction (spinor) =", h_Z2,
-          if h_Z2 = 1 then "  (non-trivial: tau = -1, spinor-like!)"
-                      else "  (trivial)"),
-    print("  Z_5 reduction (anyonic) =", h_Z5))
+     for fg in FIBER_GROUPS_DEFAULT do block(
+         [hmod : holonomy_mod(small_loop, fg)],
+         print("  Z_", fg, " reduction =", hmod,
+               if hmod # 0 then "  (non-trivial)"
+                            else "  (trivial)")))
 else
-    print("Section 8: no 3-cycle through origin in cluster (typical for trees).")$
+     print("Section 8: no 3-cycle through origin in cluster.")$
 /* Longer-loop holonomy survey: look for 4- and 5-cycles through the
-    origin, count how many have non-trivial Z_2 / Z_5 holonomy. */
+     origin, count how many have non-trivial holonomy for each fiber group. */
 find_cycles_through_origin(maxlen) := block(
      [cycles : [], v1, v2, v3, v4],
      /* 4-cycles: origin -> a -> b -> c -> origin, a,b,c distinct */
@@ -904,24 +1125,26 @@ long_cycles : find_cycles_through_origin(5) $
 print("Longer cycles through origin (lengths 4-5):",
        length(long_cycles), "found.")$
 if length(long_cycles) > 0 then block(
-     [n_z2_nontrivial : 0, n_z5_nontrivial : 0, cyc, h2, h5, samples],
+      [hcounts, cyc, raw, samples, fg, k],
+      hcounts : makelist(0, k, 1, length(FIBER_GROUPS_DEFAULT)),
      for cyc in long_cycles do (
-         h2 : holonomy_mod(cyc, 2),
-         h5 : holonomy_mod(cyc, 5),
-         if h2 # 0 then n_z2_nontrivial : n_z2_nontrivial + 1,
-         if h5 # 0 then n_z5_nontrivial : n_z5_nontrivial + 1),
-     print("  Z_2 non-trivial holonomy loops:", n_z2_nontrivial,
-           "/", length(long_cycles)),
-     print("  Z_5 non-trivial holonomy loops:", n_z5_nontrivial,
-           "/", length(long_cycles)),
-     /* Show up to 3 examples with non-trivial Z_2 holonomy. */
+          raw : loop_holonomy(cyc),
+          for k : 1 thru length(FIBER_GROUPS_DEFAULT) do (
+              fg : FIBER_GROUPS_DEFAULT[k],
+              if mod(raw, fg) # 0 then
+                  hcounts[k] : hcounts[k] + 1)),
+      for k : 1 thru length(FIBER_GROUPS_DEFAULT) do
+          print("  Z_", FIBER_GROUPS_DEFAULT[k],
+                " non-trivial holonomy loops:", hcounts[k],
+                "/", length(long_cycles)),
+      /* Show up to 3 examples with non-trivial Z_2 holonomy (or Z_n). */
      samples : 0,
      for cyc in long_cycles do
-         if samples < 3 and holonomy_mod(cyc, 2) # 0 then (
+          if samples < 3 and holonomy_mod(cyc, n_int) # 0 then (
              print("  example spinor loop:", cyc,
                    "  raw =", loop_holonomy(cyc),
-                   "  Z_2 =", holonomy_mod(cyc, 2),
-                   "  Z_5 =", holonomy_mod(cyc, 5)),
+                    "  Z_2 =", holonomy_mod(cyc, 2),
+                    "  Z_n =", holonomy_mod(cyc, n_int)),
              samples : samples + 1))$
 
 /* Sweep over a longer loop: BFS shell-2 cells reachable from origin
@@ -950,20 +1173,28 @@ for s in sheet_set do block(
    SECTION 9.  Cellular automaton dynamics
    ---------------------------------------------------------------------
 
-   Define a binary outer-totalistic rule on the 5-regular graph:
+    Define a binary outer-totalistic rule on the n-regular graph:
      New state = f(self, sum_of_neighbors)
-   We pick a Life-like B3/S23 analogue: B2/S12 (births on 2 live
-   neighbors, survival on 1 or 2).  Initialize with a small "seed"
-   at the origin and a couple of neighbors, evolve T_ca steps.
+    The default rule is B2/S12 for n <= 6 and B3/S23 for n > 6,
+    scaled to the degree of the graph.  Initialize with a small "seed"
+    at the origin and a couple of neighbors, then evolve T_ca steps.
    --------------------------------------------------------------------- */
 
-/* Rule: returns 0 or 1. */
+/* Default rule scaled to n_int neighbors.
+    Birth threshold b_thresh ~ n_int/3 (rounded), survival window [b_thresh-1, b_thresh].
+    For n=5: b_thresh=2 => B2/S12 (original rule).
+    For n=6: b_thresh=2 => B2/S12.
+    For n=8: b_thresh=3 => B3/S23.                                     */
+ca_b_thresh : max(1, round(n_int / 3)) $
 ca_rule(self_state, nbr_sum) := block(
-    [],
-    if self_state = 1 then
-        (if nbr_sum = 1 or nbr_sum = 2 then 1 else 0)
-    else
-        (if nbr_sum = 2 then 1 else 0)) $
+     [b : ca_b_thresh],
+     if self_state = 1 then
+         (if nbr_sum = b - 1 or nbr_sum = b then 1 else 0)
+     else
+         (if nbr_sum = b then 1 else 0)) $
+print("Section 9: CA default rule B", ca_b_thresh, "/S",
+       ca_b_thresh - 1, ca_b_thresh,
+       "  (n_int =", n_int, ")")$
 
 /* Initial state: origin + first neighbor alive, rest dead. */
 state : makelist(0, ii, 1, N) $
@@ -1012,15 +1243,14 @@ print("Live cells per sheet at t =", T_ca, ":", live_per_sheet)$
 /* ---------------------------------------------------------------------
     SECTION 10.  Extended ruleset survey (B/S families)
     ---------------------------------------------------------------------
-    We systematically sweep over a panel of outer-totalistic B/S rules
-    on the 5-regular(ish) pentagon graph, scoring each on:
+     We systematically sweep over a panel of outer-totalistic B/S rules
+     on the n-regular(ish) n-gon graph, scoring each on:
       - whether the seed dies, stabilizes, oscillates, or grows;
       - the maximum and final population;
       - the period (if periodic);
       - sheet-spreading behavior.
-    We test all combinations B in subset of {0,1,2,3,4,5},
-                              S in subset of {0,1,2,3,4,5}
-    drawn from a curated list of "Life-like" candidates.
+     We test combinations B, S drawn from subsets of {0,..,n_int}
+     from a curated list of "Life-like" candidates scaled to n_int.
     --------------------------------------------------------------------- */
 print("============================================================")$
 print("SECTION 10: Extended ruleset survey")$
@@ -1076,26 +1306,32 @@ run_rule_diagnose(B, S, seed, T) := block(
          else "active"),
      [fate, period, transient, max_pop, final_pop, pops]) $
 /* Curated set of B/S candidates.  On a 5-regular graph, neighbor sum
-    is in 0..5 (interior), so rules of the form B<digits>/S<digits>
-    select subsets of {0,..,5}.  We exclude B0 to avoid trivial
-    boundary births at dead cells with no neighbors. */
-rule_panel : [
-     [[2],       [1, 2]],     /* original rule (B2/S12) */
-     [[2],       [2, 3]],     /* B2/S23 -- Life-like */
-     [[3],       [2, 3]],     /* Conway's classic B3/S23 */
-     [[2],       [1, 2, 3]],  /* B2/S123 */
-     [[3],       [1, 2, 3]],  /* B3/S123 */
-     [[2, 3],    [2, 3]],     /* B23/S23 */
-     [[1],       [1, 2]],     /* B1/S12 -- replicator-style */
-     [[1],       [1]],        /* B1/S1 -- pure replicator */
-     [[2],       [3]],        /* B2/S3 -- minority */
-     [[3],       [3]],        /* B3/S3 */
-     [[2, 4],    [1, 2, 3]],  /* B24/S123 */
-     [[4],       [3, 4]],     /* B4/S34 -- high-density */
-     [[1, 2],    [1, 2]],     /* B12/S12 */
-     [[3],       [2, 3, 4]],  /* B3/S234 */
-     [[2],       [1, 2, 3, 4]] /* B2/S1234 -- generous survival */
-] $
+     is in 0..n_int (interior), so rules select subsets of {0,..,n_int}.
+     We exclude B0 to avoid trivial boundary births.
+     The panel is generated dynamically from the birth threshold b. */
+block(
+  [b : ca_b_thresh, h : max(1, round(n_int / 2))],
+  rule_panel : [
+      [[b],       [b-1, b]],           /* default rule */
+      [[b],       [b, b+1]],           /* shifted survival */
+      [[b+1],     [b, b+1]],           /* Conway-like B(b+1)/S(b,b+1) */
+      [[b],       [b-1, b, b+1]],      /* generous survival */
+      [[b+1],     [b-1, b, b+1]],      /* B(b+1)/S wide */
+      [[b, b+1],  [b, b+1]],           /* symmetric */
+      [[1],       [1, 2]],             /* replicator-style */
+      [[1],       [1]],                /* pure replicator */
+      [[b],       [b+1]],              /* minority */
+      [[b+1],     [b+1]],              /* high-density */
+      [[b, h],    [b-1, b, b+1]],      /* sparse+dense birth */
+      [[h],       [h-1, h]],           /* high-density survival */
+      [[b-1, b],  [b-1, b]],           /* low-threshold */
+      [[b+1],     [b, b+1, b+2]],      /* wide survival */
+      [[b],       makelist(j, j, 1, b+2)] /* generous */
+  ]) $
+/* Remove any rules with negative neighbor counts. */
+rule_panel : sublist(rule_panel, lambda([r],
+      every(lambda([x], x >= 0), r[1]) and
+      every(lambda([x], x >= 0), r[2]))) $
 /* Standardize the seed across the panel for comparability. */
 panel_seed : make_seed_origin(2) $
 panel_seed_pop : apply("+", panel_seed) $
@@ -1152,13 +1388,13 @@ if length(best_rule) > 0 then
 /* ---------------------------------------------------------------------
     SECTION 11.  Alternative tau-rules: holonomy and structure comparison
     ---------------------------------------------------------------------
-    We rebuild small clusters under different vortex rules tau(i, k)
-    and compare:
+     We rebuild small clusters under different vortex rules tau(i, k)
+     and compare (generalized to n_int):
       - cell count after fixed BFS depth,
       - number of sheets reached,
       - vortex-edge fraction,
       - degree statistics,
-      - non-trivial holonomy loop fraction in Z_2, Z_3, Z_5.
+       - non-trivial holonomy loop fraction in Z_2, Z_{n_int}, and others.
     --------------------------------------------------------------------- */
 print("============================================================")$
 print("SECTION 11: Alternative tau-rule survey")$
@@ -1166,25 +1402,27 @@ print("============================================================")$
 /* Cluster builder parameterized by tau function. */
 build_cluster_tau(tau_fn, depth) := block(
      [saved_count : cell_count, saved_center : cell_center,
-      saved_orient : cell_orient, saved_sheet : cell_sheet,
+      saved_chir : cell_chir, saved_sheet : cell_sheet,
       saved_nbrs : nbrs, saved_origin : origin_id,
-      saved_tau : tau_rule,
+     saved_tau : tau_rule, saved_hash : cell_hash,
       result, origin_id2],
      /* reset registry */
      cell_count : 0,
-     cell_center : [], cell_orient : [], cell_sheet : [], nbrs : [],
+     cell_center : [], cell_chir : [], cell_sheet : [], nbrs : [],
+    cell_hash : ?make\-hash\-table(),
      tau_rule(i, k) := apply(tau_fn, [i, k]),
      origin_id2 : add_cell([0, 0], 0, 0),
      expand_cluster(depth),
-     result : [cell_count, copylist(cell_center), copylist(cell_orient),
+     result : [cell_count, copylist(cell_center), copylist(cell_chir),
                copylist(cell_sheet), copylist(nbrs), origin_id2],
      /* restore */
      cell_count  : saved_count,
      cell_center : saved_center,
-     cell_orient : saved_orient,
+     cell_chir   : saved_chir,
      cell_sheet  : saved_sheet,
      nbrs        : saved_nbrs,
      origin_id   : saved_origin,
+    cell_hash   : saved_hash,
      tau_rule(i, k) := apply(saved_tau, [i, k]),
      result) $
 /* Various tau-rule candidates. */
@@ -1198,6 +1436,13 @@ tau_signed(i, k)   := if mod(i + k, 3) = 0 then 1
                        elseif mod(i + k, 3) = 1 then -1
                        else 0 $
 tau_fib(i, k)      := if member(mod(i + k, 8), [1, 2, 3, 5]) then 1 else 0 $
+/* General period-n variants (always meaningful regardless of N_GON). */
+tau_everyn_fn(i, k)  := if mod(i + k, n_int) = 0 then 1 else 0 $
+tau_signedn_fn(i, k) := if mod(i + k, n_int) = 0 then 1
+                          elseif mod(i + k, n_int) = 1 then -1
+                          else 0 $
+tau_kmodn(i, k)      := if mod(k, n_int) = 0 then 1 else 0 $
+tau_chiralN(i, k)    := if mod(k, n_int) <= floor(n_int/3) then 1 else 0 $
 tau_panel : [
      ["none      (flat)",     tau_none],
      ["every3    (default)",  tau_every3],
@@ -1206,7 +1451,11 @@ tau_panel : [
      ["k-parity",             tau_kparity],
      ["chiral",               tau_chiral],
      ["signed-3",             tau_signed],
-     ["fibonacci-mod8",       tau_fib]
+      ["fibonacci-mod8",       tau_fib],
+      ["every-n",              tau_everyn_fn],
+      ["signed-n",             tau_signedn_fn],
+      ["k-mod-n",              tau_kmodn],
+      ["chiral-n",             tau_chiralN]
 ] $
 /* For each tau rule we report key stats from a depth-3 cluster
     (kept smaller than the main cluster to keep this section snappy). */
@@ -1253,7 +1502,7 @@ tau_survey_results : [] $
 for tp in tau_panel do block(
      [label : tp[1], tau_fn : tp[2], snap, nc, sheets, nbrlist, root,
       ve_pair, vortex_edges, total_edges, deg_l, sheet_count,
-      cycles, h2 : 0, h3 : 0, h5 : 0, c, hh],
+       cycles, hcounts, c, hh, k, fg],
      snap : build_cluster_tau(tau_fn, TAU_SURVEY_DEPTH),
      nc      : snap[1],
      sheets  : snap[4],
@@ -1265,11 +1514,13 @@ for tp in tau_panel do block(
      deg_l : makelist(length(nbrlist[i]), i, 1, nc),
      sheet_count : length(listify(setify(sheets))),
      cycles : find_cycles_in_snapshot(root, nbrlist),
+      hcounts : makelist(0, k, 1, length(FIBER_GROUPS_DEFAULT)),
      for c in cycles do (
          hh : snapshot_holonomy(c, sheets),
-         if mod(hh, 2) # 0 then h2 : h2 + 1,
-         if mod(hh, 3) # 0 then h3 : h3 + 1,
-         if mod(hh, 5) # 0 then h5 : h5 + 1),
+          for k : 1 thru length(FIBER_GROUPS_DEFAULT) do (
+              fg : FIBER_GROUPS_DEFAULT[k],
+              if mod(hh, fg) # 0 then
+                  hcounts[k] : hcounts[k] + 1)),
      print("  tau =", label,
            "  cells=", nc,
            "  sheets=", sheet_count,
@@ -1280,16 +1531,18 @@ for tp in tau_panel do block(
            "  meanDeg=",
            if nc > 0 then float(apply("+", deg_l) / nc) else 0,
            "  cycles=", length(cycles),
-           "  Z2nt=", h2, "  Z3nt=", h3, "  Z5nt=", h5),
+            "  holonomy_nontrivial=", hcounts,
+            "  (groups=", FIBER_GROUPS_DEFAULT, ")"),
      tau_survey_results : endcons(
-         [label, nc, sheet_count, vortex_edges, total_edges,
-          length(cycles), h2, h3, h5],
+          append([label, nc, sheet_count, vortex_edges, total_edges,
+                  length(cycles)], hcounts),
          tau_survey_results)) $
 /* Identify the tau-rule with the richest holonomy structure. */
 best_tau_label : "" $
 best_tau_score : -1 $
 for r in tau_survey_results do block(
-     [score : r[7] + r[8] + r[9]],
+      /* sum all holonomy counts (columns 7 onward) */
+      [score : apply("+", rest(r, 6))],
      if score > best_tau_score then (
          best_tau_score : score,
          best_tau_label : r[1])) $
@@ -1300,15 +1553,14 @@ print("Richest-holonomy tau-rule (sum of Z_2/Z_3/Z_5 non-trivial counts):",
 /* ---------------------------------------------------------------------
     SECTION 12.  Extended holonomy: more fiber groups
     ---------------------------------------------------------------------
-    Apply Z_n reductions for n in {2, 3, 4, 5, 6, 10} to the long_cycles
-    of the main cluster.  n = 2 is the spinor reduction; n = 5 is the
-    anyonic one tied to pentagonal symmetry; n = 10 is the natural
-    icosian extension; n in {3, 4, 6} are diagnostic.
+     Apply Z_m reductions for m in FIBER_GROUPS_DEFAULT to the long_cycles
+     of the main cluster.  m = 2 is the spinor reduction; m = n_int is the
+     anyonic one tied to n-gon symmetry; others are diagnostic.
     --------------------------------------------------------------------- */
 print("============================================================")$
 print("SECTION 12: Extended holonomy on main cluster")$
 print("============================================================")$
-fiber_groups : [2, 3, 4, 5, 6, 10] $
+fiber_groups : FIBER_GROUPS_DEFAULT $
 print("Examining", length(long_cycles), "long cycles in main cluster.")$
 if length(long_cycles) > 0 then block(
      [hcounts, n, cyc, raw, residue, dist],
@@ -1426,6 +1678,14 @@ block([found : false, g],
                  paths : paths2)))) $
 print("Girth (shortest cycle) through origin =",
        if girth_origin > 0 then girth_origin else "> 8") $
+/* For odd n the dual graph is bipartite on chirality, so every cycle
+    of odd length must close via a non-trivial sheet-shift sequence
+    (i.e. it carries genuine monodromy and cannot be a pure same-sheet
+    geometric loop).  Report this as a structural observation. */
+if CHIRAL_ACTIVE and girth_origin > 0 then
+     print("  Bipartite-chirality note: any odd-length cycle through",
+           "origin carries non-zero net chirality flip; closure",
+           "requires the sheet/holonomy degree of freedom.")$
 /* Inter-sheet edges and sheet-to-sheet transition matrix. */
 sheet_list : sort(listify(setify(cell_sheet))) $
 n_sheets : length(sheet_list) $
@@ -1601,9 +1861,7 @@ print("  trials =", length(glider_summary),
 /* ---------------------------------------------------------------------
     SECTION 16.  Long-loop holonomy enumeration
     ---------------------------------------------------------------------
-    The 4- and 5-cycle holonomy survey in Section 8 gave 0/16
-    non-trivial loops under the didactic tau_rule.  Here we go further:
-    enumerate longer simple cycles through the origin (up to
+     Enumerate longer simple cycles through the origin (up to
     LONG_LOOP_MAX steps), and also enumerate cycles anchored at
     *non-origin* vertices to expose monodromy that depends on the
     base point.
@@ -1646,7 +1904,7 @@ if length(all_cycles_origin) > 0 then block(
      print("Cycle-length distribution [len, count]:"),
      for h in len_hist do print("  ", h)) $
 /* Multi-group holonomy enumeration. */
-long_fiber_groups : [2, 3, 4, 5, 6, 10] $
+long_fiber_groups : FIBER_GROUPS_DEFAULT $
 if length(all_cycles_origin) > 0 then block(
      [hcounts, residue_dists, n, c, raw, residue, k],
      hcounts : makelist(0, k, 1, length(long_fiber_groups)),
@@ -1702,15 +1960,14 @@ if non_origin_root > 0 then block(
 /* ---------------------------------------------------------------------
     SECTION 17.  Cut-and-project acceptance window experiment
     ---------------------------------------------------------------------
-    The didactic tau_rule(i, k) = [(i+k) ≡ 0 mod 3] is geometrically
-    arbitrary.  The rigorous regime of idea.md §2.4 uses a cut-and-
-    project window: lift the pentagon centroid into a higher-dimensional
-    lattice, check whether its "perpendicular" component lies inside an
-    acceptance window, and assign a vortex shift based on which window
-    cell it falls in.
-    We implement a *projected* version here: the vortex rule is now a
-    function of the centroid's exact position (rather than its BFS
-    index), using the golden-ratio quasiperiodic projection.
+     The didactic tau_rule is geometrically arbitrary.  The rigorous
+     regime uses a cut-and-project window: lift the n-gon centroid into
+     a higher-dimensional lattice, check whether its "perpendicular"
+     component lies inside an acceptance window, and assign a vortex
+     shift based on which window cell it falls in.
+     We implement a *projected* version: the vortex rule is a function
+     of the centroid's exact position, using the quasiperiodic projection
+     constant 2*cos(2*pi/n) (= phi - 1 for n=5).
     --------------------------------------------------------------------- */
 print("============================================================")$
 print("SECTION 17: Cut-and-project acceptance-window tau-rule")$
@@ -1722,16 +1979,18 @@ print("============================================================")$
 qfloat(z) := float(ratsimp(expand(z))) $
 /* Fractional part. */
 frac_part(x) := x - floor(x) $
-/* Phantom projection of a centroid. */
+/* Phantom projection of a centroid using the n-gon's natural
+    quasiperiodic constant: 2*cos(2*pi/n).  For n=5 this equals phi-1. */
+proj_const_n : float(2*cos(2*%pi/n_int)) $
 phantom_proj(c) := block(
-     [px : frac_part(qfloat(c[1]) * float(phi)),
-      py : frac_part(qfloat(c[2]) * float(phi))],
+      [px : frac_part(qfloat(c[1]) * proj_const_n),
+       py : frac_part(qfloat(c[2]) * proj_const_n)],
      [px, py]) $
-/* Cut-and-project tau rule: vortex iff phantom point falls in a
-    pentagonally-shaped acceptance window.  We approximate the window
-    by the inequality cos(theta) > c_win where theta is the polar
-    angle of phantom_point - (0.5, 0.5).  Different c_win values give
-    different window fractions. */
+/* Cut-and-project tau rule: vortex iff phantom point falls in an
+     n-fold-symmetric acceptance window.  We approximate the window
+     by the inequality cos(n*theta) > -threshold, where theta is the
+     polar angle of phantom_point - (0.5, 0.5).  For n=5 this gives
+     the pentagonal window of the original paper. */
 cap_window_threshold : 0.30 $
 in_cap_window(c) := block(
      [p : phantom_proj(c), dx, dy, r2, theta_cos],
@@ -1739,11 +1998,13 @@ in_cap_window(c) := block(
      dy : p[2] - 0.5,
      r2 : dx^2 + dy^2,
      if r2 < 1e-12 then return(true),
-     /* Use 5-fold-modulated test:
-        accept if cos(5*theta) > -cap_window_threshold */
-     theta_cos : (dx^2 - dy^2)/r2,  /* cos(2*theta), proxy */
-     /* compose into cos(5*theta) approximation using Chebyshev */
-     is(5 * theta_cos^2 - 4 > -cap_window_threshold * 4)) $
+      /* Use n-fold-modulated test via Chebyshev proxy for cos(n*theta).
+         cos(2*theta) = (dx^2 - dy^2)/r2.  For n=5: T_5(cos(2t/5))
+         approximation; for general n we use the same Chebyshev proxy
+         scaled by n_int. */
+      theta_cos : (dx^2 - dy^2)/r2,
+      is(n_int * theta_cos^2 - (n_int - 1)
+         > -cap_window_threshold * (n_int - 1))) $
 /* Sample test: how many cells of the main cluster fall inside the
     acceptance window? */
 cap_in_count : 0 $
@@ -1753,7 +2014,7 @@ for i : 1 thru N do
 print("Cells inside acceptance window:", cap_in_count, "/", N,
        " (fraction =", float(cap_in_count / N), ")")$
 /* tau rule derived from acceptance window: shift +1 across edges
-    where exactly one endpoint is inside the window. */
+     where exactly one endpoint is inside the n-fold window. */
 tau_cap(i, k) := block(
      [c1 : cell_center[i],
       c2 : reflected_neighbor_center(c1[1], c1[2], cell_orient[i], k),
@@ -1772,6 +2033,10 @@ cap_root : cap_snap[6] $
 cap_sheet_set : sort(listify(setify(cap_sheets))) $
 print("Cap-window cluster: N =", cap_N,
        ", sheets =", cap_sheet_set)$
+/* If TAU_MODE = "cap", the main cluster IS the cap cluster, and
+    we have already characterized it above.  But the dedicated cap
+    block here provides a side-by-side measurement that is useful
+    regardless of TAU_MODE. */
 /* Per-sheet population and vortex edge count. */
 cap_ve_pair : count_vortex_edges(cap_snap[2], cap_sheets, cap_nbrs, cap_N) $
 print("  vortex edges =", cap_ve_pair[1], "/", cap_ve_pair[2],
@@ -1914,22 +2179,42 @@ if kpm_run_ok then (
              rho : float(kpm_dos_at(xx, kpm_mu)),
              print("  lam =", lam, "  rho_est =", rho))),
      /* Use the low-lambda tail to estimate d_spec from KPM.
-        rho(lam) ~ lam^(d_spec/2 - 1) for small positive lam. */
+        rho(lam) ~ lam^(d_spec/2 - 1) for small positive lam.
+        We sample on a fine grid near the spectral edge and report
+        slopes over multiple sub-windows to surface uncertainty. */
      block(
-         [low_xs : [], low_ys : [], xx, lam, rho, fit, slope],
-         for xx : -0.99 step 0.005 thru -0.85 do (
+         [low_xs : [], low_ys : [], xx, lam, rho, fit, slope,
+          sub_xs, sub_ys, sub_fit, w_lo, w_hi, slopes : [],
+          k_pt : 0],
+         for xx : -0.999 step 0.002 thru -0.80 do (
              lam : float(kpm_a + xx * kpm_b),
              /* shift origin so lam_0 (the smallest eigenvalue ~ 0) is at xx ~ -1 */
              rho : float(kpm_dos_at(xx, kpm_mu)),
              if lam > 1e-3 and rho > 1e-6 then (
                  low_xs : endcons(float(log(lam)), low_xs),
                  low_ys : endcons(float(log(rho)), low_ys))),
+         print("KPM low-tail sample count =", length(low_xs)),
          if length(low_xs) >= 4 then (
              fit : log_log_fit_basic(low_xs, low_ys),
              slope : fit[1],
              print("KPM low-lambda log-log slope =", slope),
              print("  => d_spec_KPM (= 2*(slope+1)) ~", 2*(slope + 1)),
-             d_spec_kpm : 2*(slope + 1)) 
+             d_spec_kpm : 2*(slope + 1),
+             /* Sub-window slope sweep for uncertainty estimate. */
+             block(
+                 [n_low : length(low_xs), half, sub_fit2],
+                 half : floor(n_low / 2),
+                 if half >= 3 then (
+                     sub_xs : makelist(low_xs[k], k, 1, half),
+                     sub_ys : makelist(low_ys[k], k, 1, half),
+                     sub_fit : log_log_fit_basic(sub_xs, sub_ys),
+                     print("  KPM tail (lower half) slope =", sub_fit[1],
+                           "  d_spec ~", 2*(sub_fit[1] + 1)),
+                     sub_xs : makelist(low_xs[k], k, half + 1, n_low),
+                     sub_ys : makelist(low_ys[k], k, half + 1, n_low),
+                     sub_fit2 : log_log_fit_basic(sub_xs, sub_ys),
+                     print("  KPM tail (upper half) slope =", sub_fit2[1],
+                           "  d_spec ~", 2*(sub_fit2[1] + 1)))))
          else (
              print("KPM tail too short for slope fit."),
              d_spec_kpm : 0.0)))
@@ -1937,6 +2222,42 @@ else (
      print("KPM run failed; skipping."),
      d_spec_kpm : 0.0) $
 if not(?boundp('d_spec_kpm)) then d_spec_kpm : 0.0 $
+/* Cross-check: also estimate d_spec from the integrated DOS
+    N(<= lambda) ~ lambda^(d_spec/2).  We sum the reconstructed
+    DOS using a simple trapezoidal rule and report the log-log
+    slope of the CDF. */
+if kpm_run_ok then block(
+     [grid_x : [], grid_rho : [], xx, lam, rho, cdf : 0,
+      lam_list : [], cdf_list : [], xs : [], ys : [], fit, slope, prev_lam],
+     for xx : -0.999 step 0.002 thru 0.99 do (
+         lam : float(kpm_a + xx * kpm_b),
+         rho : float(kpm_dos_at(xx, kpm_mu)),
+         if rho < 0 then rho : 0,
+         grid_x   : endcons(lam, grid_x),
+         grid_rho : endcons(rho, grid_rho)),
+     /* trapezoidal integration */
+     prev_lam : grid_x[1],
+     for k : 2 thru length(grid_x) do (
+         cdf : cdf + 0.5 * (grid_rho[k] + grid_rho[k-1])
+                       * (grid_x[k] - grid_x[k-1]),
+         lam_list : endcons(grid_x[k], lam_list),
+         cdf_list : endcons(cdf, cdf_list)),
+     /* fit on small-lambda window */
+     for k : 1 thru length(lam_list) do
+         if lam_list[k] > 0.05 and lam_list[k] < 2.0
+            and cdf_list[k] > 1e-6 then (
+             xs : endcons(float(log(lam_list[k])), xs),
+             ys : endcons(float(log(cdf_list[k])), ys)),
+     if length(xs) >= 4 then (
+         fit : log_log_fit_basic(xs, ys),
+         slope : fit[1],
+         print("KPM integrated DOS log-log slope =", slope),
+         print("  => d_spec_KPM_CDF (= 2*slope) ~", 2*slope),
+         d_spec_kpm_cdf : 2*slope)
+     else (
+         print("KPM CDF window too sparse for slope fit."),
+         d_spec_kpm_cdf : 0.0)) $
+if not(?boundp('d_spec_kpm_cdf)) then d_spec_kpm_cdf : 0.0 $
 /* ---------------------------------------------------------------------
     SECTION 19.  Per-sheet random walk diagnostics
     ---------------------------------------------------------------------
@@ -2158,16 +2479,20 @@ if length(commute_data) >= 3 then block(
    --------------------------------------------------------------------- */
 
 print("============================================================")$
-print("experiment.mac : summary")$
+print("experiment.mac : summary  (N_GON =", N_GON, ")")$
 print("============================================================")$
 print("Preset =", EXPERIMENT_PRESET,
        " (BFS_DEPTH =", BFS_DEPTH,
        ", M_WALKS =", M_WALKS,
        ", T_STEPS =", T_STEPS,
        ", T_CA =", T_CA, ")")$
+print("N_GON =", N_GON,
+        "  interior angle =", float(theta_int_n * 180 / %pi), "deg",
+        "  k_flat =", k_flat_n,
+        "  fiber order =", FIBER_ORDER_N)$
 print("Cluster size N =", N)$
 print("Mean degree =", deg_mean,
-      " (5-regular target; lower at boundary)")$
+       " (", n_int, "-regular target; lower at boundary)")$
 print("Sheets occupied =", sheet_set)$
 if eig_skipped then
      print("Spectral gap = (skipped)")
@@ -2182,6 +2507,10 @@ print("d_spec estimate (P_0) =", d_spec_value)$
 if d_w_value > 0 then
     print("d_spec (Alexander-Orbach) =",
           float(2 * d_eff_est / d_w_value))$
+if d_spec_kpm > 0 then
+     print("d_spec (KPM low-lambda)   =", d_spec_kpm)$
+if d_spec_kpm_cdf > 0 then
+     print("d_spec (KPM integrated)   =", d_spec_kpm_cdf)$
 print("Vortex edges =", n_vortex_edges_in_cluster,
       " / total edges =", apply("+", deg_list) / 2)$
 print("CA final population =", final_pop, "after", T_ca, "steps")$
@@ -2209,13 +2538,25 @@ if d_spec_kpm > 0 then
 print("Most-fractional tau-rule:", best_dim_label,
        "  |d_eff - 2.5| =", best_dim_dist)$
 print("------------------------------------------------------------")$
+print("Active TAU_MODE for main cluster:", TAU_MODE)$
+print("Preset:", EXPERIMENT_PRESET)$
+print("N_GON:", N_GON)$
+print("------------------------------------------------------------")$
 print("Caveats:")$
-print("  * The cluster is small (depth-2 BFS); dimension fits are")$
-print("    indicative, not precise.  For publication-quality numbers")$
-print("    one wants thousands of cells and KPM-based DOS analysis.")$
-print("  * The tau_rule used here (vortex on every 3rd edge) is a")$
-print("    didactic choice; replacing it with the cut-and-project")$
-print("    window of idea.md Section 2.4 yields the rigorous regime.")$
+print("  * N_GON controls the polygon type.  Set it at the top of")$
+print("    Section 0 to study triangles (3), squares (4), pentagons")$
+print("    (5), hexagons (6), heptagons (7), etc.")$
+print("  * For n in {3,4,6} the tiling closes flat (deficit=0); the")$
+print("    sheet structure is driven entirely by the tau rule.")$
+print("  * Deeper BFS (depth 6, xhuge preset) gives ~thousands of")$
+print("    cells; dimension fits are improved but still finite-size.")$
+print("  * TAU_MODE controls whether the main cluster uses the")$
+print("    didactic every-n rule, the signed-n rule (richer monodromy),")$
+print("    or the rigorous cut-and-project window of idea.md §2.4.")$
+print("  * KPM spectral analysis (Section 18) is the preferred")$
+print("    method for large clusters where dense eigendecomposition")$
+print("    is infeasible.  Both low-lambda slope and integrated-DOS")$
+print("    slope are reported for cross-validation.")$
 print("  * Same-orientation tiling is geometrically frustrated; this")$
 print("    experiment lets the sheet index absorb the angular deficit,")$
 print("    consistent with the multi-sheeted construction.")$
