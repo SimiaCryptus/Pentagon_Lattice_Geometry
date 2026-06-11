@@ -839,9 +839,15 @@ add_dist_class(rs, i, j) := block(
     Full pairwise is O(N^2); we do origin-to-all first (O(N)), then
     all-pairs up to the cap. */
 print("Computing origin-to-all squared distances (N =", cell_count, ")...")$
+/* Track which dist_class_table index each origin-to-i distance maps to,
+    so we can compute origin_ring_sizes without a second O(N * n_classes)
+    scan after the table is sorted. */
+origin_dist_idx : makelist(0, ii, 1, cell_count) $
 for i : 2 thru cell_count do
        block([rs : sq_dist_exact(cell_center[1], cell_center[i])],
-             if listp(rs) then add_dist_class(rs, 1, i)) $
+              if listp(rs) then (
+                  add_dist_class(rs, 1, i),
+                  origin_dist_idx[i] : find_dist_class(rs))) $
 /* All-pairs (capped). */
 dist_pair_count : 0 $
 dist_pair_capped : false $
@@ -860,28 +866,43 @@ if dist_pair_capped then
             "pairs.  Increase DIST_PAIR_CAP for complete catalog.")
 else
       print("All-pairs computation complete:", dist_pair_count, "pairs.") $
+print("Sorting distance classes...")$
 /* Sort distance classes by ascending float value. */
 dist_class_sorted : sort(dist_class_table,
       lambda([a, b], qs5_lt(a[1], b[1]))) $
 n_dist_classes : length(dist_class_sorted) $
 print("Distinct squared distances found:", n_dist_classes)$
+/* Build a mapping from unsorted dist_class_table index -> sorted index,
+    so we can avoid an O(N * n_dist_classes) qs5_eq scan below. */
+print("Building sorted-index map...")$
+unsorted_to_sorted : makelist(0, k, 1, length(dist_class_table)) $
+/* O(N) approach: build a hash from fingerprint -> sorted index,
+    then look up each unsorted entry's fingerprint in the hash.
+    This replaces the previous O(n_dist_classes^2 * ratsimp) scan
+    that stalled for large clusters. */
+block(
+        [fp_to_sorted : ?make\-hash\-table(), k_sorted, k_unsorted,
+         fp, rs_sorted, sidx],
+        for k_sorted : 1 thru n_dist_classes do (
+            rs_sorted : dist_class_sorted[k_sorted][1],
+            fp : dist_fp(rs_sorted),
+            ?puthash(fp, fp_to_sorted, k_sorted)),
+        for k_unsorted : 1 thru length(dist_class_table) do (
+            fp : dist_fp(dist_class_table[k_unsorted][1]),
+            sidx : ?gethash(fp, fp_to_sorted, 0),
+            unsorted_to_sorted[k_unsorted] : sidx)) $
 /* Build ring table: for each class, record the number of points at
     that distance from the origin (ring size). */
 /* origin_ring_sizes[k] = number of cells at squared distance
     dist_class_sorted[k][1] from the origin. */
+print("Building origin ring-size table...")$
 origin_ring_sizes : makelist(0, k, 1, n_dist_classes) $
 for i : 2 thru cell_count do block(
-       [rs : sq_dist_exact(cell_center[1], cell_center[i]), idx],
-       if not listp(rs) then return(false),
-       if ratsimp(rs[1]) = 0 and ratsimp(rs[2]) = 0 then return(false),
-      idx : find_dist_class(rs),
-      if idx > 0 then block(
-          /* find position in sorted list */
-          [pos : 0, k],
-          for k : 1 thru n_dist_classes do
-              if qs5_eq(dist_class_sorted[k][1], rs) then pos : k,
-          if pos > 0 then
-              origin_ring_sizes[pos] : origin_ring_sizes[pos] + 1)) $
+        [idx_unsorted : origin_dist_idx[i], pos],
+        if idx_unsorted > 0 then (
+            pos : unsorted_to_sorted[idx_unsorted],
+            if pos > 0 then
+                origin_ring_sizes[pos] : origin_ring_sizes[pos] + 1)) $
 print("Distance ring table (first 15 rings from origin):")$
 print("  k  |  sq_dist (r,s)  |  float  |  ring_size  |  total_pairs  |  notes")$
 for k : 1 thru min(15, n_dist_classes) do block(
@@ -891,7 +912,9 @@ for k : 1 thru min(15, n_dist_classes) do block(
        fval, fib_check, sq_check, norm_val, notes : ""],
       fval : qs5_float(rs),
       fib_check : detect_fibonacci_distance(rs),
-      sq_check : is_qs5_square(rs),
+       /* is_qs5_square calls isqrt on large numerators; skip for big r */
+       sq_check : if abs(float(rs[1])) < 1e6 then is_qs5_square(rs)
+                  else [false, 0, 0],
       norm_val : qs5_norm(rs),
       if fib_check[1] then
           notes : concat(notes, " Fib(m=", fib_check[2], ")"),

@@ -1,0 +1,54 @@
+batchload("experiment.mac")
+============================================================ 
+experiment.mac : Multi-Sheeted N-Gon Tiling Experiments 
+============================================================ 
+------------------------------------------------------------ 
+PARAMETERIZATION:  N_GON = 5 
+------------------------------------------------------------ 
+  Interior angle = 108.0 deg 
+  Flat-vertex count k_flat = 3 
+  Angular deficit = 36.0 deg 
+  Loop-closure index k_loop = 10 
+  Natural fiber group order = 10 
+  Fiber groups for holonomy survey: [2, 3, 4, 5, 6, 10] 
+Configuration: 
+  preset    = medium 
+  TAU_MODE  = signed3 
+  BFS_DEPTH = 3 
+  M_WALKS   = 1000 
+  T_STEPS   = 60 
+  T_CA      = 16 
+  SKIP_EIG  = false 
+  EIG_MAX_N = 1500 
+  MSD fit window t in [ 2 , 4 ] 
+  P_0 fit window t in [ 2 , 6 ] (even t) 
+  KPM_MOMENTS = 128 
+  KPM_SAMPLES = 16 
+  LONG_LOOP_MAX = 7 
+  N_GON = 5 
+Section 1: Q(sqrt(5)) arithmetic primitives OK. 
+Section 2: N-gon geometry primitives OK (N_GON = 5 ). 
+  CHIRAL_ACTIVE = true  (odd n: bipartite orientation bigraph) 
+Section 3: created origin 5 -gon, id = 1   (TAU_MODE = signed3 ) 
+Section 3: after BFS depth 3 , cell_count = 156   (N_GON = 5 ) 
+First 5 cells (id, chirality, sheet, #neighbors): 
+   1  chir= 0  sheet= 0  deg= 5  (interior target: 5 ) 
+   2  chir= 1  sheet= - 1  deg= 6  (interior target: 5 ) 
+   3  chir= 1  sheet= 0  deg= 6  (interior target: 5 ) 
+   4  chir= 1  sheet= 1  deg= 6  (interior target: 5 ) 
+   5  chir= 1  sheet= - 1  deg= 6  (interior target: 5 ) 
+Bipartite check (odd n): same-chirality edges = 0  (should be 0) 
+Degree stats: min = 1 , mean = 1.987179487179487 , max = 6  (interior 5 
+                                                     -gons should have deg 5 ) 
+Chirality distribution: up = 26 , down = 130 
+                                 (bipartite ratio ~ 1 expected at large depth) 
+Sheets present in cluster: [- 3, - 2, - 1, 0, 1, 2, 3] 
+------------------------------------------------------------ 
+SECTION 3b: Distance ring pre-computation 
+------------------------------------------------------------ 
+Computing origin-to-all squared distances (N = 156 )... 
+Computing all-pairs squared distances (cap = 200000 )... 
+apply: found rs evaluates to 0 where an array was expected.
+#0: dist_fp(rs=0)
+#1: add_dist_class(rs=0,i=33,j=57)
+ -- an error. To debug this try: debugmode(true);
