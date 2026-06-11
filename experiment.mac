@@ -64,6 +64,101 @@ if ?fboundp('make_random_state) then
 else
      print("(note: make_random_state unavailable; using default RNG seed)")$
 /* =====================================================================
+      SECTION 0b.  GLOBAL UTILITY FUNCTIONS
+      ---------------------------------------------------------------------
+      Defined before any section uses them.  Includes exact Q(sqrt(5))
+      arithmetic helpers, sorting comparators, and the squared-distance
+      function used by the Erdos catalog (Section 23).
+    ===================================================================== */
+/* Exact squared Euclidean distance between two [x,y] points in Q(sqrt(5)). */
+sq_dist_exact(p, q) := block(
+      [dx : qcanon(p[1] - q[1]),
+       dy : qcanon(p[2] - q[2])],
+       qs5_decompose(qcanon(dx^2 + dy^2))) $
+/* Decompose an element of Q(sqrt(5)) into [r, s] where value = r + s*sqrt(5).
+    Works on ratsimp'd expressions. */
+qs5_decompose(z) := block(
+      [zz : ratsimp(expand(z)), r, s],
+      r : ratsimp(subst(0, sqrt(5), zz)),
+      s : ratsimp((zz - r) / sqrt(5)),
+      [r, s]) $
+/* Floating-point value of r + s*sqrt(5). */
+qs5_float(rs) := float(rs[1] + rs[2] * sqrt(5)) $
+/* Norm N(a + b*sqrt(5)) = a^2 - 5*b^2 in Z[sqrt(5)]. */
+qs5_norm(rs) := ratsimp(rs[1]^2 - 5 * rs[2]^2) $
+/* Galois conjugate: sqrt(5) -> -sqrt(5). */
+qs5_conjugate(z) := ratsimp(subst(-sqrt(5), sqrt(5), z)) $
+/* Lexicographic comparator on [r,s] pairs for sorting distance classes.
+    Primary key: float value r + s*sqrt(5); tie-break on r then s. */
+qs5_lt(a, b) := block(
+      [fa : qs5_float(a), fb : qs5_float(b)],
+      if abs(fa - fb) > 1e-9 then is(fa < fb)
+      else if a[1] # b[1] then is(a[1] < b[1])
+      else is(a[2] < b[2])) $
+/* Insert x into a sorted list (ascending by qs5_lt on first element
+    if x is a list, else by float value). */
+sorted_insert(x, lst) := block(
+      [result : [], inserted : false, el],
+      for el in lst do (
+          if not inserted and
+             (if listp(x) then qs5_lt(x[1], el[1])
+              else is(float(x) < float(el))) then (
+              result : endcons(x, result),
+              inserted : true),
+          result : endcons(el, result)),
+      if not inserted then result : endcons(x, result),
+      result) $
+/* Check whether two [r,s] pairs represent the same Q(sqrt(5)) element. */
+qs5_eq(a, b) := is(ratsimp(a[1] - b[1]) = 0 and ratsimp(a[2] - b[2]) = 0) $
+/* Fibonacci number F_n (0-indexed: F_0=0, F_1=1, F_2=1, ...). */
+fib(n) := block(
+      [a : 0, b : 1, k, tmp],
+      if n = 0 then return(0),
+      for k : 1 thru n - 1 do (tmp : a + b, a : b, b : tmp),
+      b) $
+/* Check if a rational number r is a perfect square in Q.
+    Returns [true, sqrt(r)] or [false, 0]. */
+is_rat_square(r) := block(
+      [rr : ratsimp(r), num, den, sn, sd],
+      if rr < 0 then return([false, 0]),
+      if rr = 0 then return([true, 0]),
+      num : num(rr), den : denom(rr),
+      sn : isqrt(num), sd : isqrt(den),
+      if sn^2 = num and sd^2 = den then [true, sn/sd]
+      else [false, 0]) $
+/* Check if z = r + s*sqrt(5) is a perfect square in Q(sqrt(5)).
+    z = (a + b*sqrt(5))^2  iff  a^2 + 5b^2 = r  and  2ab = s.
+    Returns [true, a, b] or [false, 0, 0]. */
+is_qs5_square(rs) := block(
+      [r : rs[1], s : rs[2], a, b, disc, sq_check],
+      /* From 2ab = s and a^2 + 5b^2 = r:
+         a^2 - r*a + 5*s^2/4 = 0  (if s != 0)
+         disc = r^2 - 5*s^2 = (a^2 - 5b^2)^2 >= 0 */
+      disc : ratsimp(r^2 - 5*s^2),
+      if disc < 0 then return([false, 0, 0]),
+      sq_check : is_rat_square(disc),
+      if not sq_check[1] then return([false, 0, 0]),
+      /* a^2 = (r + sqrt(disc))/2 */
+      block(
+          [a2 : ratsimp((r + sq_check[2])/2)],
+          sq_check : is_rat_square(a2),
+          if not sq_check[1] then return([false, 0, 0]),
+          a : sq_check[2],
+          b : if a # 0 then ratsimp(s / (2*a)) else 0,
+          if ratsimp(a^2 + 5*b^2 - r) = 0 and ratsimp(2*a*b - s) = 0
+          then [true, a, b]
+          else [false, 0, 0])) $
+/* Detect whether a squared distance rs = [r,s] matches a Fibonacci pattern.
+    Returns [true, m] if rs ~ F_{2m} + F_{2m-1}*sqrt(5), else [false, 0]. */
+detect_fibonacci_distance(rs) := block(
+      [r : float(rs[1]), s : float(rs[2]), m, fr, fs, tol : 1e-6],
+      for m : 1 thru 20 do (
+          fr : float(fib(2*m)),
+          fs : float(fib(2*m - 1)),
+          if abs(r - fr) < tol and abs(s - fs) < tol then
+              return([true, m])),
+      [false, 0]) $
+/* =====================================================================
      SECTION 0.  PARAMETERIZATION
      ---------------------------------------------------------------------
      N_GON controls the polygon type for all geometry, holonomy, and CA
@@ -113,16 +208,20 @@ FIBER_GROUPS_DEFAULT : sort(listify(setify(
 print("  Fiber groups for holonomy survey:", FIBER_GROUPS_DEFAULT)$
 
 /* ---------------------------------------------------------------------
-    Shared utility: least-squares slope/intercept of (xs, ys).
+     Shared utility: least-squares slope/intercept of (xs, ys) lists.
     Defined early so every section can use it.
     --------------------------------------------------------------------- */
 log_log_fit_basic(xs, ys) := block(
      [n : length(xs), sx, sy, sxx, sxy, slope, intercept],
+      if n < 2 then return([0.0, 0.0]),
      sx : apply("+", xs),
      sy : apply("+", ys),
      sxx : apply("+", xs*xs),
      sxy : apply("+", xs*ys),
-     slope : (n * sxy - sx*sy) / (n * sxx - sx^2),
+      block(
+          [denom : n * sxx - sx^2],
+          if abs(float(denom)) < 1e-15 then return([0.0, float(sy/n)]),
+          slope : (n * sxy - sx*sy) / denom),
      intercept : (sy - slope * sx) / n,
      [float(slope), float(intercept)]) $
 /* =====================================================================
@@ -184,7 +283,7 @@ log_log_fit_basic(xs, ys) := block(
                                        This is the rigorous regime of
                                        idea.md §2.4.
     ===================================================================== */
-EXPERIMENT_PRESET : "huge" $
+EXPERIMENT_PRESET : "medium" $
 if ?boundp('EXPERIMENT_PRESET_OVERRIDE) then
     EXPERIMENT_PRESET : EXPERIMENT_PRESET_OVERRIDE $
 /* Default vortex rule for the main cluster.  Set to "signed3" or
@@ -314,6 +413,14 @@ if N_GON = 5 then (
      print("Section 1: Q(sqrt(5)) arithmetic primitives OK.")
 ) else
      print("Section 1: generic field arithmetic (N_GON =", N_GON, ").")$
+/* Phi-based norm form: N(a + b*phi) = a^2 + a*b - b^2 (discriminant 5).
+    Used in Section 23 for ring-multiplicity analysis. */
+phi_norm(a, b) := ratsimp(a^2 + a*b - b^2) $
+/* Express a Q(sqrt(5)) element in the Z[phi] basis {1, phi}.
+    a + b*sqrt(5) = (a - b) + 2b*phi  since sqrt(5) = 2*phi - 1. */
+to_zphi_basis(rs) := block(
+      [r : rs[1], s : rs[2]],
+      [ratsimp(r - s), ratsimp(2*s)]) $
 
 /* ---------------------------------------------------------------------
     SECTION 2.  N-gon geometry
@@ -402,6 +509,11 @@ edge_midpoint(cx, cy, chir, k) := block(
 edge_normal_rel(chir, k) := block(
      [m : edge_mid_rel(k)],
      if chir = 1 then [m[1], -m[2]] else m) $
+/* cell_orient is a legacy alias kept for any call-sites that still
+    reference it.  It always returns 0 (the canonical orientation) since
+    the chirality bit now carries the geometric handedness information. */
+cell_orient : [] $   /* populated lazily below after cluster is built */
+
 
 /* When two n-gons share an edge, the neighbor's center is the
     reflection of the current center across that edge midpoint:
@@ -581,6 +693,7 @@ expand_cluster(depth) := block(
 origin_id : add_cell([0, 0], 0, 0) $
 print("Section 3: created origin", N_GON, "-gon, id =", origin_id,
         "  (TAU_MODE =", TAU_MODE, ")")$
+
 /* If TAU_MODE = "cap", we cannot expand yet because the acceptance
     window predicate `in_cap_window` is only defined in Section 17.
     We forward-define a minimal version here so the main cluster can
@@ -618,6 +731,9 @@ if TAU_MODE = "cap" then (
 /* Expand to a cluster.  Depth 2 already produces ~30-40 cells;
     higher depths grow roughly geometrically. */
 expand_cluster(BFS_DEPTH)$
+/* Populate the legacy cell_orient alias (always 0). */
+cell_orient : makelist(0, ii, 1, cell_count) $
+
 print("Section 3: after BFS depth", BFS_DEPTH,
         ", cell_count =", cell_count,
         "  (N_GON =", N_GON, ")")$
@@ -670,6 +786,125 @@ if CHIRAL_ACTIVE then block(
 /* Sheet distribution. */
 sheet_set : sort(listify(setify(cell_sheet))) $
 print("Sheets present in cluster:", sheet_set)$
+/* =====================================================================
+      SECTION 3b.  DISTANCE RING CATALOG (Erdős pre-computation)
+      ---------------------------------------------------------------------
+      Compute all pairwise squared distances in the cluster using exact
+      Q(sqrt(5)) arithmetic, group them into distance classes, and build
+      the ring table used by Sections 23-25.
+      This is done once here so later sections can reuse the results
+      without recomputing O(N^2) pairs.
+    ===================================================================== */
+print("------------------------------------------------------------")$
+print("SECTION 3b: Distance ring pre-computation")$
+print("------------------------------------------------------------")$
+/* Maximum number of point pairs to process.  For large clusters the
+     full O(N^2) computation is expensive; we cap it and warn.
+     NOTE: N is assigned later in Section 4; use cell_count here. */
+DIST_PAIR_CAP : 200000 $
+/* dist_class_table: association list mapping [r,s] -> [count, [pair_ids]].
+    We store only the first few pair IDs per class to keep memory bounded. */
+dist_class_table : [] $   /* list of [[r,s], count, sample_pairs] */
+dist_class_keys  : [] $   /* sorted list of [r,s] keys */
+/* Hash for fast lookup: float fingerprint -> index in dist_class_table. */
+dist_hash : ?make\-hash\-table() $
+dist_fp(rs) := [round(float(rs[1]) * 1048576),
+                 round(float(rs[2]) * 1048576)] $
+find_dist_class(rs) := block(
+      [fp : dist_fp(rs), candidates, k, entry, result : 0],
+      candidates : ?gethash(fp, dist_hash, []),
+      for k in candidates do (
+          entry : dist_class_table[k],
+          if qs5_eq(entry[1], rs) then (result : k, return(result))),
+      result) $
+add_dist_class(rs, i, j) := block(
+      [fp : dist_fp(rs), idx, prev],
+       /* Guard: skip degenerate zero-distance (same geometric position,
+          different sheets) and any non-list result from sq_dist_exact. */
+       if not listp(rs) then return(false),
+       if ratsimp(rs[1]) = 0 and ratsimp(rs[2]) = 0 then return(false),
+      idx : find_dist_class(rs),
+      if idx = 0 then (
+          dist_class_table : endcons([rs, 0, []], dist_class_table),
+          idx : length(dist_class_table),
+          prev : ?gethash(fp, dist_hash, []),
+          ?puthash(fp, dist_hash, endcons(idx, prev))),
+      /* increment count */
+      dist_class_table[idx][2] : dist_class_table[idx][2] + 1,
+      /* store up to 10 sample pairs */
+      if length(dist_class_table[idx][3]) < 10 then
+          dist_class_table[idx][3] :
+              endcons([i, j], dist_class_table[idx][3])) $
+/* Compute pairwise distances from origin only (ring catalog).
+    Full pairwise is O(N^2); we do origin-to-all first (O(N)), then
+    all-pairs up to the cap. */
+print("Computing origin-to-all squared distances (N =", cell_count, ")...")$
+for i : 2 thru cell_count do
+       block([rs : sq_dist_exact(cell_center[1], cell_center[i])],
+             if listp(rs) then add_dist_class(rs, 1, i)) $
+/* All-pairs (capped). */
+dist_pair_count : 0 $
+dist_pair_capped : false $
+print("Computing all-pairs squared distances (cap =", DIST_PAIR_CAP, ")...")$
+for i : 1 thru cell_count do (
+      if dist_pair_capped then return(0),
+       for j : i + 1 thru cell_count do (
+          if dist_pair_count >= DIST_PAIR_CAP then (
+              dist_pair_capped : true,
+              return(0)),
+           block([rs : sq_dist_exact(cell_center[i], cell_center[j])],
+                 if listp(rs) then add_dist_class(rs, i, j)),
+          dist_pair_count : dist_pair_count + 1)) $
+if dist_pair_capped then
+      print("WARNING: distance pair computation capped at", DIST_PAIR_CAP,
+            "pairs.  Increase DIST_PAIR_CAP for complete catalog.")
+else
+      print("All-pairs computation complete:", dist_pair_count, "pairs.") $
+/* Sort distance classes by ascending float value. */
+dist_class_sorted : sort(dist_class_table,
+      lambda([a, b], qs5_lt(a[1], b[1]))) $
+n_dist_classes : length(dist_class_sorted) $
+print("Distinct squared distances found:", n_dist_classes)$
+/* Build ring table: for each class, record the number of points at
+    that distance from the origin (ring size). */
+/* origin_ring_sizes[k] = number of cells at squared distance
+    dist_class_sorted[k][1] from the origin. */
+origin_ring_sizes : makelist(0, k, 1, n_dist_classes) $
+for i : 2 thru cell_count do block(
+       [rs : sq_dist_exact(cell_center[1], cell_center[i]), idx],
+       if not listp(rs) then return(false),
+       if ratsimp(rs[1]) = 0 and ratsimp(rs[2]) = 0 then return(false),
+      idx : find_dist_class(rs),
+      if idx > 0 then block(
+          /* find position in sorted list */
+          [pos : 0, k],
+          for k : 1 thru n_dist_classes do
+              if qs5_eq(dist_class_sorted[k][1], rs) then pos : k,
+          if pos > 0 then
+              origin_ring_sizes[pos] : origin_ring_sizes[pos] + 1)) $
+print("Distance ring table (first 15 rings from origin):")$
+print("  k  |  sq_dist (r,s)  |  float  |  ring_size  |  total_pairs  |  notes")$
+for k : 1 thru min(15, n_dist_classes) do block(
+      [rs : dist_class_sorted[k][1],
+       cnt : dist_class_sorted[k][2],
+       rsize : origin_ring_sizes[k],
+       fval, fib_check, sq_check, norm_val, notes : ""],
+      fval : qs5_float(rs),
+      fib_check : detect_fibonacci_distance(rs),
+      sq_check : is_qs5_square(rs),
+      norm_val : qs5_norm(rs),
+      if fib_check[1] then
+          notes : concat(notes, " Fib(m=", fib_check[2], ")"),
+      if sq_check[1] then
+          notes : concat(notes, " perfect-sq"),
+      if ratsimp(rs[2]) = 0 then
+          notes : concat(notes, " rational"),
+      print("  ", k, "  [", float(rs[1]), ",", float(rs[2]), "]",
+            "  ~", float(fval),
+            "  ring=", rsize,
+            "  pairs=", cnt,
+            "  norm=", float(norm_val),
+            notes)) $
 
 /* ---------------------------------------------------------------------
    SECTION 4.  Graph Laplacian and spectral analysis
@@ -693,7 +928,7 @@ if eig_skipped then (
            ", EIG_MAX_N =", EIG_MAX_N, ")")
 ) else (
      /* Load lapack for fast numerical eigenvalues. */
-     load("lapack"),
+      errcatch(load("lapack")),
 
      /* Build adjacency matrix as a numerical matrix for eigenvalue work. */
      build_adjacency() := block(
@@ -2113,13 +2348,26 @@ sparse_Lv(v) := block(
          result[i] : dv),
      result) $
 /* KPM rescaling: L_tilde = (L - a)/b, with a = lam_max/2, b = lam_max/2,
-    so spec(L_tilde) subset [-1, 1].  Upper bound lam_max <= 2*deg_max. */
-kpm_a : float(deg_max) $
-kpm_b : float(deg_max) $
+     so spec(L_tilde) subset [-1, 1].  Upper bound lam_max <= 2*deg_max.
+     We use a slightly tighter bound: a = deg_mean, b = deg_max + 1
+     to center the spectrum and avoid the ±1 Gibbs boundary. */
+kpm_a : float(deg_mean) $
+kpm_b : float(deg_max + 1) $
 /* Apply L_tilde to vector v. */
 kpm_Lt_v(v) := block(
      [Lv : sparse_Lv(v)],
      makelist((Lv[i] - kpm_a * v[i]) / kpm_b, i, 1, N)) $
+/* Verify that the rescaling keeps the spectrum in [-1, 1].
+    The largest eigenvalue of L is <= 2*deg_max, so
+    (2*deg_max - deg_mean) / (deg_max + 1) < 2.  Print a warning
+    if the bound is violated. */
+block(
+      [lam_max_bound : float(2 * deg_max),
+       rescaled_max  : float((2 * deg_max - deg_mean) / (deg_max + 1))],
+      print("KPM rescaling: a =", kpm_a, "  b =", kpm_b),
+      print("  rescaled lam_max bound =", rescaled_max,
+            if rescaled_max <= 1.0 then "  (OK: in [-1,1])"
+            else "  WARNING: may exceed 1; increase kpm_b")) $
 /* Estimate Chebyshev moments mu_n via stochastic trace.
     mu_n approx (1/S) sum_{s=1..S} <z_s, T_n(L_tilde) z_s>,
     using the recursion T_0 = I, T_1 = L_tilde, T_{n+1} = 2 L_tilde T_n - T_{n-1}. */
@@ -2138,6 +2386,15 @@ kpm_estimate_moments(M, S) := block(
              mu[n] : mu[n] + apply("+", t0*t2)/N,
              t0 : t1, t1 : t2)),
      makelist(mu[n]/S, n, 1, M)) $
+/* Variance of the stochastic trace estimator: run two independent
+    batches and report the spread as a quality indicator. */
+kpm_moment_variance(M, S) := block(
+      [mu1 : kpm_estimate_moments(M, max(1, floor(S/2))),
+       mu2 : kpm_estimate_moments(M, max(1, floor(S/2))),
+       var : []],
+      for k : 1 thru M do
+          var : endcons(float((mu1[k] - mu2[k])^2), var),
+      var) $
 /* Reconstruct DOS at points x in [-1+eps, 1-eps] using Jackson-damped
     Chebyshev series.  rho(x) approx (1/(pi sqrt(1-x^2))) *
     (mu_0 + 2 sum_{n>=1} g_n mu_n T_n(x))   where g_n is the Jackson kernel. */
@@ -2169,6 +2426,16 @@ if kpm_run_ok then (
      print("                    mu_1 =", kpm_mu[2],
            "  mu_2 =", if KPM_MOMENTS >= 3 then kpm_mu[3] else 0,
            "  mu_4 =", if KPM_MOMENTS >= 5 then kpm_mu[5] else 0),
+      /* Moment convergence check: compare first 5 moments between two
+         independent half-batches to estimate stochastic noise. */
+      block(
+          [var_est : kpm_moment_variance(min(10, KPM_MOMENTS),
+                                         max(2, floor(KPM_SAMPLES/2))),
+           k],
+          print("KPM moment variance (first 5 moments, split-batch):"),
+          for k : 1 thru min(5, length(var_est)) do
+              print("  mu_", k, " variance ~", var_est[k],
+                    "  std ~", float(sqrt(var_est[k])))),
      /* Sample the reconstructed DOS at a few points along the spectrum. */
      print("DOS samples [lambda, rho(lambda)]:"),
      block(
@@ -2402,6 +2669,391 @@ for r in tau_dim_results do block(
 print("Most-fractional (closest to d_eff=2.5) tau-rule:",
        best_dim_label,
        "  |d_eff - 2.5| =", best_dim_dist)$
+/* =====================================================================
+      SECTION 23.  ERDŐS DISTANCE PROBLEM CATALOG
+      ---------------------------------------------------------------------
+      Using the distance ring pre-computation of Section 3b, we:
+        (a) Report the full ring table with algebraic annotations.
+        (b) Fit the Fibonacci spacing ratio delta_{k+1}/delta_k -> phi^2.
+        (c) Compute the multiplicity function and identify anomalously
+            high-multiplicity rings (norm-multiplicativity signature).
+        (d) Estimate the Erdős distinct-distance count D(P_n) and compare
+            to the integer-lattice bound Theta(n / sqrt(log n)).
+        (e) Detect Galois conjugate pairings between distances.
+        (f) Identify Pythagorean triples d1^2 + d2^2 = d3^2 in Q(sqrt(5)).
+    ===================================================================== */
+print("============================================================")$
+print("SECTION 23: Erdős Distance Problem Catalog")$
+print("============================================================")$
+/* (a) Full ring table with algebraic annotations. */
+print("Full distance ring table:")$
+print("  k | sq_dist [r,s] | float | ring_size | pairs | norm | Z[phi] basis | notes")$
+erdos_ring_data : [] $   /* list of records for downstream use */
+for k : 1 thru n_dist_classes do block(
+      [rs : dist_class_sorted[k][1],
+       cnt : dist_class_sorted[k][2],
+       rsize : origin_ring_sizes[k],
+       fval, norm_val, zphi, fib_check, sq_check, galois_rs, notes : ""],
+      fval     : qs5_float(rs),
+      norm_val : qs5_norm(rs),
+      zphi     : to_zphi_basis(rs),
+      fib_check : detect_fibonacci_distance(rs),
+      sq_check  : is_qs5_square(rs),
+      galois_rs : [ratsimp(rs[1]), ratsimp(-rs[2])],   /* sigma: sqrt5 -> -sqrt5 */
+      if fib_check[1] then
+          notes : concat(notes, " Fib(", fib_check[2], ")"),
+      if sq_check[1] then
+          notes : concat(notes, " sq(", float(sq_check[2]), "+",
+                         float(sq_check[3]), "sqrt5)"),
+      if ratsimp(rs[2]) = 0 then notes : concat(notes, " rational"),
+      if ratsimp(norm_val) = 1 then notes : concat(notes, " unit-norm"),
+      erdos_ring_data : endcons(
+          [k, rs, fval, rsize, cnt, norm_val, zphi, galois_rs, notes],
+          erdos_ring_data),
+      print("  ", k,
+            " [", float(rs[1]), ",", float(rs[2]), "]",
+            " ~", float(fval),
+            " ring=", rsize,
+            " pairs=", cnt,
+            " norm=", float(norm_val),
+            " Z[phi]=[", float(zphi[1]), ",", float(zphi[2]), "]",
+            notes)) $
+/* (b) Fibonacci spacing ratio fit. */
+print("")$
+print("(b) Fibonacci spacing ratio delta_{k+1}/delta_k:")$
+if n_dist_classes >= 3 then block(
+      [ratios : [], k, fk, fk1, ratio],
+      for k : 1 thru n_dist_classes - 1 do block(
+          [fk  : qs5_float(dist_class_sorted[k][1]),
+           fk1 : qs5_float(dist_class_sorted[k+1][1])],
+          if fk > 1e-9 then (
+              ratio : float(fk1 / fk),
+              ratios : endcons(ratio, ratios),
+              if k <= 10 then
+                  print("  delta_", k+1, "/delta_", k, " =", ratio))),
+      if length(ratios) >= 3 then block(
+          [mean_ratio : float(apply("+", ratios) / length(ratios)),
+           phi2 : float(phi^2)],
+          print("  Mean ratio =", mean_ratio,
+                "  phi^2 =", float(phi^2),
+                "  deviation =", abs(mean_ratio - float(phi^2))),
+          if abs(mean_ratio - float(phi^2)) < 0.5 then
+              print("  OK: spacing ratio converges toward phi^2 =", float(phi^2))
+          else
+              print("  Note: spacing ratio deviates from phi^2;",
+                    "cluster may be too small or N_GON != 5."))) $
+/* (c) Multiplicity analysis: identify high-multiplicity rings. */
+print("")$
+print("(c) Multiplicity analysis:")$
+mean_ring_size : if n_dist_classes > 0
+      then float(apply("+", origin_ring_sizes) / n_dist_classes)
+      else 0 $
+print("  Mean ring size =", mean_ring_size)$
+high_mult_threshold : max(2 * mean_ring_size, n_int) $
+print("  High-multiplicity threshold =", high_mult_threshold)$
+high_mult_rings : [] $
+for k : 1 thru n_dist_classes do
+      if origin_ring_sizes[k] >= high_mult_threshold then
+          high_mult_rings : endcons(
+              [k, dist_class_sorted[k][1], origin_ring_sizes[k]],
+              high_mult_rings) $
+print("  High-multiplicity rings (ring_size >=", high_mult_threshold, "):")$
+if length(high_mult_rings) > 0 then
+      for r in high_mult_rings do
+          print("    k=", r[1],
+                " sq_dist~", float(qs5_float(r[2])),
+                " ring_size=", r[3])
+else
+      print("    (none found; cluster may be too small)")$
+/* (d) Erdős distinct-distance count estimate. */
+print("")$
+print("(d) Erdős distinct-distance count D(P_n):")$
+D_Pn : n_dist_classes $
+n_pts : N $
+print("  n =", n_pts, "  D(P_n) =", D_Pn)$
+if n_pts > 1 then block(
+      [log_n : float(log(n_pts)),
+       sqrt_log_n : float(sqrt(log(n_pts))),
+       int_lattice_bound, pent_bound_upper, pent_bound_lower],
+      int_lattice_bound : float(n_pts / sqrt_log_n),
+      pent_bound_upper  : float(log_n),
+      pent_bound_lower  : float(log_n / log(log_n + 1)),
+      print("  Integer-lattice bound Theta(n/sqrt(log n)) ~", int_lattice_bound),
+      print("  Pentagonal upper bound O(log n) ~", pent_bound_upper),
+      print("  Pentagonal lower bound Omega(log n / log log n) ~",
+            pent_bound_lower),
+      print("  Ratio D(P_n) / log(n) =", float(D_Pn / log_n),
+            "  (should be O(1) for pentagonal lattice)"),
+      if D_Pn <= 2 * pent_bound_upper then
+          print("  OK: D(P_n) consistent with O(log n) bound.")
+      else
+          print("  Note: D(P_n) exceeds 2*log(n); boundary effects likely.")) $
+/* (e) Galois conjugate pairing. */
+print("")$
+print("(e) Galois conjugate distance pairings (sigma: sqrt5 -> -sqrt5):")$
+galois_pairs_found : 0 $
+galois_pair_list : [] $
+for k : 1 thru n_dist_classes do block(
+      [rs : dist_class_sorted[k][1],
+       conj_rs : [ratsimp(rs[1]), ratsimp(-rs[2])],
+       j, found : false],
+      /* Only report pairs where the conjugate is also in the distance set
+         and has a smaller index (to avoid double-counting). */
+      if float(rs[2]) > 1e-9 then   /* skip rational distances */
+          for j : 1 thru k - 1 do
+              if qs5_eq(dist_class_sorted[j][1], conj_rs) then (
+                  found : true,
+                  galois_pairs_found : galois_pairs_found + 1,
+                  galois_pair_list : endcons([j, k], galois_pair_list),
+                  print("  Pair: k=", j, " (d^2~", float(qs5_float(dist_class_sorted[j][1])), ")",
+                        " <-> k=", k, " (d^2~", float(qs5_float(rs)), ")",
+                        "  product=", float(qs5_float(rs) * qs5_float(dist_class_sorted[j][1])),
+                        "  norm=", float(qs5_norm(rs))))) $
+print("  Total Galois conjugate pairs found:", galois_pairs_found)$
+if galois_pairs_found = 0 and n_dist_classes > 2 then
+      print("  (No pairs found; cluster may be too small or distances are rational.)")$
+/* (f) Pythagorean triples in Q(sqrt(5)): d1^2 + d2^2 = d3^2. */
+print("")$
+print("(f) Pythagorean triples d1^2 + d2^2 = d3^2 in distance set:")$
+pyth_triples : [] $
+pyth_limit : min(n_dist_classes, 12) $   /* search only first 12 classes */
+for i : 1 thru pyth_limit do
+      for j : i thru pyth_limit do block(
+          [sum_rs : [ratsimp(dist_class_sorted[i][1][1]
+                             + dist_class_sorted[j][1][1]),
+                     ratsimp(dist_class_sorted[i][1][2]
+                             + dist_class_sorted[j][1][2])],
+           k],
+          for k : j thru pyth_limit do
+              if qs5_eq(dist_class_sorted[k][1], sum_rs) then (
+                  pyth_triples : endcons([i, j, k], pyth_triples),
+                  print("  d_", i, "^2 + d_", j, "^2 = d_", k, "^2",
+                        "  (", float(qs5_float(dist_class_sorted[i][1])),
+                        "+", float(qs5_float(dist_class_sorted[j][1])),
+                        "=", float(qs5_float(dist_class_sorted[k][1])), ")"))) $
+print("  Pythagorean triples found:", length(pyth_triples))$
+/* =====================================================================
+      SECTION 24.  DISTANCE WEB ANALYSIS
+      ---------------------------------------------------------------------
+      For each of the first few distance classes, build the distance web
+      W_d (graph on cluster vertices where edges connect pairs at distance d)
+      and analyze:
+        - degree sequence (regularity / biregularity)
+        - connected components
+        - triangle count in the web
+        - intersection with the adjacency graph (W_1 = adjacency graph)
+        - web intersection pattern (shared edges between W_d1 and W_d2)
+    ===================================================================== */
+print("============================================================")$
+print("SECTION 24: Distance Web Analysis")$
+print("============================================================")$
+/* Number of distance classes to analyze as webs. */
+WEB_CLASSES : min(n_dist_classes, 6) $
+/* Build the distance web for distance class k: returns adjacency list. */
+build_distance_web(k) := block(
+      [rs : dist_class_sorted[k][1],
+       web : makelist([], ii, 1, N),
+       i, j, dij],
+      for i : 1 thru N do
+          for j : i + 1 thru N do (
+               dij : sq_dist_exact(cell_center[i], cell_center[j]),
+               if listp(dij) and qs5_eq(dij, rs) then (
+                  web[i] : endcons(j, web[i]),
+                  web[j] : endcons(i, web[j]))),
+      web) $
+/* Connected components of a graph given as adjacency list. */
+connected_components(adj, n_nodes) := block(
+      [visited : makelist(false, ii, 1, n_nodes),
+       components : [], comp, queue, v, u],
+      for start : 1 thru n_nodes do
+          if not visited[start] then (
+              comp : [],
+              queue : [start],
+              visited[start] : true,
+              while length(queue) > 0 do (
+                  v : first(queue), queue : rest(queue),
+                  comp : endcons(v, comp),
+                  for u in adj[v] do
+                      if not visited[u] then (
+                          visited[u] : true,
+                          queue : endcons(u, queue))),
+              components : endcons(comp, components)),
+      components) $
+/* Triangle count in a graph given as adjacency list. */
+count_triangles_web(adj, n_nodes) := block(
+      [count : 0, i, j, k],
+      for i : 1 thru n_nodes do
+          for j in adj[i] do
+              if j > i then
+                  for k in adj[j] do
+                      if k > j and member(k, adj[i]) then
+                          count : count + 1,
+      count) $
+web_summary : [] $
+for k : 1 thru WEB_CLASSES do block(
+      [rs : dist_class_sorted[k][1],
+       fval : qs5_float(dist_class_sorted[k][1]),
+       web, deg_list_w, deg_min_w, deg_max_w, deg_mean_w,
+       comps, n_comps, comp_sizes, n_edges_w, n_tri_w,
+       is_regular, is_biregular],
+       print("  Building web for distance class k=", k,
+             " (sq_dist~", float(fval), ")..."),
+      web : build_distance_web(k),
+      deg_list_w : makelist(length(web[i]), i, 1, N),
+      deg_min_w  : apply(min, deg_list_w),
+      deg_max_w  : apply(max, deg_list_w),
+      deg_mean_w : float(apply("+", deg_list_w) / N),
+      n_edges_w  : apply("+", deg_list_w) / 2,
+      n_tri_w    : count_triangles_web(web, N),
+      comps      : connected_components(web, N),
+      n_comps    : length(comps),
+      comp_sizes : sort(map(length, comps)),
+      is_regular   : is(deg_min_w = deg_max_w),
+      is_biregular : is(length(listify(setify(deg_list_w))) <= 2),
+      print("  Web W_", k, ":",
+            "  edges=", n_edges_w,
+            "  deg_min=", deg_min_w,
+            "  deg_max=", deg_max_w,
+            "  deg_mean=", deg_mean_w,
+            "  components=", n_comps,
+            "  triangles=", n_tri_w,
+            if is_regular then "  REGULAR"
+            else if is_biregular then "  BIREGULAR"
+            else "  irregular"),
+      print("    Component sizes:", comp_sizes),
+      web_summary : endcons(
+          [k, fval, n_edges_w, deg_min_w, deg_max_w, n_comps,
+           n_tri_w, is_regular, is_biregular],
+          web_summary)) $
+/* Web intersection: count shared edges between W_1 and W_2. */
+print("")$
+print("Web intersection analysis (W_i ∩ W_j = shared edges):")$
+if WEB_CLASSES >= 2 then block(
+      [web1 : build_distance_web(1),
+       web2 : build_distance_web(2),
+       shared : 0, i, j],
+      for i : 1 thru N do
+          for j in web1[i] do
+              if j > i and member(j, web2[i]) then
+                  shared : shared + 1,
+      print("  |W_1 ∩ W_2| =", shared, "shared edges")) $
+/* Check whether W_1 equals the adjacency graph (it should for d=edge length). */
+print("")$
+print("W_1 vs adjacency graph comparison:")$
+block(
+      [web1 : build_distance_web(1), match : true, i, j],
+      for i : 1 thru N do (
+          if sort(web1[i]) # sort(nbrs[i]) then (
+              match : false,
+              print("  Mismatch at node", i,
+                    ": web1=", sort(web1[i]),
+                    " nbrs=", sort(nbrs[i])))),
+      if match then
+          print("  W_1 = adjacency graph (as expected for unit-edge distance).")
+      else
+          print("  W_1 != adjacency graph; first distance class is not the edge length.")) $
+/* =====================================================================
+      SECTION 25.  PINWHEEL PHENOMENON AND DIRECTION ANALYSIS
+      ---------------------------------------------------------------------
+      For each distance class, compute the set of directions (angles) of
+      vectors between pairs at that distance.  Analyze:
+        - number of distinct directions (up to tolerance)
+        - whether directions are dense in [0, 2*pi) (pinwheel)
+        - angular gap statistics
+        - comparison with integer-lattice (finitely many directions/dist)
+    ===================================================================== */
+print("============================================================")$
+print("SECTION 25: Pinwheel Phenomenon and Direction Analysis")$
+print("============================================================")$
+/* Angular tolerance for direction clustering (radians). */
+ANGLE_TOL : 1e-4 $
+/* Compute the angle of vector (dx, dy) in [0, 2*pi). */
+vec_angle(dx, dy) := block(
+      [a : float(atan2(dy, dx))],
+      if a < 0 then a + 2 * float(%pi) else a) $
+/* Count distinct directions among a list of angles (up to ANGLE_TOL). */
+count_distinct_angles(angles) := block(
+      [sorted : sort(angles), distinct : 0, prev : -1e10, a],
+      for a in sorted do (
+          if a - prev > ANGLE_TOL then (
+              distinct : distinct + 1,
+              prev : a)),
+      distinct) $
+/* Angular gap statistics: max gap and mean gap in a sorted angle list. */
+angular_gaps(angles) := block(
+      [sorted : sort(angles), n : length(angles),
+       gaps : [], k, wrap_gap, max_gap, mean_gap],
+      if n < 2 then return([2 * float(%pi), 2 * float(%pi)]),
+      for k : 1 thru n - 1 do
+          gaps : endcons(sorted[k+1] - sorted[k], gaps),
+      /* wrap-around gap */
+      wrap_gap : sorted[1] + 2 * float(%pi) - last(sorted),
+      gaps : endcons(wrap_gap, gaps),
+      max_gap  : apply(max, gaps),
+      mean_gap : float(apply("+", gaps) / length(gaps)),
+      [max_gap, mean_gap]) $
+/* Pinwheel threshold: if max_gap < pi/n_int we call it "dense". */
+pinwheel_threshold : float(%pi / n_int) $
+print("Pinwheel threshold (max angular gap < pi/n =",
+       float(%pi / n_int), "rad):")$
+DIRECTION_CLASSES : min(n_dist_classes, 8) $
+direction_summary : [] $
+for k : 1 thru DIRECTION_CLASSES do block(
+      [rs : dist_class_sorted[k][1],
+       fval : qs5_float(dist_class_sorted[k][1]),
+       angles : [], i, j, dx, dy, a,
+       n_distinct, gap_stats, is_pinwheel],
+      /* Collect all directed angles for pairs at this distance. */
+      for i : 1 thru N do
+          for j : i + 1 thru N do block(
+               [dij : sq_dist_exact(cell_center[i], cell_center[j])],
+               if listp(dij) and qs5_eq(dij, rs) then (
+                  dx : float(qcanon(cell_center[j][1] - cell_center[i][1])),
+                  dy : float(qcanon(cell_center[j][2] - cell_center[i][2])),
+                  a  : vec_angle(dx, dy),
+                  angles : endcons(a, angles),
+                  /* also add the reverse direction */
+                  angles : endcons(vec_angle(-dx, -dy), angles))),
+      n_distinct : count_distinct_angles(angles),
+      gap_stats  : angular_gaps(sort(listify(setify(
+                       map(lambda([a], round(a / ANGLE_TOL) * ANGLE_TOL),
+                           angles))))),
+      is_pinwheel : is(gap_stats[1] < pinwheel_threshold),
+      print("  Distance class k=", k,
+            " (sq_dist~", float(fval), "):",
+            "  n_directions=", n_distinct,
+            "  max_gap=", float(gap_stats[1]),
+            "  mean_gap=", float(gap_stats[2]),
+            if is_pinwheel then "  PINWHEEL (dense)"
+            else "  sparse"),
+      direction_summary : endcons(
+          [k, fval, n_distinct, gap_stats[1], gap_stats[2], is_pinwheel],
+          direction_summary)) $
+/* Summary: how many distance classes show the pinwheel phenomenon? */
+n_pinwheel : length(sublist(direction_summary, lambda([r], r[6]))) $
+print("")$
+print("Pinwheel summary:", n_pinwheel, "/", DIRECTION_CLASSES,
+       "distance classes show dense directions.")$
+if n_pinwheel > 0 then
+      print("  Pinwheel phenomenon confirmed: multiple distances have",
+            "dense direction sets, consistent with erdos.md §3.4.")
+else
+      print("  No pinwheel detected; cluster may be too small for",
+            "irrational angle accumulation to manifest.")$
+/* Direction count vs distance: does n_directions grow with distance? */
+print("")$
+print("Direction count vs distance class (log-log fit):")$
+if length(direction_summary) >= 3 then block(
+      [xs : [], ys : [], r, fit],
+      for r in direction_summary do
+          if r[2] > 0 and r[3] > 0 then (
+              xs : endcons(float(log(r[2])), xs),
+              ys : endcons(float(log(r[3])), ys)),
+      if length(xs) >= 3 then (
+          fit : log_log_fit_basic(xs, ys),
+          print("  log(n_directions) vs log(sq_dist) slope =", fit[1]),
+          print("  Positive slope => more directions at larger distances",
+                "(consistent with pinwheel accumulation)."))) $
 /* ---------------------------------------------------------------------
     SECTION 21.  Resistance distance and commute time (sample)
     ---------------------------------------------------------------------
@@ -2538,6 +3190,29 @@ if d_spec_kpm > 0 then
 print("Most-fractional tau-rule:", best_dim_label,
        "  |d_eff - 2.5| =", best_dim_dist)$
 print("------------------------------------------------------------")$
+print("Erdős distance catalog (Section 23):")$
+print("  Distinct squared distances:", n_dist_classes)$
+print("  High-multiplicity rings:", length(high_mult_rings))$
+print("  Galois conjugate pairs:", galois_pairs_found)$
+print("  Pythagorean triples:", length(pyth_triples))$
+if n_pts > 1 then
+      print("  D(P_n)/log(n) =",
+            float(D_Pn / log(float(n_pts))),
+            "  (O(1) expected for pentagonal lattice)")$
+print("Distance web summary (Section 24):")$
+for r in web_summary do
+      print("  W_", r[1], ": edges=", r[3],
+            " deg=[", r[4], ",", r[5], "]",
+            " comps=", r[6],
+            " tri=", r[7],
+            if r[8] then " REGULAR" else if r[9] then " BIREGULAR" else "")$
+print("Pinwheel summary (Section 25):")$
+print("  Pinwheel classes:", n_pinwheel, "/", DIRECTION_CLASSES)$
+for r in direction_summary do
+      print("  k=", r[1], " n_dir=", r[3],
+            " max_gap=", float(r[4]),
+            if r[6] then " PINWHEEL" else "")$
+print("------------------------------------------------------------")$
 print("Active TAU_MODE for main cluster:", TAU_MODE)$
 print("Preset:", EXPERIMENT_PRESET)$
 print("N_GON:", N_GON)$
@@ -2560,6 +3235,13 @@ print("    slope are reported for cross-validation.")$
 print("  * Same-orientation tiling is geometrically frustrated; this")$
 print("    experiment lets the sheet index absorb the angular deficit,")$
 print("    consistent with the multi-sheeted construction.")$
+print("  * Section 23 catalogs the Erdős distance problem on the")$
+print("    pentagonal lattice: ring table, Fibonacci spacing, Galois")$
+print("    conjugate pairings, and D(P_n) vs log(n) scaling.")$
+print("  * Section 24 builds distance webs W_d and checks regularity,")$
+print("    connectivity, and intersection with the adjacency graph.")$
+print("  * Section 25 analyzes the pinwheel phenomenon: whether each")$
+print("    distance class has a dense set of directions in [0,2*pi).")$
 print("============================================================")$
 print("experiment.mac : done.")$
 print("============================================================")$

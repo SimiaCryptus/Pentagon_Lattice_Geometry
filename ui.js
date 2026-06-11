@@ -118,8 +118,9 @@ export function initDocs() {
     const DOC_TABS = [
         {label: "Overview", doc: "README.md"},
         {label: "Concept", doc: "idea.md"},
-        {label: "Affine Generalization", doc: "affine.md"},
-        {label: "3D Generalization", doc: "polyhedra.md"},
+        {label: "Erdos", doc: "erdos.md"},
+        {label: "Irregular", doc: "affine.md"},
+        {label: "Polyhedra", doc: "polyhedra.md"},
     ];
 
     function syncModalTabs() {

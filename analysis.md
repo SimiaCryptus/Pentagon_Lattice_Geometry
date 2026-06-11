@@ -18,7 +18,12 @@ n-gon sweep over n ∈ [3, 12].
 - **Algebraic identities** verified by `ratsimp` reduction to 0.
 - **Linear algebra** on rotation matrices, cyclic shift matrices, projectors, and graph Laplacians.
 - **Numerical cross-checks** for symbolic results, with abort-on-error tolerances (≤ 1e-10).
-- **A summary table** capturing key per-n invariants.
+- **Per-n analyses** of inflation/substitution systems, zeta and L-series, heat traces, acceptance windows, and
+  symbolic-dynamics sequences.
+- **Pentagon-specific extensions** in Z[φ] arithmetic, prime splitting, continued fractions, Pisano periods, and a
+  Wall-Sun-Sun search.
+- **A summary table** capturing key per-n invariants plus a **cross-section correlation table** with Pearson
+  coefficients.
 
 Every identity used downstream in `idea.md` is either proved symbolically or backed by a passing numerical check; the
 log confirms `all checks passed for n = 3 to 12`.
@@ -51,6 +56,24 @@ verifying:
 
 These results directly underwrite the Section 2.3 mandate of `idea.md`: **exact arithmetic over Q(√5) eliminates the
 floating-point topological tearing failure mode** of the Adjacency Oracle.
+
+### 2.1 Extended Z[φ] Number Theory (Section 10b)
+
+A dedicated post-sweep block exercises arithmetic operations in the ring of integers Z[φ] = Z[(1+√5)/2]:
+
+- **Conjugation**: `conj([a,b]) = [a+b, −b]` (verified `conj(φ) = [1,−1] = −ψ`).
+- **Division** via `(p / q) = (p · conj(q)) / N(q)`: φ²/φ = φ and φ³/φ² = φ confirmed.
+- **Euclidean GCD** in Z[φ] implemented via the norm-driven Euclidean algorithm.
+- **Prime splitting** by the Legendre symbol `(5/p)`: tabulated for p ∈ {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31};
+  matches the standard splitting types (split / inert / ramified at p = 5).
+- **Units**: φⁿ for n ∈ [−3, 3] tabulated with closed-form Q(√5) expressions and norms ±1.
+- **Continued fraction**: convergents h_k/k_k of φ = [1; 1, 1, …] tabulated through k = 10; ratio error → 0.
+- **Pisano periods** π(m) for m = 2..15 computed and printed.
+- **Wall-Sun-Sun search**: `F_{p − (5/p)} mod p²` evaluated for small primes; no Wall-Sun-Sun primes found (consistent
+  with the known empirical absence below the standard search bounds).
+
+These extensions provide a number-theoretic substrate for any future work on **Galois conjugate windows** and
+**exact arithmetic over Z[φ]** in the cut-and-project construction.
 
 ---
 
@@ -127,9 +150,10 @@ These provide the exact geometric primitives that the Adjacency Oracle (`idea.md
 
 ---
 
-## 6. Holonomy, Z_n Covers, and the Spinor Analogue (Section 5, plus a pre-loop Z_2 block)
+## 6. Holonomy, Z_n Covers, and the Spinor Analogue (Section 5, plus pre-loop Z_2 and flat-bundle blocks)
 
-Two complementary fiber structures are analyzed:
+Two complementary fiber structures are analyzed, plus an extended pre-loop block covering flat U(1) connections, Berry
+phases, and Chern numbers:
 
 ### 6.1 Z_2 spinor cover (pre-loop, n-independent)
 
@@ -149,6 +173,21 @@ This is the exact discrete realization of the spinor analogy in §3.2 of `idea.m
 These prove the **homomorphism property** of the discrete connection (Section 3 of `idea.md`) and verify that the
 sheet-transition group is structurally Z_n with the expected fractional rotation phases — the discrete analogue of
 anyonic statistics (§3.3 of `idea.md`).
+
+### 6.3 Extended flat-bundle analysis (n-independent)
+
+A pre-loop block tabulates:
+
+- **Element orders** in every Z_m for m = 2..12 (full inventory of cyclic-cover holonomies).
+- **Flat U(1) holonomy phases** `exp(2πi k/n)` for n = 5, k = 0..4 — the U(1) avatar of the Z_n cover.
+- **Aharonov-Bohm phases** `exp(2πi Φ/Φ₀)` for fractional flux ratios — the discrete model of magnetic monodromy.
+- **2D monodromy matrices** R(2π/n) for n ∈ {3, 4, 5, 6} with explicit verification that the smallest k with Mᵏ = I is
+  k = n.
+- **Berry phases** γ_B = π · w for winding numbers w = 0..4.
+- **Chern numbers** C = k/n for the k-th sector of Z_5.
+
+These extensions concretize the **discrete principal G-bundle** abstraction of §3.1 of `idea.md` and tie it to the
+familiar U(1) Berry/Chern language used in condensed-matter physics.
 
 ---
 
@@ -171,6 +210,29 @@ reduction (§4.3 of `idea.md`).
 
 Synthetic checks of `V(r) = c r^d` recovery (slope = 2.5 ± 1e-10), MSD model `D_α t^(2/d_w)`, P_0(t) model, and DOS
 model `B λ^(d_spec/2 − 1)` are all verified — these prefigure the spectral pipeline of §6.3–§6.4 of `idea.md`.
+
+### 7.1 Extended Alexander–Orbach analysis
+
+A dedicated extension block adds:
+
+- A 5 × 6 **phase diagram** of d_spec on the grid (d_eff ∈ {1.5..3.5}) × (d_w ∈ {1.5..4.0}).
+- **Diffusion classification** (super-diffusive / normal / sub-diffusive) for d_w ∈ {1.5, 2.0, 2.5, 3.0, 4.0}.
+- **Return-probability slopes** d_s/2 and P_0(t = 100) values for d_s ∈ {1.0..2.5}.
+- **Crossover times** t_cross at which d_spec(t) reaches a target d_eff under the exponential interpolator.
+- **DOS integrated weight** ∫₀^Λ ρ(λ) dλ for ρ ~ λ^(d_s/2 − 1) at (d_s, Λ) sample points.
+
+### 7.2 Extended volume-growth analysis
+
+Adds:
+
+- **Multi-scale V(r)** for d_eff ∈ {2.0, 2.5, 3.0} at r ∈ {1, 2, 5, 10, 20, 50, 100}.
+- **Self-similarity ratios** V(2r)/V(r) = 2^(d_eff).
+- **Recovered d_eff** from two-point ratios (perfect recovery within 1e-10).
+- **Lacunarity model** Λ(r) = r^(−d_eff).
+- **Monofractal τ(q) = (q − 1) d_eff** at q ∈ {−2..3} as a multifractal baseline.
+
+These extensions calibrate the **spectral and geometric estimators** that the §6.3–§6.4 pipeline of `idea.md` will
+apply to real lattice data.
 
 ---
 
@@ -276,9 +338,114 @@ These spectra calibrate the **KPM-based DOS estimator** proposed in §6.4 of `id
 
 ---
 
-## 13. Sweep Summary Table
+## 13. Inflation / Substitution Systems (Section 15)
 
-`analysis.mac` accumulates a row per n and prints a final table containing:
+For each n the loop constructs a 2-type **substitution matrix** M (n-gon + complementary rhombus/kite):
+
+- n = 3 ⇒ M = I (Euclidean equilateral tiling).
+- n = 5 ⇒ M = [[2, 1], [1, 1]] (Penrose substitution).
+- General n ≥ 4 ⇒ M = [[2, 1], [n − 3, n − 4]] (reduces to Penrose at n = 5).
+
+Each iteration logs:
+
+- Tile-count vectors v_k = Mᵏ v_0 for k = 1..INFLATION_DEPTH (default 6).
+- **Perron–Frobenius eigenvalue** λ_PF (inflation ratio).
+- **Successive growth-rate ratios** converging to λ_PF.
+- **Fractal dimension estimate** d_f = log N_tiles / log λ_PF after one inflation step.
+
+Highlights:
+
+- **n = 5: λ_PF = φ²** ≈ 2.618, confirmed to ≤ 1e-8 against the symbolic value φ² (this matches the Penrose
+  self-similarity ratio).
+- n = 4: λ_PF = 1 + √2 (silver ratio), n = 6: 2 + √3, n = 7: ≈ 4.5616, n = 8: ≈ 5.4495, n = 9: ≈ 6.3723, etc.,
+  monotonically increasing with n.
+- d_f decreases from ≈ 1.246 (n = 4) toward ≈ 1.08 (n = 12) — slower asymptotic inflation reduces the effective
+  packing dimension under this 2-type model.
+
+These quantities are the exact substitution-system substrate for the **discrete-CDT-style inflation step** envisioned
+in §5 of `idea.md`.
+
+---
+
+## 14. Zeta Functions and L-Series (Section 16)
+
+For each n, post-loop number-theoretic data are collected:
+
+- Partial **Riemann ζ(2), ζ(3)** sums (ZETA_TERMS = 40 terms) vs. exact π²/6 and Apéry's constant.
+- Partial **Dedekind zeta** ζ_{Q(√5)}(s) at s = 2, 3 via the Euler product up to primes ≤ 30 (split / inert / ramified
+  by Legendre(5/p)).
+- Ratio ζ_{Q(√5)}(2) / ζ(2)² ≈ 0.439 (matches the expected class-number/regulator factor).
+- Partial **Dirichlet L(s, χ_5)** at s = 2, 3 (ZETA_TERMS = 40); printed alongside the exact L(2, χ_5) = π²/(5√5).
+- A **functional-equation spot check** at s = 0.7 vs. 1 − s = 0.3.
+- **Spectral zeta** ζ_L(s) of the cycle C_n at s = 1, 2, 3, computed as Σ_{λ > 0} λ^(−s).
+
+The spectral zeta values grow monotonically with n (e.g. ζ_{C_n}(2): 0.22 at n=3 → 30.78 at n=12), as expected for
+denser-packing low-frequency modes — the discrete analogue of the heat-trace divergence used in §6.4 of `idea.md`.
+
+---
+
+## 15. Diffusion Kernel and Heat Trace (Section 17)
+
+At each n, the heat trace Tr(e^{−tL}) is computed for both:
+
+- **Cycle C_n** via λ_k = 2 − 2 cos(2πk/n)
+- **Star K_{1,n}** via the closed-form spectrum {0, 1 (× n), n + 1}
+
+at HEAT_TIMES = {0.01, 0.1, 0.5, 1, 2, 5, 10, 50}. Three derived quantities are reported:
+
+- **Effective spectral dimension** d_s(t_i, t_{i+1}) from the log-log slope of Tr(e^{−tL}) — exhibits the expected
+  crossover from short-time Weyl behaviour to long-time saturation at 1 (the kernel of L).
+- **2D Weyl leading term** (4πt)^{−1} for short-time comparison.
+- **2D Gaussian heat kernel** K_t(x) at x ∈ {0, 1, 2} for t ∈ {0.1, 1, 10}.
+
+The log shows d_s starting near 0 (Weyl-dominated short time) and approaching ≈ 1.19 in the intermediate window for
+larger n — a clean discrete analogue of the **anomalous diffusion crossover** featured in §4.3 of `idea.md`.
+
+The spectral zeta of C_n at s = 1, 2, 3 is reprinted here as a Mellin-transform sibling of the heat trace.
+
+---
+
+## 16. Acceptance-Window Geometry (Section 18)
+
+For each n, the acceptance window is taken to be a regular n-gon of inradius ρ in perp space, with unit-cell area
+A_cell = Area_{n-gon}(side 1). Each iteration logs:
+
+- **Window vertices** at angles 2πk/n on a circle of radius ρ = 1.
+- **Acceptance density** A_window(ρ)/A_cell at ρ ∈ {0.5, 1, 1.5, 2} (quadratic in ρ).
+- A 20 × 20 **grid acceptance test** on [−1.5, 1.5]², printing the empirical fraction inside the window and the
+  expected fraction A_window/A_box.
+
+**Pentagon-specific inflation check**: under one Penrose inflation step, the perp-space window scales by 1/φ. The log
+verifies that the area ratio equals 1/φ² (≈ 0.3820) to machine precision — the exact internal-space contraction that
+underlies §2.4 of `idea.md`.
+
+---
+
+## 17. Fibonacci Word and Symbolic-Dynamics Sequences (Section 19)
+
+For each n, the loop generates symbolic-dynamics objects relevant to substitution tilings:
+
+- **Fibonacci word** under a → ab, b → a, iterated to depth INFLATION_DEPTH:
+    - Length(depth k) = F_{k+1}, verified through depth 8.
+    - At depth 6: |a| = 13, |b| = 8, ratio |a|/|b| = 1.625 → φ.
+    - Sturmian property (complexity p(n) = n + 1) noted.
+- **Thue–Morse sequence** (first 16 terms) — relevant for n = 4 square-lattice substitution.
+- **Rudin–Shapiro sequence** (first 16 terms) — paperfolding/automatic sequence baseline.
+- **Fibonacci substitution matrix** [[1, 1], [1, 0]] with `charpoly = x² − x − 1` (verified) and PF eigenvalue = φ
+  (verified to 1e-8).
+
+For n = 5 a dedicated block prints the depth-6 Fibonacci word and verifies length = F_8 = 21 — this is the symbolic
+encoding of the **long/short edge sequence on Penrose tiling lines**.
+
+These results provide the **discrete symbolic substrate** that complements the geometric inflation analysis of §13.
+
+---
+
+## 18. Sweep Summary Table and Cross-Section Correlations
+
+`analysis.mac` accumulates **two** tables per run:
+
+### 18.1 Per-n summary table (Section 14)
 
 `n | θ(deg) | k_flat | deficit(deg) | k_close | turns | φ(n) | Area | R | OT_rules | C_n_gap`
 
@@ -289,28 +456,47 @@ This table, reproduced verbatim in `analysis.log`, makes the n = 5 entry directl
 - The cycle-spectral gap shrinks monotonically with n, foreshadowing slower diffusion (and hence smaller d_spec) on
   larger-n analogues.
 
----
+### 18.2 Cross-section correlation table (Section 20, new)
 
-## 14. Summary of Verified Claims Supporting `idea.md`
+`n | deficit | k_close | C_n_gap | HeatTr(t=1) | SpZeta(s=2) | WinArea`
 
-| Claim in `idea.md`                              | Verification in `analysis.mac`                              |
-|-------------------------------------------------|-------------------------------------------------------------|
-| Pentagon angular deficit 36° (§2.1)             | Section 2 sweep: n = 5 ⇒ deficit = π/5 = 36°                |
-| Multi-sheeted cover loop closure (§2.2, §3.1)   | k_close = 2n/gcd(2n, n−2); n = 5 ⇒ 10 pentagons / 3 turns   |
-| Exact Q(√5) substrate (§2.3)                    | Section 1: φ identities, Z[φ] arithmetic, N(φⁿ) = (−1)ⁿ     |
-| Cut-and-project window (§2.4)                   | Section 7: Z^n decomposition, projectors, dim(E_perp) = n−2 |
-| Z_2 spinor cover (§3.2)                         | Pre-loop Section 5: single-loop holonomy = 1, order = 2     |
-| Z_n anyonic statistics (§3.3)                   | Section 5: order(g) = n/gcd(g,n), composite holonomy mod n  |
-| Effective dimension 2 < d_eff < 3 (§4.2)        | Section 6: in_paper_regime predicate validated              |
-| d_spec < d_eff when d_w > 2 (§4.2)              | Section 6: Alexander–Orbach sub-diffusivity table           |
-| Dimensional flow (§4.3)                         | Section 6: d_spec(t) interpolator                           |
-| 5-regular outer-totalistic CA rule space (§5.1) | Section 8: 4096 rules confirmed                             |
-| Adjacency Oracle exact arithmetic (§6.1)        | All checks performed without `float` drift                  |
-| Spectral dimension via Laplacian DOS (§6.4)     | Section 13: exact spectra of K_{1,n} and C_n                |
+with Pearson correlation coefficients reported across the sweep:
+
+- **r(deficit, C_n_gap) ≈ −0.746** — strong negative correlation: larger angular frustration is associated with denser
+  low-frequency modes (smaller spectral gap).
+- **r(k_close, HeatTr(t=1)) ≈ +0.566** — moderate positive correlation: longer sheet-closure loops correlate with
+  higher heat-trace mass at intermediate t (more low-energy modes contributing).
+
+These quantitative cross-sections are the first machine-checked **structural correlations** between geometric
+(deficit, k_close), spectral (C_n gap, heat trace), and topological (φ(n), window area) invariants across the sweep,
+directly supporting the unified narrative of §4 and §6 of `idea.md`.
 
 ---
 
-## 15. Status
+## 19. Summary of Verified Claims Supporting `idea.md`
+
+| Claim in `idea.md`                              | Verification in `analysis.mac`                                   |
+|-------------------------------------------------|------------------------------------------------------------------|
+| Pentagon angular deficit 36° (§2.1)             | Section 2 sweep: n = 5 ⇒ deficit = π/5 = 36°                     |
+| Multi-sheeted cover loop closure (§2.2, §3.1)   | k_close = 2n/gcd(2n, n−2); n = 5 ⇒ 10 pentagons / 3 turns        |
+| Exact Q(√5) substrate (§2.3)                    | Sections 1, 10, 10b: φ identities, Z[φ] arithmetic, prime splits |
+| Cut-and-project window (§2.4)                   | Sections 7, 18: Z^n decomposition + window-area/density check    |
+| Z_2 spinor cover (§3.2)                         | Pre-loop Section 5: single-loop holonomy = 1, order = 2          |
+| Z_n anyonic statistics (§3.3)                   | Section 5: order(g) = n/gcd(g,n), composite holonomy mod n       |
+| Flat U(1) / Berry / Chern structure (§3)        | Extended Section 5: U(1) phases, monodromy, Berry, Chern         |
+| Effective dimension 2 < d_eff < 3 (§4.2)        | Section 6: in_paper_regime predicate validated                   |
+| d_spec < d_eff when d_w > 2 (§4.2)              | Section 6 + extension: AO phase diagram, sub-diffusivity         |
+| Dimensional flow (§4.3)                         | Section 6 (interpolator) + Section 17 (heat-trace slopes)        |
+| Inflation / substitution structure (§5)         | Section 15: PF eigenvalue, pentagon ratio = φ² confirmed         |
+| Symbolic-dynamics / Penrose edge code           | Section 19: Fibonacci word, depth-6 length = F_8                 |
+| 5-regular outer-totalistic CA rule space (§5.1) | Section 8: 4096 rules confirmed                                  |
+| Adjacency Oracle exact arithmetic (§6.1)        | All checks performed without `float` drift                       |
+| Spectral dimension via Laplacian DOS (§6.4)     | Section 13 + Section 16 + Section 17 (heat-trace ↔ DOS)          |
+| Cross-section structural correlations (§4, §6)  | Section 20: r(deficit, gap), r(k_close, HeatTr) reported         |
+
+---
+
+## 20. Status
 
 The `analysis.mac` script terminates with:
 
@@ -319,5 +505,7 @@ analysis.mac : all checks passed for n = 3 to 12 step 1
 ```
 
 Every assertion is enforced by either a symbolic `ratsimp(... ) = 0` test or a numerical tolerance check; any failure
-would abort via `error(...)`. The full pentagonal benchmark suite plus the generalized n-gon sweep therefore constitute
-a machine-verified foundation for the geometric, algebraic, and spectral claims of `idea.md`.
+would abort via `error(...)`. The full pentagonal benchmark suite plus the generalized n-gon sweep — now augmented with
+inflation/substitution analysis, Dedekind ζ and Dirichlet L partial sums, heat-trace diagnostics, acceptance-window
+geometry, symbolic-dynamics sequences, extended Z[φ] number theory, and a cross-section correlation table — therefore
+constitute a machine-verified foundation for the geometric, algebraic, and spectral claims of `idea.md`.

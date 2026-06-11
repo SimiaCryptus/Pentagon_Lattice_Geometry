@@ -11,8 +11,8 @@ run_maxima() {
      local log_file="${LOG_DIR}/${base_name}_${TIMESTAMP}.log"
      echo "Running ${mac_file}, logging to ${log_file}..."
      maxima --very-quiet --batch-string="batchload(\"${mac_file}\")$" \
-      | grep -v 'rat: replaced' \
-      | grep -v '^$' \
+      | grep -v 'rat: replaced' --line-buffered \
+      | grep -v '^$' --line-buffered \
       | tee "${log_file}"
 }
 

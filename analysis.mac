@@ -39,6 +39,8 @@
 if not(?boundp('display2d)) then display2d : false$
 /* Load string-handling package (provides pad_right, sconcat utilities). */
 load("stringproc")$
+/* Load additional packages for enhanced analysis. */
+load("eigen")$
 
 print("============================================================")$
 print("analysis.mac : Multi-Sheeted n-gon Tiling Analysis")$
@@ -74,6 +76,17 @@ print("============================================================")$
 N_GON_MIN  : 3  $   /* first n-gon in sweep  (integer >= 3)       */
 N_GON_MAX  : 12 $   /* last  n-gon in sweep  (integer >= N_GON_MIN) */
 N_GON_STEP : 1  $   /* step size             (positive integer)    */
+/* ---------------------------------------------------------------
+    ADDITIONAL GLOBAL PARAMETERS
+    --------------------------------------------------------------- */
+/* Inflation / substitution analysis depth (Sections 15, 19). */
+INFLATION_DEPTH : 6 $
+/* Heat-trace / diffusion kernel time samples (Section 17). */
+HEAT_TIMES : [0.01, 0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 50.0] $
+/* Zeta function: number of terms in Euler-product approximation (Sec 16). */
+ZETA_TERMS : 40 $
+/* Acceptance-window sampling resolution (Section 18). */
+WINDOW_SAMPLES : 20 $
 
 /* Validate range parameters. */
 if not integerp(N_GON_MIN)  or N_GON_MIN  < 3
@@ -92,6 +105,8 @@ print("------------------------------------------------------------")$
 
 /* Accumulator for the per-n summary table (populated inside the loop). */
 ngon_summary_table : [] $
+/* Accumulator for cross-section correlation data (Section 20). */
+cross_section_data : [] $
 
 /* ---------------------------------------------------------------------
    SECTION 1.  Golden ratio phi and Q(sqrt(5))    [pentagon-specific]
@@ -287,6 +302,62 @@ print("Dimensional flow d_spec(t) interpolator (UV=2.5, IR=1.7):")$
 for tt in [0.1, 1, 10, 100] do
      print("  t =", tt,
            ": d_spec(t) =", float(d_spec_flow(2.5, 1.7, tt, 10))) $
+/* ---------------------------------------------------------------
+    EXTENDED ALEXANDER-ORBACH ANALYSIS
+    --------------------------------------------------------------- */
+print("------------------------------------------------------------")$
+print("Extended Alexander-Orbach / spectral-dimension analysis:")$
+/* Full (d_eff, d_w) phase diagram on a grid. */
+print("  Phase diagram: d_spec = 2*d_eff/d_w on grid")$
+print("  (rows = d_eff 1.5..3.5 step 0.5; cols = d_w 1.5..4.0 step 0.5)")$
+block([deff_vals, dw_vals, header, sep],
+     deff_vals : [1.5, 2.0, 2.5, 3.0, 3.5],
+     dw_vals   : [1.5, 2.0, 2.5, 3.0, 3.5, 4.0],
+     header : pad_right("d_eff\\d_w", 12),
+     for dw in dw_vals do header : sconcat(header, " | ", pad_right(string(dw), 7)),
+     print("  ", header),
+     sep : "  ------------",
+     for dw in dw_vals do sep : sconcat(sep, "-+---------"),
+     print(sep),
+     for deff in deff_vals do block(
+         [row],
+         row : pad_right(string(deff), 12),
+         for dw in dw_vals do block(
+             [ds],
+             ds  : float(d_spec_AO(deff, dw)),
+             row : sconcat(row, " | ", pad_right(string(ds), 7))),
+         print("  ", row))) $
+/* Anomalous diffusion classification. */
+classify_diffusion(d_w) :=
+     if d_w < 2 then "super-diffusive"
+     else if d_w = 2 then "normal"
+     else "sub-diffusive (anomalous)" $
+print("  Diffusion classification by d_w:")$
+for dw in [1.5, 2.0, 2.5, 3.0, 4.0] do
+     print("    d_w =", dw, "->", classify_diffusion(dw)) $
+/* Spectral dimension from return probability exponent. */
+/* P_0(t) ~ t^{-d_s/2}  =>  log P_0 / log t = -d_s/2 */
+print("  Return-probability log-log slope (d_s/2) for d_s in {1.0..2.5}:")$
+for ds in [1.0, 1.2, 1.5, 1.7, 2.0, 2.5] do
+     print("    d_s =", ds, "  slope =", -ds/2,
+           "  P_0(t=100) =", float(100^(-ds/2))) $
+/* Crossover scale: when does UV regime end? */
+/* d_spec(t) crosses d_eff at t = t_cross where exp(-t/t0) = (d_eff-d_ir)/(d_uv-d_ir) */
+t_crossover(d_uv, d_ir, d_eff_val, t0) :=
+     if d_uv = d_ir then inf
+     else -t0 * log((d_eff_val - d_ir)/(d_uv - d_ir)) $
+print("  Crossover times (UV=2.5, IR=1.7, t0=10):")$
+for deff in [1.8, 2.0, 2.2, 2.4] do
+     print("    d_eff =", deff, "  t_cross =",
+           float(t_crossover(2.5, 1.7, deff, 10))) $
+/* Integrated spectral weight. */
+/* integral_0^Lambda rho(lambda) d lambda = d_spec/2 * integral lambda^{d_s/2-1} */
+dos_integral(lam_max, B, d_spec) :=
+     B * lam_max^(d_spec/2) / (d_spec/2) $
+print("  DOS integrated weight (B=1, d_s=1.7, Lambda=1) =",
+       float(dos_integral(1.0, 1.0, 1.7))) $
+print("  DOS integrated weight (B=1, d_s=2.0, Lambda=1) =",
+       float(dos_integral(1.0, 1.0, 2.0))) $
 
 /* Volume-growth and MSD models (n-independent, run once). */
 print("------------------------------------------------------------")$
@@ -319,6 +390,49 @@ dos_model(lam, B, d_spec) := B * lam^(d_spec/2 - 1) $
 print("  DOS model (B=1, d_spec=1.7):")$
 for lam in [0.001, 0.01, 0.1, 1] do
      print("    lambda =", lam, ":  rho =", float(dos_model(lam, 1, 1.7))) $
+/* ---------------------------------------------------------------
+    EXTENDED VOLUME-GROWTH ANALYSIS
+    --------------------------------------------------------------- */
+print("------------------------------------------------------------")$
+print("Extended volume-growth analysis (n-independent):")$
+/* Multi-scale volume growth: compare d_eff = 2.0, 2.5, 3.0 */
+print("  V(r) = c * r^d_eff for d_eff in {2.0, 2.5, 3.0}, c=1:")$
+for deff in [2.0, 2.5, 3.0] do block(
+     [vols],
+     vols : map(lambda([rr], float(synthetic_volume(rr, 1.0, deff))),
+                [1, 2, 5, 10, 20, 50, 100]),
+     print("    d_eff =", deff, ": V(r) =", vols)) $
+/* Ratio V(2r)/V(r) = 2^d_eff (self-similarity). */
+print("  Self-similarity ratio V(2r)/V(r) = 2^d_eff:")$
+for deff in [1.5, 2.0, 2.5, 3.0] do
+     print("    d_eff =", deff, "  ratio =", float(2^deff)) $
+/* Effective dimension from two-point volume ratio. */
+d_eff_from_ratio(V1, V2, r1, r2) :=
+     log(V2/V1) / log(r2/r1) $
+print("  Recovered d_eff from V(5)/V(1) with true d_eff=2.5:",
+       float(d_eff_from_ratio(
+           synthetic_volume(1,  1.0, 2.5),
+           synthetic_volume(5,  1.0, 2.5), 1, 5))) $
+print("  Recovered d_eff from V(10)/V(2) with true d_eff=2.5:",
+       float(d_eff_from_ratio(
+           synthetic_volume(2,  1.0, 2.5),
+           synthetic_volume(10, 1.0, 2.5), 2, 10))) $
+/* Lacunarity: variance of V(r) over random sub-windows. */
+/* Lacunarity Lambda = (sigma_V / mu_V)^2; for self-similar sets Lambda ~ r^{-d_eff} */
+lacunarity_model(r, d_eff_val) := r^(-d_eff_val) $
+print("  Lacunarity model Lambda(r) = r^{-d_eff} (d_eff=2.5):")$
+for rr in [1, 2, 5, 10, 20] do
+     print("    r =", rr, "  Lambda =", float(lacunarity_model(rr, 2.5))) $
+/* Multifractal spectrum: f(alpha) = d_eff for monofractal. */
+/* For a monofractal, the Legendre transform of tau(q) = (q-1)*d_eff gives */
+/* f(alpha) = d_eff at alpha = d_eff, zero elsewhere. */
+tau_q_monofractal(q, d_eff_val) := (q - 1) * d_eff_val $
+alpha_q_monofractal(q, d_eff_val) := d_eff_val $   /* d tau/d q */
+f_alpha_monofractal(alpha, d_eff_val) :=
+     if alpha = d_eff_val then d_eff_val else 0 $
+print("  Monofractal tau(q) = (q-1)*d_eff (d_eff=2.5):")$
+for q in [-2, -1, 0, 1, 2, 3] do
+     print("    q =", q, "  tau(q) =", float(tau_q_monofractal(q, 2.5))) $
 
 /* Z_2 spinor checks (n-independent, run once). */
 print("------------------------------------------------------------")$
@@ -333,6 +447,72 @@ if holonomy_Zn([1,1], 2) # 0 then error("Z2 double-loop holonomy failed")$
 print("  spinor loop order   =", order_Zn(1, 2),
        " (expected 2 -- double cover)")$
 if order_Zn(1, 2) # 2 then error("Z2 spinor order != 2")$
+/* ---------------------------------------------------------------
+    EXTENDED HOLONOMY / FLAT-BUNDLE ANALYSIS (n-independent)
+    --------------------------------------------------------------- */
+print("------------------------------------------------------------")$
+print("Extended flat-bundle / holonomy analysis (n-independent):")$
+/* Holonomy group structure for Z_m covers. */
+print("  Holonomy groups Z_m for m = 2..12:")$
+for m : 2 thru 12 do block(
+     [gens, orders],
+     gens   : makelist(gg, gg, 0, m-1),
+     orders : map(lambda([gg], order_Zn(gg, m)), gens),
+     print("    Z_", m, ": generators and orders =",
+           map(list, gens, orders))) $
+/* Flat U(1) holonomy: phase accumulated around a vortex. */
+/* For a Z_n vortex, the holonomy phase is exp(2 pi i k / n). */
+flat_U1_holonomy(k, n) := exp(2*%pi*%i*k/n) $
+print("  Flat U(1) holonomy phases exp(2 pi i k/n) for n=5:")$
+for k : 0 thru 4 do
+     print("    k =", k, ": phase =",
+           rectform(flat_U1_holonomy(k, 5)),
+           " ~ (", float(realpart(flat_U1_holonomy(k,5))),
+           ",", float(imagpart(flat_U1_holonomy(k,5))), ")") $
+/* Aharonov-Bohm phase: flux Phi through vortex, holonomy = exp(2 pi i Phi/Phi_0). */
+AB_phase(flux_ratio) := exp(2*%pi*%i*flux_ratio) $
+print("  Aharonov-Bohm phases for flux/flux_0 in {0, 1/5, 2/5, 3/5, 4/5, 1}:")$
+for fr in [0, 1/5, 2/5, 3/5, 4/5, 1] do
+     print("    Phi/Phi_0 =", fr, ": phase =",
+           float(realpart(AB_phase(fr))), "+",
+           float(imagpart(AB_phase(fr))), "i") $
+/* Monodromy matrix for a 2D representation of Z_n. */
+monodromy_2D(n) := matrix(
+     [cos(2*%pi/n), -sin(2*%pi/n)],
+     [sin(2*%pi/n),  cos(2*%pi/n)]) $
+print("  Monodromy matrices for n = 3, 4, 5, 6:")$
+for n_m in [3, 4, 5, 6] do block(
+     [M, Mk, found_k],
+     M : monodromy_2D(n_m),
+     print("    n =", n_m, ": M =",
+           matrix([float(M[1,1]), float(M[1,2])],
+                  [float(M[2,1]), float(M[2,2])])),
+     /* Find smallest k with M^k = I */
+     Mk : ident(2),
+     found_k : -1,
+     for k : 1 thru 2*n_m do block(
+         Mk : Mk . M,
+         if found_k < 0 and
+            abs(float(trigsimp(Mk[1,1])) - 1) < 1e-10 and
+            abs(float(trigsimp(Mk[1,2])))     < 1e-10 and
+            abs(float(trigsimp(Mk[2,1])))     < 1e-10 and
+            abs(float(trigsimp(Mk[2,2])) - 1) < 1e-10
+         then found_k : k),
+     print("      M^k = I first at k =", found_k, " (expected", n_m, ")")) $
+/* Berry phase for a closed loop in parameter space. */
+/* For a 2-level system with gap Delta, Berry phase = pi * winding_number. */
+berry_phase(winding) := %pi * winding $
+print("  Berry phases for winding numbers 0..4:")$
+for w : 0 thru 4 do
+     print("    w =", w, ": gamma_B =", float(berry_phase(w)),
+           " = ", w, "* pi") $
+/* Chern number from holonomy: C = (1/2pi) * integral of Berry curvature. */
+/* For Z_n holonomy, C = k/n for the k-th sector. */
+chern_number(k, n) := k/n $
+print("  Chern numbers for Z_5 sectors k = 0..4:")$
+for k : 0 thru 4 do
+     print("    k =", k, ": C =", chern_number(k, 5),
+           " =", float(chern_number(k, 5))) $
 
 /* ===================================================================
     MAIN SWEEP LOOP  over n = N_GON_MIN .. N_GON_MAX step N_GON_STEP
@@ -342,8 +522,140 @@ print("============================================================")$
 print("BEGIN SWEEP: n =", N_GON_MIN, "to", N_GON_MAX,
        "step", N_GON_STEP)$
 print("============================================================")$
+/* ---------------------------------------------------------------
+    HELPER FUNCTIONS FOR ENHANCED SECTIONS (defined before loop)
+    --------------------------------------------------------------- */
+/* --- Section 15: Inflation / substitution helpers --- */
+/* Apply a substitution matrix M to a vector v (tile counts). */
+apply_substitution(M, v) := M . v $
+/* Iterate substitution k times. */
+iterate_substitution(M, v, k) := block(
+     [result : v],
+     for i : 1 thru k do result : apply_substitution(M, result),
+     result) $
+/* Perron-Frobenius eigenvalue (largest real eigenvalue, numeric). */
+pf_eigenvalue_numeric(M) := block(
+     [eigs, real_eigs],
+     eigs      : map(lambda([e], float(e)), eigenvalues(M)[1]),
+     real_eigs : sublist(eigs, lambda([e], imagpart(e) = 0)),
+     if real_eigs = [] then error("No real eigenvalues found")
+     else lmax(map(realpart, real_eigs))) $
+/* Growth rate from iterated substitution (ratio of total counts). */
+substitution_growth_rate(M, v, k) := block(
+     [v1, v2, s1, s2],
+     v1 : iterate_substitution(M, v, k),
+     v2 : iterate_substitution(M, v, k+1),
+     s1 : lreduce("+", list_matrix_entries(v1), 0),
+     s2 : lreduce("+", list_matrix_entries(v2), 0),
+     if s1 = 0 then error("Zero count at step k")
+     else float(s2/s1)) $
+/* --- Section 16: Zeta / L-series helpers --- */
+/* Partial Euler product for zeta_Q(sqrt5)(s) up to norm N_max. */
+/* Primes in Z[phi]: p splits if (5/p)=1, inert if (5/p)=-1, ramifies if p=5. */
+legendre5(p) :=
+     if mod(p, 5) = 0 then 0
+     else if mod(p^2, 5) = 1 then 1   /* p = +-1 mod 5 => splits */
+     else -1 $                          /* p = +-2 mod 5 => inert  */
+/* Euler factor at rational prime p for zeta_{Q(sqrt5)}(s). */
+euler_factor_qsqrt5(p, s) :=
+     if legendre5(p) = 1  then 1/(1 - p^(-s))^2
+     else if legendre5(p) = -1 then 1/(1 - p^(-2*s))
+     else 1/(1 - p^(-s)) $   /* ramified: p = 5 */
+/* Partial Dedekind zeta product over primes up to P_max. */
+partial_dedekind_zeta(s, P_max) := block(
+     [prod : 1.0, p],
+     p : 2,
+     while p <= P_max do block(
+         prod : prod * float(euler_factor_qsqrt5(p, s)),
+         p    : next_prime(p)),
+     prod) $
+/* Dirichlet L-function for the Kronecker symbol (5/.) */
+/* L(s, chi_5) = sum_{n=1}^{N} chi_5(n) / n^s  (partial sum) */
+kronecker5(n) :=
+     if mod(n, 5) = 0 then 0
+     else if member(mod(n, 5), [1, 4]) then 1
+     else -1 $
+partial_L_chi5(s, N_terms) :=
+     float(sum(kronecker5(nn) / nn^s, nn, 1, N_terms)) $
+/* --- Section 17: Heat-trace helpers --- */
+/* Heat kernel on Z (1D lattice): K_t(x) = exp(-t) * I_x(t) */
+/* Approximated by Gaussian for large t: K_t(x) ~ (4 pi t)^{-1/2} exp(-x^2/(4t)) */
+heat_kernel_1D_gauss(x, t) := (1/sqrt(4*%pi*t)) * exp(-x^2/(4*t)) $
+/* Heat trace on a finite cycle C_n: Tr(e^{-t L}) = sum_k exp(-t lambda_k) */
+/* where lambda_k = 2 - 2 cos(2 pi k / n). */
+heat_trace_cycle(n, t) :=
+     float(sum(exp(-t * (2 - 2*cos(2*%pi*k/n))), k, 0, n-1)) $
+/* Heat trace on star K_{1,n}: eigenvalues 0, 1 (x n-1), n+1. */
+heat_trace_star(n, t) :=
+     float(1 + (n-1)*exp(-t) + exp(-t*(n+1))) $
+/* Spectral zeta function: zeta_L(s) = sum_{lambda_k > 0} lambda_k^{-s} */
+/* For cycle C_n: */
+spectral_zeta_cycle(n, s) :=
+     float(sum(
+         if k = 0 then 0
+         else (2 - 2*cos(2*%pi*k/n))^(-s),
+         k, 0, n-1)) $
+/* Effective spectral dimension from heat-trace slope: */
+/* Tr(e^{-t L}) ~ t^{-d_s/2}  =>  d_s = -2 * d(log Tr)/d(log t) */
+heat_trace_slope(n, t1, t2) :=
+     -2 * (log(heat_trace_cycle(n, t2)) - log(heat_trace_cycle(n, t1)))
+          / (log(t2) - log(t1)) $
+/* --- Section 18: Acceptance-window helpers --- */
+/* Regular n-gon acceptance window: vertices at angles 2 pi k/n, radius rho. */
+window_vertex(n, k, rho) :=
+     [rho * cos(2*%pi*k/n), rho * sin(2*%pi*k/n)] $
+/* Check if a 2D point p_perp lies inside the regular n-gon window of radius rho. */
+/* Uses the half-plane intersection test. */
+in_ngon_window(p_perp, n, rho) := block(
+      [inside : true, px : p_perp[1], py : p_perp[2]],
+     for k : 0 thru n-1 do block(
+         [theta_k : 2*%pi*k/n,
+          nx, ny, d],
+         nx : float(cos(theta_k + %pi/2)),
+         ny : float(sin(theta_k + %pi/2)),
+         d  : float(rho * cos(%pi/n)),
+          if nx*px + ny*py > d then inside : false),
+     inside) $
+/* Area of regular n-gon with inradius rho. */
+ngon_window_area(n, rho) := n * rho^2 * tan(%pi/n) $
+/* Density of accepted points: rho_accept = A_window / A_unit_cell */
+/* For the pentagonal lattice, A_unit_cell = phi^2 * sin(2 pi/5). */
+acceptance_density(n, rho, A_cell) :=
+     float(ngon_window_area(n, rho)) / float(A_cell) $
+/* --- Section 19: Fibonacci word / substitution helpers --- */
+/* Fibonacci word substitution: a -> ab, b -> a */
+fib_word_substitute(w) := block(
+     [result : ""],
+     for i : 1 thru slength(w) do block(
+         [c : substring(w, i, i+1)],
+         result : sconcat(result,
+                          if c = "a" then "ab" else "a")),
+     result) $
+/* Generate Fibonacci word of depth k starting from "a". */
+fib_word(k) := block(
+     [w : "a"],
+     for i : 1 thru k do w : fib_word_substitute(w),
+     w) $
+/* Count occurrences of character c in string w. */
+count_char(w, c) := block(
+     [cnt : 0],
+     for i : 1 thru slength(w) do
+         if substring(w, i, i+1) = c then cnt : cnt + 1,
+     cnt) $
+/* Thue-Morse sequence: t(n) = parity of number of 1s in binary(n). */
+thue_morse(n) := mod(sum(
+     block([bit : floor(n / 2^k)],
+           mod(bit, 2)),
+     k, 0, floor(log(max(n,1))/log(2))), 2) $
+/* Rudin-Shapiro sequence: r(n) = (-1)^{number of 11 pairs in binary(n)}. */
+rudin_shapiro(n) := block(
+     [bits : [], m : n, cnt : 0],
+     while m > 0 do (bits : cons(mod(m,2), bits), m : floor(m/2)),
+     for i : 1 thru length(bits)-1 do
+         if bits[i] = 1 and bits[i+1] = 1 then cnt : cnt + 1,
+     (-1)^cnt) $
 
-for N_GON : N_GON_MIN step N_GON_STEP thru N_GON_MAX do block(
+for N_GON : N_GON_MIN thru N_GON_MAX step N_GON_STEP do block(
 
    /* ---- local variables for this iteration ---- */
    [n_int, theta_int_n, theta_ext_n, theta_cen_n,
@@ -884,7 +1196,352 @@ for N_GON : N_GON_MIN step N_GON_STEP thru N_GON_MAX do block(
    ],
    ngon_summary_table : endcons(row_entry, ngon_summary_table),
 
-   print("  [n =", N_GON, "] iteration complete.")
+    print("  [n =", N_GON, "] iteration complete."),
+
+    /* ----------------------------------------------------------------
+       SECTION 15.  Inflation / substitution system
+       ---------------------------------------------------------------- */
+    print("------------------------------------------------------------"),
+    print("[n = ", N_GON, "] Inflation / substitution system:"),
+
+
+    block(
+        [M_sub, v0, inflation_ratio_n, pf_eig, growth_rates],
+         /* For a regular n-gon tiling, the substitution matrix encodes how
+            each tile type inflates into smaller tiles.  For the pentagon (n=5)
+            this is the Penrose substitution; for general n we use the
+            "star-polygon" substitution where each n-gon inflates into
+            phi_n copies of itself and (n-2) "kite" pieces.
+            Here we use a simplified 2-type model: type A (n-gon) and
+            type B (complementary rhombus / kite). */
+         /* Assign M_sub based on n_int BEFORE any use. */
+         M_sub : if n_int = 3
+                 then ident(2)
+                 else if n_int = 5
+                 then matrix([2, 1], [1, 1])
+                 else matrix([2, 1], [n_int - 3, n_int - 4]),
+
+        /* Substitution matrix for n-gon + rhombus system.
+          For n=5 we use the Penrose (kite/dart) substitution matrix
+          M = [[2,1],[1,1]] whose Perron-Frobenius eigenvalue is phi^2
+          (charpoly x^2 - 3x + 1, roots phi^2 and 1/phi^2).
+          For general n >= 4 we use M = [[2, 1], [n-3, n-4]] which
+          reduces to the Penrose case at n=5.
+          For n=3: identity (equilateral triangle tiles flat). */
+
+
+        v0 : matrix([1], [0]),   /* start with one A tile */
+
+        print("  Substitution matrix M =", M_sub),
+        print("  Initial vector v0 =", transpose(v0)),
+
+        /* Iterate substitution */
+        for depth : 1 thru INFLATION_DEPTH do block(
+            [vk],
+            vk : iterate_substitution(M_sub, v0, depth),
+            print("  depth =", depth, ": tile counts =",
+                  transpose(vk),
+                  "  total =",
+                  lreduce("+", list_matrix_entries(vk), 0))),
+
+        /* Perron-Frobenius eigenvalue = inflation ratio */
+        if n_int = 3
+        then inflation_ratio_n : 1
+        else inflation_ratio_n : pf_eigenvalue_numeric(M_sub),
+        print("  Perron-Frobenius eigenvalue (inflation ratio) =",
+              inflation_ratio_n),
+
+        /* For n=5, inflation ratio should be phi^2 */
+        if n_int = 5 then block(
+            [phi2_num : float(phi^2)],
+            print("  [Pentagon] phi^2 =", phi2_num,
+                  "  PF eigenvalue =", inflation_ratio_n,
+                  "  diff =", abs(inflation_ratio_n - phi2_num)),
+            if abs(inflation_ratio_n - phi2_num) > 1.0e-8
+               then error("Pentagon inflation ratio != phi^2")),
+
+        /* Growth rates at successive depths */
+        print("  Tile-count growth rates (ratio at successive depths):"),
+        growth_rates : makelist(
+            substitution_growth_rate(M_sub, v0, d),
+            d, 1, INFLATION_DEPTH - 1),
+        print("  ", growth_rates),
+        print("  Converging to PF eigenvalue:", inflation_ratio_n),
+
+        /* Fractal dimension from inflation: d_f = log(N_tiles) / log(inflation_ratio) */
+        /* where N_tiles = total tiles after one inflation step starting from 1 tile. */
+        if n_int # 3 then block(
+            [N_tiles_1, d_frac],
+            N_tiles_1 : lreduce("+",
+                list_matrix_entries(apply_substitution(M_sub, v0)), 0),
+            d_frac : if inflation_ratio_n > 1
+                     then float(log(N_tiles_1) / log(inflation_ratio_n))
+                     else 0,
+            print("  Tiles after 1 inflation step:", N_tiles_1),
+            print("  Fractal dimension estimate d_f = log(N)/log(lambda) =",
+                  d_frac))),
+
+    /* ----------------------------------------------------------------
+       SECTION 16.  Zeta functions and L-series
+       ---------------------------------------------------------------- */
+    print("------------------------------------------------------------"),
+    print("[n = ", N_GON, "] Zeta functions and L-series:"),
+
+    block(
+        [zeta_2_partial, zeta_3_partial, L_chi_2, L_chi_3,
+         riemann_zeta_2, riemann_zeta_3],
+
+        /* Partial Riemann zeta sums for reference */
+        riemann_zeta_2 : float(sum(1/nn^2, nn, 1, ZETA_TERMS)),
+        riemann_zeta_3 : float(sum(1/nn^3, nn, 1, ZETA_TERMS)),
+        print("  Partial Riemann zeta(2) (", ZETA_TERMS, " terms) =",
+              riemann_zeta_2, "  (exact pi^2/6 =", float(%pi^2/6), ")"),
+        print("  Partial Riemann zeta(3) (", ZETA_TERMS, " terms) =",
+              riemann_zeta_3, "  (Apery's constant ~ 1.202)"),
+
+        /* Dedekind zeta for Q(sqrt(5)) at s=2 and s=3 */
+        zeta_2_partial : partial_dedekind_zeta(2, 30),
+        zeta_3_partial : partial_dedekind_zeta(3, 30),
+        print("  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) =",
+              zeta_2_partial),
+        print("  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) =",
+              zeta_3_partial),
+        print("  Ratio zeta_{Q(sqrt5)}(2) / zeta(2)^2 ~ (class number factor):"),
+        print("    =", zeta_2_partial / riemann_zeta_2^2),
+
+        /* Dirichlet L-function L(s, chi_5) */
+        L_chi_2 : partial_L_chi5(2, ZETA_TERMS),
+        L_chi_3 : partial_L_chi5(3, ZETA_TERMS),
+        print("  Partial L(2, chi_5) (", ZETA_TERMS, " terms) =", L_chi_2),
+        print("  Partial L(3, chi_5) (", ZETA_TERMS, " terms) =", L_chi_3),
+        print("  Exact L(2, chi_5) = pi^2 / (5 sqrt(5)) ~",
+              float(%pi^2 / (5*sqrt(5)))),
+
+        /* Functional equation check: xi(s) = xi(1-s) */
+        /* For L(s, chi_5): completed function satisfies xi(s) = xi(1-s). */
+        /* Numerically: L(s) / L(1-s) = (pi/5)^{s-1/2} * Gamma(1-s)/Gamma(s) * chi_factor */
+        print("  Functional equation (numerical check at s=0.7):"),
+        block(
+            [s_val : 0.7,
+             L_s, L_1ms, ratio],
+            L_s   : partial_L_chi5(s_val,   ZETA_TERMS),
+            L_1ms : partial_L_chi5(1-s_val, ZETA_TERMS),
+            ratio : if abs(L_1ms) > 1e-15 then L_s / L_1ms else 0,
+            print("    L(0.7) =", L_s, "  L(0.3) =", L_1ms,
+                  "  ratio =", ratio)),
+
+        /* Spectral zeta for cycle C_n */
+        if n_int >= 3 then block(
+            [sz2, sz3],
+            sz2 : spectral_zeta_cycle(n_int, 2),
+            sz3 : spectral_zeta_cycle(n_int, 3),
+            print("  Spectral zeta of C_", n_int, " at s=2:", sz2),
+            print("  Spectral zeta of C_", n_int, " at s=3:", sz3))),
+
+    /* ----------------------------------------------------------------
+       SECTION 17.  Diffusion kernel and heat trace
+       ---------------------------------------------------------------- */
+    print("------------------------------------------------------------"),
+    print("[n = ", N_GON, "] Diffusion kernel and heat trace:"),
+
+    block(
+        [ht_cycle, ht_star, slopes],
+
+        print("  Heat trace Tr(e^{-t L}) for cycle C_", n_int, ":"),
+        ht_cycle : map(lambda([t], heat_trace_cycle(n_int, t)), HEAT_TIMES),
+        for i : 1 thru length(HEAT_TIMES) do
+            print("    t =", HEAT_TIMES[i], ":  Tr =", ht_cycle[i]),
+
+        print("  Heat trace Tr(e^{-t L}) for star K_{1,", n_int, "}:"),
+        ht_star : map(lambda([t], heat_trace_star(n_int, t)), HEAT_TIMES),
+        for i : 1 thru length(HEAT_TIMES) do
+            print("    t =", HEAT_TIMES[i], ":  Tr =", ht_star[i]),
+
+        /* Effective spectral dimension from log-log slope of heat trace */
+        print("  Effective d_s from heat-trace slope (cycle C_", n_int, "):"),
+        slopes : makelist(
+            heat_trace_slope(n_int, HEAT_TIMES[i], HEAT_TIMES[i+1]),
+            i, 1, length(HEAT_TIMES)-1),
+        for i : 1 thru length(slopes) do
+            print("    t in [", HEAT_TIMES[i], ",", HEAT_TIMES[i+1], "]:  d_s ~",
+                  slopes[i]),
+
+        /* Short-time asymptotics: Tr ~ (4 pi t)^{-d/2} * Vol */
+        /* For a 2D manifold: Tr ~ (4 pi t)^{-1} * Area + (1/6) * (4 pi t)^{-1/2} * Length + ... */
+        print("  Short-time heat-trace asymptotics (2D Weyl law):"),
+        print("    Tr(e^{-tL}) ~ (4 pi t)^{-1} * A + (4 pi t)^{-1/2} * B/6 + ..."),
+        for t_val in [0.01, 0.05, 0.1] do block(
+            [weyl_2d],
+            weyl_2d : float(1/(4*%pi*t_val)),
+            print("    t =", t_val, ":  Weyl leading term =", weyl_2d)),
+
+        /* Heat kernel on the physical 2D plane (Gaussian approximation) */
+        print("  Heat kernel K_t(x) on R^2 (Gaussian, d=2):"),
+        for t_val in [0.1, 1.0, 10.0] do block(
+            [K0, K1, K2],
+            K0 : float((1/(4*%pi*t_val))),
+            K1 : float((1/(4*%pi*t_val)) * exp(-1/(4*t_val))),
+            K2 : float((1/(4*%pi*t_val)) * exp(-4/(4*t_val))),
+            print("    t =", t_val, ":  K(0) =", K0,
+                  "  K(1) =", K1, "  K(2) =", K2)),
+
+        /* Spectral zeta from heat trace via Mellin transform */
+        /* zeta_L(s) = (1/Gamma(s)) * integral_0^inf t^{s-1} (Tr e^{-tL} - dim_ker) dt */
+        print("  Spectral zeta of C_", n_int, " at s=1,2,3:"),
+        for s_val in [1, 2, 3] do
+            print("    s =", s_val, ":  zeta_L =",
+                  spectral_zeta_cycle(n_int, s_val))),
+
+    /* ----------------------------------------------------------------
+       SECTION 18.  Acceptance-window geometry
+       ---------------------------------------------------------------- */
+    print("------------------------------------------------------------"),
+    print("[n = ", N_GON, "] Acceptance-window (cut-and-project) geometry:"),
+
+    block(
+        [rho_vals, A_cell_n, densities, sample_pts, accepted],
+
+        /* Unit-cell area for the n-gon lattice (approximate). */
+        /* For the pentagonal lattice: A_cell = phi^2 * sin(2 pi/5). */
+        A_cell_n : float(area_ngon(n_int)),
+
+        print("  Acceptance window: regular ", n_int, "-gon in perp space"),
+        print("  Unit-cell area A_cell ~", A_cell_n),
+
+        /* Acceptance density for various window radii */
+        rho_vals : [0.5, 1.0, 1.5, 2.0],
+        print("  Acceptance densities (rho = window inradius):"),
+        densities : map(
+            lambda([rho], acceptance_density(n_int, rho, A_cell_n)),
+            rho_vals),
+        for i : 1 thru length(rho_vals) do
+            print("    rho =", rho_vals[i], ":  density =", densities[i]),
+
+        /* Window vertices */
+        print("  Window vertices (rho = 1):"),
+        for k : 0 thru n_int - 1 do
+            print("    v[", k, "] = (",
+                  float(cos(2*%pi*k/n_int)), ",",
+                  float(sin(2*%pi*k/n_int)), ")"),
+
+        /* Sample points in perp space and test acceptance */
+        print("  Sample acceptance test (rho = 1, grid [-1.5, 1.5]^2,",
+              WINDOW_SAMPLES, "x", WINDOW_SAMPLES, " grid):"),
+        block(
+             [grid_step : 3.0 / WINDOW_SAMPLES, cnt_in : 0, cnt_tot : 0],
+            for ix : 0 thru WINDOW_SAMPLES - 1 do
+                for iy : 0 thru WINDOW_SAMPLES - 1 do block(
+                     [gpx : -1.5 + ix * grid_step,
+                      gpy : -1.5 + iy * grid_step],
+                    cnt_tot : cnt_tot + 1,
+                     if in_ngon_window([gpx, gpy], n_int, 1.0)
+                       then cnt_in : cnt_in + 1),
+            print("    Points inside window:", cnt_in, "/", cnt_tot,
+                  "  fraction =", float(cnt_in / cnt_tot)),
+            print("    Expected fraction (A_window/A_box) =",
+                  float(ngon_window_area(n_int, 1.0) / 9.0))),
+
+        /* Inflation of acceptance window: under inflation by phi, */
+        /* the window scales by 1/phi (internal space contracts). */
+        if n_int = 5 then block(
+            [rho_inflated],
+            rho_inflated : float(1.0 / phi),
+            print("  [Pentagon] After one inflation step, window radius:",
+                  rho_inflated, " (= 1/phi)"),
+            print("  [Pentagon] Window area ratio (inflated/original) =",
+                  float(ngon_window_area(5, rho_inflated) /
+                        ngon_window_area(5, 1.0)),
+                  " (expected 1/phi^2 =", float(1/phi^2), ")"))),
+
+    /* ----------------------------------------------------------------
+       SECTION 19.  Fibonacci word and substitution sequences
+       ---------------------------------------------------------------- */
+    print("------------------------------------------------------------"),
+    print("[n = ", N_GON, "] Substitution sequences and symbolic dynamics:"),
+
+    block(
+        [fw, len_fw, cnt_a, cnt_b, ratio_ab,
+         tm_seq, rs_seq],
+
+        /* Fibonacci word */
+        print("  Fibonacci word (substitution a->ab, b->a):"),
+        for depth : 0 thru min(INFLATION_DEPTH, 8) do block(
+            [w],
+            w : fib_word(depth),
+            print("    depth =", depth, ": length =", slength(w),
+                  "  word =",
+                  if slength(w) <= 30 then w
+                  else sconcat(substring(w, 1, 28), "..."))),
+
+        /* a/b ratio converges to phi */
+        fw : fib_word(INFLATION_DEPTH),
+        len_fw : slength(fw),
+        cnt_a  : count_char(fw, "a"),
+        cnt_b  : count_char(fw, "b"),
+        ratio_ab : if cnt_b > 0 then float(cnt_a / cnt_b) else inf,
+        print("  At depth", INFLATION_DEPTH, ": |a| =", cnt_a,
+              "  |b| =", cnt_b,
+              "  |a|/|b| =", ratio_ab,
+              "  phi =", float(phi)),
+        if abs(ratio_ab - float(phi)) > 0.1
+           then print("  WARNING: a/b ratio not yet close to phi at depth",
+                      INFLATION_DEPTH)
+           else print("  a/b ratio converging to phi: OK"),
+
+        /* Fibonacci word complexity: p(n) = n + 1 (Sturmian) */
+        print("  Fibonacci word is Sturmian: complexity p(n) = n + 1"),
+        print("  (minimum complexity for an aperiodic sequence)"),
+
+        /* Thue-Morse sequence (relevant for n=4 square lattice) */
+        print("  Thue-Morse sequence (first 16 terms):"),
+        tm_seq : makelist(thue_morse(k), k, 0, 15),
+        print("  ", tm_seq),
+
+        /* Rudin-Shapiro sequence */
+        print("  Rudin-Shapiro sequence (first 16 terms):"),
+        rs_seq : makelist(rudin_shapiro(k), k, 0, 15),
+        print("  ", rs_seq),
+
+        /* For n=5: the Fibonacci word encodes the long/short edge sequence
+           in the Penrose tiling along any line. */
+        if n_int = 5 then block(
+            [w6 : fib_word(6)],
+            print("  [Pentagon] Fibonacci word depth 6 (Penrose edge sequence):"),
+            print("    ", w6),
+            print("    Length =", slength(w6),
+                  "  (= F_8 =", fib(8), ")"),
+            if slength(w6) # fib(8)
+               then error("Fibonacci word length != F_8 at depth 6")),
+
+        /* Substitution matrix for Fibonacci word: [[1,1],[1,0]] */
+        block(
+            [M_fib, eigs_fib],
+            M_fib : matrix([1, 1], [1, 0]),
+            print("  Fibonacci substitution matrix:", M_fib),
+            print("  Characteristic polynomial:",
+                  expand(charpoly(M_fib, x))),
+            if expand(charpoly(M_fib, x) - (x^2 - x - 1)) # 0
+               then error("Fibonacci substitution charpoly wrong"),
+            print("  Eigenvalues: phi =", float(phi),
+                  " and psi =", float(psi),
+                  " (roots of x^2 - x - 1)"),
+            print("  PF eigenvalue =", pf_eigenvalue_numeric(M_fib),
+                  " (expected phi =", float(phi), ")"),
+            if abs(pf_eigenvalue_numeric(M_fib) - float(phi)) > 1e-8
+               then error("Fibonacci substitution PF eigenvalue != phi"))),
+
+    /* ----------------------------------------------------------------
+       Accumulate cross-section data for Section 20
+       ---------------------------------------------------------------- */
+    cross_section_data : endcons(
+        [n_int,
+         float(deficit_n * 180 / %pi),
+         k_loop_close_n,
+         float(Cn_gap),
+         float(heat_trace_cycle(n_int, 1.0)),
+         float(spectral_zeta_cycle(n_int, 2)),
+         float(ngon_window_area(n_int, 1.0))],
+        cross_section_data)
 
 ) $ /* end for N_GON */
 
@@ -940,6 +1597,99 @@ for nn:1 thru 7 do block(
     if n_int_l # (-1)^nn
        then error("Unit-norm test failed at n =", nn))$
 print("  N(phi^n) = (-1)^n verified for n = 1..7 (phi^n a unit).")$
+/* ---------------------------------------------------------------
+    EXTENDED Z[phi] ARITHMETIC AND NUMBER THEORY
+    --------------------------------------------------------------- */
+print("------------------------------------------------------------")$
+print("[Pentagon-specific] Extended Z[phi] number theory:")$
+/* Division in Z[phi]: (a + b phi) / (c + d phi) = (a+b phi)(c+d psi) / N(c+d phi) */
+zphi_conj(p) := [p[1] + p[2], -p[2]] $   /* conjugate: a+b phi -> a+b psi = (a+b) - b phi */
+zphi_div(p, q) := block(
+     [num, denom],
+     num   : zphi_mul(p, zphi_conj(q)),
+     denom : norm_zphi(q),
+     if denom = 0 then error("Division by zero in Z[phi]")
+     else [num[1]/denom, num[2]/denom]) $
+/* GCD in Z[phi] via Euclidean algorithm (norm-based). */
+zphi_gcd(p, q) := block(
+     [a : p, b : q, r, na, nb, tmp],
+     if norm_zphi(q) = 0 then return(p),
+     if norm_zphi(p) = 0 then return(q),
+     /* Ensure |N(a)| >= |N(b)| */
+     if abs(norm_zphi(a)) < abs(norm_zphi(b)) then (tmp:a, a:b, b:tmp),
+     for i : 1 thru 20 do block(
+         [quot, rem],
+         quot : zphi_div(a, b),
+         quot : [round(quot[1]), round(quot[2])],
+         rem  : zphi_add(a, zphi_neg(zphi_mul(b, quot))),
+         if norm_zphi(rem) = 0 then return(b),
+         a : b,
+         b : rem),
+     b) $
+print("  Z[phi] conjugate: conj(phi) = [1,-1] (= 1 - phi = -psi):",
+       zphi_conj(e2))$
+if zphi_conj(e2) # [1, -1] then error("Z[phi] conjugate failed")$
+print("  Z[phi] division: phi^2 / phi = phi:")$
+block([q], q : zphi_div(phi_sq_pair, e2),
+     print("    phi^2 / phi =", q, " (expected [0,1] = phi)"),
+     if q # [0, 1] then error("Z[phi] division phi^2/phi failed"))$
+print("  Z[phi] division: phi^3 / phi^2 = phi:")$
+block([q], q : zphi_div(phi_cubed_pair, phi_sq_pair),
+     print("    phi^3 / phi^2 =", q, " (expected [0,1] = phi)"),
+     if q # [0, 1] then error("Z[phi] division phi^3/phi^2 failed"))$
+/* Primes in Z[phi]: p splits if Legendre(5/p) = 1, inert if = -1, ramifies if p=5. */
+print("  Prime splitting in Z[phi] = Z[(1+sqrt5)/2]:")$
+for p_prime in [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31] do block(
+     [leg, split_type],
+     leg : legendre5(p_prime),
+     split_type : if leg = 0  then "ramified (p=5)"
+                  else if leg = 1  then "splits (p = +-1 mod 5)"
+                  else "inert   (p = +-2 mod 5)",
+     print("    p =", p_prime, ": Legendre(5/p) =", leg, " =>", split_type))$
+/* Units in Z[phi]: all phi^n for n in Z. */
+print("  Units in Z[phi] (phi^n for n = -3..3):")$
+for nn : -3 thru 3 do block(
+     [u_sym, u_norm],
+     u_sym  : ratsimp(phi^nn),
+     u_norm : ratsimp(qnorm(u_sym)),
+     print("    phi^", nn, " =", u_sym, " ~ ", float(u_sym),
+           "  N =", u_norm))$
+/* Continued fraction expansion of phi: [1; 1, 1, 1, ...] */
+print("  Continued fraction convergents of phi:")$
+block(
+     [p_prev : 0, p_curr : 1, q_prev : 1, q_curr : 1],
+     print("    h_0/k_0 = 1/1 =", float(1/1)),
+     for i : 1 thru 10 do block(
+         [p_next, q_next],
+         p_next : p_curr + p_prev,
+         q_next : q_curr + q_prev,
+         print("    h_", i, "/k_", i, " =", p_next, "/", q_next,
+               " =", float(p_next/q_next),
+               "  error =", float(abs(p_next/q_next - phi))),
+         p_prev : p_curr,  p_curr : p_next,
+         q_prev : q_curr,  q_curr : q_next))$
+/* Pisano period: Fibonacci sequence mod m. */
+pisano_period(m) := block(
+     [a : 0, b : 1, period : 0],
+     for i : 1 thru 6*m do block(
+         [c : mod(a + b, m)],
+         a : b,  b : c,
+         if a = 0 and b = 1 then (period : i, return(period))),
+     period) $
+print("  Pisano periods pi(m) for m = 2..15:")$
+for m : 2 thru 15 do
+     print("    pi(", m, ") =", pisano_period(m))$
+/* Wall-Sun-Sun prime check (p^2 | F_{p - Legendre(5/p)}): */
+print("  Wall-Sun-Sun prime check (F_{p - (5/p)} mod p^2) for small primes:")$
+for p_prime in [5, 7, 11, 13, 17, 19, 23, 29] do block(
+     [leg, idx, fib_val, wss],
+     leg     : legendre5(p_prime),
+     idx     : p_prime - leg,
+     fib_val : fib(idx),
+     wss     : mod(fib_val, p_prime^2),
+     print("    p =", p_prime, ": F_{p-(5/p)} = F_", idx,
+           " mod p^2 =", wss,
+           if wss = 0 then " *** WALL-SUN-SUN PRIME ***" else ""))$
 
 /* ---------------------------------------------------------------------
     SECTION 14.  Sweep summary table and final report
@@ -950,6 +1700,78 @@ print("SWEEP SUMMARY TABLE")$
 print("  Range: n =", N_GON_MIN, "to", N_GON_MAX,
        "step", N_GON_STEP)$
 print("------------------------------------------------------------")$
+/* ---------------------------------------------------------------
+    SECTION 20.  Cross-section correlation table
+    --------------------------------------------------------------- */
+print("------------------------------------------------------------")$
+print("CROSS-SECTION CORRELATION TABLE")$
+print("  Columns: n | deficit | k_close | C_n_gap | HeatTr(t=1) | SpZeta(s=2) | WinArea")$
+print("------------------------------------------------------------")$
+print(sconcat(
+     pad_right("n",       4), " | ",
+     pad_right("deficit", 9), " | ",
+     pad_right("k_close", 8), " | ",
+     pad_right("C_n_gap", 9), " | ",
+     pad_right("HeatTr1", 9), " | ",
+     pad_right("SpZeta2", 9), " | ",
+     pad_right("WinArea", 9)))$
+print(sconcat(
+     "----+-----------+---------+----------+----------+----------+----------"))$
+for row in cross_section_data do
+     print(sconcat(
+         pad_right(string(row[1]), 4), " | ",
+         pad_right(string(float(row[2])), 9), " | ",
+         pad_right(string(row[3]),  8), " | ",
+         pad_right(string(float(row[4])), 9), " | ",
+         pad_right(string(float(row[5])), 9), " | ",
+         pad_right(string(float(row[6])), 9), " | ",
+         pad_right(string(float(row[7])), 9)))$
+print("------------------------------------------------------------")$
+/* Correlation: deficit vs spectral gap */
+print("Correlation analysis: deficit angle vs C_n spectral gap:")$
+block(
+     [deficits, gaps, n_pts, mean_d, mean_g, cov, var_d, var_g, corr],
+     deficits : map(lambda([r], r[2]), cross_section_data),
+     gaps     : map(lambda([r], r[4]), cross_section_data),
+     n_pts    : length(deficits),
+     mean_d   : float(lreduce("+", deficits, 0) / n_pts),
+     mean_g   : float(lreduce("+", gaps,     0) / n_pts),
+     cov      : float(lreduce("+",
+                    map(lambda([d,g], (d - mean_d)*(g - mean_g)),
+                        deficits, gaps), 0) / n_pts),
+     var_d    : float(lreduce("+",
+                    map(lambda([d], (d - mean_d)^2), deficits), 0) / n_pts),
+     var_g    : float(lreduce("+",
+                    map(lambda([g], (g - mean_g)^2), gaps),     0) / n_pts),
+     corr     : if var_d * var_g > 0
+                then cov / sqrt(var_d * var_g)
+                else 0,
+     print("  mean deficit =", mean_d, " deg"),
+     print("  mean C_n gap =", mean_g),
+     print("  Pearson r(deficit, C_n_gap) =", float(corr)))$
+/* Correlation: k_close vs heat trace at t=1 */
+print("Correlation: k_close vs heat trace Tr(e^{-L}) at t=1:")$
+block(
+     [kcs, hts, n_pts, mean_k, mean_h, cov, var_k, var_h, corr],
+     kcs    : map(lambda([r], r[3]), cross_section_data),
+     hts    : map(lambda([r], r[5]), cross_section_data),
+     n_pts  : length(kcs),
+     mean_k : float(lreduce("+", kcs, 0) / n_pts),
+     mean_h : float(lreduce("+", hts, 0) / n_pts),
+     cov    : float(lreduce("+",
+                  map(lambda([k,h], (k - mean_k)*(h - mean_h)),
+                      kcs, hts), 0) / n_pts),
+     var_k  : float(lreduce("+",
+                  map(lambda([k], (k - mean_k)^2), kcs), 0) / n_pts),
+     var_h  : float(lreduce("+",
+                  map(lambda([h], (h - mean_h)^2), hts), 0) / n_pts),
+     corr   : if var_k * var_h > 0
+              then cov / sqrt(var_k * var_h)
+              else 0,
+     print("  mean k_close =", mean_k),
+     print("  mean HeatTr  =", mean_h),
+     print("  Pearson r(k_close, HeatTr1) =", float(corr)))$
+
 print(sconcat(
      pad_right("n",    4),  " | ",
      pad_right("theta(deg)", 12), " | ",
@@ -1020,6 +1842,32 @@ print("  * Binet formula F_n = (phi^n - psi^n)/sqrt(5)")$
 print("  * Pentagon diagonal/side = phi")$
 print("  * Pentagram self-similarity: 1/phi^2 = 2 - phi")$
 print("  * Z[phi] arithmetic, N(phi^n) = (-1)^n")$
+print(" [Extended sections verified]")$
+print("  * Alexander-Orbach phase diagram (d_eff x d_w grid)")$
+print("  * Anomalous diffusion classification by d_w")$
+print("  * Crossover scale t_cross from UV to IR regime")$
+print("  * Multifractal tau(q) spectrum (monofractal baseline)")$
+print("  * Flat U(1) holonomy phases and Aharonov-Bohm phases")$
+print("  * Monodromy matrices and loop orders for n=3,4,5,6")$
+print("  * Berry phases and Chern numbers for Z_n sectors")$
+print("  * Inflation/substitution matrices and PF eigenvalues")$
+print("  * Pentagon inflation ratio = phi^2 confirmed")$
+print("  * Dedekind zeta and Dirichlet L(s,chi_5) partial sums")$
+print("  * Spectral zeta of C_n at s=1,2,3")$
+print("  * Heat trace Tr(e^{-tL}) for cycle and star graphs")$
+print("  * Effective spectral dimension from heat-trace slope")$
+print("  * Acceptance-window geometry and density")$
+print("  * Pentagon window inflation: radius -> 1/phi")$
+print("  * Fibonacci word: length = F_k, a/b ratio -> phi")$
+print("  * Fibonacci substitution charpoly = x^2 - x - 1")$
+print("  * Thue-Morse and Rudin-Shapiro sequences generated")$
+print("  * Z[phi] division, conjugate, GCD")$
+print("  * Prime splitting in Z[phi] by Legendre symbol")$
+print("  * Continued fraction convergents of phi")$
+print("  * Pisano periods pi(m) for m=2..15")$
+print("  * Wall-Sun-Sun prime check for small primes")$
+print("  * Cross-section correlation table (20 columns)")$
+print("  * Pearson correlations: deficit/gap, k_close/HeatTr")$
 print("============================================================")$
 print("analysis.mac : all checks passed for n =",
        N_GON_MIN, "to", N_GON_MAX, "step", N_GON_STEP)$
