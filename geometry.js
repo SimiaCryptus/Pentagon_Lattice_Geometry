@@ -63,25 +63,30 @@ export function rotate(p, cos, sin) {
 
 // Vertex k (0..4) of pentagon at centroid `c` with orientation index `o`
 // in 0..4 meaning rotated by o*72 deg from the canonical orientation.
-// Canonical orientation: vertex 0 points "up" (+y).
-export function pentVertex(centroid, orient, k) {
-  // start with v0 = (0, R)
-  let v = V(ZERO, R_CIRCUM);
+// Canonical orientation: vertex 0 points "up" (+y) when sigma=0, and
+// "down" (-y) when sigma=1. Sigma encodes the reflection bit needed
+// for edge-to-edge tiling of regular pentagons: any two pentagons
+// sharing an edge must be reflections of each other (since C_5 alone
+// can't tile the plane edge-to-edge). Without this flip, neighbors
+// would visually look "the same orientation" instead of inverted.
+export function pentVertex(centroid, orient, k, sigma = 0) {
+   // start with v0 = (0, R) for sigma=0, or (0, -R) for sigma=1.
+   let v = (sigma & 1) ? V(ZERO, neg(R_CIRCUM)) : V(ZERO, R_CIRCUM);
   const steps = (orient + k) % 5;
   for (let i = 0; i < steps; i++) v = rotate(v, COS72, SIN72);
   return vAdd(centroid, v);
 }
 
-export function pentVertices(centroid, orient) {
+export function pentVertices(centroid, orient, sigma = 0) {
   const out = [];
-  for (let k = 0; k < 5; k++) out.push(pentVertex(centroid, orient, k));
+   for (let k = 0; k < 5; k++) out.push(pentVertex(centroid, orient, k, sigma));
   return out;
 }
 
 // Edge k connects vertex k and vertex k+1.
-export function pentEdge(centroid, orient, k) {
-  return [pentVertex(centroid, orient, k),
-          pentVertex(centroid, orient, (k + 1) % 5)];
+export function pentEdge(centroid, orient, k, sigma = 0) {
+   return [pentVertex(centroid, orient, k, sigma),
+           pentVertex(centroid, orient, (k + 1) % 5, sigma)];
 }
 
 // ----- Edge-mate computation -----
@@ -96,41 +101,48 @@ export function pentEdge(centroid, orient, k) {
 // 180 deg relative to P about the edge normal, which is equivalent to
 // o' = o + (something) mod 5 *together with a flip*.
 //
-// For an edge-to-edge match of two regular pentagons the neighbor
-// orientation satisfies o' = o + (2k + 3) mod 5  -- derived below.
-// And its centroid is c' = c + 2*(m_k - c) -- twice the vector from
-// centroid to edge midpoint (since the edge midpoint is at the apothem
-// distance r, and the neighbor centroid lies at distance r on the
-// opposite side).
+// For an edge-to-edge match of two regular pentagons:
+//   - the neighbor's sigma flips (necessary reflection)
+//   - the neighbor's orient shifts by a CONSTANT 3 (mod 5), not by a
+//     k-dependent amount. The constant choice is what makes "press the
+//     same edge key repeatedly" walk in a roughly straight line — each
+//     step then rotates the walking direction by only +36 deg (the
+//     smallest possible offset with 5-fold symmetry).
+//   - the centroid is c' = c + 2*(m_k - c).
 //
-// Why orientation shift = 2k + 3 (mod 5):
-//   Edge k of P has outward normal rotated (k + 1/2) * 72 deg from the
-//   canonical "up" axis of P. The neighbor's corresponding inward
-//   normal must point oppositely, so its canonical-up axis must rotate
-//   by 180 deg minus that. Working modulo 360 = 5*72 we get an offset
-//   of (2k + 3) mod 5 turns of 72 deg. We verify numerically below.
+// Derivation: edge k of (c, o, s) has midpoint at world angle
+//   phi_k = 126 + 180*s + 72*(o + k) deg from c.
+// The neighbor (c', o', s') has edge k' midpoint at angle
+//   psi_k' = 126 + 180*s' + 72*(o' + k').
+// Shared edge requires psi_k' = phi_k + 180, giving
+//   180*(s'-s) + 72*(o'+k'-o-k) = 180 (mod 360).
+// Set s' = s+1 (mod 2); then o' + k' = o + k (mod 5).
+// To make pressing the same k continue in the same world direction,
+// we want psi_k - phi_k ~= 0, i.e. 180 + 72*(o'-o) ~= 0 (mod 360).
+// The closest 72-deg multiple to -180 is -216 (= +144), giving
+// o' = o + 2 (mod 5), or +3, both with |offset| = 36 deg. We pick +3.
+// Then matchEdge = (k + 2) mod 5.
 //
-// We also need to know which edge of the *neighbor* matches our edge
-// k. By symmetry this is edge k' = (2k + 3 + something) mod 5; we
-// determine it constructively from the shared vertices.
+// We still verify matchEdge constructively below from shared vertices.
 
-export function neighborOf(centroid, orient, k) {
+export function neighborOf(centroid, orient, sigma, k) {
   // edge midpoint
-  const [v0, v1] = pentEdge(centroid, orient, k);
+   const [v0, v1] = pentEdge(centroid, orient, k, sigma);
   const mid = vScale(vAdd(v0, v1), 0.5);
   // c' = c + 2*(mid - c)
   const newC = vAdd(centroid, vScale(vSub(mid, centroid), 2));
-  const newO = (orient + 2 * k + 3) % 5;
+   const newSigma = 1 - (sigma & 1);
+   const newO = (orient + 3) % 5;
   // determine which edge of the neighbor matches: the neighbor edge
   // whose vertex set equals {v0, v1}.
   let matchEdge = -1;
   for (let kk = 0; kk < 5; kk++) {
-    const [w0, w1] = pentEdge(newC, newO, kk);
+     const [w0, w1] = pentEdge(newC, newO, kk, newSigma);
     if ((vEq(w0, v0) && vEq(w1, v1)) ||
         (vEq(w0, v1) && vEq(w1, v0))) {
       matchEdge = kk;
       break;
     }
   }
-  return { centroid: newC, orient: newO, matchEdge };
+   return { centroid: newC, orient: newO, sigma: newSigma, matchEdge };
 }

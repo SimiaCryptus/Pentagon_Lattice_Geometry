@@ -293,9 +293,54 @@
                 </p>
               </div>
             </details>
+           <details class="section-group" id="docs-section">
+             <summary>Docs</summary>
+             <div class="section-body">
+               <div class="doc-tabs">
+                 <button class="doc-tab active" data-doc="README.md">Overview</button>
+                 <button class="doc-tab" data-doc="idea.md">Concept</button>
+                 <button class="doc-tab" data-doc="affine.md">Affine Generalization</button>
+                <button class="doc-tab doc-maximize" id="docMaximize" title="Maximize document view">⛶</button>
+               </div>
+               <div id="doc-content" class="doc-content">
+                 <em>Loading…</em>
+               </div>
+             </div>
+           </details>
           </aside>
         </main>
       </div>
       <script type="module" src="main.js"></script>
+     <script src="marked.min.js"></script>
+  <!-- MathJax configuration: must appear before the MathJax script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath:  [["$", "$"], ["\\(", "\\)"]],
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ["script","noscript","style","textarea","pre","code"]
+      },
+      startup: {
+        // Don't typeset the whole page on load; we'll call it manually.
+        typeset: false
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script" async></script>
+     <!-- Doc maximized modal -->
+     <div id="doc-modal" class="doc-modal" aria-modal="true" role="dialog" style="display:none">
+       <div class="doc-modal-inner">
+         <div class="doc-modal-header">
+           <div class="doc-modal-tabs" id="docModalTabs"></div>
+           <button class="doc-modal-close" id="docModalClose" title="Close (Esc)">✕</button>
+         </div>
+         <div class="doc-modal-body" id="doc-modal-content"></div>
+       </div>
+     </div>
     </body>
     </html>

@@ -21,20 +21,24 @@ export function makeLattice({ radius = 3, groupOrder = 5 } = {}) {
   const origin = {
     centroid: V(ZERO, ZERO),
     orient: 0,
+     sigma: 0,
     sheet: 0,
   };
   const tiles = []; // array of tile objects
   const byId  = new Map(); // tile id -> index in tiles[]
 
-  function tileId(centroid, orient, sheet) {
-    return `${vKey(centroid)}|o${orient}|s${sheet}`;
+   function tileId(centroid, orient, sigma, sheet) {
+     // sigma is part of the tile's geometric identity: a pentagon at
+     // a given centroid with vertex 0 up is genuinely different from
+     // one at the same centroid with vertex 0 down.
+     return `${vKey(centroid)}|o${orient}|sig${sigma}|s${sheet}`;
   }
 
   function addTile(t, depth) {
-    const id = tileId(t.centroid, t.orient, t.sheet);
+     const id = tileId(t.centroid, t.orient, t.sigma, t.sheet);
     if (byId.has(id)) return byId.get(id);
     const idx = tiles.length;
-    const verts = pentVertices(t.centroid, t.orient);
+     const verts = pentVertices(t.centroid, t.orient, t.sigma);
     const vertsF = verts.map(vFloat);
     const tile = {
       index: idx,
@@ -42,13 +46,11 @@ export function makeLattice({ radius = 3, groupOrder = 5 } = {}) {
       centroid: t.centroid,
       centroidF: vFloat(t.centroid),
       orient: t.orient,
-       // sigma: physical orientation bit for the pentagon (odd n-gon).
-       // A regular pentagon has C_5 rotational symmetry, so the 5 values
-       // of `orient` are all the same pentagon up to relabeling of its
-       // vertices. The genuine orientation degree of freedom is the
-       // up/down bipartition: every edge-crossing flips it.
-       // The lattice is bipartite under sigma, so it equals depth mod 2.
-       sigma: depth & 1,
+        // sigma: physical orientation bit for the pentagon (odd n-gon).
+        // sigma=0 means vertex 0 points up; sigma=1 means it points down.
+        // Edge-to-edge tiling forces sigma to flip on every edge crossing,
+        // so along any BFS path from the origin, sigma = depth mod 2.
+        sigma: t.sigma,
       sheet: t.sheet,
       depth,
       verts,
@@ -74,10 +76,10 @@ export function makeLattice({ radius = 3, groupOrder = 5 } = {}) {
       // tiles know about already-discovered neighbors).
       for (let k = 0; k < 5; k++) {
         if (t.neighbors[k] !== null) continue;
-        const nb = neighborOf(t.centroid, t.orient, k);
+         const nb = neighborOf(t.centroid, t.orient, t.sigma, k);
         const delta = k; // tau(edge) = k  (mod groupOrder)
         const newSheet = mod(t.sheet + delta, groupOrder);
-        const id = tileId(nb.centroid, nb.orient, newSheet);
+         const id = tileId(nb.centroid, nb.orient, nb.sigma, newSheet);
         if (byId.has(id)) {
           t.neighbors[k] = byId.get(id);
           t.neighborSheetDeltas[k] = delta;
@@ -86,16 +88,16 @@ export function makeLattice({ radius = 3, groupOrder = 5 } = {}) {
       continue;
     }
     for (let k = 0; k < 5; k++) {
-      const nb = neighborOf(t.centroid, t.orient, k);
+       const nb = neighborOf(t.centroid, t.orient, t.sigma, k);
       const delta = k; // discrete connection rule
       const newSheet = mod(t.sheet + delta, groupOrder);
-      const id = tileId(nb.centroid, nb.orient, newSheet);
+       const id = tileId(nb.centroid, nb.orient, nb.sigma, newSheet);
       let nIdx;
       if (byId.has(id)) {
         nIdx = byId.get(id);
       } else {
         nIdx = addTile(
-          { centroid: nb.centroid, orient: nb.orient, sheet: newSheet },
+           { centroid: nb.centroid, orient: nb.orient, sigma: nb.sigma, sheet: newSheet },
           t.depth + 1
         );
         queue.push(nIdx);

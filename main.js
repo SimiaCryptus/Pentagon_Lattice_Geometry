@@ -5,6 +5,7 @@
     import { makeLattice } from "./lattice.js";
     import { LatticeView } from "./render.js";
     import { renderTileInfo, appendWalkStep, clearWalk } from "./ui.js";
+import { initDocs } from "./ui.js";
      import { CA } from "./ca.js";
     
     const canvas = document.getElementById("lattice");
@@ -413,3 +414,4 @@
     
     // initial build
     rebuild();
+initDocs();
