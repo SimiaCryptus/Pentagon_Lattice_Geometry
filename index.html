@@ -9,11 +9,10 @@
       <div id="app">
         <header>
           <h1>Multi-Sheeted Pentagon Lattice Lab</h1>
-          <p class="subtitle">
-            Exact arithmetic in Q(√5). Click a tile to inspect. Press
-             <kbd>1</kbd>–<kbd>5</kbd> to walk to neighbor across edge <i>k</i>.
-             Press <kbd>space</kbd> to play/pause CA, <kbd>n</kbd> to step.
-          </p>
+         <p class="subtitle" id="subtitle-text">
+           Click a tile to inspect. Press edge keys to walk.
+           Press <kbd>space</kbd> to play/pause CA, <kbd>n</kbd> to step.
+         </p>
         </header>
         <main>
           <section id="canvas-wrap">
@@ -26,10 +25,35 @@
             <details class="section-group" open>
               <summary>Lattice</summary>
               <div class="section-body">
+               <label>
+                 Polygon type:
+                 <select id="polyType">
+                   <option value="pentagon" selected>Regular Pentagon (n=5)</option>
+                   <option value="triangle">Equilateral Triangle (n=3)</option>
+                   <option value="square">Square (n=4)</option>
+                   <option value="hexagon">Regular Hexagon (n=6)</option>
+                   <option value="heptagon">Regular Heptagon (n=7)</option>
+                   <option value="octagon">Regular Octagon (n=8)</option>
+                   <option value="decagon">Regular Decagon (n=10)</option>
+                   <option value="dodecagon">Regular Dodecagon (n=12)</option>
+                   <option value="custom">Custom n-gon…</option>
+                   <option value="sierpinski">Sierpiński Triangle</option>
+                 </select>
+               </label>
+               <label id="customNLabel" style="display:none">
+                 Custom n:
+                 <input type="number" id="customN" min="3" max="24" value="7" />
+               </label>
+               <label id="sierpinskiDepthLabel" style="display:none">
+                 Sierpiński depth:
+                 <input type="number" id="sierpinskiDepth" min="1" max="7" value="4" />
+               </label>
                 <label>
                   Radius (BFS depth):
                   <input type="number" id="radius" min="0" max="12" value="3" />
                 </label>
+               <div id="fieldInfo" class="alg-block" style="margin-top:6px;font-size:11px">
+               </div>
                 <label>
                   Sheet group:
                   <select id="group">
@@ -291,6 +315,11 @@
                   radical is stored symbolically as <code>S72</code> with
                   S72² = (10+2√5)/16).
                 </p>
+               <p>
+                 For general n-gons, floating-point arithmetic is used with
+                 double precision. The Sierpiński triangle uses an IFS
+                 (iterated function system) with contraction ratio ½.
+               </p>
               </div>
             </details>
            <details class="section-group" id="docs-section">
@@ -300,6 +329,7 @@
                  <button class="doc-tab active" data-doc="README.md">Overview</button>
                  <button class="doc-tab" data-doc="idea.md">Concept</button>
                  <button class="doc-tab" data-doc="affine.md">Affine Generalization</button>
+                 <button class="doc-tab" data-doc="polyhedra.md">3D Generalization</button>
                 <button class="doc-tab doc-maximize" id="docMaximize" title="Maximize document view">⛶</button>
                </div>
                <div id="doc-content" class="doc-content">

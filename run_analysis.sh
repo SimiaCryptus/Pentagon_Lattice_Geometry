@@ -1,5 +1,21 @@
 # Run analysis.mac using Maxima
 
 
-maxima --very-quiet --batch-string="batchload(\"experiment.mac\")$" | grep -v 'rat: replaced' | tee experiment.log
-#maxima --very-quiet --batch-string="batchload(\"sweep_ngon.mac\")$" | grep -v 'rat: replaced' | tee sweep_ngon.log
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+LOG_DIR="logs"
+mkdir -p "$LOG_DIR"
+
+run_maxima() {
+     local mac_file="$1"
+     local base_name="${mac_file%.mac}"
+     local log_file="${LOG_DIR}/${base_name}_${TIMESTAMP}.log"
+     echo "Running ${mac_file}, logging to ${log_file}..."
+     maxima --very-quiet --batch-string="batchload(\"${mac_file}\")$" \
+      | grep -v 'rat: replaced' \
+      | grep -v '^$' \
+      | tee "${log_file}"
+}
+
+#run_maxima "analysis.mac"
+run_maxima "experiment.mac"
+#run_maxima "sweep_ngon.mac"

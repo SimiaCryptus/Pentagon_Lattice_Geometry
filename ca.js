@@ -134,6 +134,7 @@ export const ALL_RULE_FAMILIES = [
      if (tileIdx < 0 || tileIdx >= tiles.length) return;
      const v = 1;
      const nb = tiles[tileIdx].neighbors;
+     const nEdges = nb.length;
      switch (shape) {
        case "single": {
          this.state[tileIdx] = v;
@@ -141,7 +142,7 @@ export const ALL_RULE_FAMILIES = [
        }
        case "pair": {
          this.state[tileIdx] = v;
-         for (let k = 0; k < 5; k++) {
+         for (let k = 0; k < nEdges; k++) {
            if (nb[k] !== null) { this.state[nb[k]] = v; break; }
          }
          break;
@@ -149,20 +150,20 @@ export const ALL_RULE_FAMILIES = [
        case "triple": {
          this.state[tileIdx] = v;
          let set = 0;
-         for (let k = 0; k < 5 && set < 2; k++) {
+         for (let k = 0; k < nEdges && set < 2; k++) {
            if (nb[k] !== null) { this.state[nb[k]] = v; set++; }
          }
          break;
        }
        case "petal": {
-         for (let k = 0; k < 5; k++) {
+         for (let k = 0; k < nEdges; k++) {
            if (nb[k] !== null) this.state[nb[k]] = v;
          }
          break;
        }
        case "all5": {
          this.state[tileIdx] = v;
-         for (let k = 0; k < 5; k++) {
+         for (let k = 0; k < nEdges; k++) {
            if (nb[k] !== null) this.state[nb[k]] = v;
          }
          break;
@@ -172,14 +173,14 @@ export const ALL_RULE_FAMILIES = [
          // or origin's direct neighbors
          const direct = new Set();
          direct.add(tileIdx);
-         for (let k = 0; k < 5; k++) {
+         for (let k = 0; k < nEdges; k++) {
            if (nb[k] !== null) direct.add(nb[k]);
          }
-         for (let k = 0; k < 5; k++) {
+         for (let k = 0; k < nEdges; k++) {
            const ni = nb[k];
            if (ni === null) continue;
            const nb2 = tiles[ni].neighbors;
-           for (let j = 0; j < 5; j++) {
+           for (let j = 0; j < nb2.length; j++) {
              const nj = nb2[j];
              if (nj !== null && !direct.has(nj)) {
                this.state[nj] = v;
@@ -189,10 +190,10 @@ export const ALL_RULE_FAMILIES = [
          break;
        }
        case "line": {
-         // Walk in one direction (always edge 0) for 5 steps.
+         // Walk in one direction (always edge 0) for n steps.
          this.state[tileIdx] = v;
          let cur = tileIdx;
-         for (let step = 0; step < 4; step++) {
+         for (let step = 0; step < Math.max(nEdges - 1, 4); step++) {
            const next = tiles[cur].neighbors[0];
            if (next === null) break;
            this.state[next] = v;
@@ -222,13 +223,15 @@ export const ALL_RULE_FAMILIES = [
       const s = this.state;
       const out = this.next;
       const ns = this.numStates;
+      // Number of edges/neighbours varies by polygon type.
+      const nEdges = (i) => tiles[i].neighbors.length;
       switch (this.family) {
         case "life": {
           const { birth, survive } = this.lifeRule;
           for (let i = 0; i < tiles.length; i++) {
             const nbrs = tiles[i].neighbors;
             let live = 0;
-            for (let k = 0; k < 5; k++) {
+            for (let k = 0; k < nbrs.length; k++) {
               const ni = nbrs[k];
               if (ni !== null && s[ni] !== 0) live++;
             }
@@ -244,7 +247,7 @@ export const ALL_RULE_FAMILIES = [
           for (let i = 0; i < tiles.length; i++) {
             const nbrs = tiles[i].neighbors;
             let sum = 0;
-            for (let k = 0; k < 5; k++) {
+            for (let k = 0; k < nbrs.length; k++) {
               const ni = nbrs[k];
               if (ni !== null) sum += s[ni];
             }
@@ -258,7 +261,7 @@ export const ALL_RULE_FAMILIES = [
             const nbrs = tiles[i].neighbors;
             const target = (s[i] + 1) % ns;
             let count = 0;
-            for (let k = 0; k < 5; k++) {
+            for (let k = 0; k < nbrs.length; k++) {
               const ni = nbrs[k];
               if (ni !== null && s[ni] === target) count++;
             }
@@ -272,7 +275,7 @@ export const ALL_RULE_FAMILIES = [
             counts.fill(0);
             counts[s[i]]++;
             const nbrs = tiles[i].neighbors;
-            for (let k = 0; k < 5; k++) {
+            for (let k = 0; k < nbrs.length; k++) {
               const ni = nbrs[k];
               if (ni !== null) counts[s[ni]]++;
             }
@@ -291,7 +294,7 @@ export const ALL_RULE_FAMILIES = [
          for (let i = 0; i < tiles.length; i++) {
            const nbrs = tiles[i].neighbors;
            let live = 0;
-           for (let k = 0; k < 5; k++) {
+           for (let k = 0; k < nbrs.length; k++) {
              const ni = nbrs[k];
              if (ni !== null && s[ni] !== 0) live++;
            }
@@ -304,7 +307,7 @@ export const ALL_RULE_FAMILIES = [
            const nbrs = tiles[i].neighbors;
            let sum = s[i];
            let cnt = 1;
-           for (let k = 0; k < 5; k++) {
+           for (let k = 0; k < nbrs.length; k++) {
              const ni = nbrs[k];
              if (ni !== null) { sum += s[ni]; cnt++; }
            }
@@ -319,7 +322,7 @@ export const ALL_RULE_FAMILIES = [
          for (let i = 0; i < tiles.length; i++) {
            const nbrs = tiles[i].neighbors;
            let sum = s[i];
-           for (let k = 0; k < 5; k++) {
+           for (let k = 0; k < nbrs.length; k++) {
              const ni = nbrs[k];
              if (ni !== null && s[ni] !== 0) {
                sum += tiles[ni].sheet;
@@ -333,7 +336,7 @@ export const ALL_RULE_FAMILIES = [
          for (let i = 0; i < tiles.length; i++) {
            const nbrs = tiles[i].neighbors;
            let acc = 0;
-           for (let k = 0; k < 5; k++) {
+           for (let k = 0; k < nbrs.length; k++) {
              const ni = nbrs[k];
              if (ni !== null) acc ^= s[ni];
            }

@@ -184,7 +184,7 @@ log_log_fit_basic(xs, ys) := block(
                                        This is the rigorous regime of
                                        idea.md §2.4.
     ===================================================================== */
-EXPERIMENT_PRESET : "xhuge" $
+EXPERIMENT_PRESET : "huge" $
 if ?boundp('EXPERIMENT_PRESET_OVERRIDE) then
     EXPERIMENT_PRESET : EXPERIMENT_PRESET_OVERRIDE $
 /* Default vortex rule for the main cluster.  Set to "signed3" or

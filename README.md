@@ -195,7 +195,7 @@ on protein interaction networks, neural connectomes, or financial correlation gr
 of which exhibit sub-diffusive transport without obvious geometric explanation.
 
 ### Number-Theoretic Cryptography
-The algebraic field classification (Section 2 of `directions.md`) provides a new
+The algebraic field classification (Section 2 of `affine.md`) provides a new
 **hardness criterion** for lattice-based cryptographic problems: problems defined over
 multi-sheeted pentagon graphs inherit the algebraic complexity of Q(√5) while exhibiting
 the geometric complexity of a fractional-dimension space — potentially combining the
@@ -218,7 +218,7 @@ solvable toy model** of CDT-style dimensional reduction.
 | `analysis.md`      | Summary of symbolic/numerical verification (`analysis.mac` / `.log`)     |
 | `experiment.mac`   | Full computational pipeline: geometry → graph → spectra → CA → KPM       |
 | `sweep_ngon.md`    | Cross-polygon sweep results (n = 3..12) and universal observations        |
-| `directions.md`    | Generalization to irregular polygons; algebraic classification framework  |
+| `affine.md`    | Generalization to irregular polygons; algebraic classification framework  |
 | `README.md`        | This file                                                                 |
 
 ---
