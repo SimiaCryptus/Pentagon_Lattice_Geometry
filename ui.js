@@ -4,6 +4,29 @@
 // ── Docs panel ────────────────────────────────────────────────────────────────
 let _docCache = {};   // filename → rendered HTML
 let _activeDoc = "README.md";
+// Glossary file listing (kept in sync with ./glossary/)
+const GLOSSARY_FILES = [
+     { file: "glossary/README.md",                       label: "Glossary Index" },
+     { file: "glossary/MAP.md",                          label: "Concept Map" },
+     { file: "glossary/A_algebraic_structures.md",       label: "A · Algebraic Structures" },
+     { file: "glossary/B_geometric_constructions.md",    label: "B · Geometric Constructions" },
+     { file: "glossary/C_higher_dimensional_polytopes.md", label: "C · Higher-Dim Polytopes" },
+     { file: "glossary/D_group_theory.md",               label: "D · Group Theory" },
+     { file: "glossary/E_topology_bundles.md",           label: "E · Topology & Bundles" },
+     { file: "glossary/F_dimensions_scaling.md",         label: "F · Dimensions & Scaling" },
+     { file: "glossary/G_spectral_graph_theory.md",      label: "G · Spectral Graph Theory" },
+     { file: "glossary/H_fractals_self_similarity.md",   label: "H · Fractals" },
+     { file: "glossary/I_cellular_automata.md",          label: "I · Cellular Automata" },
+     { file: "glossary/J_physics.md",                    label: "J · Physics" },
+     { file: "glossary/K_extremal.md",                   label: "K · Extremal" },
+     { file: "glossary/L_reconnection.md",               label: "L · Reconnection" },
+     { file: "glossary/M_algorithmic.md",                label: "M · Algorithmic" },
+     { file: "glossary/N_notation.md",                   label: "N · Notation" },
+     { file: "glossary/O_project_terms.md",              label: "O · Project Terms" },
+];
+function isGlossaryDoc(filename) {
+     return typeof filename === "string" && filename.startsWith("glossary/");
+}
 
 // ── MathJax helpers ──────────────────────────────────────────────────────────
 /**
@@ -14,8 +37,15 @@ let _activeDoc = "README.md";
  */
 function markedWithMath(src) {
     const stash = [];
+     const mermaidStash = [];
+     // First, extract mermaid fenced code blocks so marked doesn't escape
+     // their contents. We'll re-inject them as <div class="mermaid"> nodes.
+     let pre = src.replace(/```mermaid\s*\n([\s\S]+?)\n```/g, (_, code) => {
+         mermaidStash.push(code);
+         return `@@MERMAID${mermaidStash.length - 1}@@`;
+     });
     // Order matters: match display math ($$) before inline ($).
-    const escaped = src
+     const escaped = pre
         // Display math: $$...$$  (possibly multi-line)
         .replace(/\$\$([\s\S]+?)\$\$/g, (_, inner) => {
             stash.push(`\\[${inner}\\]`);
@@ -29,9 +59,72 @@ function markedWithMath(src) {
     let html = marked.parse(escaped);
     // Restore math, but make sure the placeholder wasn't HTML-escaped.
     html = html.replace(/@@MATH(\d+)@@/g, (_, i) => stash[Number(i)]);
+     // Restore mermaid blocks as <div class="mermaid"> nodes. The placeholder
+     // may have been wrapped in <p>…</p> by marked; strip such wrappers.
+     html = html.replace(/<p>\s*@@MERMAID(\d+)@@\s*<\/p>/g, (_, i) =>
+         `<div class="mermaid">${escapeHtmlText(mermaidStash[Number(i)])}</div>`);
+     html = html.replace(/@@MERMAID(\d+)@@/g, (_, i) =>
+         `<div class="mermaid">${escapeHtmlText(mermaidStash[Number(i)])}</div>`);
     // marked sometimes wraps a lone placeholder in <p>; that's fine for MathJax.
     return html;
 }
+// Minimal HTML-escape for text content destined for a <div class="mermaid">.
+function escapeHtmlText(s) {
+     return s.replace(/[&<>]/g, c =>
+         ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+}
+/**
+  * Rewrite relative .md links inside rendered HTML so that clicks navigate
+  * the in-app doc viewer instead of doing a hard page load.
+  * `basePath` is the directory of the source document (e.g. "glossary/").
+  */
+function rewriteMdLinks(containerEl, basePath) {
+     if (!containerEl) return;
+     const anchors = containerEl.querySelectorAll("a[href]");
+     anchors.forEach(a => {
+         const href = a.getAttribute("href");
+         if (!href) return;
+         // Skip absolute URLs, anchors, mailto, etc.
+         if (/^[a-z]+:\/\//i.test(href) || href.startsWith("#") ||
+             href.startsWith("mailto:")) return;
+         // Strip any trailing #fragment for the resolution step.
+         const [pathPart, frag] = href.split("#");
+         if (!pathPart) return;
+         if (!pathPart.endsWith(".md")) return;
+         // Resolve relative to basePath.
+         let resolved;
+         if (pathPart.startsWith("/")) {
+             resolved = pathPart.replace(/^\/+/, "");
+         } else {
+             resolved = (basePath || "") + pathPart;
+         }
+         // Collapse "foo/../bar" segments.
+         const parts = [];
+         resolved.split("/").forEach(seg => {
+             if (seg === "" || seg === ".") return;
+             if (seg === "..") parts.pop();
+             else parts.push(seg);
+         });
+         resolved = parts.join("/");
+         a.dataset.doc = resolved;
+         a.dataset.frag = frag || "";
+         a.href = "javascript:void(0)";
+         a.addEventListener("click", (ev) => {
+             ev.preventDefault();
+             // Find which view we're in (modal vs sidebar) and route accordingly.
+             const inModal = !!containerEl.closest("#doc-modal");
+             if (inModal) {
+                 _navigateModal(resolved);
+             } else {
+                 _navigateSidebar(resolved);
+             }
+         });
+     });
+}
+// These get filled in by initDocs().
+let _navigateSidebar = (doc) => showDoc(doc);
+let _navigateModal   = (doc) => {};
+
 
 /**
  * Ask MathJax to typeset a DOM element.
@@ -51,6 +144,33 @@ function typesetMath(el) {
             }
         }, { once: true });
     }
+}
+/**
+  * Render any <div class="mermaid"> nodes inside an element. Safe to call
+  * even if mermaid hasn't loaded yet — we retry on window 'load'.
+  */
+function renderMermaid(el) {
+     if (!el) return;
+     const nodes = el.querySelectorAll("div.mermaid");
+     if (nodes.length === 0) return;
+     // Mermaid's run() processes nodes that haven't been processed yet.
+     // We must clear any data-processed flag in case the same HTML was
+     // cached and re-inserted.
+     nodes.forEach(n => { n.removeAttribute("data-processed"); });
+     const doRun = () => {
+         try {
+             window.mermaid.run({ nodes });
+         } catch (err) {
+             console.warn("Mermaid render error:", err);
+         }
+     };
+     if (window.mermaid && window.mermaid.run) {
+         doRun();
+     } else {
+         window.addEventListener("load", () => {
+             if (window.mermaid && window.mermaid.run) doRun();
+         }, { once: true });
+     }
 }
 
 async function loadDoc(filename) {
@@ -81,7 +201,38 @@ async function showDoc(filename) {
     if (!contentEl) return;
     contentEl.innerHTML = "<em>Loading…</em>";
     contentEl.innerHTML = await loadDoc(filename);
+     // Compute base path for relative link resolution.
+     const basePath = filename.includes("/")
+         ? filename.substring(0, filename.lastIndexOf("/") + 1)
+         : "";
+     rewriteMdLinks(contentEl, basePath);
+     // If this is a glossary doc, inject a sub-nav at the top.
+     if (isGlossaryDoc(filename)) {
+         _injectGlossaryNav(contentEl, filename, /*inModal=*/false);
+     }
     typesetMath(contentEl);
+     renderMermaid(contentEl);
+}
+function _injectGlossaryNav(containerEl, currentFile, inModal) {
+     const nav = document.createElement("div");
+     nav.className = "glossary-subnav";
+     nav.style.cssText = "display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;" +
+         "padding-bottom:8px;border-bottom:1px solid var(--border, #333);";
+     GLOSSARY_FILES.forEach(({ file, label }) => {
+         const btn = document.createElement("button");
+         btn.className = "glossary-subnav-btn";
+         btn.textContent = label;
+         btn.style.cssText = "font-size:10px;padding:2px 6px;cursor:pointer;" +
+             "background:" + (file === currentFile ? "var(--accent2,#4a5)" : "#222") + ";" +
+             "color:#ddd;border:1px solid #444;border-radius:3px;";
+         btn.addEventListener("click", (e) => {
+             e.preventDefault();
+             if (inModal) _navigateModal(file);
+             else         _navigateSidebar(file);
+         });
+         nav.appendChild(btn);
+     });
+     containerEl.insertBefore(nav, containerEl.firstChild);
 }
 
 export function initDocs() {
@@ -94,6 +245,18 @@ export function initDocs() {
             showDoc(btn.dataset.doc);
         });
     });
+     // Wire the sidebar navigation callback so in-doc links work.
+     _navigateSidebar = (doc) => {
+         // Highlight the closest top-level tab if it matches; for glossary
+         // sub-pages we light up the "Glossary" tab.
+         tabs.forEach(b => {
+             if (b.id === "docMaximize") return;
+             const isMatch = b.dataset.doc === doc ||
+                 (isGlossaryDoc(doc) && b.dataset.doc === "glossary/README.md");
+             b.classList.toggle("active", isMatch);
+         });
+         showDoc(doc);
+     };
     // Load the default tab immediately when the section is first opened.
     const section = document.getElementById("docs-section");
     if (section) {
@@ -125,11 +288,14 @@ export function initDocs() {
         { label: "Multipolygon", doc: "multipolygon.md" },
         { label: "Einstein", doc: "einstein.md" },
         { label: "Insights", doc: "insights.md" },
+         { label: "Glossary", doc: "glossary/README.md" },
     ];
 
     function syncModalTabs() {
         modalTabs.querySelectorAll(".doc-tab").forEach(b => {
-            b.classList.toggle("active", b.dataset.doc === _activeDoc);
+             const isMatch = b.dataset.doc === _activeDoc ||
+                 (isGlossaryDoc(_activeDoc) && b.dataset.doc === "glossary/README.md");
+             b.classList.toggle("active", isMatch);
         });
     }
 
@@ -143,14 +309,43 @@ export function initDocs() {
             syncModalTabs();
             // Also sync the sidebar tabs.
             document.querySelectorAll(".doc-tab:not(.doc-maximize)").forEach(b => {
-                b.classList.toggle("active", b.dataset.doc === doc);
+                 const isMatch = b.dataset.doc === doc ||
+                     (isGlossaryDoc(doc) && b.dataset.doc === "glossary/README.md");
+                 b.classList.toggle("active", isMatch);
             });
             modalBody.innerHTML = "<em>Loading…</em>";
             modalBody.innerHTML = await loadDoc(doc);
+             const basePath = doc.includes("/")
+                 ? doc.substring(0, doc.lastIndexOf("/") + 1) : "";
+             rewriteMdLinks(modalBody, basePath);
+             if (isGlossaryDoc(doc)) {
+                 _injectGlossaryNav(modalBody, doc, /*inModal=*/true);
+             }
             typesetMath(modalBody);
+             renderMermaid(modalBody);
         });
         modalTabs.appendChild(btn);
     });
+     // Wire the modal navigation callback used by in-doc link clicks.
+     _navigateModal = async (doc) => {
+         _activeDoc = doc;
+         syncModalTabs();
+         document.querySelectorAll(".doc-tab:not(.doc-maximize)").forEach(b => {
+             const isMatch = b.dataset.doc === doc ||
+                 (isGlossaryDoc(doc) && b.dataset.doc === "glossary/README.md");
+             b.classList.toggle("active", isMatch);
+         });
+         modalBody.innerHTML = "<em>Loading…</em>";
+         modalBody.innerHTML = await loadDoc(doc);
+         const basePath = doc.includes("/")
+             ? doc.substring(0, doc.lastIndexOf("/") + 1) : "";
+         rewriteMdLinks(modalBody, basePath);
+         if (isGlossaryDoc(doc)) {
+             _injectGlossaryNav(modalBody, doc, /*inModal=*/true);
+         }
+         typesetMath(modalBody);
+     };
+
 
     async function openModal() {
         modal.style.display = "flex";
@@ -158,7 +353,14 @@ export function initDocs() {
         syncModalTabs();
         modalBody.innerHTML = "<em>Loading…</em>";
         modalBody.innerHTML = await loadDoc(_activeDoc);
+         const basePath = _activeDoc.includes("/")
+             ? _activeDoc.substring(0, _activeDoc.lastIndexOf("/") + 1) : "";
+         rewriteMdLinks(modalBody, basePath);
+         if (isGlossaryDoc(_activeDoc)) {
+             _injectGlossaryNav(modalBody, _activeDoc, /*inModal=*/true);
+         }
         typesetMath(modalBody);
+         renderMermaid(modalBody);
     }
 
     function closeModal() {
