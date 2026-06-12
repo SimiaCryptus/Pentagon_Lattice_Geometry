@@ -66,6 +66,50 @@ In standard Euclidean geometry, this mismatch prevents a regular, monohedral til
 one must either introduce non-Euclidean curvature (yielding a hyperbolic tiling for $\ge 4$ pentagons per vertex, or a
 spherical dodecahedron for exactly 3 pentagons per vertex) or allow the tiles to overlap in $\mathbb{R}^2$.
 
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-220 -120 440 240" width="520">
+   <title>Figure 1: Pentagonal angular frustration</title>
+   <defs>
+     <style>
+       .pent { fill: #cfe2ff; stroke: #1f4e8c; stroke-width: 1.5; fill-opacity: 0.55; }
+       .pent2 { fill: #ffd6a5; stroke: #a0522d; stroke-width: 1.5; fill-opacity: 0.55; }
+       .gap { fill: #ff595e; fill-opacity: 0.35; stroke: #b00020; stroke-dasharray: 3 2; }
+       .overlap { fill: #6a4c93; fill-opacity: 0.35; stroke: #3d2c5e; stroke-dasharray: 3 2; }
+       .lbl { font: 12px sans-serif; fill: #222; text-anchor: middle; }
+       .ttl { font: bold 13px sans-serif; fill: #111; text-anchor: middle; }
+     </style>
+     <symbol id="pent5" viewBox="-50 -50 100 100">
+       <polygon points="0,-50 47.55,-15.45 29.39,40.45 -29.39,40.45 -47.55,-15.45"/>
+     </symbol>
+   </defs>
+   <!-- Left: 3 pentagons -> 36° gap -->
+   <g transform="translate(-120,10)">
+     <text class="ttl" x="0" y="-95">3 pentagons: 324° (gap 36°)</text>
+     <!-- Three pentagons meeting at origin; rotate around vertex at top -->
+     <g transform="rotate(-54)"><use href="#pent5" class="pent" x="-50" y="-50" width="100" height="100"/></g>
+     <g transform="rotate(54)"><use href="#pent5" class="pent" x="-50" y="-50" width="100" height="100"/></g>
+     <g transform="rotate(162)"><use href="#pent5" class="pent" x="-50" y="-50" width="100" height="100"/></g>
+     <!-- Gap wedge -->
+     <path class="gap" d="M0,0 L 35,-11.4 A 36,36 0 0 0 35,11.4 Z" transform="rotate(180)"/>
+     <circle cx="0" cy="0" r="3" fill="#111"/>
+     <text class="lbl" x="0" y="78">δ = 36°</text>
+   </g>
+   <!-- Right: 4 pentagons -> 72° overlap -->
+   <g transform="translate(120,10)">
+     <text class="ttl" x="0" y="-95">4 pentagons: 432° (overlap 72°)</text>
+     <g transform="rotate(-54)"><use href="#pent5" class="pent2" x="-50" y="-50" width="100" height="100"/></g>
+     <g transform="rotate(54)"><use href="#pent5" class="pent2" x="-50" y="-50" width="100" height="100"/></g>
+     <g transform="rotate(162)"><use href="#pent5" class="pent2" x="-50" y="-50" width="100" height="100"/></g>
+     <g transform="rotate(-162)"><use href="#pent5" class="pent2" x="-50" y="-50" width="100" height="100"/></g>
+     <!-- Overlap wedge -->
+     <path class="overlap" d="M0,0 L 35,-22.7 A 42,42 0 0 0 35,22.7 Z" transform="rotate(180)"/>
+     <circle cx="0" cy="0" r="3" fill="#111"/>
+     <text class="lbl" x="0" y="78">excess = 72°</text>
+   </g>
+</svg>
+</p>
+<p align="center"><em>Figure 1. Angular frustration of regular pentagons around a vertex. Three pentagons leave a 36° gap; four pentagons produce a 72° overlap.</em></p>
+
 ### 2.2. The Multi-Sheeted Covering Space
 
 We define a covering space $\mathcal{M}$ over the Euclidean plane $\mathbb{R}^2$.
@@ -90,6 +134,59 @@ We impose the following rules:
 
 This construction yields a graph $\mathcal{G} = (\mathcal{V}, \mathcal{E})$, where the vertices $\mathcal{V}$ are the
 pentagons, and the edges $\mathcal{E}$ represent the shared boundaries that satisfy the identical matching condition.
+
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 320" width="560">
+   <title>Figure 2: Multi-sheeted covering with branched vortex</title>
+   <defs>
+     <style>
+       .sheet { fill: #f3f6fb; stroke: #1f4e8c; stroke-width: 1.2; }
+       .sheetA { fill: #cfe2ff; fill-opacity: 0.85; stroke: #1f4e8c; }
+       .sheetB { fill: #ffd6a5; fill-opacity: 0.85; stroke: #a0522d; }
+       .sheetC { fill: #c8e6c9; fill-opacity: 0.85; stroke: #2e7d32; }
+       .proj { stroke: #555; stroke-width: 1; stroke-dasharray: 4 3; fill: none; }
+       .vortex { fill: #b00020; }
+       .lbl { font: 12px sans-serif; fill: #222; }
+       .ttl { font: bold 13px sans-serif; fill: #111; text-anchor: middle; }
+       .conn { stroke: #6a4c93; stroke-width: 1.6; fill: none; marker-end: url(#arr); }
+     </style>
+     <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+       <path d="M0,0 L10,5 L0,10 z" fill="#6a4c93"/>
+     </marker>
+   </defs>
+   <text class="ttl" x="260" y="20">Discrete principal G-bundle: sheets stacked over the punctured plane</text>
+   <!-- Sheet 3 (top) -->
+   <g transform="translate(60,40) skewX(-25)">
+     <rect class="sheet sheetC" x="0" y="0" width="280" height="70" rx="6"/>
+     <polygon class="sheetC" points="120,15 150,30 140,55 100,55 90,30"/>
+     <circle cx="135" cy="35" r="3" class="vortex"/>
+   </g>
+   <text class="lbl" x="360" y="78">sheet s = +1</text>
+   <!-- Sheet 2 (middle) -->
+   <g transform="translate(60,130) skewX(-25)">
+     <rect class="sheet sheetB" x="0" y="0" width="280" height="70" rx="6"/>
+     <polygon class="sheetB" points="120,15 150,30 140,55 100,55 90,30"/>
+     <polygon class="sheetB" points="170,18 200,33 190,58 150,58 140,33"/>
+     <circle cx="135" cy="35" r="3" class="vortex"/>
+   </g>
+   <text class="lbl" x="360" y="168">sheet s = 0</text>
+   <!-- Sheet 1 (bottom) -->
+   <g transform="translate(60,220) skewX(-25)">
+     <rect class="sheet sheetA" x="0" y="0" width="280" height="70" rx="6"/>
+     <polygon class="sheetA" points="120,15 150,30 140,55 100,55 90,30"/>
+     <circle cx="135" cy="35" r="3" class="vortex"/>
+   </g>
+   <text class="lbl" x="360" y="258">sheet s = −1</text>
+   <!-- Vertical branch line through the three vortices -->
+   <path class="proj" d="M125,70 L125,290"/>
+   <text class="lbl" x="130" y="305">branch point Σ (vortex)</text>
+   <!-- Edge transition arrows between sheets -->
+   <path class="conn" d="M155,165 C 200,150 200,110 165,90"/>
+   <path class="conn" d="M155,255 C 210,240 210,200 165,180"/>
+   <text class="lbl" x="215" y="125">τ(e) ∈ G</text>
+</svg>
+</p>
+<p align="center"><em>Figure 2. Three sheets of the covering space π: 𝓜 → ℝ². Pentagons on different sheets may project to the same region; sheet transitions τ(e) glue them along identically matching edges. The dashed vertical line is a branch (vortex) locus Σ.</em></p>
 
 ### 2.3. Algebraic Foundation: Exact Arithmetic over $\mathbb{Q}(\sqrt{5})$
 
@@ -162,6 +259,48 @@ back to the identity. Choosing $G = \mathbb{Z}_2$ recovers the canonical spinor 
 loop yields $\tau = -1$, and a $4\pi$ loop is required to restore identity. This requirement of multiple full rotations
 to achieve identity is the precise discrete geometric analogue of spinor holonomy.
 
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-160 -160 320 320" width="420">
+   <title>Figure 3: Spinor-like holonomy around a pentagonal vortex</title>
+   <defs>
+     <style>
+       .ring1 { fill: none; stroke: #1f4e8c; stroke-width: 2; }
+       .ring2 { fill: none; stroke: #b00020; stroke-width: 2; stroke-dasharray: 6 4; }
+       .pt { fill: #111; }
+       .lbl { font: 12px sans-serif; fill: #222; text-anchor: middle; }
+       .lblL { font: 11px sans-serif; fill: #1f4e8c; }
+       .lblR { font: 11px sans-serif; fill: #b00020; }
+       .ttl { font: bold 13px sans-serif; fill: #111; text-anchor: middle; }
+       .vx { fill: #b00020; }
+     </style>
+     <marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+       <path d="M0,0 L10,5 L0,10 z" fill="#1f4e8c"/>
+     </marker>
+     <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+       <path d="M0,0 L10,5 L0,10 z" fill="#b00020"/>
+     </marker>
+   </defs>
+   <text class="ttl" x="0" y="-135">Holonomy: τ(2π) = −1, τ(4π) = +1   (G = ℤ₂)</text>
+   <!-- First loop -->
+   <circle class="ring1" cx="0" cy="0" r="70" marker-end="url(#ar1)" pathLength="100"
+           stroke-dashoffset="0"/>
+   <!-- Second loop (outer) -->
+   <circle class="ring2" cx="0" cy="0" r="105" marker-end="url(#ar2)"/>
+   <!-- Vortex point -->
+   <circle class="vx" cx="0" cy="0" r="4"/>
+   <text class="lbl" x="0" y="18">vortex</text>
+   <!-- Start markers -->
+   <circle class="pt" cx="70" cy="0" r="3"/>
+   <text class="lblL" x="76" y="-6">start, s=0</text>
+   <circle class="pt" cx="105" cy="0" r="3"/>
+   <text class="lblR" x="111" y="-6">2nd lap, s=1</text>
+   <!-- After one loop label -->
+   <text class="lblL" x="-80" y="-50">after 2π: s → s+1 (sheet flip)</text>
+   <text class="lblR" x="-80" y="120">after 4π: s → s (identity restored)</text>
+</svg>
+</p>
+<p align="center"><em>Figure 3. Discrete spinor analogy: a single 2π loop around a vortex flips the sheet (τ = −1 in G = ℤ₂); a 4π loop restores the original sheet, mirroring the SU(2) → SO(3) double cover.</em></p>
+
 ### 3.3. Connection to Anyons and Braid Statistics
 
 The sheet-transition group is structurally close to a discrete braid group: a particle (or CA glider) looping around a
@@ -207,6 +346,54 @@ connectivity), other regions present topological barriers where matching edges a
   to the irregularity and sparsity of matching overlaps).
 * The effective dimension $d_{\text{eff}}$ is fractional:
   $$2 < d_{\text{eff}} < 3.$$
+
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 300" width="520">
+   <title>Figure 4: Volume growth and fractional effective dimension</title>
+   <defs>
+     <style>
+       .axis { stroke: #333; stroke-width: 1.2; fill: none; }
+       .grid { stroke: #ddd; stroke-width: 0.6; fill: none; }
+       .c2 { stroke: #1f4e8c; stroke-width: 2; fill: none; stroke-dasharray: 5 4; }
+       .c3 { stroke: #2e7d32; stroke-width: 2; fill: none; stroke-dasharray: 5 4; }
+       .cf { stroke: #b00020; stroke-width: 2.5; fill: none; }
+       .lbl { font: 12px sans-serif; fill: #222; }
+       .ttl { font: bold 13px sans-serif; fill: #111; text-anchor: middle; }
+     </style>
+   </defs>
+   <text class="ttl" x="230" y="22">log N(r) vs log r:  slope = d_eff</text>
+   <!-- Grid -->
+   <g class="grid">
+     <path d="M60,260 L60,50"/><path d="M150,260 L150,50"/>
+     <path d="M240,260 L240,50"/><path d="M330,260 L330,50"/><path d="M420,260 L420,50"/>
+     <path d="M60,260 L420,260"/><path d="M60,210 L420,210"/>
+     <path d="M60,160 L420,160"/><path d="M60,110 L420,110"/><path d="M60,60 L420,60"/>
+   </g>
+   <!-- Axes -->
+   <path class="axis" d="M60,260 L420,260"/>
+   <path class="axis" d="M60,260 L60,40"/>
+   <text class="lbl" x="420" y="278" text-anchor="end">log r</text>
+   <text class="lbl" x="50" y="50" text-anchor="end">log N</text>
+   <!-- d=2 reference line (slope 2) -->
+   <line class="c2" x1="60" y1="240" x2="420" y2="120"/>
+   <text class="lbl" x="425" y="120" fill="#1f4e8c">slope 2 (planar)</text>
+   <!-- d=3 reference line (slope 3) -->
+   <line class="c3" x1="60" y1="240" x2="320" y2="60"/>
+   <text class="lbl" x="325" y="60" fill="#2e7d32">slope 3 (cubic)</text>
+   <!-- Fractional dimension ~2.4 (between) -->
+   <line class="cf" x1="60" y1="240" x2="420" y2="90"/>
+   <text class="lbl" x="425" y="90" fill="#b00020">slope d_eff ≈ 2.4</text>
+   <!-- Sample BFS points along fractional line -->
+   <g fill="#b00020">
+     <circle cx="110" cy="220" r="3"/>
+     <circle cx="170" cy="195" r="3"/>
+     <circle cx="230" cy="170" r="3"/>
+     <circle cx="290" cy="145" r="3"/>
+     <circle cx="350" cy="118" r="3"/>
+   </g>
+</svg>
+</p>
+<p align="center"><em>Figure 4. Schematic BFS volume-growth plot. The measured slope d_eff for the multi-sheeted pentagon graph falls strictly between the planar (2) and cubic (3) references, consistent with a fractional effective dimension.</em></p>
 
 ### 4.3. Dimensional Decoupling and Anomalous Diffusion
 
@@ -338,6 +525,46 @@ embarrassingly parallelizable, and avoids the noise inherent in Monte Carlo rand
 used as a cross-check on the low-lying spectrum. Combined with FSS over cluster radii $R$, this yields tight,
 reproducible estimates of $d_{\text{spec}}$ and direct numerical evidence of dimensional flow.
 
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 280" width="540">
+   <title>Figure 5: Density of states and spectral dimension</title>
+   <defs>
+     <style>
+       .axis { stroke: #333; stroke-width: 1.2; fill: none; }
+       .grid { stroke: #eee; stroke-width: 0.6; fill: none; }
+       .dos { stroke: #1f4e8c; stroke-width: 2.2; fill: none; }
+       .fit { stroke: #b00020; stroke-width: 2; stroke-dasharray: 5 4; fill: none; }
+       .lbl { font: 12px sans-serif; fill: #222; }
+       .ttl { font: bold 13px sans-serif; fill: #111; text-anchor: middle; }
+     </style>
+   </defs>
+   <text class="ttl" x="240" y="20">KPM density of states: ρ(λ) ~ λ^(d_spec/2 − 1)</text>
+   <g class="grid">
+     <path d="M60,240 L60,40"/><path d="M160,240 L160,40"/>
+     <path d="M260,240 L260,40"/><path d="M360,240 L360,40"/><path d="M460,240 L460,40"/>
+     <path d="M60,200 L460,200"/><path d="M60,150 L460,150"/>
+     <path d="M60,100 L460,100"/><path d="M60,60 L460,60"/>
+   </g>
+   <path class="axis" d="M60,240 L460,240"/>
+   <path class="axis" d="M60,240 L60,30"/>
+   <text class="lbl" x="460" y="258" text-anchor="end">λ</text>
+   <text class="lbl" x="50" y="40" text-anchor="end">ρ(λ)</text>
+   <!-- DOS curve: rises sublinearly from 0, peaks, decays -->
+   <path class="dos" d="M60,240
+                        C 90,225 110,210 140,190
+                        C 170,170 200,140 230,110
+                        C 260,80  300,70  340,90
+                        C 380,115 420,170 460,215"/>
+   <!-- Power-law fit at low λ -->
+   <path class="fit" d="M60,240 C 90,225 120,212 160,196 L 200,182"/>
+   <text class="lbl" x="205" y="180" fill="#b00020">slope = d_spec/2 − 1</text>
+   <!-- Annotation regions -->
+   <text class="lbl" x="110" y="258">IR (λ → 0)</text>
+   <text class="lbl" x="430" y="258" text-anchor="end">UV (bulk)</text>
+</svg>
+</p>
+<p align="center"><em>Figure 5. Schematic KPM-reconstructed density of states. The low-λ power law fixes d_spec; deviations between the IR and UV slopes evidence the dimensional flow predicted in Section 4.3.</em></p>
+
 ## 7. Discussion and Future Directions
 
 The multi-sheeted pentagon tiling represents a fertile ground for both mathematical physics and computer science.
@@ -386,4 +613,3 @@ strictly smaller spectral dimension $d_{\text{spec}} < d_{\text{eff}}$ and nontr
 causal cellular automata on these structures and analyzing them with graph-Laplacian spectral methods, we open up a
 rigorous and computationally viable avenue for studying how complex physical laws and higher-dimensional behaviors can
 emerge from simple, discrete, and frustrated 2D systems.
-

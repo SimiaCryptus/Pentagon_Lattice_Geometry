@@ -78,6 +78,62 @@ Specifically, partition the plane into kites of the $3.4.6.4$ Laves lattice. The
 is the union of **eight** adjacent kites assembled into a 13-sided polygon. Because the
 underlying kite has $\mathbb{Q}(\sqrt{3})$ coordinates (it sits on a hexagonal-symmetric
 substrate), **every vertex of the hat lies in $\mathbb{Q}(\sqrt{3})^2$**.
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-220 -180 440 360" width="500">
+   <title>The Hat Monotile</title>
+   <!-- Underlying kite grid (faint) -->
+   <g stroke="#bbb" stroke-width="0.5" fill="none" opacity="0.5">
+     <!-- Hexagonal reference grid lines -->
+     <path d="M -200 -150 L 200 -150 M -200 -100 L 200 -100 M -200 -50 L 200 -50 M -200 0 L 200 0 M -200 50 L 200 50 M -200 100 L 200 100 M -200 150 L 200 150"/>
+     <path d="M -200 -150 L -200 150 M -150 -150 L -150 150 M -100 -150 L -100 150 M -50 -150 L -50 150 M 0 -150 L 0 150 M 50 -150 L 50 150 M 100 -150 L 100 150 M 150 -150 L 150 150 M 200 -150 L 200 150"/>
+   </g>
+   <!-- The hat polygon (13 sides), constructed on a sqrt(3) grid -->
+   <!-- Vertices in units where short edge = 50, long edge = 50*sqrt(3) ~ 86.6 -->
+   <polygon points="
+     0,-100
+     50,-100
+     93.3,-75
+     93.3,-25
+     136.6,0
+     93.3,25
+     93.3,75
+     50,100
+     -43.3,100
+     -43.3,50
+     -86.6,25
+     -86.6,-25
+     -43.3,-50
+   " fill="#7fb3d5" stroke="#1b4f72" stroke-width="2.5" opacity="0.85"/>
+   <!-- Mark short vs long edges with colored dots at midpoints -->
+   <g fill="#c0392b">
+     <circle cx="25" cy="-100" r="3"/>
+     <circle cx="93.3" cy="0" r="3"/>
+     <circle cx="-43.3" cy="75" r="3"/>
+     <circle cx="-86.6" cy="0" r="3"/>
+     <circle cx="-65" cy="-37.5" r="3"/>
+     <circle cx="-21.65" cy="-75" r="3"/>
+   </g>
+   <g fill="#1e8449">
+     <circle cx="71.65" cy="-87.5" r="3"/>
+     <circle cx="93.3" cy="-50" r="3"/>
+     <circle cx="115" cy="-12.5" r="3"/>
+     <circle cx="115" cy="12.5" r="3"/>
+     <circle cx="93.3" cy="50" r="3"/>
+     <circle cx="71.65" cy="87.5" r="3"/>
+     <circle cx="3.35" cy="100" r="3"/>
+   </g>
+   <!-- Legend -->
+   <g font-family="serif" font-size="12">
+     <circle cx="-180" cy="-160" r="4" fill="#c0392b"/>
+     <text x="-170" y="-156">short edges (length 1)</text>
+     <circle cx="-180" cy="-140" r="4" fill="#1e8449"/>
+     <text x="-170" y="-136">long edges (length √3)</text>
+   </g>
+</svg>
+<br/><em>Figure 1: The hat tile, a 13-gon with edges in two length classes. Vertex
+coordinates lie in $\mathbb{Q}(\sqrt{3})^2$.</em>
+</p>
+
 
 This is the first key observation:
 
@@ -146,6 +202,42 @@ is a one-state automaton:
 - **State**: $H$ (the only tile type).
 - **Transitions**: each labeled by an edge class, all returning to state $H$.
 
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-150 -120 300 240" width="320">
+   <title>Einstein Type Graph: One Vertex, Many Self-Loops</title>
+   <!-- Central vertex H -->
+   <circle cx="0" cy="0" r="22" fill="#f5cba7" stroke="#7d6608" stroke-width="2"/>
+   <text x="0" y="6" text-anchor="middle" font-family="serif" font-size="20" font-style="italic">H</text>
+   <!-- Self-loops around H, at various angles -->
+   <g fill="none" stroke-width="1.5">
+     <path d="M 19,-12 C 70,-60 100,-40 22,-5" stroke="#c0392b"/>
+     <path d="M 22,0 C 90,-10 90,10 22,0" stroke="#1e8449"/>
+     <path d="M 19,12 C 70,60 100,40 22,5" stroke="#c0392b"/>
+     <path d="M 12,19 C 40,70 -40,70 -12,19" stroke="#2874a6"/>
+     <path d="M -19,12 C -70,60 -100,40 -22,5" stroke="#1e8449"/>
+     <path d="M -22,0 C -90,10 -90,-10 -22,0" stroke="#c0392b"/>
+     <path d="M -19,-12 C -70,-60 -100,-40 -22,-5" stroke="#1e8449"/>
+     <path d="M -12,-19 C -40,-70 40,-70 12,-19" stroke="#2874a6"/>
+   </g>
+   <!-- Arrowheads (small) -->
+   <g fill="#555">
+     <circle cx="22" cy="-5" r="2"/>
+     <circle cx="22" cy="0" r="2"/>
+     <circle cx="22" cy="5" r="2"/>
+     <circle cx="-12" cy="19" r="2"/>
+     <circle cx="-22" cy="5" r="2"/>
+     <circle cx="-22" cy="0" r="2"/>
+     <circle cx="-22" cy="-5" r="2"/>
+     <circle cx="12" cy="-19" r="2"/>
+   </g>
+   <text x="0" y="105" text-anchor="middle" font-family="serif" font-size="12" font-style="italic">
+     Self-loops labeled by edge-class pairs (~30 distinct labels)
+   </text>
+</svg>
+<br/><em>Figure 2: The ground-level type graph $\mathcal{T}_{\text{einstein}}$ has a
+single vertex with many self-loops, one per admissible edge-class adjacency.</em>
+</p>
+
 The aperiodicity therefore cannot be diagnosed from the state graph alone — it lies
 entirely in the **matching rules** $\{M_{HH,\ell}\}$ and, crucially, in the **substitution
 structure** that we now describe.
@@ -165,6 +257,50 @@ satisfy a **substitution rule**:
 $$\sigma: \mathcal{M} \to \mathcal{M}^*,$$
 mapping each metatile to a finite patch composed of (smaller) metatiles. Iterating
 $\sigma$ produces arbitrarily large patches of the tiling.
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-260 -160 520 320" width="600">
+   <title>The Substitution Rule on Metatiles</title>
+   <!-- LHS: a single metatile H7 -->
+   <g transform="translate(-180,0)">
+     <polygon points="-40,-50 40,-50 60,0 40,50 -40,50 -60,0"
+              fill="#aed6f1" stroke="#1b4f72" stroke-width="2"/>
+     <text x="0" y="5" text-anchor="middle" font-family="serif" font-size="20" font-style="italic">H₇</text>
+     <text x="0" y="80" text-anchor="middle" font-family="serif" font-size="13">metatile (level n)</text>
+   </g>
+   <!-- Arrow with sigma -->
+   <g>
+     <line x1="-100" y1="0" x2="-30" y2="0" stroke="#333" stroke-width="2"/>
+     <polygon points="-30,0 -38,-5 -38,5" fill="#333"/>
+     <text x="-65" y="-8" text-anchor="middle" font-family="serif" font-size="18" font-style="italic">σ</text>
+   </g>
+   <!-- RHS: a patch of smaller metatiles -->
+   <g transform="translate(80,0)">
+     <!-- Cluster of smaller hexagons / quads representing sub-metatiles -->
+     <polygon points="-20,-40 0,-40 10,-25 0,-10 -20,-10 -30,-25"
+              fill="#aed6f1" stroke="#1b4f72" stroke-width="1.5"/>
+     <text x="-10" y="-22" text-anchor="middle" font-family="serif" font-size="10">H₇</text>
+     <polygon points="10,-40 35,-40 45,-20 30,-5 10,-10 0,-25"
+              fill="#f9e79f" stroke="#7d6608" stroke-width="1.5"/>
+     <text x="22" y="-20" text-anchor="middle" font-family="serif" font-size="10">H₈</text>
+     <polygon points="-30,-10 0,-10 10,15 -10,30 -35,20"
+              fill="#f5b7b1" stroke="#7b241c" stroke-width="1.5"/>
+     <text x="-15" y="10" text-anchor="middle" font-family="serif" font-size="10">F</text>
+     <polygon points="10,-5 35,-5 50,15 35,35 10,30 0,15"
+              fill="#abebc6" stroke="#1e8449" stroke-width="1.5"/>
+     <text x="25" y="15" text-anchor="middle" font-family="serif" font-size="10">P</text>
+     <polygon points="-35,20 -10,30 0,50 -25,55 -45,45"
+              fill="#aed6f1" stroke="#1b4f72" stroke-width="1.5"/>
+     <text x="-22" y="42" text-anchor="middle" font-family="serif" font-size="10">H₇</text>
+     <polygon points="10,30 35,35 40,55 15,55 0,50"
+              fill="#f9e79f" stroke="#7d6608" stroke-width="1.5"/>
+     <text x="20" y="48" text-anchor="middle" font-family="serif" font-size="10">H₈</text>
+     <text x="0" y="80" text-anchor="middle" font-family="serif" font-size="13">patch of metatiles (level n−1)</text>
+   </g>
+</svg>
+<br/><em>Figure 3: Schematic of the substitution rule $\sigma$ inflating one metatile
+$H_7$ into a patch of four metatile types $\{H_7, H_8, F, P\}$.</em>
+</p>
+
 
 ### 4.2 The Two-Level Type Graph
 
@@ -184,6 +320,50 @@ $$V(\mathcal{T}) = \{H, H_7, H_8, F, P\}, \quad E(\mathcal{T}) = E_{\text{adj}} 
 
 where $E_{\text{adj}}$ encodes ground-level and meta-level adjacencies, and
 $E_{\text{inflate}}$ encodes the substitution maps.
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-220 -160 440 320" width="520">
+   <title>The Two-Level Type Graph of the Einstein</title>
+   <!-- Meta level: 4 vertices in a row -->
+   <g>
+     <circle cx="-150" cy="-90" r="20" fill="#aed6f1" stroke="#1b4f72" stroke-width="2"/>
+     <text x="-150" y="-85" text-anchor="middle" font-family="serif" font-size="14">H₇</text>
+     <circle cx="-50" cy="-90" r="20" fill="#f9e79f" stroke="#7d6608" stroke-width="2"/>
+     <text x="-50" y="-85" text-anchor="middle" font-family="serif" font-size="14">H₈</text>
+     <circle cx="50" cy="-90" r="20" fill="#f5b7b1" stroke="#7b241c" stroke-width="2"/>
+     <text x="50" y="-85" text-anchor="middle" font-family="serif" font-size="14">F</text>
+     <circle cx="150" cy="-90" r="20" fill="#abebc6" stroke="#1e8449" stroke-width="2"/>
+     <text x="150" y="-85" text-anchor="middle" font-family="serif" font-size="14">P</text>
+     <!-- Meta-level adjacency edges (curved) -->
+     <g fill="none" stroke="#555" stroke-width="1.2">
+       <path d="M -130 -90 Q -100 -110 -70 -90"/>
+       <path d="M -30 -90 Q 0 -110 30 -90"/>
+       <path d="M 70 -90 Q 100 -110 130 -90"/>
+       <path d="M -130 -90 Q -50 -135 130 -90"/>
+     </g>
+     <text x="0" y="-145" text-anchor="middle" font-family="serif" font-size="12" font-style="italic">Meta level: metatiles + substitution edges</text>
+   </g>
+   <!-- Ground level: single vertex H -->
+   <g>
+     <circle cx="0" cy="80" r="24" fill="#f5cba7" stroke="#7d6608" stroke-width="2"/>
+     <text x="0" y="86" text-anchor="middle" font-family="serif" font-size="20" font-style="italic">H</text>
+     <!-- self loops -->
+     <path d="M 23,72 C 60,40 60,120 23,88" fill="none" stroke="#555" stroke-width="1.2"/>
+     <path d="M -23,72 C -60,40 -60,120 -23,88" fill="none" stroke="#555" stroke-width="1.2"/>
+     <text x="0" y="130" text-anchor="middle" font-family="serif" font-size="12" font-style="italic">Ground level: single tile H with self-loops</text>
+   </g>
+   <!-- Inflation edges (dashed) from meta to ground -->
+   <g stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4 3" fill="none">
+     <line x1="-150" y1="-70" x2="-15" y2="62"/>
+     <line x1="-50" y1="-70" x2="-8" y2="60"/>
+     <line x1="50" y1="-70" x2="8" y2="60"/>
+     <line x1="150" y1="-70" x2="15" y2="62"/>
+   </g>
+   <text x="-195" y="0" font-family="serif" font-size="11" fill="#c0392b" font-style="italic">inflation edges</text>
+</svg>
+<br/><em>Figure 4: The decorated two-level type graph. Solid edges are adjacencies;
+dashed red edges are inflation (substitution) maps connecting metatiles to constituent hats.</em>
+</p>
+
 
 ### 4.3 Comparison with Penrose
 
@@ -287,6 +467,62 @@ For the hat (with reflections), the local data at each tile includes a **chirali
 $\chi \in \{+, -\}$. The matching rules force chirality flips along certain edge classes.
 Walking around a vertex configuration, the chirality label may flip an even or odd number
 of times — exactly analogous to the **sheet index** of `idea.md`!
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-200 -130 400 260" width="500">
+   <title>The Z₂ Chirality Bundle over the Hat Tiling</title>
+   <!-- Base: simplified hat tiling patch -->
+   <g opacity="0.9">
+     <polygon points="-150,-80 -110,-80 -90,-50 -110,-20 -150,-20 -170,-50"
+              fill="#7fb3d5" stroke="#1b4f72" stroke-width="1.5"/>
+     <text x="-130" y="-45" text-anchor="middle" font-family="serif" font-size="14">+</text>
+     <polygon points="-90,-50 -50,-50 -30,-20 -50,10 -90,10 -110,-20"
+              fill="#f5b7b1" stroke="#7b241c" stroke-width="1.5"/>
+     <text x="-70" y="-15" text-anchor="middle" font-family="serif" font-size="14">−</text>
+     <polygon points="-30,-20 10,-20 30,10 10,40 -30,40 -50,10"
+              fill="#7fb3d5" stroke="#1b4f72" stroke-width="1.5"/>
+     <text x="-10" y="15" text-anchor="middle" font-family="serif" font-size="14">+</text>
+     <polygon points="30,10 70,10 90,40 70,70 30,70 10,40"
+              fill="#f5b7b1" stroke="#7b241c" stroke-width="1.5"/>
+     <text x="50" y="45" text-anchor="middle" font-family="serif" font-size="14">−</text>
+     <polygon points="-150,-20 -110,-20 -90,10 -110,40 -150,40 -170,10"
+              fill="#f5b7b1" stroke="#7b241c" stroke-width="1.5"/>
+     <text x="-130" y="15" text-anchor="middle" font-family="serif" font-size="14">−</text>
+     <polygon points="-90,10 -50,10 -30,40 -50,70 -90,70 -110,40"
+              fill="#7fb3d5" stroke="#1b4f72" stroke-width="1.5"/>
+     <text x="-70" y="45" text-anchor="middle" font-family="serif" font-size="14">+</text>
+   </g>
+   <!-- Holonomy walk: closed loop around a vertex -->
+   <g fill="none" stroke="#1a5276" stroke-width="2.5" stroke-dasharray="5 3">
+     <path d="M -130,-20 L -70,-20 L -10,10 L -70,40 L -130,40 Z"/>
+   </g>
+   <g fill="#1a5276">
+     <circle cx="-130" cy="-20" r="3"/>
+     <circle cx="-70" cy="-20" r="3"/>
+     <circle cx="-10" cy="10" r="3"/>
+     <circle cx="-70" cy="40" r="3"/>
+     <circle cx="-130" cy="40" r="3"/>
+   </g>
+   <text x="-70" y="95" text-anchor="middle" font-family="serif" font-size="11" fill="#1a5276" font-style="italic">closed walk γ</text>
+   <!-- Legend / Z2 fiber diagram on right -->
+   <g transform="translate(140,-50)">
+     <text x="0" y="-30" text-anchor="middle" font-family="serif" font-size="13" font-weight="bold">ℤ₂ fiber</text>
+     <circle cx="0" cy="0" r="14" fill="#7fb3d5" stroke="#1b4f72" stroke-width="2"/>
+     <text x="0" y="5" text-anchor="middle" font-family="serif" font-size="16">+</text>
+     <circle cx="0" cy="50" r="14" fill="#f5b7b1" stroke="#7b241c" stroke-width="2"/>
+     <text x="0" y="55" text-anchor="middle" font-family="serif" font-size="16">−</text>
+     <!-- Double arrow between -->
+     <g stroke="#555" stroke-width="1.5" fill="none">
+       <path d="M 0,14 L 0,36"/>
+       <polygon points="0,36 -4,30 4,30" fill="#555"/>
+       <polygon points="0,14 -4,20 4,20" fill="#555"/>
+     </g>
+     <text x="22" y="30" font-family="serif" font-size="11" font-style="italic">flip</text>
+   </g>
+</svg>
+<br/><em>Figure 5: A patch of the hat tiling labeled with chirality $\chi \in \{+,-\}$.
+The closed walk $\gamma$ may pick up a non-trivial $\mathbb{Z}_2$ holonomy.</em>
+</p>
+
 
 > **Proposition 6.2**: The hat tiling carries a natural $\mathbb{Z}_2$ holonomy whose
 > "sheet index" is the chirality label $\chi$. Closed walks on the dual adjacency graph
@@ -377,6 +613,52 @@ Refining the table of `multipolygon.md` Section 9:
 | 1c    | Aperiodic, substitution, no chirality  | $\mathbb{Q}(\sqrt{3})$ | Finite (local) + infinite (meta) | **Spectre** |
 | 2     | Multi-sheeted covering, fractional dim | $\mathbb{Q}(\sqrt{5})$ | Infinite cyclic   | Pentagon (`idea.md`)     |
 | 3     | Non-reconnective                       | Mixed / transcendental | Infinite, free    | Generic irregular polygon |
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-30 -30 660 360" width="640">
+   <title>The Reconnection Hierarchy</title>
+   <!-- Horizontal axis: levels 0..3 -->
+   <g font-family="serif" font-size="13">
+     <!-- Level boxes -->
+     <rect x="10" y="50" width="90" height="60" fill="#d4efdf" stroke="#1e8449" stroke-width="2" rx="6"/>
+     <text x="55" y="75" text-anchor="middle" font-weight="bold">Level 0</text>
+     <text x="55" y="95" text-anchor="middle" font-size="11">periodic</text>
+     <rect x="120" y="20" width="90" height="60" fill="#fcf3cf" stroke="#7d6608" stroke-width="2" rx="6"/>
+     <text x="165" y="45" text-anchor="middle" font-weight="bold">1a Penrose</text>
+     <text x="165" y="65" text-anchor="middle" font-size="11">ℚ(√5)</text>
+     <rect x="120" y="100" width="90" height="60" fill="#fadbd8" stroke="#7b241c" stroke-width="3" rx="6"/>
+     <text x="165" y="125" text-anchor="middle" font-weight="bold">1b Hat</text>
+     <text x="165" y="145" text-anchor="middle" font-size="11">ℚ(√3), ℤ₂</text>
+     <rect x="120" y="180" width="90" height="60" fill="#d6eaf8" stroke="#1b4f72" stroke-width="3" rx="6"/>
+     <text x="165" y="205" text-anchor="middle" font-weight="bold">1c Spectre</text>
+     <text x="165" y="225" text-anchor="middle" font-size="11">ℚ(√3), no χ</text>
+     <rect x="240" y="100" width="100" height="60" fill="#e8daef" stroke="#6c3483" stroke-width="2" rx="6"/>
+     <text x="290" y="125" text-anchor="middle" font-weight="bold">Level 2</text>
+     <text x="290" y="145" text-anchor="middle" font-size="11">multi-sheeted</text>
+     <rect x="370" y="100" width="100" height="60" fill="#f6ddcc" stroke="#a04000" stroke-width="2" rx="6"/>
+     <text x="420" y="125" text-anchor="middle" font-weight="bold">Level 3</text>
+     <text x="420" y="145" text-anchor="middle" font-size="11">non-reconnective</text>
+     <!-- Arrows between -->
+     <g stroke="#333" stroke-width="1.5" fill="none">
+       <line x1="100" y1="80" x2="120" y2="50"/>
+       <line x1="100" y1="80" x2="120" y2="130"/>
+       <line x1="100" y1="80" x2="120" y2="210"/>
+       <line x1="210" y1="130" x2="240" y2="130"/>
+       <line x1="340" y1="130" x2="370" y2="130"/>
+     </g>
+     <!-- Axis label -->
+     <text x="240" y="290" text-anchor="middle" font-style="italic" font-size="12">
+       Increasing combinatorial / algebraic / topological complexity →
+     </text>
+     <g stroke="#333" stroke-width="2" fill="none">
+       <line x1="40" y1="270" x2="440" y2="270"/>
+       <polygon points="440,270 432,265 432,275" fill="#333"/>
+     </g>
+   </g>
+</svg>
+<br/><em>Figure 6: The reconnection hierarchy. The hat and spectre occupy the new
+sublevels 1b and 1c, with $\mathbb{Q}(\sqrt{3})$ ground-level substrate.</em>
+</p>
+
 
 The hat and spectre occupy a **new sublevel 1b/1c** in the hierarchy, distinguished from
 Penrose by:

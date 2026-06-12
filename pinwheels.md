@@ -15,6 +15,32 @@ hypotenuse points outward, then rotate the resulting shape by $90°$ around its 
 four times. The four copies tile around a central square, and the four outward-pointing
 hypotenuses look exactly like the blades of a child's pinwheel.
 
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -60 320 320" width="320" height="320">
+   <title>Rectangular pinwheel P(a,b) with C4 symmetry</title>
+   <!-- central square -->
+   <rect x="0" y="0" width="200" height="200" fill="#e8f0ff" stroke="#3060a0" stroke-width="1.5"/>
+   <!-- four fins (right triangles), curling counterclockwise -->
+   <!-- top fin: leg a along top-left of top edge, leg b upward -->
+   <polygon points="0,0 80,0 0,-60" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+   <!-- right fin: rotated 90 CW about (100,100) of top fin -->
+   <polygon points="200,0 200,80 260,0" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+   <!-- bottom fin -->
+   <polygon points="200,200 120,200 200,260" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+   <!-- left fin -->
+   <polygon points="0,200 0,120 -60,200" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+   <!-- center marker -->
+   <circle cx="100" cy="100" r="3" fill="#3060a0"/>
+   <!-- labels -->
+   <text x="100" y="115" text-anchor="middle" font-family="serif" font-size="14" fill="#3060a0">B</text>
+   <text x="40" y="-15" text-anchor="middle" font-family="serif" font-size="11" fill="#a05000">F</text>
+   <text x="40" y="-30" text-anchor="middle" font-family="serif" font-size="10" fill="#444">a</text>
+   <text x="-12" y="-25" text-anchor="middle" font-family="serif" font-size="10" fill="#444">b</text>
+</svg>
+</p>
+<p align="center"><em>Figure 1. The canonical rectangular pinwheel P(a,b): a unit square base B with four right-triangle fins arranged with C₄ symmetry.</em></p>
+
+
 The construction is irregular (the boundary is not that of a regular polygon, and its
 edges have multiple lengths and orientations) but **symmetric** (it has cyclic
 $C_n$ symmetry by construction) and **algebraically compact** (all edge vectors and
@@ -40,6 +66,44 @@ The pinwheel construction has three ingredients:
    each of the $n$ rotation images of the chosen edge of $B$, all related by the same
    rotation. The result is the **pinwheel polygon** $P = B \cup \bigcup_{k=0}^{n-1}
    R^k(F)$, where $R$ is rotation by $2\pi/n$.
+
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 180" width="560" height="180">
+   <title>Pinwheel construction recipe: base + fin + rotation</title>
+   <!-- Step 1: Base -->
+   <g transform="translate(40,40)">
+     <rect x="0" y="0" width="100" height="100" fill="#e8f0ff" stroke="#3060a0" stroke-width="1.5"/>
+     <text x="50" y="55" text-anchor="middle" font-family="serif" font-size="14" fill="#3060a0">B</text>
+     <text x="50" y="160" text-anchor="middle" font-family="serif" font-size="12" fill="#222">1. Base</text>
+   </g>
+   <!-- arrow -->
+   <text x="170" y="95" text-anchor="middle" font-family="serif" font-size="20" fill="#666">→</text>
+   <!-- Step 2: Base + one fin -->
+   <g transform="translate(200,40)">
+     <rect x="0" y="0" width="100" height="100" fill="#e8f0ff" stroke="#3060a0" stroke-width="1.5"/>
+     <polygon points="0,0 40,0 0,-30" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <text x="50" y="55" text-anchor="middle" font-family="serif" font-size="14" fill="#3060a0">B</text>
+     <text x="15" y="-8" text-anchor="middle" font-family="serif" font-size="11" fill="#a05000">F</text>
+     <text x="50" y="160" text-anchor="middle" font-family="serif" font-size="12" fill="#222">2. Attach fin</text>
+   </g>
+   <!-- arrow -->
+   <text x="340" y="95" text-anchor="middle" font-family="serif" font-size="20" fill="#666">→</text>
+   <!-- Step 3: rotate -->
+   <g transform="translate(370,40)">
+     <rect x="0" y="0" width="100" height="100" fill="#e8f0ff" stroke="#3060a0" stroke-width="1.5"/>
+     <polygon points="0,0 40,0 0,-30" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <polygon points="100,0 100,40 130,0" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <polygon points="100,100 60,100 100,130" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <polygon points="0,100 0,60 -30,100" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <!-- rotation arrow -->
+     <path d="M 50 50 m -25 0 a 25 25 0 1 0 25 -25" fill="none" stroke="#3060a0" stroke-width="1.2"/>
+     <polygon points="75,25 70,18 68,28" fill="#3060a0"/>
+     <text x="50" y="160" text-anchor="middle" font-family="serif" font-size="12" fill="#222">3. Rotate by 2π/n</text>
+   </g>
+</svg>
+</p>
+<p align="center"><em>Figure 2. The three-step pinwheel construction recipe (illustrated for n=4).</em></p>
+
 
 The resulting polygon has the **dihedral or cyclic symmetry of $B$ reduced to the
 cyclic subgroup $C_n$**: the fins break the reflection symmetry of $B$ but preserve
@@ -88,6 +152,34 @@ not congruent to the original by orientation-preserving isometries alone. This
 chirality is one of the construction's key features: it allows the pinwheel to
 distinguish "left" from "right" in expansions, producing graphs with intrinsic
 handedness.
+
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 200" width="420" height="200">
+   <title>Chirality: left-handed and right-handed pinwheels</title>
+   <!-- Left-handed (CCW fins) -->
+   <g transform="translate(40,30)">
+     <rect x="0" y="0" width="100" height="100" fill="#e8f0ff" stroke="#3060a0" stroke-width="1.5"/>
+     <polygon points="0,0 40,0 0,-30" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <polygon points="100,0 100,40 130,0" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <polygon points="100,100 60,100 100,130" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <polygon points="0,100 0,60 -30,100" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <text x="50" y="160" text-anchor="middle" font-family="serif" font-size="12" fill="#222">Left-handed</text>
+   </g>
+   <!-- Mirror -->
+   <line x1="210" y1="20" x2="210" y2="160" stroke="#999" stroke-dasharray="4,3" stroke-width="1"/>
+   <text x="210" y="15" text-anchor="middle" font-family="serif" font-size="10" fill="#999">mirror</text>
+   <!-- Right-handed (CW fins) -->
+   <g transform="translate(280,30)">
+     <rect x="0" y="0" width="100" height="100" fill="#e8f0ff" stroke="#3060a0" stroke-width="1.5"/>
+     <polygon points="60,0 100,0 100,-30" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <polygon points="100,60 100,100 130,100" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <polygon points="0,100 40,100 0,130" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <polygon points="0,0 0,40 -30,0" fill="#ffd9a8" stroke="#a05000" stroke-width="1.5"/>
+     <text x="50" y="160" text-anchor="middle" font-family="serif" font-size="12" fill="#222">Right-handed</text>
+   </g>
+</svg>
+</p>
+<p align="center"><em>Figure 3. The two chiralities of a C₄ pinwheel. Reflection swaps them; no direct rotation does.</em></p>
 
 ---
 
@@ -160,6 +252,30 @@ the fins of four neighboring pinwheels to fill a $2 \times 2$ super-square of si
 $\sqrt{(1 + b)^2 + a^2}$ (or similar, depending on fit), and this super-square then
 tiles $\mathbb{R}^2$ periodically.
 
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -80 420 420" width="420" height="420">
+   <title>Periodic tiling of pinwheels: four interlocking copies</title>
+   <defs>
+     <g id="pw">
+       <rect x="0" y="0" width="100" height="100" fill="#e8f0ff" stroke="#3060a0" stroke-width="1.2"/>
+       <polygon points="0,0 40,0 0,-30" fill="#ffd9a8" stroke="#a05000" stroke-width="1.2"/>
+       <polygon points="100,0 100,40 130,0" fill="#ffd9a8" stroke="#a05000" stroke-width="1.2"/>
+       <polygon points="100,100 60,100 100,130" fill="#ffd9a8" stroke="#a05000" stroke-width="1.2"/>
+       <polygon points="0,100 0,60 -30,100" fill="#ffd9a8" stroke="#a05000" stroke-width="1.2"/>
+     </g>
+   </defs>
+   <use href="#pw" x="0"   y="0"/>
+   <use href="#pw" x="130" y="0"/>
+   <use href="#pw" x="0"   y="130"/>
+   <use href="#pw" x="130" y="130"/>
+   <!-- super-cell outline -->
+   <rect x="-30" y="-30" width="260" height="260" fill="none" stroke="#c03030" stroke-width="1.5" stroke-dasharray="6,4"/>
+   <text x="100" y="-40" text-anchor="middle" font-family="serif" font-size="12" fill="#c03030">super-cell</text>
+</svg>
+</p>
+<p align="center"><em>Figure 4. Four rectangular pinwheels interlock to fill a periodic super-cell (dashed red).</em></p>
+
+
 This is a key distinction from the Conway–Radin pinwheel **tile** (a single right
 triangle whose tiling is aperiodic): our pinwheel **polygon** is a *composite* shape
 that tiles periodically and reconnects cleanly. The two are different mathematical
@@ -209,13 +325,51 @@ each of its three edges, with $C_3$ rotational symmetry around the centroid. If 
 fins are right triangles with legs $a$ along the base edge and $b$ perpendicular to it,
 the resulting hexagonal pinwheel has:
 
-- 3 fin hypotenuses,
-- 3 fin perpendiculars,
-- 3 base remnants.
-
 For $a, b \in \mathbb{Q}$ (with $s = 1$), $\mathbb{F} = \mathbb{Q}(\sqrt{3})$ and
 $\Gamma$ is a subgroup of $D_6 \ltimes \mathbb{F}^2$. The pinwheel reconnects on the
 triangular lattice.
+
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -80 360 320" width="360" height="320">
+   <title>C3 (triangular), C6 (hexagonal), and C5 (pentagonal) pinwheels</title>
+   <!-- C3 pinwheel -->
+   <g transform="translate(0,40)">
+     <!-- equilateral triangle, side 80, centered around (50,50) -->
+     <polygon points="10,75 90,75 50,5" fill="#e8f0ff" stroke="#3060a0" stroke-width="1.3"/>
+     <!-- three fins (small right triangles), CCW -->
+     <polygon points="10,75 40,75 5,90" fill="#ffd9a8" stroke="#a05000" stroke-width="1.2"/>
+     <polygon points="90,75 70,40 105,55" fill="#ffd9a8" stroke="#a05000" stroke-width="1.2"/>
+     <polygon points="50,5 30,40 15,15" fill="#ffd9a8" stroke="#a05000" stroke-width="1.2"/>
+     <text x="50" y="115" text-anchor="middle" font-family="serif" font-size="12" fill="#222">C₃</text>
+   </g>
+   <!-- C6 pinwheel -->
+   <g transform="translate(120,40)">
+     <!-- regular hexagon, radius 40, center (50,50) -->
+     <polygon points="90,50 70,84.6 30,84.6 10,50 30,15.4 70,15.4" fill="#e8f0ff" stroke="#3060a0" stroke-width="1.3"/>
+     <!-- six small fins -->
+     <polygon points="90,50 80,67 105,62" fill="#ffd9a8" stroke="#a05000" stroke-width="1.1"/>
+     <polygon points="70,84.6 50,84.6 75,100" fill="#ffd9a8" stroke="#a05000" stroke-width="1.1"/>
+     <polygon points="30,84.6 20,67 5,90" fill="#ffd9a8" stroke="#a05000" stroke-width="1.1"/>
+     <polygon points="10,50 20,33 -5,38" fill="#ffd9a8" stroke="#a05000" stroke-width="1.1"/>
+     <polygon points="30,15.4 50,15.4 25,0" fill="#ffd9a8" stroke="#a05000" stroke-width="1.1"/>
+     <polygon points="70,15.4 80,33 95,10" fill="#ffd9a8" stroke="#a05000" stroke-width="1.1"/>
+     <text x="50" y="115" text-anchor="middle" font-family="serif" font-size="12" fill="#222">C₆</text>
+   </g>
+   <!-- C5 pinwheel -->
+   <g transform="translate(240,40)">
+     <!-- regular pentagon, radius 40, center (50,50), vertex at top -->
+     <polygon points="50,10 88,37.6 73.5,82.4 26.5,82.4 12,37.6" fill="#e8f0ff" stroke="#3060a0" stroke-width="1.3"/>
+     <!-- five fins -->
+     <polygon points="50,10 70,22 78,5" fill="#ffd9a8" stroke="#a05000" stroke-width="1.1"/>
+     <polygon points="88,37.6 81,60 105,55" fill="#ffd9a8" stroke="#a05000" stroke-width="1.1"/>
+     <polygon points="73.5,82.4 50,82.4 70,100" fill="#ffd9a8" stroke="#a05000" stroke-width="1.1"/>
+     <polygon points="26.5,82.4 30,60 5,75" fill="#ffd9a8" stroke="#a05000" stroke-width="1.1"/>
+     <polygon points="12,37.6 30,30 15,10" fill="#ffd9a8" stroke="#a05000" stroke-width="1.1"/>
+     <text x="50" y="115" text-anchor="middle" font-family="serif" font-size="12" fill="#222">C₅ (multi-sheeted)</text>
+   </g>
+</svg>
+</p>
+<p align="center"><em>Figure 5. Higher-symmetry pinwheels: triangular (C₃), hexagonal (C₆), and pentagonal (C₅). The C₅ case requires a multi-sheeted cover due to its angular deficit.</em></p>
 
 ### 4.2 The $C_6$ Pinwheel (Hexagonal Base)
 
@@ -274,12 +428,12 @@ polygons that are nevertheless tractable under the reconnection framework.
 
 Combining the pinwheel construction with the classification of `affine.md` Section 2:
 
-| Level | Pinwheel type                                  | Reconnection           | Example                                |
-|-------|------------------------------------------------|------------------------|----------------------------------------|
-| 0     | $C_n$ pinwheel, $n \in \{3, 4, 6\}$, rational fins | Full periodic reconnection | Rectangular pinwheel $P_{a,b}$, $a,b \in \mathbb{Q}$ |
-| 1     | $C_n$ pinwheel, $n \in \{5, 8, 12\}$, single quadratic fin | Multi-sheeted full reconnection | Pentagonal pinwheel              |
-| 2     | $C_n$ pinwheel, $n \in \{7, 9, 11\}$ or mixed quadratic | Edge-restricted reconnection (drop hypotenuses) | Heptagonal pinwheel        |
-| 3     | Asymmetric "pinwheel" with no compatible $\mathbb{F}$ | Non-reconnective | Random fin parameters                |
+| Level | Pinwheel type                                              | Reconnection                                    | Example                                              |
+|-------|------------------------------------------------------------|-------------------------------------------------|------------------------------------------------------|
+| 0     | $C_n$ pinwheel, $n \in \{3, 4, 6\}$, rational fins         | Full periodic reconnection                      | Rectangular pinwheel $P_{a,b}$, $a,b \in \mathbb{Q}$ |
+| 1     | $C_n$ pinwheel, $n \in \{5, 8, 12\}$, single quadratic fin | Multi-sheeted full reconnection                 | Pentagonal pinwheel                                  |
+| 2     | $C_n$ pinwheel, $n \in \{7, 9, 11\}$ or mixed quadratic    | Edge-restricted reconnection (drop hypotenuses) | Heptagonal pinwheel                                  |
+| 3     | Asymmetric "pinwheel" with no compatible $\mathbb{F}$      | Non-reconnective                                | Random fin parameters                                |
 
 Notice that **most** pinwheels of practical interest fall in Levels 0 or 1 — the
 construction is naturally aligned with the reconnection framework. This is the
@@ -300,6 +454,7 @@ sense in which pinwheels are "designed for reconnection".
 - **$d_{\text{eff}}$**: $2$ exactly.
 
 Special cases:
+
 - $a = b = 1/2$: symmetric pinwheel, super-cell is a $\sqrt{2} \times \sqrt{2}$ square.
 - $a = 1/2, b = 1$: tall fins (the "windmill blade" pinwheel).
 - $a \to 0$: fins degenerate to spikes, pinwheel approaches the unit square.
