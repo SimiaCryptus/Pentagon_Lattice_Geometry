@@ -1,0 +1,41 @@
+batchload("pinwheels.mac")
+============================================================ 
+pinwheels.mac : Pinwheel Polygons and Edge-Restricted 
+                Reconnection 
+============================================================ 
+Configuration: 
+  POLY_TYPE         = CR_triangle 
+  ACTIVE_MODE       = legs_only 
+  EXPERIMENT_PRESET = small 
+  BFS_DEPTH         = 3 
+  M_WALKS           = 200 
+  T_STEPS           = 30 
+  FIBER_ORDER       = 8 
+Section 1: field arithmetic primitives loaded. 
+Section 2: polygon ' CR_triangle ' loaded. 
+  vertices = [[0, 0], [1, 0], [0, 2]] 
+  edges    = [leg1, hyp, leg2] 
+  field    = Q 
+  n_edges  = 3 
+  edge length-squareds: 
+    e 1 ( leg1 ) : 1 
+    e 2 ( hyp ) : 5 
+    e 3 ( leg2 ) : 4 
+Section 3: active/inactive partition computed. 
+  edge_active = [true, false, true] 
+  edge_weak   = [false, false, false] 
+  |E_A|       = 2 
+  |E_weak|    = 0 
+  |E_I|       = 1 
+------------------------------------------------------------ 
+SECTION 4: Orientation group analysis 
+------------------------------------------------------------ 
+Edge angles (radians): 
+  e 1 ( leg1 ) :  0.0  ~  0.0  deg 
+  e 2 ( hyp ) :  2.034443935795703  ~  116.565051177078  deg 
+  e 3 ( leg2 ) :  - 1.570796326794897  ~  - 90.0  deg 
+Active edge indices:  [1, 3] 
+Weak   edge indices:  [] 
+incorrect syntax: then is an unknown keyword in a do statement.
+SpacedeltaSpace<=Space-%piSpacethenSpace
+                  ^

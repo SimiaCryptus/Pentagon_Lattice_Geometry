@@ -260,17 +260,49 @@ export class LatticeView {
       ctx.fill();
     }
     if (opts.strokeTiles) {
-      ctx.strokeStyle = isSelSheet
-        ? "rgba(255,255,255,0.18)"
-        : "rgba(255,255,255,0.08)";
-      ctx.lineWidth = isSelSheet
-        ? opts.borderWidth
-        : Math.max(0.4, opts.borderWidth * 0.6);
-      ctx.stroke();
+       // If this tile has an activeEdges restriction (pinwheel), draw
+       // active edges solid and inactive edges with a dashed, dim style.
+       if (t.activeEdges) {
+         const n = t.vertsF.length;
+         for (let k = 0; k < n; k++) {
+           const [sx0, sy0] = this.worldToScreen(...t.vertsF[k]);
+           const [sx1, sy1] = this.worldToScreen(...t.vertsF[(k + 1) % n]);
+           ctx.beginPath();
+           ctx.moveTo(sx0, sy0);
+           ctx.lineTo(sx1, sy1);
+           if (t.activeEdges[k]) {
+             ctx.strokeStyle = isSelSheet
+               ? "rgba(255,255,255,0.30)"
+               : "rgba(255,255,255,0.14)";
+             ctx.lineWidth = isSelSheet
+               ? opts.borderWidth * 1.3
+               : Math.max(0.4, opts.borderWidth * 0.7);
+             ctx.setLineDash([]);
+           } else {
+             ctx.strokeStyle = isSelSheet
+               ? "rgba(255, 90, 90, 0.55)"
+               : "rgba(255, 90, 90, 0.28)";
+             ctx.lineWidth = isSelSheet
+               ? opts.borderWidth
+               : Math.max(0.4, opts.borderWidth * 0.5);
+             ctx.setLineDash([4, 3]);
+           }
+           ctx.stroke();
+         }
+         ctx.setLineDash([]);
+       } else {
+         ctx.strokeStyle = isSelSheet
+           ? "rgba(255,255,255,0.18)"
+           : "rgba(255,255,255,0.08)";
+         ctx.lineWidth = isSelSheet
+           ? opts.borderWidth
+           : Math.max(0.4, opts.borderWidth * 0.6);
+         ctx.stroke();
+       }
     }
 
     const drawLabels = isSelSheet || opts.labelsAllSheets;
-    if (drawLabels && !t.isSierpinski) {
+     if (drawLabels && !t.isSierpinski && !t.isPinwheel) {
       const [cx, cy] = this.worldToScreen(...t.centroidF);
       const sz = opts.labelSize;
       ctx.font = `600 ${sz}px ui-monospace, 'JetBrains Mono', monospace`;

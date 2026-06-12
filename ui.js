@@ -49,7 +49,7 @@ function typesetMath(el) {
                 window.MathJax.typesetPromise([el]).catch(err =>
                     console.warn("MathJax typeset error:", err));
             }
-        }, {once: true});
+        }, { once: true });
     }
 }
 
@@ -65,7 +65,7 @@ async function loadDoc(filename) {
         const html = (typeof marked !== "undefined")
             ? markedWithMath(text)
             : `<pre>${text.replace(/[&<>]/g, c =>
-                ({"&": "&amp;", "<": "&lt;", ">": "&gt;"}[c]))}</pre>`;
+                ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]))}</pre>`;
         _docCache[filename] = html;
         return html;
     } catch (err) {
@@ -116,11 +116,15 @@ export function initDocs() {
     if (!maximizeBtn || !modal) return;
     // Build tab buttons inside the modal that mirror the sidebar tabs.
     const DOC_TABS = [
-        {label: "Overview", doc: "README.md"},
-        {label: "Concept", doc: "idea.md"},
-        {label: "Erdos", doc: "erdos.md"},
-        {label: "Irregular", doc: "affine.md"},
-        {label: "Polyhedra", doc: "polyhedra.md"},
+        { label: "Overview", doc: "README.md" },
+        { label: "Concept", doc: "idea.md" },
+        { label: "Erdos", doc: "erdos.md" },
+        { label: "Irregular", doc: "affine.md" },
+        { label: "Polyhedra", doc: "polyhedra.md" },
+        { label: "Pinwheel", doc: "pinwheels.md" },
+        { label: "Multipolygon", doc: "multipolygon.md" },
+        { label: "Einstein", doc: "einstein.md" },
+        { label: "Insights", doc: "insights.md" },
     ];
 
     function syncModalTabs() {
@@ -129,7 +133,7 @@ export function initDocs() {
         });
     }
 
-    DOC_TABS.forEach(({label, doc}) => {
+    DOC_TABS.forEach(({ label, doc }) => {
         const btn = document.createElement("button");
         btn.className = "doc-tab";
         btn.dataset.doc = doc;
@@ -196,6 +200,13 @@ export function renderTileInfo(el, tile, lattice) {
     if (tile.isSierpinski) {
         html.push(kv("Type", `<span class="pill">Sierpiński triangle</span>`));
         html.push(kv("Scale", `<span class="pill">1/${Math.pow(2, tile.depth)}</span>`));
+    } else if (tile.isPinwheel) {
+        html.push(kv("Type", `<span class="pill">Pinwheel triangle</span>`));
+        html.push(kv("Edges", `<span class="pill">legs active</span> ` +
+            `<span class="pill" style="background:#5a1d1d;color:#ffb">hyp inactive</span>`));
+        html.push(kv("Orient (Z₄)", `<span class="pill">o${tile.orient}</span>` +
+            ` <span style="color:var(--muted);font-size:11px">Klein 4-group</span>`));
+        html.push(kv("Reflection σ", `<span class="pill">${tile.sigma}</span>`));
     } else {
         const isOdd = n % 2 === 1;
         if (isOdd) {
@@ -227,17 +238,21 @@ export function renderTileInfo(el, tile, lattice) {
     html.push(`<div class="section">Neighbors</div>`);
     for (let k = 0; k < tile.neighbors.length; k++) {
         const nIdx = tile.neighbors[k];
+        const isInactive = tile.activeEdges && !tile.activeEdges[k];
+        const edgeLabel = isInactive
+            ? `edge ${k + 1} <span style="color:#ff8a8a;font-size:10px">[inactive]</span>`
+            : `edge ${k + 1}`;
         if (nIdx === null) {
             html.push(`<div class="neighbor-row missing">
-          <span class="pill edge">edge ${k + 1}</span>
-          <span>out of lattice</span>
+           <span class="pill edge">${edgeLabel}</span>
+           <span>${isInactive ? "no generator (boundary)" : "out of lattice"}</span>
           <span></span>
         </div>`);
             continue;
         }
         const nb = lattice.tiles[nIdx];
         html.push(`<div class="neighbor-row">
-        <span class="pill edge">edge ${k + 1}</span>
+         <span class="pill edge">${edgeLabel}</span>
       <span>→ #${nb.index} · <span style="color:var(--accent3)">s${nb.sheet}</span> · <span style="color:var(--accent2)">o${nb.orient}</span></span>
         <span class="delta">Δs = +${tile.neighborSheetDeltas[k]}</span>
       </div>`);
@@ -261,7 +276,7 @@ function floatBlock(fx, fy) {
 }
 
 function escapeHtml(s) {
-    return s.replace(/[&<>]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;"}[c]));
+    return s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
 }
 
 export function appendWalkStep(listEl, tile, edgeK, reason) {

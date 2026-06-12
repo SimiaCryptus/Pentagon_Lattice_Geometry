@@ -79,6 +79,7 @@ group is **free** and the adjacency graph is a tree.
 Most polygons — especially irregular ones — fall into this category. The expansion grows
 exponentially (branching factor up to $n-1$ per step, since one edge was used to arrive),
 and the resulting structure has:
+
 - **No periodic long-range order**.
 - **Exponential volume growth**, giving a formal dimension $d_{\text{eff}} = \infty$ in
   the graph-theoretic sense (or more precisely, $d_{\text{eff}}$ equal to the growth
@@ -164,13 +165,13 @@ Combining the two criteria, we obtain a complete taxonomy of expansion families:
 - **Both criteria satisfied**, but the orientation group does *not* act transitively, or
   the reconnection produces a quasiperiodic rather than periodic structure.
 - Examples:
-  - **Regular pentagon** ($\mathbb{F} = \mathbb{Q}(\sqrt{5})$, $\Gamma = \mathbb{Z}_5$):
-    reconnects into a **Penrose-like quasicrystal** or, in the multi-sheeted
-    construction, a covering space with fractional dimension $2 < d_{\text{eff}} < 3$.
-  - **Sierpiński triangle** (equilateral triangle with a specific contraction ratio):
-    reconnects into a **fractal** with $d_{\text{eff}} = \log 3 / \log 2 \approx 1.585$.
-  - **Koch snowflake** (equilateral triangle with edge-replacement rule): reconnects into
-    a fractal curve with $d_{\text{eff}} = \log 4 / \log 3 \approx 1.261$.
+    - **Regular pentagon** ($\mathbb{F} = \mathbb{Q}(\sqrt{5})$, $\Gamma = \mathbb{Z}_5$):
+      reconnects into a **Penrose-like quasicrystal** or, in the multi-sheeted
+      construction, a covering space with fractional dimension $2 < d_{\text{eff}} < 3$.
+    - **Sierpiński triangle** (equilateral triangle with a specific contraction ratio):
+      reconnects into a **fractal** with $d_{\text{eff}} = \log 3 / \log 2 \approx 1.585$.
+    - **Koch snowflake** (equilateral triangle with edge-replacement rule): reconnects into
+      a fractal curve with $d_{\text{eff}} = \log 4 / \log 3 \approx 1.261$.
 - The adjacency graph has **polynomial but non-integer volume growth**.
 
 ### 3.3 Non-Reconnective (Trees)
@@ -235,30 +236,30 @@ Given a polygon $P$, the following procedure determines which expansion family i
 to:
 
 1. **Compute the algebraic field** $\mathbb{F}$ of the polygon's vertex coordinates.
-   - Determine the minimal polynomial of each vertex coordinate over $\mathbb{Q}$.
-   - Compute the compositum of all these fields.
+    - Determine the minimal polynomial of each vertex coordinate over $\mathbb{Q}$.
+    - Compute the compositum of all these fields.
 
 2. **Check Criterion 1** (Orientation Closure):
-   - Compute the rotation angle $\theta_k$ introduced by each edge generator.
-   - Check whether all $\theta_k$ are rational multiples of $\pi$.
-   - If **no**: the expansion is **non-reconnective (tree)**. Stop.
-   - If **yes**: proceed to Criterion 2.
+    - Compute the rotation angle $\theta_k$ introduced by each edge generator.
+    - Check whether all $\theta_k$ are rational multiples of $\pi$.
+    - If **no**: the expansion is **non-reconnective (tree)**. Stop.
+    - If **yes**: proceed to Criterion 2.
 
 3. **Check Criterion 2** (Single Irrational Base):
-   - Check whether $\mathbb{F} = \mathbb{Q}(\alpha)$ for a single $\alpha$.
-   - Equivalently, check whether $[\mathbb{F} : \mathbb{Q}]$ equals the degree of the
-     minimal polynomial of a single generator.
-   - If **no**: the expansion is **non-reconnective (tree)**. Stop.
-   - If **yes**: proceed to classification.
+    - Check whether $\mathbb{F} = \mathbb{Q}(\alpha)$ for a single $\alpha$.
+    - Equivalently, check whether $[\mathbb{F} : \mathbb{Q}]$ equals the degree of the
+      minimal polynomial of a single generator.
+    - If **no**: the expansion is **non-reconnective (tree)**. Stop.
+    - If **yes**: proceed to classification.
 
 4. **Classify the reconnection type**:
-   - Attempt to tile $\mathbb{R}^2$ flatly (check angular sums at vertices).
-   - If flat tiling is possible: **periodic tiling** (e.g., square, hexagon).
-   - If flat tiling is impossible but the expansion reconnects with a contraction ratio:
-     **fractal** (e.g., Sierpiński, Koch).
-   - If flat tiling is impossible and no contraction: **multi-sheeted covering space**
-     (e.g., pentagon), with fractional dimension to be determined by the methods of
-     `idea.md` Section 6.
+    - Attempt to tile $\mathbb{R}^2$ flatly (check angular sums at vertices).
+    - If flat tiling is possible: **periodic tiling** (e.g., square, hexagon).
+    - If flat tiling is impossible but the expansion reconnects with a contraction ratio:
+      **fractal** (e.g., Sierpiński, Koch).
+    - If flat tiling is impossible and no contraction: **multi-sheeted covering space**
+      (e.g., pentagon), with fractional dimension to be determined by the methods of
+      `idea.md` Section 6.
 
 ---
 
@@ -278,6 +279,7 @@ $G$-bundle construction in `idea.md`. Specifically:
 
 The two reconnection criteria thus have direct geometric interpretations in the bundle
 language:
+
 - **Criterion 1** (finite orientation group) ↔ the holonomy group is **finite** (the
   bundle has finitely many sheets).
 - **Criterion 2** (single irrational base) ↔ the transition functions live in a
@@ -287,14 +289,14 @@ language:
 
 ## 7. Summary Table
 
-| Polygon              | Field $\mathbb{F}$              | $\Gamma$       | Criterion 1 | Criterion 2 | Result                        |
-|----------------------|---------------------------------|----------------|-------------|-------------|-------------------------------|
-| Square               | $\mathbb{Q}$                    | $\mathbb{Z}_4$ | ✓           | ✓           | Periodic lattice ($d=2$)      |
-| Equilateral triangle | $\mathbb{Q}(\sqrt{3})$          | $\mathbb{Z}_6$ | ✓           | ✓           | Periodic lattice ($d=2$)      |
-| Regular hexagon      | $\mathbb{Q}(\sqrt{3})$          | $\mathbb{Z}_6$ | ✓           | ✓           | Periodic lattice ($d=2$)      |
-| Regular pentagon     | $\mathbb{Q}(\sqrt{5})$          | $\mathbb{Z}_5$ | ✓           | ✓           | Multi-sheeted ($2<d<3$)       |
-| Regular octagon      | $\mathbb{Q}(\sqrt{2})$          | $\mathbb{Z}_8$ | ✓           | ✓           | Quasicrystal / multi-sheeted  |
-| Regular 15-gon       | $\mathbb{Q}(\sqrt{3},\sqrt{5})$ | $\mathbb{Z}_{15}$ | ✓        | ✗           | Non-reconnective tree         |
-| Sierpiński triangle  | $\mathbb{Q}(\sqrt{3})$          | $\mathbb{Z}_6$ | ✓           | ✓           | Fractal ($d \approx 1.585$)   |
-| Koch snowflake       | $\mathbb{Q}(\sqrt{3})$          | $\mathbb{Z}_6$ | ✓           | ✓           | Fractal ($d \approx 1.261$)   |
-| Generic irregular    | Transcendental / high degree    | Infinite       | ✗           | ✗           | Non-reconnective tree         |
+| Polygon              | Field $\mathbb{F}$              | $\Gamma$          | Criterion 1 | Criterion 2 | Result                       |
+|----------------------|---------------------------------|-------------------|-------------|-------------|------------------------------|
+| Square               | $\mathbb{Q}$                    | $\mathbb{Z}_4$    | ✓           | ✓           | Periodic lattice ($d=2$)     |
+| Equilateral triangle | $\mathbb{Q}(\sqrt{3})$          | $\mathbb{Z}_6$    | ✓           | ✓           | Periodic lattice ($d=2$)     |
+| Regular hexagon      | $\mathbb{Q}(\sqrt{3})$          | $\mathbb{Z}_6$    | ✓           | ✓           | Periodic lattice ($d=2$)     |
+| Regular pentagon     | $\mathbb{Q}(\sqrt{5})$          | $\mathbb{Z}_5$    | ✓           | ✓           | Multi-sheeted ($2<d<3$)      |
+| Regular octagon      | $\mathbb{Q}(\sqrt{2})$          | $\mathbb{Z}_8$    | ✓           | ✓           | Quasicrystal / multi-sheeted |
+| Regular 15-gon       | $\mathbb{Q}(\sqrt{3},\sqrt{5})$ | $\mathbb{Z}_{15}$ | ✓           | ✗           | Non-reconnective tree        |
+| Sierpiński triangle  | $\mathbb{Q}(\sqrt{3})$          | $\mathbb{Z}_6$    | ✓           | ✓           | Fractal ($d \approx 1.585$)  |
+| Koch snowflake       | $\mathbb{Q}(\sqrt{3})$          | $\mathbb{Z}_6$    | ✓           | ✓           | Fractal ($d \approx 1.261$)  |
+| Generic irregular    | Transcendental / high degree    | Infinite          | ✗           | ✗           | Non-reconnective tree        |

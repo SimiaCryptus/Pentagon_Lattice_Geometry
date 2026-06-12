@@ -2,7 +2,7 @@
 // Top-level wiring: build lattice, install canvas interactions,
 // hook up keyboard walking and side-panel updates.
 
-import { buildNgonLattice, buildSierpinski, fieldInfoForN, POLY_PRESETS } from "./ngon.js";
+import { buildNgonLattice, buildSierpinski, buildPinwheel, fieldInfoForN, POLY_PRESETS } from "./ngon.js";
 import { LatticeView } from "./render.js";
 import { renderTileInfo, appendWalkStep, clearWalk } from "./ui.js";
 import { initDocs } from "./ui.js";
@@ -12,6 +12,39 @@ const canvas = document.getElementById("lattice");
 const view = new LatticeView(canvas);
 
 const $ = (id) => document.getElementById(id);
+// ── Inject pinwheel option into the polygon-type select and add options UI ──
+(function injectPinwheelUI() {
+   const polyType = document.getElementById("polyType");
+   if (polyType && !polyType.querySelector('option[value="pinwheel"]')) {
+     const opt = document.createElement("option");
+     opt.value = "pinwheel";
+      opt.textContent = "Pinwheel (Rectangle + Corner Triangle)";
+     // Insert before sierpinski if present, else append.
+     const sierp = polyType.querySelector('option[value="sierpinski"]');
+     if (sierp) polyType.insertBefore(opt, sierp);
+     else polyType.appendChild(opt);
+   }
+   // Add pinwheel options panel next to the sierpinski depth control.
+   const sierpLabel = document.getElementById("sierpinskiDepthLabel");
+   if (sierpLabel && !document.getElementById("pinwheelOptionsLabel")) {
+     const label = document.createElement("label");
+     label.id = "pinwheelOptionsLabel";
+     label.style.display = "none";
+     label.innerHTML =
+       `<span style="font-size:12px;color:var(--muted)">Pinwheel options</span>` +
+        `<div style="display:flex;gap:6px;margin-top:4px;align-items:center;font-size:12px">` +
+        `<span>a</span><input type="number" id="pinwheelA" value="2" step="0.5" min="0.5" max="6" style="width:55px">` +
+        `<span>b</span><input type="number" id="pinwheelB" value="1" step="0.5" min="0.5" max="6" style="width:55px">` +
+        `<span>c</span><input type="number" id="pinwheelC" value="1" step="0.5" min="0.5" max="6" style="width:55px">` +
+        `</div>` +
+       `<label style="display:flex;align-items:center;gap:6px;font-size:12px;margin-top:4px">` +
+       `<input type="checkbox" id="pinwheelHypSheets">` +
+        `Hypotenuse → sheet transitions (visualisation)` +
+       `</label>`;
+     sierpLabel.parentNode.insertBefore(label, sierpLabel.nextSibling);
+   }
+})();
+
 
 const els = {
   radius: $("radius"),
@@ -27,6 +60,11 @@ const els = {
   customN: $("customN"),
   sierpinskiDepthLabel: $("sierpinskiDepthLabel"),
   sierpinskiDepth: $("sierpinskiDepth"),
+   pinwheelOptionsLabel: $("pinwheelOptionsLabel"),
+   pinwheelHypSheets: $("pinwheelHypSheets"),
+   pinwheelA: $("pinwheelA"),
+   pinwheelB: $("pinwheelB"),
+   pinwheelC: $("pinwheelC"),
   fieldInfo: $("fieldInfo"),
   // display
   colorMode: $("colorMode"),
@@ -104,6 +142,16 @@ function getPolyConfig() {
   if (type === "sierpinski") {
     return { mode: "sierpinski", depth: parseInt(els.sierpinskiDepth.value, 10) || 4 };
   }
+   if (type === "pinwheel") {
+      const a = parseFloat(els.pinwheelA && els.pinwheelA.value) || 2;
+      const b = parseFloat(els.pinwheelB && els.pinwheelB.value) || 1;
+      const c = parseFloat(els.pinwheelC && els.pinwheelC.value) || 1;
+     return {
+       mode: "pinwheel",
+        a, b, c,
+       hypotenuseSheets: els.pinwheelHypSheets ? els.pinwheelHypSheets.checked : false,
+     };
+   }
   if (type === "custom") {
     return { mode: "ngon", n: Math.max(3, Math.min(24, parseInt(els.customN.value, 10) || 7)) };
   }
@@ -116,8 +164,11 @@ function updatePolyTypeUI() {
   const type = els.polyType.value;
   els.customNLabel.style.display = (type === "custom") ? "" : "none";
   els.sierpinskiDepthLabel.style.display = (type === "sierpinski") ? "" : "none";
+   if (els.pinwheelOptionsLabel) {
+     els.pinwheelOptionsLabel.style.display = (type === "pinwheel") ? "" : "none";
+   }
 
-  // Show/hide BFS radius (not meaningful for Sierpiński).
+   // Show/hide BFS radius (not meaningful for Sierpiński; meaningful for pinwheel).
   const radiusLabel = els.radius.closest("label");
   if (radiusLabel) radiusLabel.style.display = (type === "sierpinski") ? "none" : "";
 
@@ -128,6 +179,21 @@ function updatePolyTypeUI() {
       `Field: ℚ(√3) &nbsp;|&nbsp; Γ: ℤ₆<br>` +
       `IFS contraction ratio: ½<br>` +
       `Fractal dim: log3/log2 ≈ 1.585`;
+   } else if (type === "pinwheel") {
+     const cfg = getPolyConfig();
+     els.fieldInfo.innerHTML =
+        `<b>Pinwheel Tile</b> (rectangle + free hypotenuse triangle)<br>` +
+        `Rectangle: ${cfg.a} × ${cfg.b} &nbsp;|&nbsp; Triangle legs: ${cfg.a} × ${cfg.c}<br>` +
+        `Hypotenuse: √(${cfg.a}² + ${cfg.c}²) = ${Math.hypot(cfg.a, cfg.c).toFixed(3)}<br>` +
+        `Active edges: 4 of 5 (3 rectangle sides + vertical triangle leg)<br>` +
+        `Inactive: hypotenuse (free edge, edge 4 in CCW order)<br>` +
+        `Replication: ×4 by 90° rotations → windmill motif (ℤ₄)<br>` +
+        `Irregular but symmetric; algebraically compact<br>` +
+        `Field: ℚ (when a, b, c ∈ ℚ) &nbsp;|&nbsp; Target lattice: ℤ²<br>` +
+       (cfg.hypotenuseSheets
+          ? `Hypotenuses carry sheet-shift (visualisation only)`
+          : `Hypotenuses are pure boundary (no sheet shift)`) +
+        `<br>d<sub>eff</sub> = 2 exactly`;
   } else {
     const n = getPolyConfig().n;
     const info = fieldInfoForN(n);
@@ -144,6 +210,12 @@ function updatePolyTypeUI() {
     if (cfg.mode === "sierpinski") {
       sub.innerHTML = `Sierpiński Triangle IFS. Click a tile to inspect. ` +
         `Press <kbd>space</kbd> to play/pause CA, <kbd>n</kbd> to step.`;
+     } else if (cfg.mode === "pinwheel") {
+       sub.innerHTML = `Pinwheel tile: rectangle (a×b) + right triangle (legs a, c) with free hypotenuse, ` +
+         `replicated by 90° rotations (×4) about the inner corner to form a windmill (ℤ₄). ` +
+         `Click a tile to inspect. Press <kbd>1</kbd>–<kbd>5</kbd> to walk edges ` +
+         `(the hypotenuse edge is free / inactive). ` +
+         `Press <kbd>space</kbd> to play/pause CA, <kbd>n</kbd> to step.`;
     } else {
       const edgeKeys = cfg.n <= 9
         ? `<kbd>1</kbd>–<kbd>${cfg.n}</kbd>`
@@ -168,6 +240,13 @@ function rebuild() {
 
   if (cfg.mode === "sierpinski") {
     lattice = buildSierpinski(cfg.depth);
+   } else if (cfg.mode === "pinwheel") {
+     const radius = Math.max(0, Math.min(8, parseInt(els.radius.value, 10) || 3));
+      lattice = buildPinwheel({
+        radius,
+        a: cfg.a, b: cfg.b, c: cfg.c,
+        hypotenuseSheets: cfg.hypotenuseSheets,
+      });
   } else {
     const radius = Math.max(0, Math.min(8, parseInt(els.radius.value, 10) || 3));
     const groupOrder = groupOrderFromSel();
@@ -260,6 +339,24 @@ els.customN.addEventListener("change", () => {
 });
 els.sierpinskiDepth.addEventListener("change", () => {
   if (els.polyType.value === "sierpinski") rebuild();
+});
+if (els.pinwheelHypSheets) {
+   els.pinwheelHypSheets.addEventListener("change", () => {
+     if (els.polyType.value === "pinwheel") rebuild();
+   });
+}
+// Pinwheel a, b, c dimension changes trigger rebuild.
+["pinwheelA", "pinwheelB", "pinwheelC"].forEach((id) => {
+   const el = document.getElementById(id);
+   if (el) el.addEventListener("change", () => {
+     if (els.polyType.value === "pinwheel") {
+       // Refresh refs (in case they were added after initial $()).
+       els.pinwheelA = document.getElementById("pinwheelA");
+       els.pinwheelB = document.getElementById("pinwheelB");
+       els.pinwheelC = document.getElementById("pinwheelC");
+       rebuild();
+     }
+   });
 });
 
 // ---- Display option wiring ----
@@ -490,6 +587,10 @@ window.addEventListener("keydown", (e) => {
   if (k < 0) return;
   const t = lattice.tiles[currentTileIdx];
   if (k >= t.neighbors.length) return;
+   if (t.activeEdges && !t.activeEdges[k]) {
+     appendWalkStep(els.walk, t, k, "inactive edge (pinwheel)");
+     return;
+   }
   const nIdx = t.neighbors[k];
   if (nIdx === null) {
     appendWalkStep(els.walk, t, k, "no neighbor in lattice");

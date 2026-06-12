@@ -63,6 +63,19 @@ if ?fboundp('make_random_state) then
      set_random_state(make_random_state(20250101))
 else
      print("(note: make_random_state unavailable; using default RNG seed)")$
+   /* Load string-processing package for pad_right used in summary tables. */
+   if not(?fboundp('pad_right)) then errcatch(load("stringproc"))$
+   /* Fallback pad_right if package unavailable. */
+   if not(?fboundp('pad_right)) then
+       pad_right(s, n) := block(
+           [str : if stringp(s) then s else string(s),
+            len, pad],
+           len : slength(str),
+           if len >= n then str
+           else (
+               pad : apply(sconcat, makelist(" ", k, 1, n - len)),
+               sconcat(str, pad)))$
+
 /* =====================================================================
       SECTION 0b.  GLOBAL UTILITY FUNCTIONS
       ---------------------------------------------------------------------
@@ -78,9 +91,12 @@ sq_dist_exact(p, q) := block(
 /* Decompose an element of Q(sqrt(5)) into [r, s] where value = r + s*sqrt(5).
     Works on ratsimp'd expressions. */
 qs5_decompose(z) := block(
-      [zz : ratsimp(expand(z)), r, s],
+         [zz : ratsimp(expand(z)), r, s, has_sqrt],
+         /* If z is a plain rational (no sqrt(5)), s = 0. */
       r : ratsimp(subst(0, sqrt(5), zz)),
-      s : ratsimp((zz - r) / sqrt(5)),
+         has_sqrt : freeof(sqrt(5), zz),
+         s : if has_sqrt then 0
+             else ratsimp((zz - r) / sqrt(5)),
       [r, s]) $
 /* Floating-point value of r + s*sqrt(5). */
 qs5_float(rs) := float(rs[1] + rs[2] * sqrt(5)) $
@@ -283,7 +299,7 @@ log_log_fit_basic(xs, ys) := block(
                                        This is the rigorous regime of
                                        idea.md §2.4.
     ===================================================================== */
-EXPERIMENT_PRESET : "medium" $
+EXPERIMENT_PRESET : "huge" $
 if ?boundp('EXPERIMENT_PRESET_OVERRIDE) then
     EXPERIMENT_PRESET : EXPERIMENT_PRESET_OVERRIDE $
 /* Default vortex rule for the main cluster.  Set to "signed3" or
@@ -721,7 +737,10 @@ if TAU_MODE = "cap" then (
      /* Rebind cap rule body to use the pre-versions. */
      tau_rule_cap(i, k) := block(
          [c1 : cell_center[i],
-          c2 : reflected_neighbor_center(c1[1], c1[2], cell_chir[i], k),
+             c2 : reflected_neighbor_center(c1[1], c1[2],
+                                            if length(cell_chir) >= i
+                                              then cell_chir[i] else 0,
+                                            k),
           a, b],
          a : in_cap_window_pre(c1),
          b : in_cap_window_pre(c2),
@@ -822,7 +841,10 @@ add_dist_class(rs, i, j) := block(
        /* Guard: skip degenerate zero-distance (same geometric position,
           different sheets) and any non-list result from sq_dist_exact. */
        if not listp(rs) then return(false),
-       if ratsimp(rs[1]) = 0 and ratsimp(rs[2]) = 0 then return(false),
+         /* Use float threshold; exact zero check misses near-zero residuals
+            from Q(sqrt(5)) arithmetic that round to ~1e-16. */
+         if abs(float(rs[1])) < 1e-12 and abs(float(rs[2])) < 1e-12
+             then return(false),
       idx : find_dist_class(rs),
       if idx = 0 then (
           dist_class_table : endcons([rs, 0, []], dist_class_table),
@@ -867,9 +889,22 @@ if dist_pair_capped then
 else
       print("All-pairs computation complete:", dist_pair_count, "pairs.") $
 print("Sorting distance classes...")$
-/* Sort distance classes by ascending float value. */
-dist_class_sorted : sort(dist_class_table,
-      lambda([a, b], qs5_lt(a[1], b[1]))) $
+/* Sort distance classes by ascending float value.
+    PERFORMANCE: pre-compute float keys once per class so sort
+    comparisons are O(1) float compares instead of repeated
+    ratsimp(expand(...)) evaluations.  For ~10^4-10^5 classes the
+    naive symbolic sort can hang for hours. */
+block(
+       [n_classes : length(dist_class_table),
+        keyed : [], entry, fkey, k],
+       print("  (pre-computing float keys for", n_classes, "classes...)"),
+       for k : 1 thru n_classes do (
+           entry : dist_class_table[k],
+           fkey  : float(entry[1][1] + entry[1][2] * 2.2360679774997896),
+           keyed : cons([fkey, entry], keyed)),
+       print("  (sorting", n_classes, "classes by float key...)"),
+       keyed : sort(keyed, lambda([a, b], a[1] < b[1])),
+       dist_class_sorted : map(lambda([p], p[2]), keyed)) $
 n_dist_classes : length(dist_class_sorted) $
 print("Distinct squared distances found:", n_dist_classes)$
 /* Build a mapping from unsorted dist_class_table index -> sorted index,
@@ -897,12 +932,16 @@ block(
     dist_class_sorted[k][1] from the origin. */
 print("Building origin ring-size table...")$
 origin_ring_sizes : makelist(0, k, 1, n_dist_classes) $
-for i : 2 thru cell_count do block(
+block([progress_step : max(1, floor(cell_count / 10)), i],
+for i : 2 thru cell_count do (
+         if mod(i, progress_step) = 0 then
+             print("  ring-table progress: i =", i, "/", cell_count),
+         block(
         [idx_unsorted : origin_dist_idx[i], pos],
         if idx_unsorted > 0 then (
             pos : unsorted_to_sorted[idx_unsorted],
             if pos > 0 then
-                origin_ring_sizes[pos] : origin_ring_sizes[pos] + 1)) $
+                 origin_ring_sizes[pos] : origin_ring_sizes[pos] + 1)))) $
 print("Distance ring table (first 15 rings from origin):")$
 print("  k  |  sq_dist (r,s)  |  float  |  ring_size  |  total_pairs  |  notes")$
 for k : 1 thru min(15, n_dist_classes) do block(
@@ -911,6 +950,8 @@ for k : 1 thru min(15, n_dist_classes) do block(
        rsize : origin_ring_sizes[k],
        fval, fib_check, sq_check, norm_val, notes : ""],
       fval : qs5_float(rs),
+        /* Skip near-zero degenerate distances in the display. */
+        if abs(float(fval)) < 1e-9 then return(0),
       fib_check : detect_fibonacci_distance(rs),
        /* is_qs5_square calls isqrt on large numerators; skip for big r */
        sq_check : if abs(float(rs[1])) < 1e6 then is_qs5_square(rs)
@@ -1718,15 +1759,15 @@ tau_panel : [
 /* For each tau rule we report key stats from a depth-3 cluster
     (kept smaller than the main cluster to keep this section snappy). */
 TAU_SURVEY_DEPTH : min(BFS_DEPTH, 3) $
-/* Helper: count vortex edges in a cluster snapshot. */
+  /* Count vortex edges in a cluster snapshot. */
 count_vortex_edges(centers, sheets, nbr_list, n_cells) := block(
      [v : 0, total : 0, i, j],
      for i : 1 thru n_cells do
          for j in nbr_list[i] do
              if i < j then (
                  total : total + 1,
-                 if sheets[j] - sheets[i] # 0 then v : v + 1)),
-         [v, total] $
+                     if sheets[j] - sheets[i] # 0 then v : v + 1),
+         [v, total]) $
 /* Helper: enumerate 4- and 5-cycles through a given root in a snapshot. */
 find_cycles_in_snapshot(root, nbr_list) := block(
      [cycles : [], v1, v2, v3, v4],
@@ -1782,12 +1823,12 @@ for tp in tau_panel do block(
      print("  tau =", label,
            "  cells=", nc,
            "  sheets=", sheet_count,
-           "  edges=", total_edges,
-           "  vortex=", vortex_edges,
+             "  edges=", float(total_edges),
+             "  vortex=", float(vortex_edges),
            "  vfrac=",
-           if total_edges > 0 then float(vortex_edges/total_edges) else 0,
+             if total_edges > 0 then float(vortex_edges/total_edges) else 0.0,
            "  meanDeg=",
-           if nc > 0 then float(apply("+", deg_l) / nc) else 0,
+             if nc > 0 then float(apply("+", deg_l) / nc) else 0.0,
            "  cycles=", length(cycles),
             "  holonomy_nontrivial=", hcounts,
             "  (groups=", FIBER_GROUPS_DEFAULT, ")"),
@@ -2134,7 +2175,8 @@ print("============================================================")$
 enumerate_simple_cycles(root, maxlen, nbr_list) := block(
      [results : [], stack, visited, depth_limit : maxlen,
       v, nb, recur],
-     /* iterative DFS via explicit recursion */
+        /* Recursive DFS.  Declared as a local lambda via define() so
+           the inner function can call itself. */
      recur(path, current_depth) := block(
          [last_v : last(path), nb, p_new, nx],
          for nx in nbr_list[last_v] do (
@@ -2712,12 +2754,17 @@ print("============================================================")$
 print("Full distance ring table:")$
 print("  k | sq_dist [r,s] | float | ring_size | pairs | norm | Z[phi] basis | notes")$
 erdos_ring_data : [] $   /* list of records for downstream use */
-for k : 1 thru n_dist_classes do block(
+/* Cap the printed ring table to avoid log spam on large clusters.
+    Internal data structures still hold the full catalog. */
+ERDOS_TABLE_MAX : 50 $
+for k : 1 thru min(n_dist_classes, ERDOS_TABLE_MAX) do block(
       [rs : dist_class_sorted[k][1],
        cnt : dist_class_sorted[k][2],
        rsize : origin_ring_sizes[k],
        fval, norm_val, zphi, fib_check, sq_check, galois_rs, notes : ""],
       fval     : qs5_float(rs),
+        /* Skip degenerate near-zero rings in the display. */
+        if abs(float(fval)) < 1e-9 then return(0),
       norm_val : qs5_norm(rs),
       zphi     : to_zphi_basis(rs),
       fib_check : detect_fibonacci_distance(rs),
@@ -2741,6 +2788,9 @@ for k : 1 thru n_dist_classes do block(
             " norm=", float(norm_val),
             " Z[phi]=[", float(zphi[1]), ",", float(zphi[2]), "]",
             notes)) $
+if n_dist_classes > ERDOS_TABLE_MAX then
+     print("  ... (", n_dist_classes - ERDOS_TABLE_MAX,
+           "additional distance classes; see erdos_ring_data internally)")$
 /* (b) Fibonacci spacing ratio fit. */
 print("")$
 print("(b) Fibonacci spacing ratio delta_{k+1}/delta_k:")$
@@ -2964,17 +3014,24 @@ if WEB_CLASSES >= 2 then block(
 print("")$
 print("W_1 vs adjacency graph comparison:")$
 block(
-      [web1 : build_distance_web(1), match : true, i, j],
+       [web1 : build_distance_web(1), match : true, i, j,
+        mismatch_count : 0, MISMATCH_LIMIT : 5],
       for i : 1 thru N do (
           if sort(web1[i]) # sort(nbrs[i]) then (
               match : false,
-              print("  Mismatch at node", i,
-                    ": web1=", sort(web1[i]),
-                    " nbrs=", sort(nbrs[i])))),
+                mismatch_count : mismatch_count + 1,
+                if mismatch_count <= MISMATCH_LIMIT then
+                    print("  Mismatch at node", i,
+                          ": web1=", sort(web1[i]),
+                          " nbrs=", sort(nbrs[i])))),
+        if mismatch_count > MISMATCH_LIMIT then
+            print("  ... (", mismatch_count - MISMATCH_LIMIT,
+                  "additional mismatches suppressed)"),
       if match then
           print("  W_1 = adjacency graph (as expected for unit-edge distance).")
       else
-          print("  W_1 != adjacency graph; first distance class is not the edge length.")) $
+            print("  W_1 != adjacency graph; first",
+                  mismatch_count, "nodes differ.")) $
 /* =====================================================================
       SECTION 25.  PINWHEEL PHENOMENON AND DIRECTION ANALYSIS
       ---------------------------------------------------------------------
@@ -3026,6 +3083,8 @@ for k : 1 thru DIRECTION_CLASSES do block(
        fval : qs5_float(dist_class_sorted[k][1]),
        angles : [], i, j, dx, dy, a,
        n_distinct, gap_stats, is_pinwheel],
+        /* Skip degenerate near-zero distance classes. */
+        if abs(float(fval)) < 1e-9 then return(0),
       /* Collect all directed angles for pairs at this distance. */
       for i : 1 thru N do
           for j : i + 1 thru N do block(

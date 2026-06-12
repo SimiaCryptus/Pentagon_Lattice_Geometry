@@ -1,0 +1,51 @@
+batchload("erdos.mac")
+============================================================ 
+erdos.mac : Erdos Distance Catalog for the Pentagonal Lattice 
+============================================================ 
+Parameters: 
+  MAX_RING        = 12 
+  NORM_SEARCH_MAX = 12 
+  LOG_N_POINTS    = [10, 25, 50, 100, 250, 500, 1000] 
+                    2
+  SIGNED3_FRAC    = - 
+                    3
+  PINWHEEL_KMAX   = 16 
+------------------------------------------------------------ 
+Section 1 self-tests: 
+  phi^2 = [1,1] in Z[phi] basis: OK 
+                                   3  1
+  phi^2 in Q(sqrt5) basis (r,s) = [-, -]  =  2.618033988749895  (expected  
+                                   2  2
+                                                           2.618033988749895 ) 
+  N(phi) = -1: OK 
+------------------------------------------------------------ 
+Section 2: Z[phi] norm form  N(a + b phi) = a^2 + a b - b^2 
+  N([1,0])  = 1  (= 1) 
+  N([0,1])  = - 1  (= -1, phi is a unit) 
+  N([1,1])  = 1  (= 1) 
+  N([1,2])  = - 1  (= -1) 
+  N([2,1])  = 5  (= 5) 
+  N([2,3])  = 1  (= 1) 
+  N(phi^n) = (-1)^n check (n = 1..7): 
+    n = 1   phi^n pair = [0, 1]   N = - 1   expected - 1 
+    n = 2   phi^n pair = [1, 1]   N = 1   expected 1 
+    n = 3   phi^n pair = [1, 2]   N = - 1   expected - 1 
+    n = 4   phi^n pair = [2, 3]   N = 1   expected 1 
+    n = 5   phi^n pair = [3, 5]   N = - 1   expected - 1 
+    n = 6   phi^n pair = [5, 8]   N = 1   expected 1 
+    n = 7   phi^n pair = [8, 13]   N = - 1   expected - 1 
+------------------------------------------------------------ 
+Section 3: Five fundamental distance classes (erdos.md 1.2) 
+pad_right("class",22) | pad_right("squared (symbolic)",22) | pad_right("(r,s)"\
+,14) | pad_right("decimal",10) 
+-----------------------+-------------------------+----------------+----------- 
+pad_right("edge (s = 1)",22) | pad_right("1",22) | pad_right("[1,0]",14) | pad\
+_right("1.0",10) 
+                                                      1  1
+Distance class  short diagonal phi  mismatch: pair = [-, -]  sym = 
+                                                      2  2
+                                                                              2
+                                                                 (sqrt(5) + 1)
+                                                                 --------------
+                                                                       4
+ -- an error. To debug this try: debugmode(true);
