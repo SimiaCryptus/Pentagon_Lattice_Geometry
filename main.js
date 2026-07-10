@@ -197,10 +197,17 @@ function updatePolyTypeUI() {
   } else {
     const n = getPolyConfig().n;
     const info = fieldInfoForN(n);
+    const isOdd = (n % 2 === 1);
+    const fiber = isOdd
+      ? "Z₂ (orientation cover, 2 sheets)"
+      : "trivial (single sheet)";
     els.fieldInfo.innerHTML =
       `<b>${n}-gon</b><br>` +
-      `Field: ${info.field} &nbsp;|&nbsp; Γ: ${info.group}<br>` +
-      `${info.result}`;
+      `Base field: ${info.field}<br>` +
+      `Fiber / structure group: ${fiber}<br>` +
+      `<span style="color:var(--muted);font-size:11px">` +
+      `Adjacent tiles flip orientation; vertex-loop holonomy is trivial ` +
+      `(even-length cycle). ${info.result}</span>`;
   }
 
   // Update subtitle.
@@ -220,19 +227,20 @@ function updatePolyTypeUI() {
       const edgeKeys = cfg.n <= 9
         ? `<kbd>1</kbd>–<kbd>${cfg.n}</kbd>`
         : `<kbd>1</kbd>–<kbd>9</kbd>`;
-      sub.innerHTML = `Regular ${cfg.n}-gon lattice. Click a tile to inspect. ` +
-        `Press ${edgeKeys} to walk. ` +
+      sub.innerHTML = `Regular ${cfg.n}-gon lattice (Z₂ orientation cover; ` +
+        `each edge flips orientation, vertex-loop holonomy trivial). ` +
+        `Click a tile to inspect. Press ${edgeKeys} to walk. ` +
         `Press <kbd>space</kbd> to play/pause CA, <kbd>n</kbd> to step.`;
     }
   }
 }
 
 function groupOrderFromSel() {
-  const v = els.group.value;
-  if (v === "Z2") return 2;
-  if (v === "Z5") return 5;
-  if (v === "Z10") return 10;
-  return 5;
+  // sheet_fix.md (NORMATIVE): the cover is Z₂ (orientation only). The old
+  // Z₅ / Z₁₀ options were based on the corrected error and no longer exist.
+  // buildNgonLattice further forces groupOrder to 2 (odd n) or 1 (even n),
+  // so this value is only an upper bound / display hint.
+  return 2;
 }
 
 function rebuild() {

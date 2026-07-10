@@ -244,6 +244,17 @@ export function buildSierpinski(depth) {
 // ── Lattice builder for regular n-gons ───────────────────────────────────────
 
 export function buildNgonLattice({ n = 5, radius = 3, groupOrder = 5 } = {}) {
+  // sheet_fix.md (NORMATIVE):
+  //   The fiber is determined by pentagon ORIENTATION only. It is Z₂.
+  //   Adjacent tiles carry the flipped orientation, so the sheet of a tile
+  //   is simply its orientation bit (sigma) for odd n-gons. There is NO
+  //   Z5/Z10 "sheet shift", no `signed3` rule, and the vertex loop (even
+  //   length) has trivial holonomy. `groupOrder` is forced to 2 here.
+  //
+  //   For even n, adjacent tiles keep sigma (a pure π-rotation suffices),
+  //   so the cover is trivial (single sheet, groupOrder 1).
+  const isOdd = (n % 2 === 1);
+  const effectiveGroupOrder = isOdd ? 2 : 1;
   const tiles = [];
   const byId = new Map();
 
@@ -273,6 +284,7 @@ export function buildNgonLattice({ n = 5, radius = 3, groupOrder = 5 } = {}) {
     return idx;
   }
 
+  // Origin sheet = origin orientation (sigma = 0 → sheet 0).
   const originIdx = addTile(0, 0, 0, 0, 0, 0);
   const queue = [originIdx];
 
@@ -284,8 +296,11 @@ export function buildNgonLattice({ n = 5, radius = 3, groupOrder = 5 } = {}) {
       if (t.neighbors[k] !== null) continue;
 
       const nb = ngonNeighbour(t.centroid[0], t.centroid[1], n, t.orient, t.sigma, k);
-      const delta = k % groupOrder;
-      const newSheet = mod(t.sheet + delta, groupOrder);
+      // Z₂ orientation cover: the sheet IS the orientation bit. The per-edge
+      // "delta" is the non-trivial Z₂ element (a flip) whenever the
+      // neighbour's orientation differs, else the identity (0).
+      const newSheet = mod(nb.sigma, effectiveGroupOrder);
+      const delta = mod(newSheet - t.sheet, effectiveGroupOrder);
       const [ncx, ncy] = nb.centroid;
       const id = tileKey(ncx, ncy, nb.orient, nb.sigma) + `|sh${newSheet}`;
 
@@ -306,12 +321,16 @@ export function buildNgonLattice({ n = 5, radius = 3, groupOrder = 5 } = {}) {
       const nt = tiles[nIdx];
       if (nt.neighbors[nb.matchEdge] === null) {
         nt.neighbors[nb.matchEdge] = tIdx;
-        nt.neighborSheetDeltas[nb.matchEdge] = mod(-delta, groupOrder);
+        nt.neighborSheetDeltas[nb.matchEdge] = mod(-delta, effectiveGroupOrder);
       }
     }
   }
 
-  return { tiles, byId, groupOrder, radius, n, isSierpinski: false };
+  return {
+    tiles, byId,
+    groupOrder: effectiveGroupOrder,   // Z₂ (odd n) or trivial (even n)
+    radius, n, isSierpinski: false,
+  };
 }
 
 // ── Field info strings ────────────────────────────────────────────────────────

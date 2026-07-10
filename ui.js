@@ -397,7 +397,7 @@ export function renderTileInfo(el, tile, lattice) {
     html.push(kv("Depth", `${tile.depth} hop${tile.depth === 1 ? "" : "s"} from origin`));
     html.push(kv("Sheet",
         `<span class="pill sheet">s${tile.sheet}</span>
-       <span style="color:var(--muted);font-size:11px">mod ${lattice.groupOrder}</span>`));
+       <span style="color:var(--muted);font-size:11px">Z₂ orientation cover · mod ${lattice.groupOrder}</span>`));
     const n = tile.n || (tile.vertsF ? tile.vertsF.length : 5);
     if (tile.isSierpinski) {
         html.push(kv("Type", `<span class="pill">Sierpiński triangle</span>`));
@@ -414,7 +414,7 @@ export function renderTileInfo(el, tile, lattice) {
         if (isOdd) {
             html.push(kv("Orientation σ",
                 `<span class="pill">${tile.sigma === 0 ? "↑" : "↓"}</span>
-           <span style="color:var(--muted);font-size:11px">Z₂ bipartition (odd n-gon)</span>`));
+           <span style="color:var(--muted);font-size:11px">Z₂ fiber (orientation flips each edge; holonomy trivial)</span>`));
         }
         html.push(kv("Edge frame",
             `<span class="pill">f${tile.orient}</span>

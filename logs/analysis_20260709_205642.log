@@ -49,19 +49,19 @@ Emergent-dimension framework (n-independent, run once):
 Dimension sanity table: 
   d_eff= 2.5  d_w= 2.0  => d_spec= 2.5   (not sub-diffusive) 
   d_eff= 2.5  d_w= 2.5  => d_spec= 2.0   (sub-diffusive) 
-  d_eff= 2.5  d_w= 3.0  => d_spec= 1.666666666666666   (sub-diffusive) 
-  d_eff= 2.8  d_w= 3.2  => d_spec= 1.749999999999999   (sub-diffusive) 
-  d_eff= 2.2  d_w= 2.4  => d_spec= 1.833333333333333   (sub-diffusive) 
+  d_eff= 2.5  d_w= 3.0  => d_spec= 1.666666666666667   (sub-diffusive) 
+  d_eff= 2.8  d_w= 3.2  => d_spec= 1.75   (sub-diffusive) 
+  d_eff= 2.2  d_w= 2.4  => d_spec= 1.833333333333334   (sub-diffusive) 
 Sierpinski-gasket reference: d_eff= 1.584962500721156  d_w= 2.321928094887362 
-                                                      d_spec= 1.36521238897197 
+                                                     d_spec= 1.365212388971971 
 in_paper_regime(2.5, 2.4) = true  (true expected) 
 in_paper_regime(2.0, 2.0) = false 
 in_paper_regime(2.5, 1.9) = false 
 in_paper_regime(3.1, 2.5) = false 
 Dimensional flow d_spec(t) interpolator (UV=2.5, IR=1.7): 
-  t = 0.1 : d_spec(t) = 2.492039866999334 
-  t = 1 : d_spec(t) = 2.423869934428767 
-  t = 10 : d_spec(t) = 1.994303552937153 
+  t = 0.1 : d_spec(t) = 2.492039866999335 
+  t = 1 : d_spec(t) = 2.423869934428768 
+  t = 10 : d_spec(t) = 1.994303552937154 
   t = 100 : d_spec(t) = 1.70003631994381 
 ------------------------------------------------------------ 
 Extended Alexander-Orbach / spectral-dimension analysis: 
@@ -74,17 +74,17 @@ right("2.5",7) | pad_right("3.0",7) | pad_right("3.5",7) | pad_right("4.0",7)
    pad_right("1.5",12) | pad_right("2.0",7) | pad_right("1.5",7) | pad_right("\
 1.2",7) | pad_right("1.0",7) | pad_right("0.8571428571428571",7) | pad_right("\
 0.75",7) 
-   pad_right("2.0",12) | pad_right("2.666666666666666",7) | pad_right("2.0",7)\
+   pad_right("2.0",12) | pad_right("2.666666666666667",7) | pad_right("2.0",7)\
  | pad_right("1.6",7) | pad_right("1.333333333333333",7) | pad_right("1.142857\
-142857142",7) | pad_right("1.0",7) 
-   pad_right("2.5",12) | pad_right("3.333333333333333",7) | pad_right("2.5",7)\
- | pad_right("2.0",7) | pad_right("1.666666666666666",7) | pad_right("1.428571\
-428571428",7) | pad_right("1.25",7) 
+142857143",7) | pad_right("1.0",7) 
+   pad_right("2.5",12) | pad_right("3.333333333333334",7) | pad_right("2.5",7)\
+ | pad_right("2.0",7) | pad_right("1.666666666666667",7) | pad_right("1.428571\
+428571429",7) | pad_right("1.25",7) 
    pad_right("3.0",12) | pad_right("4.0",7) | pad_right("3.0",7) | pad_right("\
 2.4",7) | pad_right("2.0",7) | pad_right("1.714285714285714",7) | pad_right("1\
 .5",7) 
    pad_right("3.5",12) | pad_right("4.666666666666667",7) | pad_right("3.5",7)\
- | pad_right("2.8",7) | pad_right("2.333333333333333",7) | pad_right("2.0",7) \
+ | pad_right("2.8",7) | pad_right("2.333333333333334",7) | pad_right("2.0",7) \
 | pad_right("1.75",7) 
   Diffusion classification by d_w: 
     d_w = 1.5 -> super-diffusive 
@@ -95,29 +95,29 @@ right("2.5",7) | pad_right("3.0",7) | pad_right("3.5",7) | pad_right("4.0",7)
   Return-probability log-log slope (d_s/2) for d_s in {1.0..2.5}: 
     d_s = 1.0   slope = - 0.5   P_0(t=100) = 0.1 
     d_s = 1.2   slope = - 0.6   P_0(t=100) = 0.06309573444801932 
-    d_s = 1.5   slope = - 0.75   P_0(t=100) = 0.03162277660168378 
+    d_s = 1.5   slope = - 0.75   P_0(t=100) = 0.03162277660168379 
     d_s = 1.7   slope = - 0.85   P_0(t=100) = 0.01995262314968879 
     d_s = 2.0   slope = - 1.0   P_0(t=100) = 0.01 
-    d_s = 2.5   slope = - 1.25   P_0(t=100) = 0.003162277660168376 
+    d_s = 2.5   slope = - 1.25   P_0(t=100) = 0.003162277660168377 
   Crossover times (UV=2.5, IR=1.7, t0=10): 
-    d_eff = 1.8   t_cross = 20.79441541679834 
+    d_eff = 1.8   t_cross = 20.79441541679835 
     d_eff = 2.0   t_cross = 9.80829253011726 
-    d_eff = 2.2   t_cross = 4.700036292457351 
+    d_eff = 2.2   t_cross = 4.700036292457352 
     d_eff = 2.4   t_cross = 1.335313926245227 
   DOS integrated weight (B=1, d_s=1.7, Lambda=1) = 1.176470588235294 
   DOS integrated weight (B=1, d_s=2.0, Lambda=1) = 1.0 
 ------------------------------------------------------------ 
 Volume-growth and MSD models (n-independent, run once): 
   Sample r       : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] 
-  Sample V(r)    : [2.5, 14.14213562373095, 38.97114317029973, 80.0, 
-139.7542485937369, 220.454076850486, 324.1045356054124, 452.5483399593906, 
+  Sample V(r)    : [2.5, 14.14213562373096, 38.97114317029973, 80.0, 
+139.7542485937369, 220.454076850486, 324.1045356054124, 452.5483399593907, 
 607.5, 790.5694150420952] 
-  Recovered slope: 2.499999999999999  (expected 2.5) 
+  Recovered slope: 2.5  (expected 2.5) 
   MSD model (D=1, d_w=2.5): 
     t = 1 :  MSD = 1.0 
     t = 10 :  MSD = 6.309573444801934 
-    t = 100 :  MSD = 39.81071705534975 
-    t = 1000 :  MSD = 251.188643150958 
+    t = 100 :  MSD = 39.81071705534976 
+    t = 1000 :  MSD = 251.1886431509581 
   P_0(t) model (A=1, d_spec=1.7): 
     t = 1 :  P_0 = 1.0 
     t = 10 :  P_0 = 0.1412537544622754 
@@ -125,7 +125,7 @@ Volume-growth and MSD models (n-independent, run once):
     t = 1000 :  P_0 = 0.002818382931264455 
   DOS model (B=1, d_spec=1.7): 
     lambda = 0.001 :  rho = 2.818382931264454 
-    lambda = 0.01 :  rho = 1.995262314968879 
+    lambda = 0.01 :  rho = 1.99526231496888 
     lambda = 0.1 :  rho = 1.412537544622754 
     lambda = 1 :  rho = 1.0 
 ------------------------------------------------------------ 
@@ -133,11 +133,11 @@ Extended volume-growth analysis (n-independent):
   V(r) = c * r^d_eff for d_eff in {2.0, 2.5, 3.0}, c=1: 
     d_eff = 2.0 : V(r) = [1.0, 4.0, 25.0, 100.0, 400.0, 2500.0, 10000.0] 
     d_eff = 2.5 : V(r) = [1.0, 5.656854249492383, 55.90169943749477, 
-            316.2277660168381, 1788.854381999832, 17677.66952966369, 100000.0] 
+             316.2277660168381, 1788.854381999833, 17677.6695296637, 100000.0] 
     d_eff = 3.0 : V(r) = [1.0, 8.0, 125.0, 1000.0, 8000.0, 125000.0, 1000000.0]
                                                                                
   Self-similarity ratio V(2r)/V(r) = 2^d_eff: 
-    d_eff = 1.5   ratio = 2.82842712474619 
+    d_eff = 1.5   ratio = 2.828427124746191 
     d_eff = 2.0   ratio = 4.0 
     d_eff = 2.5   ratio = 5.656854249492383 
     d_eff = 3.0   ratio = 8.0 
@@ -145,7 +145,7 @@ Extended volume-growth analysis (n-independent):
   Recovered d_eff from V(10)/V(2) with true d_eff=2.5: 2.5 
   Lacunarity model Lambda(r) = r^{-d_eff} (d_eff=2.5): 
     r = 1   Lambda = 1.0 
-    r = 2   Lambda = 0.1767766952966367 
+    r = 2   Lambda = 0.1767766952966368 
     r = 5   Lambda = 0.01788854381999831 
     r = 10   Lambda = 0.003162277660168378 
     r = 20   Lambda = 5.590169943749471E-4 
@@ -157,14 +157,17 @@ Extended volume-growth analysis (n-independent):
     q = 2   tau(q) = 2.5 
     q = 3   tau(q) = 5.0 
 ------------------------------------------------------------ 
-Spinor / holonomy checks (Z_2, n-independent, run once): 
-[Spinor case G = Z_2]: 
-  single-loop holonomy = 1  (expected 1, i.e. tau = -1) 
-  double-loop holonomy = 0  (expected 0) 
-  spinor loop order   = 2  (expected 2 -- double cover) 
+Orientation / holonomy checks (Z_2, n-independent, run once): 
+[Orientation cover G = Z_2]: 
+  single-edge flip = 1  (expected 1, i.e. orientation flips crossing one edge) 
+  two-edge crossing = 0  (expected 0, two flips cancel) 
+  Z_2 cover order (orientation cover) = 2  (expected 2 -- two sheets, + and -) 
+  Vertex-loop holonomy (even-length loop of flips): 
+    loop length = 10  (even) ; product of edge-flips = 0 
+                                               (expected 0 = trivial holonomy) 
 ------------------------------------------------------------ 
 Extended flat-bundle / holonomy analysis (n-independent): 
-  Holonomy groups Z_m for m = 2..12: 
+  Cyclic-group Z_m reference tables (base-graph structure, m = 2..12): 
     Z_ 2 : generators and orders = [list(0, 1), list(1, 2)] 
     Z_ 3 : generators and orders = [list(0, 1), list(1, 3), list(2, 3)] 
     Z_ 4 : generators and orders = [list(0, 1), list(1, 4), list(2, 2), 
@@ -188,39 +191,11 @@ list(9, 11), list(10, 11)]
     Z_ 12 : generators and orders = [list(0, 1), list(1, 12), list(2, 6), 
 list(3, 4), list(4, 3), list(5, 12), list(6, 2), list(7, 12), list(8, 3), 
 list(9, 4), list(10, 6), list(11, 12)] 
-  Flat U(1) holonomy phases exp(2 pi i k/n) for n=5: 
-    k = 0 : phase = 1  ~ ( 1.0 , 0.0 ) 
-                           2 %pi        2 %pi
-    k = 1 : phase = %i sin(-----) + cos(-----)  ~ ( 0.3090169943749474 , 
-                             5            5
-                                                          0.9510565162951535 ) 
-                           4 %pi        4 %pi
-    k = 2 : phase = %i sin(-----) + cos(-----)  ~ ( - 0.8090169943749473 , 
-                             5            5
-                                                          0.5877852522924733 ) 
-                        4 %pi           4 %pi
-    k = 3 : phase = cos(-----) - %i sin(-----)  ~ ( - 0.8090169943749473 , 
-                          5               5
-                                                        - 0.5877852522924733 ) 
-                        2 %pi           2 %pi
-    k = 4 : phase = cos(-----) - %i sin(-----)  ~ ( 0.3090169943749474 , 
-                          5               5
-                                                        - 0.9510565162951535 ) 
-  Aharonov-Bohm phases for flux/flux_0 in {0, 1/5, 2/5, 3/5, 4/5, 1}: 
-    Phi/Phi_0 = 0 : phase = 1.0 + 0.0 i 
-                1
-    Phi/Phi_0 = - : phase = 0.3090169943749474 + 0.9510565162951535 i 
-                5
-                2
-    Phi/Phi_0 = - : phase = - 0.8090169943749473 + 0.5877852522924733 i 
-                5
-                3
-    Phi/Phi_0 = - : phase = - 0.8090169943749473 + - 0.5877852522924733 i 
-                5
-                4
-    Phi/Phi_0 = - : phase = 0.3090169943749474 + - 0.9510565162951535 i 
-                5
-    Phi/Phi_0 = 1 : phase = 1.0 + 0.0 i 
+  Flat Z_2 orientation-cover holonomy phases exp(pi i q), q in Z_2: 
+    q = 0 : phase = 1  ~ ( 1.0 , 0.0 )   (identity) 
+    q = 1 : phase = - 1  ~ ( - 1.0 , 0.0 )   (orientation flip) 
+  Vertex-loop net phase = exp(pi i * 10) = 1 
+                              (trivial holonomy, no Aharonov-Bohm / no spinor) 
   Monodromy matrices for n = 3, 4, 5, 6: 
                 [       - 0.5         - 0.8660254037844386 ]
     n = 3 : M = [                                          ] 
@@ -230,34 +205,20 @@ list(9, 4), list(10, 6), list(11, 12)]
     n = 4 : M = [            ] 
                 [ 1.0   0.0  ]
       M^k = I first at k = 4  (expected 4 ) 
-                [ 0.3090169943749474  - 0.9510565162951535 ]
+                [ 0.3090169943749475  - 0.9510565162951535 ]
     n = 5 : M = [                                          ] 
-                [ 0.9510565162951535   0.3090169943749474  ]
+                [ 0.9510565162951535   0.3090169943749475  ]
       M^k = I first at k = 5  (expected 5 ) 
                 [        0.5          - 0.8660254037844386 ]
     n = 6 : M = [                                          ] 
                 [ 0.8660254037844386          0.5          ]
       M^k = I first at k = 6  (expected 6 ) 
-  Berry phases for winding numbers 0..4: 
-    w = 0 : gamma_B = 0.0  =  0 * pi 
-    w = 1 : gamma_B = 3.141592653589793  =  1 * pi 
-    w = 2 : gamma_B = 6.283185307179586  =  2 * pi 
-    w = 3 : gamma_B = 9.42477796076938  =  3 * pi 
-    w = 4 : gamma_B = 12.56637061435917  =  4 * pi 
-  Chern numbers for Z_5 sectors k = 0..4: 
-    k = 0 : C = 0  = 0.0 
-                1
-    k = 1 : C = -  = 0.2 
-                5
-                2
-    k = 2 : C = -  = 0.4 
-                5
-                3
-    k = 3 : C = -  = 0.6 
-                5
-                4
-    k = 4 : C = -  = 0.8 
-                5
+  Z_2 orientation Berry phase gamma = pi * (loop parity): 
+    loop length parity = 0 : gamma_B = 0.0   (trivial) 
+    loop length parity = 1 : gamma_B = 3.141592653589793   (flip) 
+    loop length parity = 0 : gamma_B = 0.0   (trivial) 
+    loop length parity = 1 : gamma_B = 3.141592653589793   (flip) 
+  (No Chern / fractional-sector structure: fiber is Z_2 only.) 
 ============================================================ 
 BEGIN SWEEP: n = 3 to 12 step 1 
 ============================================================ 
@@ -280,7 +241,7 @@ Smallest k>0 with k*theta = (integer)*2*pi:  k = 6 ,  accumulating  1
 ------------------------------------------------------------ 
 [n =  3 ] Angle summary: 
                             %pi
-  Interior angle  theta   = ---  = 1.047197551196597  rad = 60.0  deg 
+  Interior angle  theta   = ---  = 1.047197551196598  rad = 60.0  deg 
                              3
                             2 %pi
   Exterior angle          = -----  = 2.094395102393195  rad 
@@ -373,17 +334,16 @@ Smallest k with full closure: k = 6   (number of full turns = 1 )
   e[ 3 ] (numeric) =  [- 0.8660254037844386, 1.5] 
 [n =  3 ] Side length (unit circumradius) s = sqrt(3)  = 1.732050807568877 
 ------------------------------------------------------------ 
-[n =  3 ] Holonomy / spinor cover analysis: 
-  Natural single-vortex fiber order = 6 
-  Z_n single-vortex holonomy (n = 6 ) : 1 
-  Required loop count to close fiber : 6 
-[Anyonic case G = Z_n with n = 3 ]: 
-  single-vortex holonomy = 1 
-  loop order required    = 3  (expected 3 ) 
-[n =  3 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
-  All g in Z_n satisfy order(g) = n/gcd(g, n). 
-[n =  3 ] Composite holonomy: Loop A = 0 , Loop B = 1 , Composite = 1 
-                                                               , Sum mod n = 1 
+[n =  3 ] Holonomy / Z_2 orientation cover analysis: 
+  Fiber / structure group order = 2 
+                                   (Z_2 orientation cover; two sheets + and -) 
+  Single-edge crossing (orientation flip) = 1 
+  Z_2 cover order (loops to return to same sheet) = 2  (expected 2) 
+[n =  3 ] Vertex-loop holonomy (Z_2, orientation flips): 
+  vertex-cycle length = 6  (even) 
+  product of edge-flips around cycle = 0  (trivial holonomy) 
+[n =  3 ] Composite Z_2 holonomy: Loop A = 0 , Loop B = 0 , Composite = 0 
+                                                               , Sum mod 2 = 0 
 ------------------------------------------------------------ 
 [n =  3 ] Cut-and-project ambient lattice Z^n: 
   C_n cyclic shift matrix: 
@@ -466,62 +426,62 @@ Smallest k with full closure: k = 6   (number of full turns = 1 )
   Converging to PF eigenvalue: 1 
 ------------------------------------------------------------ 
 [n =  3 ] Zeta functions and L-series: 
-  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006935   (exact pi^2/6 = 
+  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006936   (exact pi^2/6 = 
                                                            1.644934066848226 ) 
-  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023676 
+  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023677 
                                                     (Apery's constant ~ 1.202) 
-  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104993 
-  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683453 
+  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104994 
+  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683454 
   Ratio zeta_{Q(sqrt5)}(2) / zeta(2)^2 ~ (class number factor): 
     = 0.4393854233642092 
   Partial L(2, chi_5) ( 40  terms) = 0.7061989804245805 
   Partial L(3, chi_5) ( 40  terms) = 0.8548243026978557 
   Exact L(2, chi_5) = pi^2 / (5 sqrt(5)) ~ 0.8827642540746761 
   Functional equation (numerical check at s=0.7): 
-    L(0.7) = 0.3154812660944506   L(0.3) = 0.140960360039939   ratio = 
+    L(0.7) = 0.3154812660944506   L(0.3) = 0.1409603600399391   ratio = 
                                                              2.238084990738273 
   Spectral zeta of C_ 3  at s=2: 0.2222222222222222 
   Spectral zeta of C_ 3  at s=3: 0.07407407407407407 
 ------------------------------------------------------------ 
 [n =  3 ] Diffusion kernel and heat trace: 
   Heat trace Tr(e^{-t L}) for cycle C_ 3 : 
-    t = 0.01 :  Tr = 2.940891067097016 
-    t = 0.1 :  Tr = 2.481636441363435 
-    t = 0.5 :  Tr = 1.446260320296859 
-    t = 1.0 :  Tr = 1.099574136735727 
-    t = 2.0 :  Tr = 1.004957504353332 
+    t = 0.01 :  Tr = 2.940891067097017 
+    t = 0.1 :  Tr = 2.481636441363436 
+    t = 0.5 :  Tr = 1.44626032029686 
+    t = 1.0 :  Tr = 1.099574136735728 
+    t = 2.0 :  Tr = 1.004957504353333 
     t = 5.0 :  Tr = 1.000000611804641 
     t = 10.0 :  Tr = 1.000000000000187 
     t = 50.0 :  Tr = 1.0 
   Heat trace Tr(e^{-t L}) for star K_{1, 3 }: 
-    t = 0.01 :  Tr = 3.940889106650659 
+    t = 0.01 :  Tr = 3.94088910665066 
     t = 0.1 :  Tr = 3.479994882107558 
-    t = 0.5 :  Tr = 2.348396602661879 
-    t = 1.0 :  Tr = 1.754074521231618 
-    t = 2.0 :  Tr = 1.271006029101127 
-    t = 5.0 :  Tr = 1.013475896059324 
+    t = 0.5 :  Tr = 2.34839660266188 
+    t = 1.0 :  Tr = 1.754074521231619 
+    t = 2.0 :  Tr = 1.271006029101128 
+    t = 5.0 :  Tr = 1.013475896059325 
     t = 10.0 :  Tr = 1.000090799859525 
     t = 50.0 :  Tr = 1.0 
   Effective d_s from heat-trace slope (cycle C_ 3 ): 
     t in [ 0.01 , 0.1 ]:  d_s ~ 0.1474815606481602 
     t in [ 0.1 , 0.5 ]:  d_s ~ 0.6709635188581037 
     t in [ 0.5 , 1.0 ]:  d_s ~ 0.7907647514600357 
-    t in [ 1.0 , 2.0 ]:  d_s ~ 0.2596207632462062 
+    t in [ 1.0 , 2.0 ]:  d_s ~ 0.2596207632462063 
     t in [ 2.0 , 5.0 ]:  d_s ~ 0.01079274168129712 
     t in [ 5.0 , 10.0 ]:  d_s ~ 1.765293964155048E-6 
     t in [ 10.0 , 50.0 ]:  d_s ~ 2.323314939985474E-13 
   Short-time heat-trace asymptotics (2D Weyl law): 
     Tr(e^{-tL}) ~ (4 pi t)^{-1} * A + (4 pi t)^{-1/2} * B/6 + ... 
     t = 0.01 :  Weyl leading term = 7.957747154594768 
-    t = 0.05 :  Weyl leading term = 1.591549430918953 
+    t = 0.05 :  Weyl leading term = 1.591549430918954 
     t = 0.1 :  Weyl leading term = 0.7957747154594768 
   Heat kernel K_t(x) on R^2 (Gaussian, d=2): 
     t = 0.1 :  K(0) = 0.7957747154594768   K(1) = 0.0653211664234246   K(2) = 
-                                                          3.612811618862161E-5 
+                                                          3.612811618862162E-5 
     t = 1.0 :  K(0) = 0.07957747154594767   K(1) = 0.06197499715482649   K(2) =
-                                                           0.02927491576215958 
-    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291536 
-                                                   K(2) = 0.007200467388746533 
+                                                           0.02927491576215959 
+    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291537 
+                                                   K(2) = 0.007200467388746534 
   Spectral zeta of C_ 3  at s=1,2,3: 
     s = 1 :  zeta_L = 0.6666666666666666 
     s = 2 :  zeta_L = 0.2222222222222222 
@@ -531,9 +491,9 @@ Smallest k with full closure: k = 6   (number of full turns = 1 )
   Acceptance window: regular  3 -gon in perp space 
   Unit-cell area A_cell ~ 0.4330127018922193 
   Acceptance densities (rho = window inradius): 
-    rho = 0.5 :  density = 3.0 
+    rho = 0.5 :  density = 3.000000000000001 
     rho = 1.0 :  density = 12.0 
-    rho = 1.5 :  density = 26.99999999999999 
+    rho = 1.5 :  density = 27.0 
     rho = 2.0 :  density = 48.00000000000001 
   Window vertices (rho = 1): 
     v[ 0 ] = ( 1.0 , 0.0 ) 
@@ -587,13 +547,13 @@ Smallest k>0 with k*theta = (integer)*2*pi:  k = 4 ,  accumulating  1
 ------------------------------------------------------------ 
 [n =  4 ] Angle summary: 
                             %pi
-  Interior angle  theta   = ---  = 1.570796326794896  rad = 90.0  deg 
+  Interior angle  theta   = ---  = 1.570796326794897  rad = 90.0  deg 
                              2
                             %pi
-  Exterior angle          = ---  = 1.570796326794896  rad 
+  Exterior angle          = ---  = 1.570796326794897  rad 
                              2
                             %pi
-  Central angle           = ---  = 1.570796326794896  rad 
+  Central angle           = ---  = 1.570796326794897  rad 
                              2
   Sum of interior angles  = 2 %pi 
                             %pi
@@ -672,17 +632,16 @@ Smallest k with full closure: k = 4   (number of full turns = 1 )
   e[ 4 ] (numeric) =  [- 1.0, 1.0] 
 [n =  4 ] Side length (unit circumradius) s = sqrt(2)  = 1.414213562373095 
 ------------------------------------------------------------ 
-[n =  4 ] Holonomy / spinor cover analysis: 
-  Natural single-vortex fiber order = 4 
-  Z_n single-vortex holonomy (n = 4 ) : 1 
-  Required loop count to close fiber : 4 
-[Anyonic case G = Z_n with n = 4 ]: 
-  single-vortex holonomy = 1 
-  loop order required    = 4  (expected 4 ) 
-[n =  4 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
-  All g in Z_n satisfy order(g) = n/gcd(g, n). 
-[n =  4 ] Composite holonomy: Loop A = 3 , Loop B = 3 , Composite = 2 
-                                                               , Sum mod n = 2 
+[n =  4 ] Holonomy / Z_2 orientation cover analysis: 
+  Fiber / structure group order = 2 
+                                   (Z_2 orientation cover; two sheets + and -) 
+  Single-edge crossing (orientation flip) = 1 
+  Z_2 cover order (loops to return to same sheet) = 2  (expected 2) 
+[n =  4 ] Vertex-loop holonomy (Z_2, orientation flips): 
+  vertex-cycle length = 4  (even) 
+  product of edge-flips around cycle = 0  (trivial holonomy) 
+[n =  4 ] Composite Z_2 holonomy: Loop A = 0 , Loop B = 0 , Composite = 0 
+                                                               , Sum mod 2 = 0 
 ------------------------------------------------------------ 
 [n =  4 ] Cut-and-project ambient lattice Z^n: 
   C_n cyclic shift matrix: 
@@ -701,7 +660,7 @@ Smallest k with full closure: k = 4   (number of full turns = 1 )
   Projectors P_diag, P_perp: idempotent, orthogonal, complete. 
   dim(orthogonal complement of diagonal) = 3  = n - 1 
 [n =  4 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
-  V_ 1  (rotation angle 2 pi * 1 /n = 1.570796326794896 ): 
+  V_ 1  (rotation angle 2 pi * 1 /n = 1.570796326794897 ): 
     u_ 1  (cos) = [1.0, 0.0, - 1.0, 0.0] 
     w_ 1  (sin) = [0.0, 1.0, 0.0, - 1.0] 
   alternating-sign eigenvector (eigenvalue -1) = [1, - 1, 1, - 1] 
@@ -763,26 +722,26 @@ Smallest k with full closure: k = 4   (number of full turns = 1 )
   depth = 6 : tile counts = [ 169  70 ]   total = 239 
   Perron-Frobenius eigenvalue (inflation ratio) = 2.414213562373095 
   Tile-count growth rates (ratio at successive depths): 
-   [2.333333333333333, 2.428571428571428, 2.411764705882353, 
-                                         2.414634146341463, 2.414141414141414] 
+   [2.333333333333334, 2.428571428571429, 2.411764705882353, 
+                                         2.414634146341464, 2.414141414141414] 
   Converging to PF eigenvalue: 2.414213562373095 
   Tiles after 1 inflation step: 3 
   Fractal dimension estimate d_f = log(N)/log(lambda) = 1.246477435729816 
 ------------------------------------------------------------ 
 [n =  4 ] Zeta functions and L-series: 
-  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006935   (exact pi^2/6 = 
+  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006936   (exact pi^2/6 = 
                                                            1.644934066848226 ) 
-  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023676 
+  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023677 
                                                     (Apery's constant ~ 1.202) 
-  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104993 
-  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683453 
+  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104994 
+  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683454 
   Ratio zeta_{Q(sqrt5)}(2) / zeta(2)^2 ~ (class number factor): 
     = 0.4393854233642092 
   Partial L(2, chi_5) ( 40  terms) = 0.7061989804245805 
   Partial L(3, chi_5) ( 40  terms) = 0.8548243026978557 
   Exact L(2, chi_5) = pi^2 / (5 sqrt(5)) ~ 0.8827642540746761 
   Functional equation (numerical check at s=0.7): 
-    L(0.7) = 0.3154812660944506   L(0.3) = 0.140960360039939   ratio = 
+    L(0.7) = 0.3154812660944506   L(0.3) = 0.1409603600399391   ratio = 
                                                              2.238084990738273 
   Spectral zeta of C_ 4  at s=2: 0.5625 
   Spectral zeta of C_ 4  at s=3: 0.265625 
@@ -791,20 +750,20 @@ Smallest k with full closure: k = 4   (number of full turns = 1 )
   Heat trace Tr(e^{-t L}) for cycle C_ 4 : 
     t = 0.01 :  Tr = 3.921186785765834 
     t = 0.1 :  Tr = 3.307781552191603 
-    t = 0.5 :  Tr = 1.871094165579497 
-    t = 1.0 :  Tr = 1.288986205361959 
-    t = 2.0 :  Tr = 1.03696674040537 
-    t = 5.0 :  Tr = 1.000090801920678 
+    t = 0.5 :  Tr = 1.871094165579498 
+    t = 1.0 :  Tr = 1.28898620536196 
+    t = 2.0 :  Tr = 1.036966740405371 
+    t = 5.0 :  Tr = 1.000090801920679 
     t = 10.0 :  Tr = 1.000000004122307 
     t = 50.0 :  Tr = 1.0 
   Heat trace Tr(e^{-t L}) for star K_{1, 4 }: 
     t = 0.01 :  Tr = 4.921378925748218 
     t = 0.1 :  Tr = 4.321042913820512 
     t = 0.5 :  Tr = 2.901676977761799 
-    t = 1.0 :  Tr = 2.110376270513412 
-    t = 2.0 :  Tr = 1.4060512496396 
+    t = 1.0 :  Tr = 2.110376270513413 
+    t = 2.0 :  Tr = 1.406051249639601 
     t = 5.0 :  Tr = 1.020213841011144 
-    t = 10.0 :  Tr = 1.000136199789287 
+    t = 10.0 :  Tr = 1.000136199789288 
     t = 50.0 :  Tr = 1.0 
   Effective d_s from heat-trace slope (cycle C_ 4 ): 
     t in [ 0.01 , 0.1 ]:  d_s ~ 0.1477614192914646 
@@ -817,15 +776,15 @@ Smallest k with full closure: k = 4   (number of full turns = 1 )
   Short-time heat-trace asymptotics (2D Weyl law): 
     Tr(e^{-tL}) ~ (4 pi t)^{-1} * A + (4 pi t)^{-1/2} * B/6 + ... 
     t = 0.01 :  Weyl leading term = 7.957747154594768 
-    t = 0.05 :  Weyl leading term = 1.591549430918953 
+    t = 0.05 :  Weyl leading term = 1.591549430918954 
     t = 0.1 :  Weyl leading term = 0.7957747154594768 
   Heat kernel K_t(x) on R^2 (Gaussian, d=2): 
     t = 0.1 :  K(0) = 0.7957747154594768   K(1) = 0.0653211664234246   K(2) = 
-                                                          3.612811618862161E-5 
+                                                          3.612811618862162E-5 
     t = 1.0 :  K(0) = 0.07957747154594767   K(1) = 0.06197499715482649   K(2) =
-                                                           0.02927491576215958 
-    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291536 
-                                                   K(2) = 0.007200467388746533 
+                                                           0.02927491576215959 
+    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291537 
+                                                   K(2) = 0.007200467388746534 
   Spectral zeta of C_ 4  at s=1,2,3: 
     s = 1 :  zeta_L = 1.25 
     s = 2 :  zeta_L = 0.5625 
@@ -894,7 +853,7 @@ Smallest k>0 with k*theta = (integer)*2*pi:  k = 10 ,  accumulating  3
 ------------------------------------------------------------ 
 [n =  5 ] Angle summary: 
                             3 %pi
-  Interior angle  theta   = -----  = 1.884955592153875  rad = 108.0  deg 
+  Interior angle  theta   = -----  = 1.884955592153876  rad = 108.0  deg 
                               5
                             2 %pi
   Exterior angle          = -----  = 1.256637061435917  rad 
@@ -967,9 +926,9 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
             [     2 %pi        2 %pi   ]
             [ sin(-----)   cos(-----)  ]
             [       5            5     ]
-            [ 0.3090169943749474  - 0.9510565162951535 ]
+            [ 0.3090169943749475  - 0.9510565162951535 ]
   Numeric : [                                          ] 
-            [ 0.9510565162951535   0.3090169943749474  ]
+            [ 0.9510565162951535   0.3090169943749475  ]
   det(R) = 1  (expected 1) 
                 2 %pi
   tr(R) = 2 cos(-----)  = 2 cos(2*pi/n) = 0.6180339887498949 
@@ -981,7 +940,7 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
 [n =  5 ] R^k traces (should equal 2 cos(2 pi k/n)): 
   k = 1 : tr(R^k) = 0.6180339887498949  ~ 2cos( 1 *2pi/n) = 0.6180339887498949 
   k = 2 : tr(R^k) = - 1.618033988749895  ~ 2cos( 2 *2pi/n) = 
-                                                           - 1.618033988749894 
+                                                           - 1.618033988749895 
   k = 3 : tr(R^k) = - 1.618033988749895  ~ 2cos( 3 *2pi/n) = 
                                                            - 1.618033988749895 
   k = 4 : tr(R^k) = 0.6180339887498947  ~ 2cos( 4 *2pi/n) = 0.6180339887498945 
@@ -1010,7 +969,7 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
   e[ 1 ] (numeric) =  [- 0.9510565162951535, - 0.6909830056250526] 
   e[ 2 ] (numeric) =  [0.3632712640026803, - 1.118033988749895] 
   e[ 3 ] (numeric) =  [1.175570504584946, - 2.220446049250313E-16] 
-  e[ 4 ] (numeric) =  [0.3632712640026807, 1.118033988749894] 
+  e[ 4 ] (numeric) =  [0.3632712640026807, 1.118033988749895] 
   e[ 5 ] (numeric) =  [- 0.9510565162951536, 0.6909830056250528] 
                                                     %pi
 [n =  5 ] Side length (unit circumradius) s = 2 sin(---)  = 1.175570504584946 
@@ -1026,17 +985,16 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
   [Pentagon] R72^5 - I numeric = [          ] 
                                  [ 0.0  0.0 ]
 ------------------------------------------------------------ 
-[n =  5 ] Holonomy / spinor cover analysis: 
-  Natural single-vortex fiber order = 10 
-  Z_n single-vortex holonomy (n = 10 ) : 1 
-  Required loop count to close fiber : 10 
-[Anyonic case G = Z_n with n = 5 ]: 
-  single-vortex holonomy = 1 
-  loop order required    = 5  (expected 5 ) 
-[n =  5 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
-  All g in Z_n satisfy order(g) = n/gcd(g, n). 
-[n =  5 ] Composite holonomy: Loop A = 3 , Loop B = 2 , Composite = 0 
-                                                               , Sum mod n = 0 
+[n =  5 ] Holonomy / Z_2 orientation cover analysis: 
+  Fiber / structure group order = 2 
+                                   (Z_2 orientation cover; two sheets + and -) 
+  Single-edge crossing (orientation flip) = 1 
+  Z_2 cover order (loops to return to same sheet) = 2  (expected 2) 
+[n =  5 ] Vertex-loop holonomy (Z_2, orientation flips): 
+  vertex-cycle length = 10  (even) 
+  product of edge-flips around cycle = 0  (trivial holonomy) 
+[n =  5 ] Composite Z_2 holonomy: Loop A = 0 , Loop B = 0 , Composite = 0 
+                                                               , Sum mod 2 = 0 
 ------------------------------------------------------------ 
 [n =  5 ] Cut-and-project ambient lattice Z^n: 
   C_n cyclic shift matrix: 
@@ -1058,13 +1016,13 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
   dim(orthogonal complement of diagonal) = 4  = n - 1 
 [n =  5 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
   V_ 1  (rotation angle 2 pi * 1 /n = 1.256637061435917 ): 
-    u_ 1  (cos) = [1.0, 0.3090169943749474, - 0.8090169943749473, 
-                                     - 0.8090169943749476, 0.3090169943749472] 
+    u_ 1  (cos) = [1.0, 0.3090169943749475, - 0.8090169943749473, 
+                                     - 0.8090169943749476, 0.3090169943749473] 
     w_ 1  (sin) = [0.0, 0.9510565162951535, 0.5877852522924733, 
                                     - 0.587785252292473, - 0.9510565162951536] 
-  V_ 2  (rotation angle 2 pi * 2 /n = 2.513274122871834 ): 
-    u_ 2  (cos) = [1.0, - 0.8090169943749473, 0.3090169943749472, 
-                                     0.3090169943749477, - 0.8090169943749477] 
+  V_ 2  (rotation angle 2 pi * 2 /n = 2.513274122871835 ): 
+    u_ 2  (cos) = [1.0, - 0.8090169943749473, 0.3090169943749473, 
+                                     0.3090169943749478, - 0.8090169943749477] 
     w_ 2  (sin) = [0.0, 0.5877852522924733, - 0.9510565162951536, 
                                      0.9510565162951535, - 0.5877852522924728] 
   Physical 2D plane E_|| recommended = V_1. 
@@ -1096,7 +1054,7 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
                        %pi
                    tan(---)
                         5
-  R/r            = --------  = sec(pi/n) = 1.236067977499789 
+  R/r            = --------  = sec(pi/n) = 1.23606797749979 
                        %pi
                    sin(---)
                         5
@@ -1110,7 +1068,7 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
                  2 %pi
              sin(-----)
                    5
-    d[ 2 ] = ----------  ~ 1.618033988749894 
+    d[ 2 ] = ----------  ~ 1.618033988749895 
                   %pi
               sin(---)
                    5
@@ -1146,7 +1104,7 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
   Spectral gap = 1 (positive => connected). 
   Cycle C_ 5  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
    [0.0, 1.381966011250105, 3.618033988749895, 3.618033988749895, 
-                                                            1.381966011250105] 
+                                                            1.381966011250106] 
   Spectral gap of C_ 5  = 1.381966011250105 
                                        5          4         3         2
   [Pentagon] charpoly(L_{C_5}) = (- lam ) + 10 lam  - 35 lam  + 50 lam
@@ -1168,28 +1126,28 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
   [Pentagon] phi^2 = 2.618033988749895   PF eigenvalue = 2.618033988749895 
                                                                     diff = 0.0 
   Tile-count growth rates (ratio at successive depths): 
-   [2.666666666666666, 2.625, 2.619047619047619, 2.618181818181818, 
-                                                            2.618055555555555] 
+   [2.666666666666667, 2.625, 2.619047619047619, 2.618181818181818, 
+                                                            2.618055555555556] 
   Converging to PF eigenvalue: 2.618033988749895 
   Tiles after 1 inflation step: 3 
-  Fractal dimension estimate d_f = log(N)/log(lambda) = 1.141505914294639 
+  Fractal dimension estimate d_f = log(N)/log(lambda) = 1.14150591429464 
 ------------------------------------------------------------ 
 [n =  5 ] Zeta functions and L-series: 
-  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006935   (exact pi^2/6 = 
+  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006936   (exact pi^2/6 = 
                                                            1.644934066848226 ) 
-  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023676 
+  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023677 
                                                     (Apery's constant ~ 1.202) 
-  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104993 
-  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683453 
+  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104994 
+  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683454 
   Ratio zeta_{Q(sqrt5)}(2) / zeta(2)^2 ~ (class number factor): 
     = 0.4393854233642092 
   Partial L(2, chi_5) ( 40  terms) = 0.7061989804245805 
   Partial L(3, chi_5) ( 40  terms) = 0.8548243026978557 
   Exact L(2, chi_5) = pi^2 / (5 sqrt(5)) ~ 0.8827642540746761 
   Functional equation (numerical check at s=0.7): 
-    L(0.7) = 0.3154812660944506   L(0.3) = 0.140960360039939   ratio = 
+    L(0.7) = 0.3154812660944506   L(0.3) = 0.1409603600399391   ratio = 
                                                              2.238084990738273 
-  Spectral zeta of C_ 5  at s=2: 1.199999999999999 
+  Spectral zeta of C_ 5  at s=2: 1.2 
   Spectral zeta of C_ 5  at s=3: 0.7999999999999997 
 ------------------------------------------------------------ 
 [n =  5 ] Diffusion kernel and heat trace: 
@@ -1197,16 +1155,16 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
     t = 0.01 :  Tr = 4.901483478131218 
     t = 0.1 :  Tr = 4.134693441585213 
     t = 0.5 :  Tr = 2.329796696122076 
-    t = 1.0 :  Tr = 1.555839632012999 
+    t = 1.0 :  Tr = 1.555839632013 
     t = 2.0 :  Tr = 1.127527060261831 
-    t = 5.0 :  Tr = 1.001995882580764 
-    t = 10.0 :  Tr = 1.000001991718086 
+    t = 5.0 :  Tr = 1.001995882580765 
+    t = 10.0 :  Tr = 1.000001991718087 
     t = 50.0 :  Tr = 1.0 
   Heat trace Tr(e^{-t L}) for star K_{1, 5 }: 
     t = 0.01 :  Tr = 5.901963868580921 
     t = 0.1 :  Tr = 5.168161308237864 
-    t = 0.5 :  Tr = 3.475909707218397 
-    t = 1.0 :  Tr = 2.473996516862435 
+    t = 0.5 :  Tr = 3.475909707218398 
+    t = 1.0 :  Tr = 2.473996516862436 
     t = 2.0 :  Tr = 1.541347277158804 
     t = 5.0 :  Tr = 1.026951787996435 
     t = 10.0 :  Tr = 1.00018159971905 
@@ -1214,7 +1172,7 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
   Effective d_s from heat-trace slope (cycle C_ 5 ): 
     t in [ 0.01 , 0.1 ]:  d_s ~ 0.1477684557156631 
     t in [ 0.1 , 0.5 ]:  d_s ~ 0.7128354252672624 
-    t in [ 0.5 , 1.0 ]:  d_s ~ 1.165021409668176 
+    t in [ 0.5 , 1.0 ]:  d_s ~ 1.165021409668177 
     t in [ 1.0 , 2.0 ]:  d_s ~ 0.9290626085694703 
     t in [ 2.0 , 5.0 ]:  d_s ~ 0.2576319824693638 
     t in [ 5.0 , 10.0 ]:  d_s ~ 0.005747413516663831 
@@ -1222,18 +1180,18 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
   Short-time heat-trace asymptotics (2D Weyl law): 
     Tr(e^{-tL}) ~ (4 pi t)^{-1} * A + (4 pi t)^{-1/2} * B/6 + ... 
     t = 0.01 :  Weyl leading term = 7.957747154594768 
-    t = 0.05 :  Weyl leading term = 1.591549430918953 
+    t = 0.05 :  Weyl leading term = 1.591549430918954 
     t = 0.1 :  Weyl leading term = 0.7957747154594768 
   Heat kernel K_t(x) on R^2 (Gaussian, d=2): 
     t = 0.1 :  K(0) = 0.7957747154594768   K(1) = 0.0653211664234246   K(2) = 
-                                                          3.612811618862161E-5 
+                                                          3.612811618862162E-5 
     t = 1.0 :  K(0) = 0.07957747154594767   K(1) = 0.06197499715482649   K(2) =
-                                                           0.02927491576215958 
-    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291536 
-                                                   K(2) = 0.007200467388746533 
+                                                           0.02927491576215959 
+    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291537 
+                                                   K(2) = 0.007200467388746534 
   Spectral zeta of C_ 5  at s=1,2,3: 
-    s = 1 :  zeta_L = 1.999999999999999 
-    s = 2 :  zeta_L = 1.199999999999999 
+    s = 1 :  zeta_L = 2.0 
+    s = 2 :  zeta_L = 1.2 
     s = 3 :  zeta_L = 0.7999999999999997 
 ------------------------------------------------------------ 
 [n =  5 ] Acceptance-window (cut-and-project) geometry: 
@@ -1241,22 +1199,22 @@ Smallest k with full closure: k = 10   (number of full turns = 3 )
   Unit-cell area A_cell ~ 1.720477400588967 
   Acceptance densities (rho = window inradius): 
     rho = 0.5 :  density = 0.5278640450004206 
-    rho = 1.0 :  density = 2.111456180001682 
+    rho = 1.0 :  density = 2.111456180001683 
     rho = 1.5 :  density = 4.750776405003785 
     rho = 2.0 :  density = 8.44582472000673 
   Window vertices (rho = 1): 
     v[ 0 ] = ( 1.0 , 0.0 ) 
-    v[ 1 ] = ( 0.3090169943749474 , 0.9510565162951535 ) 
+    v[ 1 ] = ( 0.3090169943749475 , 0.9510565162951535 ) 
     v[ 2 ] = ( - 0.8090169943749473 , 0.5877852522924733 ) 
     v[ 3 ] = ( - 0.8090169943749476 , - 0.587785252292473 ) 
-    v[ 4 ] = ( 0.3090169943749472 , - 0.9510565162951536 ) 
+    v[ 4 ] = ( 0.3090169943749473 , - 0.9510565162951536 ) 
   Sample acceptance test (rho = 1, grid [-1.5, 1.5]^2, 20 x 20  grid): 
     Points inside window: 108 / 400   fraction = 0.27 
     Expected fraction (A_window/A_box) = 0.4036347377807561 
   [Pentagon] After one inflation step, window radius: 0.6180339887498948 
                                                                      (= 1/phi) 
   [Pentagon] Window area ratio (inflated/original) = 0.3819660112501051 
-                                      (expected 1/phi^2 = 0.3819660112501051 ) 
+                                      (expected 1/phi^2 = 0.3819660112501052 ) 
 ------------------------------------------------------------ 
 [n =  5 ] Substitution sequences and symbolic dynamics: 
   Fibonacci word (substitution a->ab, b->a): 
@@ -1308,10 +1266,10 @@ Smallest k>0 with k*theta = (integer)*2*pi:  k = 3 ,  accumulating  1
   Interior angle  theta   = -----  = 2.094395102393195  rad = 120.0  deg 
                               3
                             %pi
-  Exterior angle          = ---  = 1.047197551196597  rad 
+  Exterior angle          = ---  = 1.047197551196598  rad 
                              3
                             %pi
-  Central angle           = ---  = 1.047197551196597  rad 
+  Central angle           = ---  = 1.047197551196598  rad 
                              3
   Sum of interior angles  = 4 %pi 
                             2 %pi
@@ -1406,17 +1364,16 @@ Smallest k with full closure: k = 3   (number of full turns = 1 )
   e[ 6 ] (numeric) =  [- 0.8660254037844386, 0.5] 
 [n =  6 ] Side length (unit circumradius) s = 1  = 1.0 
 ------------------------------------------------------------ 
-[n =  6 ] Holonomy / spinor cover analysis: 
-  Natural single-vortex fiber order = 3 
-  Z_n single-vortex holonomy (n = 3 ) : 1 
-  Required loop count to close fiber : 3 
-[Anyonic case G = Z_n with n = 6 ]: 
-  single-vortex holonomy = 1 
-  loop order required    = 6  (expected 6 ) 
-[n =  6 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
-  All g in Z_n satisfy order(g) = n/gcd(g, n). 
-[n =  6 ] Composite holonomy: Loop A = 3 , Loop B = 1 , Composite = 4 
-                                                               , Sum mod n = 4 
+[n =  6 ] Holonomy / Z_2 orientation cover analysis: 
+  Fiber / structure group order = 2 
+                                   (Z_2 orientation cover; two sheets + and -) 
+  Single-edge crossing (orientation flip) = 1 
+  Z_2 cover order (loops to return to same sheet) = 2  (expected 2) 
+[n =  6 ] Vertex-loop holonomy (Z_2, orientation flips): 
+  vertex-cycle length = 3  (odd) 
+  product of edge-flips around cycle = 1  (nontrivial: odd-length flip loop) 
+[n =  6 ] Composite Z_2 holonomy: Loop A = 0 , Loop B = 0 , Composite = 0 
+                                                               , Sum mod 2 = 0 
 ------------------------------------------------------------ 
 [n =  6 ] Cut-and-project ambient lattice Z^n: 
   C_n cyclic shift matrix: 
@@ -1439,7 +1396,7 @@ Smallest k with full closure: k = 3   (number of full turns = 1 )
   Projectors P_diag, P_perp: idempotent, orthogonal, complete. 
   dim(orthogonal complement of diagonal) = 5  = n - 1 
 [n =  6 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
-  V_ 1  (rotation angle 2 pi * 1 /n = 1.047197551196597 ): 
+  V_ 1  (rotation angle 2 pi * 1 /n = 1.047197551196598 ): 
     u_ 1  (cos) = [1.0, 0.5, - 0.5, - 1.0, - 0.5, 0.5] 
     w_ 1  (sin) = [0.0, 0.8660254037844386, 0.8660254037844386, 0.0, 
                                    - 0.8660254037844386, - 0.8660254037844386] 
@@ -1468,11 +1425,11 @@ Smallest k with full closure: k = 3   (number of full turns = 1 )
   Apothem      r = -------  ~ 0.8660254037844386 
                       2
                       2
-  R/r            = -------  = sec(pi/n) = 1.154700538379251 
+  R/r            = -------  = sec(pi/n) = 1.154700538379252 
                    sqrt(3)
                     3/2
                    3
-  Area A         = ----  ~ 2.598076211353315 
+  Area A         = ----  ~ 2.598076211353316 
                     2
   Diagonals (k-step chord lengths, unit side): 
     d[ 1 ] = 1  ~ 1.0 
@@ -1516,76 +1473,76 @@ Smallest k with full closure: k = 3   (number of full turns = 1 )
                                                             3.732052578361982] 
   Converging to PF eigenvalue: 3.732050807568877 
   Tiles after 1 inflation step: 5 
-  Fractal dimension estimate d_f = log(N)/log(lambda) = 1.222087597631058 
+  Fractal dimension estimate d_f = log(N)/log(lambda) = 1.222087597631059 
 ------------------------------------------------------------ 
 [n =  6 ] Zeta functions and L-series: 
-  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006935   (exact pi^2/6 = 
+  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006936   (exact pi^2/6 = 
                                                            1.644934066848226 ) 
-  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023676 
+  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023677 
                                                     (Apery's constant ~ 1.202) 
-  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104993 
-  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683453 
+  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104994 
+  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683454 
   Ratio zeta_{Q(sqrt5)}(2) / zeta(2)^2 ~ (class number factor): 
     = 0.4393854233642092 
   Partial L(2, chi_5) ( 40  terms) = 0.7061989804245805 
   Partial L(3, chi_5) ( 40  terms) = 0.8548243026978557 
   Exact L(2, chi_5) = pi^2 / (5 sqrt(5)) ~ 0.8827642540746761 
   Functional equation (numerical check at s=0.7): 
-    L(0.7) = 0.3154812660944506   L(0.3) = 0.140960360039939   ratio = 
+    L(0.7) = 0.3154812660944506   L(0.3) = 0.1409603600399391   ratio = 
                                                              2.238084990738273 
-  Spectral zeta of C_ 6  at s=2: 2.284722222222222 
+  Spectral zeta of C_ 6  at s=2: 2.284722222222223 
   Spectral zeta of C_ 6  at s=3: 2.089699074074074 
 ------------------------------------------------------------ 
 [n =  6 ] Diffusion kernel and heat trace: 
   Heat trace Tr(e^{-t L}) for cycle C_ 6 : 
     t = 0.01 :  Tr = 5.881780173747676 
     t = 0.1 :  Tr = 4.961631323470995 
-    t = 0.5 :  Tr = 2.794656922958739 
-    t = 1.0 :  Tr = 1.853648657967346 
-    t = 2.0 :  Tr = 1.27596353345446 
-    t = 5.0 :  Tr = 1.013476507863965 
+    t = 0.5 :  Tr = 2.79465692295874 
+    t = 1.0 :  Tr = 1.853648657967347 
+    t = 2.0 :  Tr = 1.275963533454461 
+    t = 5.0 :  Tr = 1.013476507863966 
     t = 10.0 :  Tr = 1.000090799859712 
     t = 50.0 :  Tr = 1.0 
   Heat trace Tr(e^{-t L}) for star K_{1, 6 }: 
     t = 0.01 :  Tr = 6.882642988651789 
     t = 0.1 :  Tr = 6.020772393971207 
     t = 0.5 :  Tr = 4.062850681985485 
-    t = 1.0 :  Tr = 2.840309087822766 
-    t = 2.0 :  Tr = 1.676677247711782 
+    t = 1.0 :  Tr = 2.840309087822767 
+    t = 2.0 :  Tr = 1.676677247711783 
     t = 5.0 :  Tr = 1.033689734995428 
-    t = 10.0 :  Tr = 1.000226999648812 
+    t = 10.0 :  Tr = 1.000226999648813 
     t = 50.0 :  Tr = 1.0 
   Effective d_s from heat-trace slope (cycle C_ 6 ): 
     t in [ 0.01 , 0.1 ]:  d_s ~ 0.1477685968890032 
     t in [ 0.1 , 0.5 ]:  d_s ~ 0.713323857628776 
     t in [ 0.5 , 1.0 ]:  d_s ~ 1.184606731640358 
-    t in [ 1.0 , 2.0 ]:  d_s ~ 1.077561444583545 
+    t in [ 1.0 , 2.0 ]:  d_s ~ 1.077561444583546 
     t in [ 2.0 , 5.0 ]:  d_s ~ 0.5027118364954463 
     t in [ 5.0 , 10.0 ]:  d_s ~ 0.0383633146318807 
     t in [ 10.0 , 50.0 ]:  d_s ~ 1.128291274273291E-4 
   Short-time heat-trace asymptotics (2D Weyl law): 
     Tr(e^{-tL}) ~ (4 pi t)^{-1} * A + (4 pi t)^{-1/2} * B/6 + ... 
     t = 0.01 :  Weyl leading term = 7.957747154594768 
-    t = 0.05 :  Weyl leading term = 1.591549430918953 
+    t = 0.05 :  Weyl leading term = 1.591549430918954 
     t = 0.1 :  Weyl leading term = 0.7957747154594768 
   Heat kernel K_t(x) on R^2 (Gaussian, d=2): 
     t = 0.1 :  K(0) = 0.7957747154594768   K(1) = 0.0653211664234246   K(2) = 
-                                                          3.612811618862161E-5 
+                                                          3.612811618862162E-5 
     t = 1.0 :  K(0) = 0.07957747154594767   K(1) = 0.06197499715482649   K(2) =
-                                                           0.02927491576215958 
-    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291536 
-                                                   K(2) = 0.007200467388746533 
+                                                           0.02927491576215959 
+    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291537 
+                                                   K(2) = 0.007200467388746534 
   Spectral zeta of C_ 6  at s=1,2,3: 
-    s = 1 :  zeta_L = 2.916666666666666 
-    s = 2 :  zeta_L = 2.284722222222222 
+    s = 1 :  zeta_L = 2.916666666666667 
+    s = 2 :  zeta_L = 2.284722222222223 
     s = 3 :  zeta_L = 2.089699074074074 
 ------------------------------------------------------------ 
 [n =  6 ] Acceptance-window (cut-and-project) geometry: 
   Acceptance window: regular  6 -gon in perp space 
-  Unit-cell area A_cell ~ 2.598076211353315 
+  Unit-cell area A_cell ~ 2.598076211353316 
   Acceptance densities (rho = window inradius): 
     rho = 0.5 :  density = 0.3333333333333334 
-    rho = 1.0 :  density = 1.333333333333333 
+    rho = 1.0 :  density = 1.333333333333334 
     rho = 1.5 :  density = 3.000000000000001 
     rho = 2.0 :  density = 5.333333333333335 
   Window vertices (rho = 1): 
@@ -1628,24 +1585,24 @@ Smallest k with full closure: k = 3   (number of full turns = 1 )
 N_GON = 7 
 ============================================================ 
                                     5 %pi
-Interior angle theta = (n-2)*pi/n = -----  = 128.5714285714285 deg 
+Interior angle theta = (n-2)*pi/n = -----  = 128.5714285714286 deg 
                                       7
                                    2 %pi
 Exterior angle = 2*pi/n          = -----  = 51.42857142857143 deg 
                                      7
 Flat-vertex count k_flat = floor(2*pi/theta) = 2 
                                    4 %pi
-Angular deficit at k_flat copies = -----  = 102.8571428571428 deg 
+Angular deficit at k_flat copies = -----  = 102.8571428571429 deg 
                                      7
                                       %pi
-Angular excess at (k_flat+1) copies = ---  = 25.71428571428571 deg 
+Angular excess at (k_flat+1) copies = ---  = 25.71428571428572 deg 
                                        7
 Smallest k>0 with k*theta = (integer)*2*pi:  k = 14 ,  accumulating  5 
                                                                     full turns 
 ------------------------------------------------------------ 
 [n =  7 ] Angle summary: 
                             5 %pi
-  Interior angle  theta   = -----  = 2.243994752564138  rad = 128.5714285714285
+  Interior angle  theta   = -----  = 2.243994752564138  rad = 128.5714285714286
                               7
                                                                            deg 
                             2 %pi
@@ -1735,16 +1692,16 @@ Smallest k with full closure: k = 14   (number of full turns = 5 )
                  [        0.0          0.9999999999999982 ]
 [n =  7 ] R^k traces (should equal 2 cos(2 pi k/n)): 
   k = 1 : tr(R^k) = 1.246979603717467  ~ 2cos( 1 *2pi/n) = 1.246979603717467 
-  k = 2 : tr(R^k) = - 0.4450418679126284  ~ 2cos( 2 *2pi/n) = 
+  k = 2 : tr(R^k) = - 0.4450418679126285  ~ 2cos( 2 *2pi/n) = 
                                                           - 0.4450418679126287 
   k = 3 : tr(R^k) = - 1.801937735804838  ~ 2cos( 3 *2pi/n) = 
                                                            - 1.801937735804838 
-  k = 4 : tr(R^k) = - 1.801937735804838  ~ 2cos( 4 *2pi/n) = 
+  k = 4 : tr(R^k) = - 1.801937735804839  ~ 2cos( 4 *2pi/n) = 
                                                            - 1.801937735804838 
   k = 5 : tr(R^k) = - 0.44504186791263  ~ 2cos( 5 *2pi/n) = 
                                                           - 0.4450418679126292 
-  k = 6 : tr(R^k) = 1.246979603717465  ~ 2cos( 6 *2pi/n) = 1.246979603717466 
-  k = 7 : tr(R^k) = 1.999999999999996  ~ 2cos( 7 *2pi/n) = 2.0 
+  k = 6 : tr(R^k) = 1.246979603717465  ~ 2cos( 6 *2pi/n) = 1.246979603717467 
+  k = 7 : tr(R^k) = 1.999999999999997  ~ 2cos( 7 *2pi/n) = 2.0 
 ------------------------------------------------------------ 
 [n =  7 ] PRIMARY BASIS VECTORS (unit circumradius, 
                             vertex 0 at top, CCW): 
@@ -1756,7 +1713,7 @@ Smallest k with full closure: k = 14   (number of full turns = 5 )
                  15 %pi       15 %pi
   v[ 2 ] =  [cos(------), sin(------)]  ~  
                    14           14
-                                  [- 0.9749279121818236, - 0.2225209339563142] 
+                                  [- 0.9749279121818236, - 0.2225209339563143] 
                  19 %pi       19 %pi
   v[ 3 ] =  [cos(------), sin(------)]  ~  
                    14           14
@@ -1764,11 +1721,11 @@ Smallest k with full closure: k = 14   (number of full turns = 5 )
                  23 %pi       23 %pi
   v[ 4 ] =  [cos(------), sin(------)]  ~  
                    14           14
-                                    [0.4338837391175579, - 0.9009688679024193] 
+                                     [0.433883739117558, - 0.9009688679024193] 
                  27 %pi       27 %pi
   v[ 5 ] =  [cos(------), sin(------)]  ~  
                    14           14
-                                    [0.9749279121818235, - 0.2225209339563146] 
+                                    [0.9749279121818235, - 0.2225209339563147] 
                  31 %pi       31 %pi
   v[ 6 ] =  [cos(------), sin(------)]  ~  
                    14           14
@@ -1779,23 +1736,22 @@ Smallest k with full closure: k = 14   (number of full turns = 5 )
   e[ 3 ] (numeric) =  [0.5410441730642653, - 0.6784479339461047] 
   e[ 4 ] (numeric) =  [0.8677674782351162, - 2.220446049250313E-16] 
   e[ 5 ] (numeric) =  [0.5410441730642656, 0.6784479339461046] 
-  e[ 6 ] (numeric) =  [- 0.1930964297137934, 0.846010735815048] 
+  e[ 6 ] (numeric) =  [- 0.1930964297137935, 0.846010735815048] 
   e[ 7 ] (numeric) =  [- 0.78183148246803, 0.3765101981412666] 
                                                     %pi
 [n =  7 ] Side length (unit circumradius) s = 2 sin(---)  = 0.8677674782351162 
                                                      7
 ------------------------------------------------------------ 
-[n =  7 ] Holonomy / spinor cover analysis: 
-  Natural single-vortex fiber order = 14 
-  Z_n single-vortex holonomy (n = 14 ) : 1 
-  Required loop count to close fiber : 14 
-[Anyonic case G = Z_n with n = 7 ]: 
-  single-vortex holonomy = 1 
-  loop order required    = 7  (expected 7 ) 
-[n =  7 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
-  All g in Z_n satisfy order(g) = n/gcd(g, n). 
-[n =  7 ] Composite holonomy: Loop A = 3 , Loop B = 0 , Composite = 3 
-                                                               , Sum mod n = 3 
+[n =  7 ] Holonomy / Z_2 orientation cover analysis: 
+  Fiber / structure group order = 2 
+                                   (Z_2 orientation cover; two sheets + and -) 
+  Single-edge crossing (orientation flip) = 1 
+  Z_2 cover order (loops to return to same sheet) = 2  (expected 2) 
+[n =  7 ] Vertex-loop holonomy (Z_2, orientation flips): 
+  vertex-cycle length = 14  (even) 
+  product of edge-flips around cycle = 0  (trivial holonomy) 
+[n =  7 ] Composite Z_2 holonomy: Loop A = 0 , Loop B = 0 , Composite = 0 
+                                                               , Sum mod 2 = 0 
 ------------------------------------------------------------ 
 [n =  7 ] Cut-and-project ambient lattice Z^n: 
   C_n cyclic shift matrix: 
@@ -1821,26 +1777,26 @@ Smallest k with full closure: k = 14   (number of full turns = 5 )
   dim(orthogonal complement of diagonal) = 6  = n - 1 
 [n =  7 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
   V_ 1  (rotation angle 2 pi * 1 /n = 0.8975979010256552 ): 
-    u_ 1  (cos) = [1.0, 0.6234898018587336, - 0.2225209339563143, 
+    u_ 1  (cos) = [1.0, 0.6234898018587336, - 0.2225209339563144, 
 - 0.900968867902419, - 0.9009688679024192, - 0.2225209339563146, 
 0.6234898018587334] 
     w_ 1  (sin) = [0.0, 0.7818314824680298, 0.9749279121818236, 
-0.4338837391175582, - 0.433883739117558, - 0.9749279121818236, 
+0.4338837391175583, - 0.433883739117558, - 0.9749279121818236, 
 - 0.7818314824680299] 
   V_ 2  (rotation angle 2 pi * 2 /n = 1.79519580205131 ): 
-    u_ 2  (cos) = [1.0, - 0.2225209339563143, - 0.9009688679024192, 
+    u_ 2  (cos) = [1.0, - 0.2225209339563144, - 0.9009688679024192, 
 0.6234898018587334, 0.6234898018587337, - 0.9009688679024189, 
 - 0.2225209339563148] 
     w_ 2  (sin) = [0.0, 0.9749279121818236, - 0.433883739117558, 
-- 0.7818314824680299, 0.7818314824680296, 0.4338837391175584, 
+- 0.7818314824680299, 0.7818314824680296, 0.4338837391175585, 
 - 0.9749279121818235] 
-  V_ 3  (rotation angle 2 pi * 3 /n = 2.692793703076965 ): 
+  V_ 3  (rotation angle 2 pi * 3 /n = 2.692793703076966 ): 
     u_ 3  (cos) = [1.0, - 0.900968867902419, 0.6234898018587334, 
 - 0.2225209339563141, - 0.2225209339563148, 0.6234898018587339, 
 - 0.9009688679024194] 
-    w_ 3  (sin) = [0.0, 0.4338837391175582, - 0.7818314824680299, 
+    w_ 3  (sin) = [0.0, 0.4338837391175583, - 0.7818314824680299, 
 0.9749279121818237, - 0.9749279121818235, 0.7818314824680295, 
-- 0.4338837391175575] 
+- 0.4338837391175576] 
   Physical 2D plane E_|| recommended = V_1. 
   Perp subspace E_perp = (diagonal) + 2 * 2D pieces + 0 alternating directions 
                                                            =>  dim(E_perp) = 5 
@@ -1863,21 +1819,21 @@ Smallest k with full closure: k = 14   (number of full turns = 5 )
                    2 sin(---)
                           7
                        1
-  Apothem      r = ----------  ~ 1.038260698286168 
+  Apothem      r = ----------  ~ 1.038260698286169 
                          %pi
                    2 tan(---)
                           7
                        %pi
                    tan(---)
                         7
-  R/r            = --------  = sec(pi/n) = 1.109916264174742 
+  R/r            = --------  = sec(pi/n) = 1.109916264174743 
                        %pi
                    sin(---)
                         7
                          %pi
                    7 cot(---)
                           7
-  Area A         = ----------  ~ 3.633912444001589 
+  Area A         = ----------  ~ 3.63391244400159 
                        4
   Diagonals (k-step chord lengths, unit side): 
     d[ 1 ] = 1  ~ 1.0 
@@ -1905,7 +1861,7 @@ Smallest k with full closure: k = 14   (number of full turns = 5 )
                  5 %pi
              sin(-----)
                    7
-    d[ 5 ] = ----------  ~ 1.801937735804838 
+    d[ 5 ] = ----------  ~ 1.801937735804839 
                   %pi
               sin(---)
                    7
@@ -1931,7 +1887,7 @@ Smallest k with full closure: k = 14   (number of full turns = 5 )
   Star K_{1, 7 }: spectrum = {0, 1 (multiplicity 6 ), 8 } 
   Spectral gap = 1 (positive => connected). 
   Cycle C_ 7  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
-   [0.0, 0.7530203962825328, 2.445041867912628, 3.801937735804838, 
+   [0.0, 0.7530203962825328, 2.445041867912629, 3.801937735804838, 
                      3.801937735804838, 2.445041867912629, 0.7530203962825333] 
   Spectral gap of C_ 7  = 0.7530203962825328 
   [n = 7 ] iteration complete. 
@@ -1956,26 +1912,26 @@ Smallest k with full closure: k = 14   (number of full turns = 5 )
   Fractal dimension estimate d_f = log(N)/log(lambda) = 1.180604229953251 
 ------------------------------------------------------------ 
 [n =  7 ] Zeta functions and L-series: 
-  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006935   (exact pi^2/6 = 
+  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006936   (exact pi^2/6 = 
                                                            1.644934066848226 ) 
-  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023676 
+  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023677 
                                                     (Apery's constant ~ 1.202) 
-  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104993 
-  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683453 
+  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104994 
+  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683454 
   Ratio zeta_{Q(sqrt5)}(2) / zeta(2)^2 ~ (class number factor): 
     = 0.4393854233642092 
   Partial L(2, chi_5) ( 40  terms) = 0.7061989804245805 
   Partial L(3, chi_5) ( 40  terms) = 0.8548243026978557 
   Exact L(2, chi_5) = pi^2 / (5 sqrt(5)) ~ 0.8827642540746761 
   Functional equation (numerical check at s=0.7): 
-    L(0.7) = 0.3154812660944506   L(0.3) = 0.140960360039939   ratio = 
+    L(0.7) = 0.3154812660944506   L(0.3) = 0.1409603600399391   ratio = 
                                                              2.238084990738273 
-  Spectral zeta of C_ 7  at s=2: 3.999999999999998 
+  Spectral zeta of C_ 7  at s=2: 3.999999999999999 
   Spectral zeta of C_ 7  at s=3: 4.857142857142856 
 ------------------------------------------------------------ 
 [n =  7 ] Diffusion kernel and heat trace: 
   Heat trace Tr(e^{-t L}) for cycle C_ 7 : 
-    t = 0.01 :  Tr = 6.862076869372268 
+    t = 0.01 :  Tr = 6.862076869372269 
     t = 0.1 :  Tr = 5.788569861668015 
     t = 0.5 :  Tr = 3.260325489628616 
     t = 1.0 :  Tr = 2.159983880325649 
@@ -1987,49 +1943,49 @@ Smallest k with full closure: k = 14   (number of full turns = 5 )
     t = 0.01 :  Tr = 7.863415348881644 
     t = 0.1 :  Tr = 6.878353472332979 
     t = 0.5 :  Tr = 4.657499597164535 
-    t = 1.0 :  Tr = 3.207612109656556 
+    t = 1.0 :  Tr = 3.207612109656557 
     t = 2.0 :  Tr = 1.812011811954851 
-    t = 5.0 :  Tr = 1.040427681994512 
+    t = 5.0 :  Tr = 1.040427681994513 
     t = 10.0 :  Tr = 1.000272399578575 
     t = 50.0 :  Tr = 1.0 
   Effective d_s from heat-trace slope (cycle C_ 7 ): 
-    t in [ 0.01 , 0.1 ]:  d_s ~ 0.1477685992470463 
+    t in [ 0.01 , 0.1 ]:  d_s ~ 0.1477685992470464 
     t in [ 0.1 , 0.5 ]:  d_s ~ 0.7133648603180242 
     t in [ 0.5 , 1.0 ]:  d_s ~ 1.187990910243103 
-    t in [ 1.0 , 2.0 ]:  d_s ~ 1.130872647342674 
+    t in [ 1.0 , 2.0 ]:  d_s ~ 1.130872647342675 
     t in [ 2.0 , 5.0 ]:  d_s ~ 0.726563057758476 
     t in [ 5.0 , 10.0 ]:  d_s ~ 0.1276092191644283 
-    t in [ 10.0 , 50.0 ]:  d_s ~ 0.001332989731400048 
+    t in [ 10.0 , 50.0 ]:  d_s ~ 0.001332989731400049 
   Short-time heat-trace asymptotics (2D Weyl law): 
     Tr(e^{-tL}) ~ (4 pi t)^{-1} * A + (4 pi t)^{-1/2} * B/6 + ... 
     t = 0.01 :  Weyl leading term = 7.957747154594768 
-    t = 0.05 :  Weyl leading term = 1.591549430918953 
+    t = 0.05 :  Weyl leading term = 1.591549430918954 
     t = 0.1 :  Weyl leading term = 0.7957747154594768 
   Heat kernel K_t(x) on R^2 (Gaussian, d=2): 
     t = 0.1 :  K(0) = 0.7957747154594768   K(1) = 0.0653211664234246   K(2) = 
-                                                          3.612811618862161E-5 
+                                                          3.612811618862162E-5 
     t = 1.0 :  K(0) = 0.07957747154594767   K(1) = 0.06197499715482649   K(2) =
-                                                           0.02927491576215958 
-    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291536 
-                                                   K(2) = 0.007200467388746533 
+                                                           0.02927491576215959 
+    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291537 
+                                                   K(2) = 0.007200467388746534 
   Spectral zeta of C_ 7  at s=1,2,3: 
     s = 1 :  zeta_L = 4.0 
-    s = 2 :  zeta_L = 3.999999999999998 
+    s = 2 :  zeta_L = 3.999999999999999 
     s = 3 :  zeta_L = 4.857142857142856 
 ------------------------------------------------------------ 
 [n =  7 ] Acceptance-window (cut-and-project) geometry: 
   Acceptance window: regular  7 -gon in perp space 
-  Unit-cell area A_cell ~ 3.633912444001589 
+  Unit-cell area A_cell ~ 3.63391244400159 
   Acceptance densities (rho = window inradius): 
     rho = 0.5 :  density = 0.2319141134796165 
     rho = 1.0 :  density = 0.927656453918466 
-    rho = 1.5 :  density = 2.087227021316548 
+    rho = 1.5 :  density = 2.087227021316549 
     rho = 2.0 :  density = 3.710625815673864 
   Window vertices (rho = 1): 
     v[ 0 ] = ( 1.0 , 0.0 ) 
     v[ 1 ] = ( 0.6234898018587336 , 0.7818314824680298 ) 
-    v[ 2 ] = ( - 0.2225209339563143 , 0.9749279121818236 ) 
-    v[ 3 ] = ( - 0.900968867902419 , 0.4338837391175582 ) 
+    v[ 2 ] = ( - 0.2225209339563144 , 0.9749279121818236 ) 
+    v[ 3 ] = ( - 0.900968867902419 , 0.4338837391175583 ) 
     v[ 4 ] = ( - 0.9009688679024192 , - 0.433883739117558 ) 
     v[ 5 ] = ( - 0.2225209339563146 , - 0.9749279121818236 ) 
     v[ 6 ] = ( 0.6234898018587334 , - 0.7818314824680299 ) 
@@ -2202,29 +2158,28 @@ Smallest k with full closure: k = 8   (number of full turns = 3 )
   v[ 7 ] =  [-------, -------]  ~  [0.7071067811865475, 0.7071067811865475] 
              sqrt(2)  sqrt(2)
 [n =  8 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
-  e[ 1 ] (numeric) =  [- 0.7071067811865475, - 0.2928932188134525] 
-  e[ 2 ] (numeric) =  [- 0.2928932188134525, - 0.7071067811865475] 
-  e[ 3 ] (numeric) =  [0.2928932188134525, - 0.7071067811865475] 
-  e[ 4 ] (numeric) =  [0.7071067811865475, - 0.2928932188134525] 
-  e[ 5 ] (numeric) =  [0.7071067811865475, 0.2928932188134525] 
-  e[ 6 ] (numeric) =  [0.2928932188134525, 0.7071067811865475] 
-  e[ 7 ] (numeric) =  [- 0.2928932188134525, 0.7071067811865475] 
-  e[ 8 ] (numeric) =  [- 0.7071067811865475, 0.2928932188134525] 
+  e[ 1 ] (numeric) =  [- 0.7071067811865475, - 0.2928932188134526] 
+  e[ 2 ] (numeric) =  [- 0.2928932188134526, - 0.7071067811865475] 
+  e[ 3 ] (numeric) =  [0.2928932188134526, - 0.7071067811865475] 
+  e[ 4 ] (numeric) =  [0.7071067811865475, - 0.2928932188134526] 
+  e[ 5 ] (numeric) =  [0.7071067811865475, 0.2928932188134526] 
+  e[ 6 ] (numeric) =  [0.2928932188134526, 0.7071067811865475] 
+  e[ 7 ] (numeric) =  [- 0.2928932188134526, 0.7071067811865475] 
+  e[ 8 ] (numeric) =  [- 0.7071067811865475, 0.2928932188134526] 
                                                     %pi
 [n =  8 ] Side length (unit circumradius) s = 2 sin(---)  = 0.7653668647301796 
                                                      8
 ------------------------------------------------------------ 
-[n =  8 ] Holonomy / spinor cover analysis: 
-  Natural single-vortex fiber order = 8 
-  Z_n single-vortex holonomy (n = 8 ) : 1 
-  Required loop count to close fiber : 8 
-[Anyonic case G = Z_n with n = 8 ]: 
-  single-vortex holonomy = 1 
-  loop order required    = 8  (expected 8 ) 
-[n =  8 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
-  All g in Z_n satisfy order(g) = n/gcd(g, n). 
-[n =  8 ] Composite holonomy: Loop A = 3 , Loop B = 7 , Composite = 2 
-                                                               , Sum mod n = 2 
+[n =  8 ] Holonomy / Z_2 orientation cover analysis: 
+  Fiber / structure group order = 2 
+                                   (Z_2 orientation cover; two sheets + and -) 
+  Single-edge crossing (orientation flip) = 1 
+  Z_2 cover order (loops to return to same sheet) = 2  (expected 2) 
+[n =  8 ] Vertex-loop holonomy (Z_2, orientation flips): 
+  vertex-cycle length = 8  (even) 
+  product of edge-flips around cycle = 0  (trivial holonomy) 
+[n =  8 ] Composite Z_2 holonomy: Loop A = 0 , Loop B = 0 , Composite = 0 
+                                                               , Sum mod 2 = 0 
 ------------------------------------------------------------ 
 [n =  8 ] Cut-and-project ambient lattice Z^n: 
   C_n cyclic shift matrix: 
@@ -2257,7 +2212,7 @@ Smallest k with full closure: k = 8   (number of full turns = 3 )
                                 - 0.7071067811865475, 0.0, 0.7071067811865475] 
     w_ 1  (sin) = [0.0, 0.7071067811865475, 1.0, 0.7071067811865475, 0.0, 
                             - 0.7071067811865475, - 1.0, - 0.7071067811865475] 
-  V_ 2  (rotation angle 2 pi * 2 /n = 1.570796326794896 ): 
+  V_ 2  (rotation angle 2 pi * 2 /n = 1.570796326794897 ): 
     u_ 2  (cos) = [1.0, 0.0, - 1.0, 0.0, 1.0, 0.0, - 1.0, 0.0] 
     w_ 2  (sin) = [0.0, 1.0, 0.0, - 1.0, 0.0, 1.0, 0.0, - 1.0] 
   V_ 3  (rotation angle 2 pi * 3 /n = 2.356194490192345 ): 
@@ -2284,12 +2239,12 @@ Smallest k with full closure: k = 8   (number of full turns = 3 )
 ------------------------------------------------------------ 
 [n =  8 ] Polygon geometry (side s = 1): 
                        1
-  Circumradius R = ----------  ~ 1.306562964876376 
+  Circumradius R = ----------  ~ 1.306562964876377 
                          %pi
                    2 sin(---)
                           8
                        1
-  Apothem      r = ----------  ~ 1.207106781186547 
+  Apothem      r = ----------  ~ 1.207106781186548 
                          %pi
                    2 tan(---)
                           8
@@ -2306,7 +2261,7 @@ Smallest k with full closure: k = 8   (number of full turns = 3 )
   Diagonals (k-step chord lengths, unit side): 
     d[ 1 ] = 1  ~ 1.0 
                     1
-    d[ 2 ] = ----------------  ~ 1.847759065022573 
+    d[ 2 ] = ----------------  ~ 1.847759065022574 
                          %pi
              sqrt(2) sin(---)
                           8
@@ -2330,14 +2285,14 @@ Smallest k with full closure: k = 8   (number of full turns = 3 )
               sin(---)
                    8
                     1
-    d[ 6 ] = ----------------  ~ 1.847759065022573 
+    d[ 6 ] = ----------------  ~ 1.847759065022574 
                          %pi
              sqrt(2) sin(---)
                           8
                  7 %pi
              sin(-----)
                    8
-    d[ 7 ] = ----------  ~ 1.0 
+    d[ 7 ] = ----------  ~ 1.000000000000001 
                   %pi
               sin(---)
                    8
@@ -2381,22 +2336,22 @@ Smallest k with full closure: k = 8   (number of full turns = 3 )
   Fractal dimension estimate d_f = log(N)/log(lambda) = 1.14767615697404 
 ------------------------------------------------------------ 
 [n =  8 ] Zeta functions and L-series: 
-  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006935   (exact pi^2/6 = 
+  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006936   (exact pi^2/6 = 
                                                            1.644934066848226 ) 
-  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023676 
+  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023677 
                                                     (Apery's constant ~ 1.202) 
-  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104993 
-  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683453 
+  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104994 
+  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683454 
   Ratio zeta_{Q(sqrt5)}(2) / zeta(2)^2 ~ (class number factor): 
     = 0.4393854233642092 
   Partial L(2, chi_5) ( 40  terms) = 0.7061989804245805 
   Partial L(3, chi_5) ( 40  terms) = 0.8548243026978557 
   Exact L(2, chi_5) = pi^2 / (5 sqrt(5)) ~ 0.8827642540746761 
   Functional equation (numerical check at s=0.7): 
-    L(0.7) = 0.3154812660944506   L(0.3) = 0.140960360039939   ratio = 
+    L(0.7) = 0.3154812660944506   L(0.3) = 0.1409603600399391   ratio = 
                                                              2.238084990738273 
   Spectral zeta of C_ 8  at s=2: 6.562500000000002 
-  Spectral zeta of C_ 8  at s=3: 10.265625 
+  Spectral zeta of C_ 8  at s=3: 10.26562500000001 
 ------------------------------------------------------------ 
 [n =  8 ] Diffusion kernel and heat trace: 
   Heat trace Tr(e^{-t L}) for cycle C_ 8 : 
@@ -2404,23 +2359,23 @@ Smallest k with full closure: k = 8   (number of full turns = 3 )
     t = 0.1 :  Tr = 6.615508413077887 
     t = 0.5 :  Tr = 3.726077447038532 
     t = 1.0 :  Tr = 2.468126559661773 
-    t = 2.0 :  Tr = 1.658890172419578 
-    t = 5.0 :  Tr = 1.106999052217716 
+    t = 2.0 :  Tr = 1.658890172419579 
+    t = 5.0 :  Tr = 1.106999052217717 
     t = 10.0 :  Tr = 1.00571468286848 
     t = 50.0 :  Tr = 1.000000000000381 
   Heat trace Tr(e^{-t L}) for star K_{1, 8 }: 
     t = 0.01 :  Tr = 8.844280021515404 
     t = 0.1 :  Tr = 7.740431585992316 
-    t = 0.5 :  Tr = 5.256823614526676 
+    t = 0.5 :  Tr = 5.256823614526677 
     t = 1.0 :  Tr = 3.575279498004183 
-    t = 2.0 :  Tr = 1.947346997886268 
+    t = 2.0 :  Tr = 1.947346997886269 
     t = 5.0 :  Tr = 1.047165628993598 
-    t = 10.0 :  Tr = 1.000317799508337 
+    t = 10.0 :  Tr = 1.000317799508338 
     t = 50.0 :  Tr = 1.0 
   Effective d_s from heat-trace slope (cycle C_ 8 ): 
     t in [ 0.01 , 0.1 ]:  d_s ~ 0.1477685992807882 
     t in [ 0.1 , 0.5 ]:  d_s ~ 0.7133678040662306 
-    t in [ 0.5 , 1.0 ]:  d_s ~ 1.188482573705669 
+    t in [ 0.5 , 1.0 ]:  d_s ~ 1.18848257370567 
     t in [ 1.0 , 2.0 ]:  d_s ~ 1.146395998366749 
     t in [ 2.0 , 5.0 ]:  d_s ~ 0.8828988361851989 
     t in [ 5.0 , 10.0 ]:  d_s ~ 0.2768658208045556 
@@ -2428,19 +2383,19 @@ Smallest k with full closure: k = 8   (number of full turns = 3 )
   Short-time heat-trace asymptotics (2D Weyl law): 
     Tr(e^{-tL}) ~ (4 pi t)^{-1} * A + (4 pi t)^{-1/2} * B/6 + ... 
     t = 0.01 :  Weyl leading term = 7.957747154594768 
-    t = 0.05 :  Weyl leading term = 1.591549430918953 
+    t = 0.05 :  Weyl leading term = 1.591549430918954 
     t = 0.1 :  Weyl leading term = 0.7957747154594768 
   Heat kernel K_t(x) on R^2 (Gaussian, d=2): 
     t = 0.1 :  K(0) = 0.7957747154594768   K(1) = 0.0653211664234246   K(2) = 
-                                                          3.612811618862161E-5 
+                                                          3.612811618862162E-5 
     t = 1.0 :  K(0) = 0.07957747154594767   K(1) = 0.06197499715482649   K(2) =
-                                                           0.02927491576215958 
-    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291536 
-                                                   K(2) = 0.007200467388746533 
+                                                           0.02927491576215959 
+    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291537 
+                                                   K(2) = 0.007200467388746534 
   Spectral zeta of C_ 8  at s=1,2,3: 
     s = 1 :  zeta_L = 5.250000000000001 
     s = 2 :  zeta_L = 6.562500000000002 
-    s = 3 :  zeta_L = 10.265625 
+    s = 3 :  zeta_L = 10.26562500000001 
 ------------------------------------------------------------ 
 [n =  8 ] Acceptance-window (cut-and-project) geometry: 
   Acceptance window: regular  8 -gon in perp space 
@@ -2449,7 +2404,7 @@ Smallest k with full closure: k = 8   (number of full turns = 3 )
     rho = 0.5 :  density = 0.1715728752538099 
     rho = 1.0 :  density = 0.6862915010152396 
     rho = 1.5 :  density = 1.544155877284289 
-    rho = 2.0 :  density = 2.745166004060958 
+    rho = 2.0 :  density = 2.745166004060959 
   Window vertices (rho = 1): 
     v[ 0 ] = ( 1.0 , 0.0 ) 
     v[ 1 ] = ( 0.7071067811865475 , 0.7071067811865475 ) 
@@ -2611,16 +2566,16 @@ Smallest k with full closure: k = 18   (number of full turns = 7 )
                                                                   (expected I) 
 [n =  9 ] R^k traces (should equal 2 cos(2 pi k/n)): 
   k = 1 : tr(R^k) = 1.532088886237956  ~ 2cos( 1 *2pi/n) = 1.532088886237956 
-  k = 2 : tr(R^k) = 0.3472963553338606  ~ 2cos( 2 *2pi/n) = 0.3472963553338608 
-  k = 3 : tr(R^k) = - 1.0  ~ 2cos( 3 *2pi/n) = - 1.0 
-  k = 4 : tr(R^k) = - 1.879385241571816  ~ 2cos( 4 *2pi/n) = 
-                                                           - 1.879385241571816 
+  k = 2 : tr(R^k) = 0.3472963553338606  ~ 2cos( 2 *2pi/n) = 0.3472963553338609 
+  k = 3 : tr(R^k) = - 1.000000000000001  ~ 2cos( 3 *2pi/n) = - 1.0 
+  k = 4 : tr(R^k) = - 1.879385241571817  ~ 2cos( 4 *2pi/n) = 
+                                                           - 1.879385241571817 
   k = 5 : tr(R^k) = - 1.879385241571814  ~ 2cos( 5 *2pi/n) = 
-                                                           - 1.879385241571816 
+                                                           - 1.879385241571817 
   k = 6 : tr(R^k) = - 0.9999999999999982  ~ 2cos( 6 *2pi/n) = - 1.0 
-  k = 7 : tr(R^k) = 0.347296355333853  ~ 2cos( 7 *2pi/n) = 0.3472963553338599 
-  k = 8 : tr(R^k) = 1.532088886237964  ~ 2cos( 8 *2pi/n) = 1.532088886237955 
-  k = 9 : tr(R^k) = 2.000000000000028  ~ 2cos( 9 *2pi/n) = 2.0 
+  k = 7 : tr(R^k) = 0.3472963553338531  ~ 2cos( 7 *2pi/n) = 0.34729635533386 
+  k = 8 : tr(R^k) = 1.532088886237965  ~ 2cos( 8 *2pi/n) = 1.532088886237956 
+  k = 9 : tr(R^k) = 2.000000000000029  ~ 2cos( 9 *2pi/n) = 2.0 
 ------------------------------------------------------------ 
 [n =  9 ] PRIMARY BASIS VECTORS (unit circumradius, 
                             vertex 0 at top, CCW): 
@@ -2657,29 +2612,28 @@ Smallest k with full closure: k = 18   (number of full turns = 7 )
                                       [0.6427876096865396, 0.7660444431189778] 
 [n =  9 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
   e[ 1 ] (numeric) =  [- 0.6427876096865394, - 0.233955556881022] 
-  e[ 2 ] (numeric) =  [- 0.3420201433256686, - 0.5923962654520474] 
+  e[ 2 ] (numeric) =  [- 0.3420201433256687, - 0.5923962654520474] 
   e[ 3 ] (numeric) =  [0.1187823492277694, - 0.6736481776669308] 
   e[ 4 ] (numeric) =  [0.5240052604587693, - 0.4396926207859082] 
-  e[ 5 ] (numeric) =  [0.6840402866513384, - 1.110223024625156E-16] 
+  e[ 5 ] (numeric) =  [0.6840402866513384, - 1.110223024625157E-16] 
   e[ 6 ] (numeric) =  [0.5240052604587696, 0.4396926207859083] 
   e[ 7 ] (numeric) =  [0.1187823492277695, 0.6736481776669299] 
-  e[ 8 ] (numeric) =  [- 0.3420201433256685, 0.5923962654520478] 
+  e[ 8 ] (numeric) =  [- 0.3420201433256686, 0.5923962654520478] 
   e[ 9 ] (numeric) =  [- 0.6427876096865396, 0.2339555568810222] 
                                                     %pi
 [n =  9 ] Side length (unit circumradius) s = 2 sin(---)  = 0.6840402866513374 
                                                      9
 ------------------------------------------------------------ 
-[n =  9 ] Holonomy / spinor cover analysis: 
-  Natural single-vortex fiber order = 18 
-  Z_n single-vortex holonomy (n = 18 ) : 1 
-  Required loop count to close fiber : 18 
-[Anyonic case G = Z_n with n = 9 ]: 
-  single-vortex holonomy = 1 
-  loop order required    = 9  (expected 9 ) 
-[n =  9 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
-  All g in Z_n satisfy order(g) = n/gcd(g, n). 
-[n =  9 ] Composite holonomy: Loop A = 3 , Loop B = 7 , Composite = 1 
-                                                               , Sum mod n = 1 
+[n =  9 ] Holonomy / Z_2 orientation cover analysis: 
+  Fiber / structure group order = 2 
+                                   (Z_2 orientation cover; two sheets + and -) 
+  Single-edge crossing (orientation flip) = 1 
+  Z_2 cover order (loops to return to same sheet) = 2  (expected 2) 
+[n =  9 ] Vertex-loop holonomy (Z_2, orientation flips): 
+  vertex-cycle length = 18  (even) 
+  product of edge-flips around cycle = 0  (trivial holonomy) 
+[n =  9 ] Composite Z_2 holonomy: Loop A = 0 , Loop B = 0 , Composite = 0 
+                                                               , Sum mod 2 = 0 
 ------------------------------------------------------------ 
 [n =  9 ] Cut-and-project ambient lattice Z^n: 
   C_n cyclic shift matrix: 
@@ -2711,12 +2665,12 @@ Smallest k with full closure: k = 18   (number of full turns = 7 )
 [n =  9 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
   V_ 1  (rotation angle 2 pi * 1 /n = 0.6981317007977318 ): 
     u_ 1  (cos) = [1.0, 0.766044443118978, 0.1736481776669304, - 0.5, 
-- 0.9396926207859083, - 0.9396926207859084, - 0.5, 0.1736481776669299, 
+- 0.9396926207859083, - 0.9396926207859084, - 0.5, 0.17364817766693, 
 0.7660444431189778] 
     w_ 1  (sin) = [0.0, 0.6427876096865393, 0.984807753012208, 
-0.8660254037844386, 0.3420201433256689, - 0.3420201433256686, 
+0.8660254037844386, 0.3420201433256689, - 0.3420201433256687, 
 - 0.8660254037844386, - 0.9848077530122081, - 0.6427876096865396] 
-  V_ 2  (rotation angle 2 pi * 2 /n = 1.396263401595463 ): 
+  V_ 2  (rotation angle 2 pi * 2 /n = 1.396263401595464 ): 
     u_ 2  (cos) = [1.0, 0.1736481776669304, - 0.9396926207859083, - 0.5, 
 0.7660444431189778, 0.7660444431189781, - 0.5, - 0.9396926207859087, 
 0.1736481776669297] 
@@ -2734,7 +2688,7 @@ Smallest k with full closure: k = 18   (number of full turns = 7 )
 - 0.9396926207859089] 
     w_ 4  (sin) = [0.0, 0.3420201433256689, - 0.6427876096865396, 
 0.8660254037844386, - 0.9848077530122081, 0.984807753012208, 
-- 0.8660254037844386, 0.6427876096865381, - 0.3420201433256675] 
+- 0.8660254037844386, 0.6427876096865381, - 0.3420201433256676] 
   Physical 2D plane E_|| recommended = V_1. 
   Perp subspace E_perp = (diagonal) + 3 * 2D pieces + 0 alternating directions 
                                                            =>  dim(E_perp) = 7 
@@ -2754,7 +2708,7 @@ Smallest k with full closure: k = 18   (number of full turns = 7 )
 ------------------------------------------------------------ 
 [n =  9 ] Polygon geometry (side s = 1): 
                        1
-  Circumradius R = ----------  ~ 1.461902200081543 
+  Circumradius R = ----------  ~ 1.461902200081544 
                          %pi
                    2 sin(---)
                           9
@@ -2780,7 +2734,7 @@ Smallest k with full closure: k = 18   (number of full turns = 7 )
                  2 %pi
              sin(-----)
                    9
-    d[ 2 ] = ----------  ~ 1.879385241571816 
+    d[ 2 ] = ----------  ~ 1.879385241571817 
                   %pi
               sin(---)
                    9
@@ -2811,14 +2765,14 @@ Smallest k with full closure: k = 18   (number of full turns = 7 )
                  7 %pi
              sin(-----)
                    9
-    d[ 7 ] = ----------  ~ 1.879385241571817 
+    d[ 7 ] = ----------  ~ 1.879385241571818 
                   %pi
               sin(---)
                    9
                  8 %pi
              sin(-----)
                    9
-    d[ 8 ] = ----------  ~ 1.0 
+    d[ 8 ] = ----------  ~ 1.000000000000001 
                   %pi
               sin(---)
                    9
@@ -2855,26 +2809,26 @@ Smallest k with full closure: k = 18   (number of full turns = 7 )
   depth = 6 : tile counts = [ 15994  69930 ]   total = 85924 
   Perron-Frobenius eigenvalue (inflation ratio) = 6.372281323269014 
   Tile-count growth rates (ratio at successive depths): 
-   [6.5, 6.384615384615385, 6.373493975903615, 6.372400756143667, 
+   [6.5, 6.384615384615385, 6.373493975903615, 6.372400756143668, 
                                                              6.37229308810442] 
   Converging to PF eigenvalue: 6.372281323269014 
   Tiles after 1 inflation step: 8 
-  Fractal dimension estimate d_f = log(N)/log(lambda) = 1.122834349954022 
+  Fractal dimension estimate d_f = log(N)/log(lambda) = 1.122834349954023 
 ------------------------------------------------------------ 
 [n =  9 ] Zeta functions and L-series: 
-  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006935   (exact pi^2/6 = 
+  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006936   (exact pi^2/6 = 
                                                            1.644934066848226 ) 
-  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023676 
+  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023677 
                                                     (Apery's constant ~ 1.202) 
-  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104993 
-  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683453 
+  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104994 
+  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683454 
   Ratio zeta_{Q(sqrt5)}(2) / zeta(2)^2 ~ (class number factor): 
     = 0.4393854233642092 
   Partial L(2, chi_5) ( 40  terms) = 0.7061989804245805 
   Partial L(3, chi_5) ( 40  terms) = 0.8548243026978557 
   Exact L(2, chi_5) = pi^2 / (5 sqrt(5)) ~ 0.8827642540746761 
   Functional equation (numerical check at s=0.7): 
-    L(0.7) = 0.3154812660944506   L(0.3) = 0.140960360039939   ratio = 
+    L(0.7) = 0.3154812660944506   L(0.3) = 0.1409603600399391   ratio = 
                                                              2.238084990738273 
   Spectral zeta of C_ 9  at s=2: 10.22222222222221 
   Spectral zeta of C_ 9  at s=3: 20.07407407407404 
@@ -2885,39 +2839,39 @@ Smallest k with full closure: k = 18   (number of full turns = 7 )
     t = 0.1 :  Tr = 7.442446964709004 
     t = 0.5 :  Tr = 4.191836504884576 
     t = 1.0 :  Tr = 2.776582318726744 
-    t = 2.0 :  Tr = 1.863706408788316 
-    t = 5.0 :  Tr = 1.193257037983336 
+    t = 2.0 :  Tr = 1.863706408788317 
+    t = 5.0 :  Tr = 1.193257037983337 
     t = 10.0 :  Tr = 1.018574663511058 
-    t = 50.0 :  Tr = 1.000000000138187 
+    t = 50.0 :  Tr = 1.000000000138188 
   Heat trace Tr(e^{-t L}) for star K_{1, 9 }: 
     t = 0.01 :  Tr = 9.825236088029305 
     t = 0.1 :  Tr = 8.606578785459119 
     t = 0.5 :  Tr = 5.858983224700153 
     t = 1.0 :  Tr = 3.943080929301301 
     t = 2.0 :  Tr = 2.082682267954055 
-    t = 5.0 :  Tr = 1.053903575992683 
+    t = 5.0 :  Tr = 1.053903575992684 
     t = 10.0 :  Tr = 1.0003631994381 
     t = 50.0 :  Tr = 1.0 
   Effective d_s from heat-trace slope (cycle C_ 9 ): 
     t in [ 0.01 , 0.1 ]:  d_s ~ 0.1477685992812104 
     t in [ 0.1 , 0.5 ]:  d_s ~ 0.7133679887639652 
-    t in [ 0.5 , 1.0 ]:  d_s ~ 1.188544558712943 
-    t in [ 1.0 , 2.0 ]:  d_s ~ 1.15027111983543 
+    t in [ 0.5 , 1.0 ]:  d_s ~ 1.188544558712944 
+    t in [ 1.0 , 2.0 ]:  d_s ~ 1.150271119835431 
     t in [ 2.0 , 5.0 ]:  d_s ~ 0.9732295815792532 
-    t in [ 5.0 , 10.0 ]:  d_s ~ 0.4567062181468683 
+    t in [ 5.0 , 10.0 ]:  d_s ~ 0.4567062181468684 
     t in [ 10.0 , 50.0 ]:  d_s ~ 0.02287042083827443 
   Short-time heat-trace asymptotics (2D Weyl law): 
     Tr(e^{-tL}) ~ (4 pi t)^{-1} * A + (4 pi t)^{-1/2} * B/6 + ... 
     t = 0.01 :  Weyl leading term = 7.957747154594768 
-    t = 0.05 :  Weyl leading term = 1.591549430918953 
+    t = 0.05 :  Weyl leading term = 1.591549430918954 
     t = 0.1 :  Weyl leading term = 0.7957747154594768 
   Heat kernel K_t(x) on R^2 (Gaussian, d=2): 
     t = 0.1 :  K(0) = 0.7957747154594768   K(1) = 0.0653211664234246   K(2) = 
-                                                          3.612811618862161E-5 
+                                                          3.612811618862162E-5 
     t = 1.0 :  K(0) = 0.07957747154594767   K(1) = 0.06197499715482649   K(2) =
-                                                           0.02927491576215958 
-    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291536 
-                                                   K(2) = 0.007200467388746533 
+                                                           0.02927491576215959 
+    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291537 
+                                                   K(2) = 0.007200467388746534 
   Spectral zeta of C_ 9  at s=1,2,3: 
     s = 1 :  zeta_L = 6.666666666666663 
     s = 2 :  zeta_L = 10.22222222222221 
@@ -2930,20 +2884,20 @@ Smallest k with full closure: k = 18   (number of full turns = 7 )
     rho = 0.5 :  density = 0.1324743314317942 
     rho = 1.0 :  density = 0.5298973257271769 
     rho = 1.5 :  density = 1.192268982886148 
-    rho = 2.0 :  density = 2.119589302908707 
+    rho = 2.0 :  density = 2.119589302908708 
   Window vertices (rho = 1): 
     v[ 0 ] = ( 1.0 , 0.0 ) 
     v[ 1 ] = ( 0.766044443118978 , 0.6427876096865393 ) 
     v[ 2 ] = ( 0.1736481776669304 , 0.984807753012208 ) 
     v[ 3 ] = ( - 0.5 , 0.8660254037844386 ) 
     v[ 4 ] = ( - 0.9396926207859083 , 0.3420201433256689 ) 
-    v[ 5 ] = ( - 0.9396926207859084 , - 0.3420201433256686 ) 
+    v[ 5 ] = ( - 0.9396926207859084 , - 0.3420201433256687 ) 
     v[ 6 ] = ( - 0.5 , - 0.8660254037844386 ) 
-    v[ 7 ] = ( 0.1736481776669299 , - 0.9848077530122081 ) 
+    v[ 7 ] = ( 0.17364817766693 , - 0.9848077530122081 ) 
     v[ 8 ] = ( 0.7660444431189778 , - 0.6427876096865396 ) 
   Sample acceptance test (rho = 1, grid [-1.5, 1.5]^2, 20 x 20  grid): 
     Points inside window: 129 / 400   fraction = 0.3225 
-    Expected fraction (A_window/A_box) = 0.3639702342662023 
+    Expected fraction (A_window/A_box) = 0.3639702342662024 
 ------------------------------------------------------------ 
 [n =  9 ] Substitution sequences and symbolic dynamics: 
   Fibonacci word (substitution a->ab, b->a): 
@@ -2991,7 +2945,7 @@ Smallest k>0 with k*theta = (integer)*2*pi:  k = 5 ,  accumulating  2
 ------------------------------------------------------------ 
 [n =  10 ] Angle summary: 
                             4 %pi
-  Interior angle  theta   = -----  = 2.513274122871834  rad = 144.0  deg 
+  Interior angle  theta   = -----  = 2.513274122871835  rad = 144.0  deg 
                               5
                             %pi
   Exterior angle          = ---  = 0.6283185307179586  rad 
@@ -3098,14 +3052,14 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
   k = 3 : tr(R^k) = - 0.6180339887498949  ~ 2cos( 3 *2pi/n) = 
                                                           - 0.6180339887498947 
   k = 4 : tr(R^k) = - 1.618033988749895  ~ 2cos( 4 *2pi/n) = 
-                                                           - 1.618033988749894 
+                                                           - 1.618033988749895 
   k = 5 : tr(R^k) = - 2.0  ~ 2cos( 5 *2pi/n) = - 2.0 
   k = 6 : tr(R^k) = - 1.618033988749893  ~ 2cos( 6 *2pi/n) = 
                                                            - 1.618033988749895 
   k = 7 : tr(R^k) = - 0.6180339887498967  ~ 2cos( 7 *2pi/n) = 
                                                           - 0.6180339887498951 
   k = 8 : tr(R^k) = 0.6180339887499002  ~ 2cos( 8 *2pi/n) = 0.6180339887498945 
-  k = 9 : tr(R^k) = 1.6180339887499  ~ 2cos( 9 *2pi/n) = 1.618033988749894 
+  k = 9 : tr(R^k) = 1.6180339887499  ~ 2cos( 9 *2pi/n) = 1.618033988749895 
   k = 10 : tr(R^k) = 2.0  ~ 2cos( 10 *2pi/n) = 2.0 
 ------------------------------------------------------------ 
 [n =  10 ] PRIMARY BASIS VECTORS (unit circumradius, 
@@ -3122,7 +3076,7 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
                  11 %pi       11 %pi
   v[ 3 ] =  [cos(------), sin(------)]  ~  
                    10           10
-                                  [- 0.9510565162951535, - 0.3090169943749477] 
+                                  [- 0.9510565162951535, - 0.3090169943749478] 
                  13 %pi       13 %pi
   v[ 4 ] =  [cos(------), sin(------)]  ~  
                    10           10
@@ -3145,14 +3099,14 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
                    10           10
                                        [0.587785252292474, 0.8090169943749468] 
 [n =  10 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
-  e[ 1 ] (numeric) =  [- 0.587785252292473, - 0.1909830056250525] 
-  e[ 2 ] (numeric) =  [- 0.3632712640026805, - 0.4999999999999999] 
+  e[ 1 ] (numeric) =  [- 0.587785252292473, - 0.1909830056250526] 
+  e[ 2 ] (numeric) =  [- 0.3632712640026805, - 0.5] 
   e[ 3 ] (numeric) =  [0.0, - 0.6180339887498952] 
   e[ 4 ] (numeric) =  [0.3632712640026803, - 0.4999999999999996] 
-  e[ 5 ] (numeric) =  [0.5877852522924733, - 0.1909830056250526] 
-  e[ 6 ] (numeric) =  [0.5877852522924729, 0.1909830056250524] 
-  e[ 7 ] (numeric) =  [0.3632712640026806, 0.4999999999999999] 
-  e[ 8 ] (numeric) =  [1.110223024625156E-16, 0.6180339887498948] 
+  e[ 5 ] (numeric) =  [0.5877852522924733, - 0.1909830056250527] 
+  e[ 6 ] (numeric) =  [0.5877852522924729, 0.1909830056250525] 
+  e[ 7 ] (numeric) =  [0.3632712640026806, 0.5] 
+  e[ 8 ] (numeric) =  [1.110223024625157E-16, 0.6180339887498948] 
   e[ 9 ] (numeric) =  [- 0.3632712640026796, 0.4999999999999996] 
   e[ 10 ] (numeric) =  [- 0.587785252292474, 0.1909830056250532] 
                                                      %pi
@@ -3160,17 +3114,16 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
                                                      10
                                                                                
 ------------------------------------------------------------ 
-[n =  10 ] Holonomy / spinor cover analysis: 
-  Natural single-vortex fiber order = 5 
-  Z_n single-vortex holonomy (n = 5 ) : 1 
-  Required loop count to close fiber : 5 
-[Anyonic case G = Z_n with n = 10 ]: 
-  single-vortex holonomy = 1 
-  loop order required    = 10  (expected 10 ) 
-[n =  10 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
-  All g in Z_n satisfy order(g) = n/gcd(g, n). 
-[n =  10 ] Composite holonomy: Loop A = 3 , Loop B = 7 , Composite = 0 
-                                                               , Sum mod n = 0 
+[n =  10 ] Holonomy / Z_2 orientation cover analysis: 
+  Fiber / structure group order = 2 
+                                   (Z_2 orientation cover; two sheets + and -) 
+  Single-edge crossing (orientation flip) = 1 
+  Z_2 cover order (loops to return to same sheet) = 2  (expected 2) 
+[n =  10 ] Vertex-loop holonomy (Z_2, orientation flips): 
+  vertex-cycle length = 5  (odd) 
+  product of edge-flips around cycle = 1  (nontrivial: odd-length flip loop) 
+[n =  10 ] Composite Z_2 holonomy: Loop A = 0 , Loop B = 0 , Composite = 0 
+                                                               , Sum mod 2 = 0 
 ------------------------------------------------------------ 
 [n =  10 ] Cut-and-project ambient lattice Z^n: 
   C_n cyclic shift matrix: 
@@ -3203,29 +3156,29 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
   dim(orthogonal complement of diagonal) = 9  = n - 1 
 [n =  10 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
   V_ 1  (rotation angle 2 pi * 1 /n = 0.6283185307179586 ): 
-    u_ 1  (cos) = [1.0, 0.8090169943749475, 0.3090169943749474, 
-- 0.3090169943749473, - 0.8090169943749473, - 1.0, - 0.8090169943749476, 
-- 0.3090169943749475, 0.3090169943749472, 0.8090169943749473] 
+    u_ 1  (cos) = [1.0, 0.8090169943749475, 0.3090169943749475, 
+- 0.3090169943749474, - 0.8090169943749473, - 1.0, - 0.8090169943749476, 
+- 0.3090169943749476, 0.3090169943749473, 0.8090169943749473] 
     w_ 1  (sin) = [0.0, 0.5877852522924731, 0.9510565162951535, 
 0.9510565162951536, 0.5877852522924733, 0.0, - 0.587785252292473, 
 - 0.9510565162951535, - 0.9510565162951536, - 0.5877852522924734] 
   V_ 2  (rotation angle 2 pi * 2 /n = 1.256637061435917 ): 
-    u_ 2  (cos) = [1.0, 0.3090169943749474, - 0.8090169943749473, 
-- 0.8090169943749476, 0.3090169943749472, 1.0, 0.3090169943749477, 
+    u_ 2  (cos) = [1.0, 0.3090169943749475, - 0.8090169943749473, 
+- 0.8090169943749476, 0.3090169943749473, 1.0, 0.3090169943749478, 
 - 0.8090169943749472, - 0.8090169943749477, 0.309016994374947] 
     w_ 2  (sin) = [0.0, 0.9510565162951535, 0.5877852522924733, 
 - 0.587785252292473, - 0.9510565162951536, 0.0, 0.9510565162951535, 
 0.5877852522924734, - 0.5877852522924728, - 0.9510565162951538] 
-  V_ 3  (rotation angle 2 pi * 3 /n = 1.884955592153875 ): 
-    u_ 3  (cos) = [1.0, - 0.3090169943749473, - 0.8090169943749476, 
-0.8090169943749473, 0.3090169943749477, - 1.0, 0.309016994374947, 
-0.8090169943749477, - 0.8090169943749471, - 0.309016994374948] 
+  V_ 3  (rotation angle 2 pi * 3 /n = 1.884955592153876 ): 
+    u_ 3  (cos) = [1.0, - 0.3090169943749474, - 0.8090169943749476, 
+0.8090169943749473, 0.3090169943749478, - 1.0, 0.309016994374947, 
+0.8090169943749477, - 0.8090169943749471, - 0.3090169943749481] 
     w_ 3  (sin) = [0.0, 0.9510565162951536, - 0.587785252292473, 
 - 0.5877852522924734, 0.9510565162951535, 0.0, - 0.9510565162951538, 
 0.5877852522924727, 0.5877852522924736, - 0.9510565162951534] 
-  V_ 4  (rotation angle 2 pi * 4 /n = 2.513274122871834 ): 
-    u_ 4  (cos) = [1.0, - 0.8090169943749473, 0.3090169943749472, 
-0.3090169943749477, - 0.8090169943749477, 1.0, - 0.8090169943749471, 
+  V_ 4  (rotation angle 2 pi * 4 /n = 2.513274122871835 ): 
+    u_ 4  (cos) = [1.0, - 0.8090169943749473, 0.3090169943749473, 
+0.3090169943749478, - 0.8090169943749477, 1.0, - 0.8090169943749471, 
 0.3090169943749468, 0.3090169943749482, - 0.8090169943749479] 
     w_ 4  (sin) = [0.0, 0.5877852522924733, - 0.9510565162951536, 
 0.9510565162951535, - 0.5877852522924728, 0.0, 0.5877852522924736, 
@@ -3295,7 +3248,7 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
                  2 %pi
              sin(-----)
                    5
-    d[ 4 ] = ----------  ~ 3.077683537175253 
+    d[ 4 ] = ----------  ~ 3.077683537175254 
                   %pi
               sin(---)
                   10
@@ -3307,7 +3260,7 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
                  3 %pi
              sin(-----)
                    5
-    d[ 6 ] = ----------  ~ 3.077683537175253 
+    d[ 6 ] = ----------  ~ 3.077683537175254 
                   %pi
               sin(---)
                   10
@@ -3321,7 +3274,7 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
                  4 %pi
              sin(-----)
                    5
-    d[ 8 ] = ----------  ~ 1.902113032590307 
+    d[ 8 ] = ----------  ~ 1.902113032590308 
                   %pi
               sin(---)
                   10
@@ -3349,7 +3302,7 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
   Cycle C_ 10  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
    [0.0, 0.3819660112501051, 1.381966011250105, 2.618033988749895, 
 3.618033988749895, 4.0, 3.618033988749895, 2.618033988749895, 
-1.381966011250105, 0.3819660112501053] 
+1.381966011250106, 0.3819660112501053] 
   Spectral gap of C_ 10  = 0.3819660112501051 
   [n = 10 ] iteration complete. 
 ------------------------------------------------------------ 
@@ -3366,28 +3319,28 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
   depth = 6 : tile counts = [ 30451  161896 ]   total = 192347 
   Perron-Frobenius eigenvalue (inflation ratio) = 7.3166247903554 
   Tile-count growth rates (ratio at successive depths): 
-   [7.444444444444445, 7.328358208955223, 7.317718940936864, 
+   [7.444444444444445, 7.328358208955224, 7.317718940936864, 
                                          7.316726969106596, 7.316634333751759] 
   Converging to PF eigenvalue: 7.3166247903554 
   Tiles after 1 inflation step: 9 
   Fractal dimension estimate d_f = log(N)/log(lambda) = 1.104050217674653 
 ------------------------------------------------------------ 
 [n =  10 ] Zeta functions and L-series: 
-  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006935   (exact pi^2/6 = 
+  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006936   (exact pi^2/6 = 
                                                            1.644934066848226 ) 
-  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023676 
+  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023677 
                                                     (Apery's constant ~ 1.202) 
-  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104993 
-  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683453 
+  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104994 
+  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683454 
   Ratio zeta_{Q(sqrt5)}(2) / zeta(2)^2 ~ (class number factor): 
     = 0.4393854233642092 
   Partial L(2, chi_5) ( 40  terms) = 0.7061989804245805 
   Partial L(3, chi_5) ( 40  terms) = 0.8548243026978557 
   Exact L(2, chi_5) = pi^2 / (5 sqrt(5)) ~ 0.8827642540746761 
   Functional equation (numerical check at s=0.7): 
-    L(0.7) = 0.3154812660944506   L(0.3) = 0.140960360039939   ratio = 
+    L(0.7) = 0.3154812660944506   L(0.3) = 0.1409603600399391   ratio = 
                                                              2.238084990738273 
-  Spectral zeta of C_ 10  at s=2: 15.26249999999999 
+  Spectral zeta of C_ 10  at s=2: 15.2625 
   Spectral zeta of C_ 10  at s=3: 36.81562499999998 
 ------------------------------------------------------------ 
 [n =  10 ] Diffusion kernel and heat trace: 
@@ -3397,9 +3350,9 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
     t = 0.5 :  Tr = 4.65759607796191 
     t = 1.0 :  Tr = 3.085084042140032 
     t = 2.0 :  Tr = 2.070167125296116 
-    t = 5.0 :  Tr = 1.298211123651013 
-    t = 10.0 :  Tr = 1.043872502019411 
-    t = 50.0 :  Tr = 1.000000010156485 
+    t = 5.0 :  Tr = 1.298211123651014 
+    t = 10.0 :  Tr = 1.043872502019412 
+    t = 50.0 :  Tr = 1.000000010156486 
   Heat trace Tr(e^{-t L}) for star K_{1, 10 }: 
     t = 0.01 :  Tr = 10.80628263903904 
     t = 0.1 :  Tr = 9.476407846021717 
@@ -3407,51 +3360,51 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
     t = 1.0 :  Tr = 4.310931672243772 
     t = 2.0 :  Tr = 2.218017549408461 
     t = 5.0 :  Tr = 1.060641522991769 
-    t = 10.0 :  Tr = 1.000408599367862 
+    t = 10.0 :  Tr = 1.000408599367863 
     t = 50.0 :  Tr = 1.0 
   Effective d_s from heat-trace slope (cycle C_ 10 ): 
     t in [ 0.01 , 0.1 ]:  d_s ~ 0.147768599281215 
     t in [ 0.1 , 0.5 ]:  d_s ~ 0.7133679990563635 
-    t in [ 0.5 , 1.0 ]:  d_s ~ 1.188551477428731 
+    t in [ 0.5 , 1.0 ]:  d_s ~ 1.188551477428732 
     t in [ 1.0 , 2.0 ]:  d_s ~ 1.151125098633515 
     t in [ 2.0 , 5.0 ]:  d_s ~ 1.01854589715767 
     t in [ 5.0 , 10.0 ]:  d_s ~ 0.6291590205212676 
-    t in [ 10.0 , 50.0 ]:  d_s ~ 0.05335694780389519 
+    t in [ 10.0 , 50.0 ]:  d_s ~ 0.0533569478038952 
   Short-time heat-trace asymptotics (2D Weyl law): 
     Tr(e^{-tL}) ~ (4 pi t)^{-1} * A + (4 pi t)^{-1/2} * B/6 + ... 
     t = 0.01 :  Weyl leading term = 7.957747154594768 
-    t = 0.05 :  Weyl leading term = 1.591549430918953 
+    t = 0.05 :  Weyl leading term = 1.591549430918954 
     t = 0.1 :  Weyl leading term = 0.7957747154594768 
   Heat kernel K_t(x) on R^2 (Gaussian, d=2): 
     t = 0.1 :  K(0) = 0.7957747154594768   K(1) = 0.0653211664234246   K(2) = 
-                                                          3.612811618862161E-5 
+                                                          3.612811618862162E-5 
     t = 1.0 :  K(0) = 0.07957747154594767   K(1) = 0.06197499715482649   K(2) =
-                                                           0.02927491576215958 
-    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291536 
-                                                   K(2) = 0.007200467388746533 
+                                                           0.02927491576215959 
+    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291537 
+                                                   K(2) = 0.007200467388746534 
   Spectral zeta of C_ 10  at s=1,2,3: 
     s = 1 :  zeta_L = 8.249999999999999 
-    s = 2 :  zeta_L = 15.26249999999999 
+    s = 2 :  zeta_L = 15.2625 
     s = 3 :  zeta_L = 36.81562499999998 
 ------------------------------------------------------------ 
 [n =  10 ] Acceptance-window (cut-and-project) geometry: 
   Acceptance window: regular  10 -gon in perp space 
   Unit-cell area A_cell ~ 7.694208842938135 
   Acceptance densities (rho = window inradius): 
-    rho = 0.5 :  density = 0.105572809000084 
-    rho = 1.0 :  density = 0.4222912360003363 
+    rho = 0.5 :  density = 0.1055728090000841 
+    rho = 1.0 :  density = 0.4222912360003364 
     rho = 1.5 :  density = 0.9501552810007569 
-    rho = 2.0 :  density = 1.689164944001345 
+    rho = 2.0 :  density = 1.689164944001346 
   Window vertices (rho = 1): 
     v[ 0 ] = ( 1.0 , 0.0 ) 
     v[ 1 ] = ( 0.8090169943749475 , 0.5877852522924731 ) 
-    v[ 2 ] = ( 0.3090169943749474 , 0.9510565162951535 ) 
-    v[ 3 ] = ( - 0.3090169943749473 , 0.9510565162951536 ) 
+    v[ 2 ] = ( 0.3090169943749475 , 0.9510565162951535 ) 
+    v[ 3 ] = ( - 0.3090169943749474 , 0.9510565162951536 ) 
     v[ 4 ] = ( - 0.8090169943749473 , 0.5877852522924733 ) 
     v[ 5 ] = ( - 1.0 , 0.0 ) 
     v[ 6 ] = ( - 0.8090169943749476 , - 0.587785252292473 ) 
-    v[ 7 ] = ( - 0.3090169943749475 , - 0.9510565162951535 ) 
-    v[ 8 ] = ( 0.3090169943749472 , - 0.9510565162951536 ) 
+    v[ 7 ] = ( - 0.3090169943749476 , - 0.9510565162951535 ) 
+    v[ 8 ] = ( 0.3090169943749473 , - 0.9510565162951536 ) 
     v[ 9 ] = ( 0.8090169943749473 , - 0.5877852522924734 ) 
   Sample acceptance test (rho = 1, grid [-1.5, 1.5]^2, 20 x 20  grid): 
     Points inside window: 133 / 400   fraction = 0.3325 
@@ -3486,7 +3439,7 @@ Smallest k with full closure: k = 5   (number of full turns = 2 )
 N_GON = 11 
 ============================================================ 
                                     9 %pi
-Interior angle theta = (n-2)*pi/n = -----  = 147.2727272727272 deg 
+Interior angle theta = (n-2)*pi/n = -----  = 147.2727272727273 deg 
                                      11
                                    2 %pi
 Exterior angle = 2*pi/n          = -----  = 32.72727272727273 deg 
@@ -3503,7 +3456,7 @@ Smallest k>0 with k*theta = (integer)*2*pi:  k = 22 ,  accumulating  9
 ------------------------------------------------------------ 
 [n =  11 ] Angle summary: 
                             9 %pi
-  Interior angle  theta   = -----  = 2.57039398930074  rad = 147.2727272727272 
+  Interior angle  theta   = -----  = 2.57039398930074  rad = 147.2727272727273 
                              11
                                                                            deg 
                             2 %pi
@@ -3594,7 +3547,7 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
   Sum of primitive n-th roots (numeric) = - 0.9999999999999996 
                                                         ,  Moebius mu(n) = - 1 
                         2 %pi
-  2*cos(2*pi/n) = 2 cos(-----)  = 1.682507065662362 
+  2*cos(2*pi/n) = 2 cos(-----)  = 1.682507065662363 
                          11
                                (algebraic integer in real cyclotomic subfield) 
 ------------------------------------------------------------ 
@@ -3611,28 +3564,29 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
             [ 0.5406408174555976   0.8412535328311812  ]
   det(R) = 1  (expected 1) 
                 2 %pi
-  tr(R) = 2 cos(-----)  = 2 cos(2*pi/n) = 1.682507065662362 
+  tr(R) = 2 cos(-----)  = 2 cos(2*pi/n) = 1.682507065662363 
                  11
                  [   0.9999999999999716     6.146374487975636E-14 ]
   R^n  numeric = [                                                ] 
                  [ - 6.146374487975636E-14   0.9999999999999716   ]
                                                                   (expected I) 
 [n =  11 ] R^k traces (should equal 2 cos(2 pi k/n)): 
-  k = 1 : tr(R^k) = 1.682507065662362  ~ 2cos( 1 *2pi/n) = 1.682507065662362 
+  k = 1 : tr(R^k) = 1.682507065662363  ~ 2cos( 1 *2pi/n) = 1.682507065662363 
   k = 2 : tr(R^k) = 0.8308300260037731  ~ 2cos( 2 *2pi/n) = 0.8308300260037729 
-  k = 3 : tr(R^k) = - 0.2846296765465705  ~ 2cos( 3 *2pi/n) = 
+  k = 3 : tr(R^k) = - 0.2846296765465706  ~ 2cos( 3 *2pi/n) = 
                                                             - 0.28462967654657 
-  k = 4 : tr(R^k) = - 1.30972146789057  ~ 2cos( 4 *2pi/n) = - 1.30972146789057 
-  k = 5 : tr(R^k) = - 1.918985947228996  ~ 2cos( 5 *2pi/n) = 
-                                                           - 1.918985947228994 
-  k = 6 : tr(R^k) = - 1.918985947228996  ~ 2cos( 6 *2pi/n) = 
-                                                           - 1.918985947228995 
-  k = 7 : tr(R^k) = - 1.309721467890568  ~ 2cos( 7 *2pi/n) = - 1.30972146789057
+  k = 4 : tr(R^k) = - 1.309721467890571  ~ 2cos( 4 *2pi/n) = - 1.30972146789057
                                                                                
-  k = 8 : tr(R^k) = - 0.2846296765465723  ~ 2cos( 8 *2pi/n) = 
-                                                          - 0.2846296765465704 
+  k = 5 : tr(R^k) = - 1.918985947228997  ~ 2cos( 5 *2pi/n) = 
+                                                           - 1.918985947228995 
+  k = 6 : tr(R^k) = - 1.918985947228997  ~ 2cos( 6 *2pi/n) = 
+                                                           - 1.918985947228995 
+  k = 7 : tr(R^k) = - 1.309721467890569  ~ 2cos( 7 *2pi/n) = 
+                                                           - 1.309721467890571 
+  k = 8 : tr(R^k) = - 0.2846296765465724  ~ 2cos( 8 *2pi/n) = 
+                                                          - 0.2846296765465705 
   k = 9 : tr(R^k) = 0.8308300260037953  ~ 2cos( 9 *2pi/n) = 0.8308300260037737 
-  k = 10 : tr(R^k) = 1.682507065662264  ~ 2cos( 10 *2pi/n) = 1.682507065662361 
+  k = 10 : tr(R^k) = 1.682507065662264  ~ 2cos( 10 *2pi/n) = 1.682507065662362 
   k = 11 : tr(R^k) = 1.999999999999943  ~ 2cos( 11 *2pi/n) = 2.0 
 ------------------------------------------------------------ 
 [n =  11 ] PRIMARY BASIS VECTORS (unit circumradius, 
@@ -3661,7 +3615,7 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
                  35 %pi       35 %pi
   v[ 6 ] =  [cos(------), sin(------)]  ~  
                    22           22
-                                    [0.2817325568414293, - 0.9594929736144975] 
+                                    [0.2817325568414294, - 0.9594929736144975] 
                  39 %pi       39 %pi
   v[ 7 ] =  [cos(------), sin(------)]  ~  
                    22           22
@@ -3679,14 +3633,14 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
                     22           22
                                       [0.5406408174555976, 0.8412535328311812] 
 [n =  11 ] EDGE VECTORS e[k] = v[k] - v[k-1] (unit circumradius): 
-  e[ 1 ] (numeric) =  [- 0.5406408174555972, - 0.1587464671688185] 
+  e[ 1 ] (numeric) =  [- 0.5406408174555972, - 0.1587464671688186] 
   e[ 2 ] (numeric) =  [- 0.3689911778989212, - 0.4258385198292951] 
   e[ 3 ] (numeric) =  [- 0.08018944652641436, - 0.5577298512751713] 
   e[ 4 ] (numeric) =  [0.2340718675266744, - 0.512545895672] 
-  e[ 5 ] (numeric) =  [0.4740170175128286, - 0.3046322396692124] 
-  e[ 6 ] (numeric) =  [0.563465113682859, - 1.110223024625156E-16] 
-  e[ 7 ] (numeric) =  [0.4740170175128285, 0.3046322396692119] 
-  e[ 8 ] (numeric) =  [0.2340718675266748, 0.5125458956720003] 
+  e[ 5 ] (numeric) =  [0.4740170175128287, - 0.3046322396692124] 
+  e[ 6 ] (numeric) =  [0.563465113682859, - 1.110223024625157E-16] 
+  e[ 7 ] (numeric) =  [0.4740170175128285, 0.304632239669212] 
+  e[ 8 ] (numeric) =  [0.2340718675266749, 0.5125458956720003] 
   e[ 9 ] (numeric) =  [- 0.08018944652641413, 0.5577298512751713] 
   e[ 10 ] (numeric) =  [- 0.368991177898921, 0.4258385198292952] 
   e[ 11 ] (numeric) =  [- 0.5406408174555976, 0.1587464671688188] 
@@ -3695,17 +3649,16 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
                                                      11
                                                                                
 ------------------------------------------------------------ 
-[n =  11 ] Holonomy / spinor cover analysis: 
-  Natural single-vortex fiber order = 22 
-  Z_n single-vortex holonomy (n = 22 ) : 1 
-  Required loop count to close fiber : 22 
-[Anyonic case G = Z_n with n = 11 ]: 
-  single-vortex holonomy = 1 
-  loop order required    = 11  (expected 11 ) 
-[n =  11 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
-  All g in Z_n satisfy order(g) = n/gcd(g, n). 
-[n =  11 ] Composite holonomy: Loop A = 3 , Loop B = 7 , Composite = 10 
-                                                              , Sum mod n = 10 
+[n =  11 ] Holonomy / Z_2 orientation cover analysis: 
+  Fiber / structure group order = 2 
+                                   (Z_2 orientation cover; two sheets + and -) 
+  Single-edge crossing (orientation flip) = 1 
+  Z_2 cover order (loops to return to same sheet) = 2  (expected 2) 
+[n =  11 ] Vertex-loop holonomy (Z_2, orientation flips): 
+  vertex-cycle length = 22  (even) 
+  product of edge-flips around cycle = 0  (trivial holonomy) 
+[n =  11 ] Composite Z_2 holonomy: Loop A = 0 , Loop B = 0 , Composite = 0 
+                                                               , Sum mod 2 = 0 
 ------------------------------------------------------------ 
 [n =  11 ] Cut-and-project ambient lattice Z^n: 
   C_n cyclic shift matrix: 
@@ -3740,28 +3693,28 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
   dim(orthogonal complement of diagonal) = 10  = n - 1 
 [n =  11 ] REAL-INVARIANT 2D SUBSPACES V_k of C_n: 
   V_ 1  (rotation angle 2 pi * 1 /n = 0.5711986642890533 ): 
-    u_ 1  (cos) = [1.0, 0.8412535328311812, 0.4154150130018864, 
+    u_ 1  (cos) = [1.0, 0.8412535328311812, 0.4154150130018865, 
 - 0.142314838273285, - 0.654860733945285, - 0.9594929736144973, 
 - 0.9594929736144975, - 0.6548607339452852, - 0.1423148382732852, 
 0.4154150130018868, 0.8412535328311808] 
     w_ 1  (sin) = [0.0, 0.5406408174555976, 0.9096319953545183, 
-0.9898214418809328, 0.7557495743542583, 0.28173255684143, 
+0.9898214418809328, 0.7557495743542583, 0.2817325568414301, 
 - 0.2817325568414294, - 0.7557495743542582, - 0.9898214418809327, 
 - 0.9096319953545182, - 0.5406408174555982] 
-  V_ 2  (rotation angle 2 pi * 2 /n = 1.142397328578106 ): 
-    u_ 2  (cos) = [1.0, 0.4154150130018864, - 0.654860733945285, 
+  V_ 2  (rotation angle 2 pi * 2 /n = 1.142397328578107 ): 
+    u_ 2  (cos) = [1.0, 0.4154150130018865, - 0.654860733945285, 
 - 0.9594929736144975, - 0.1423148382732852, 0.8412535328311808, 
-0.8412535328311815, - 0.1423148382732847, - 0.9594929736144974, 
+0.8412535328311815, - 0.1423148382732848, - 0.9594929736144974, 
 - 0.6548607339452844, 0.415415013001885] 
     w_ 2  (sin) = [0.0, 0.9096319953545183, 0.7557495743542583, 
 - 0.2817325568414294, - 0.9898214418809327, - 0.5406408174555982, 
 0.5406408174555971, 0.9898214418809328, 0.2817325568414299, 
 - 0.7557495743542588, - 0.909631995354519] 
-  V_ 3  (rotation angle 2 pi * 3 /n = 1.713595992867159 ): 
+  V_ 3  (rotation angle 2 pi * 3 /n = 1.71359599286716 ): 
     u_ 3  (cos) = [1.0, - 0.142314838273285, - 0.9594929736144975, 
 0.4154150130018868, 0.8412535328311815, - 0.6548607339452839, 
 - 0.6548607339452844, 0.8412535328311811, 0.4154150130018875, 
-- 0.9594929736144973, - 0.1423148382732883] 
+- 0.9594929736144973, - 0.1423148382732884] 
     w_ 3  (sin) = [0.0, 0.9898214418809328, - 0.2817325568414294, 
 - 0.9096319953545182, 0.5406408174555971, 0.7557495743542594, 
 - 0.7557495743542588, - 0.5406408174555977, 0.9096319953545179, 
@@ -3773,17 +3726,17 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
 - 0.1423148382732869, - 0.6548607339452874] 
     w_ 4  (sin) = [0.0, 0.7557495743542583, - 0.9898214418809327, 
 0.5406408174555971, 0.2817325568414299, - 0.909631995354519, 
-0.9096319953545179, - 0.2817325568414289, - 0.5406408174555979, 
+0.9096319953545179, - 0.281732556841429, - 0.5406408174555979, 
 0.9898214418809325, - 0.7557495743542563] 
   V_ 5  (rotation angle 2 pi * 5 /n = 2.855993321445266 ): 
     u_ 5  (cos) = [1.0, - 0.9594929736144973, 0.8412535328311808, 
 - 0.6548607339452839, 0.415415013001885, - 0.1423148382732854, 
-- 0.1423148382732883, 0.4154150130018877, - 0.6548607339452874, 
+- 0.1423148382732884, 0.4154150130018877, - 0.6548607339452874, 
 0.8412535328311819, - 0.9594929736144973] 
-    w_ 5  (sin) = [0.0, 0.28173255684143, - 0.5406408174555982, 
+    w_ 5  (sin) = [0.0, 0.2817325568414301, - 0.5406408174555982, 
 0.7557495743542594, - 0.909631995354519, 0.9898214418809327, 
 - 0.9898214418809322, 0.9096319953545178, - 0.7557495743542563, 
-0.5406408174555965, - 0.2817325568414301] 
+0.5406408174555965, - 0.2817325568414302] 
   Physical 2D plane E_|| recommended = V_1. 
   Perp subspace E_perp = (diagonal) + 4 * 2D pieces + 0 alternating directions 
                                                            =>  dim(E_perp) = 9 
@@ -3815,19 +3768,19 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
 ------------------------------------------------------------ 
 [n =  11 ] Polygon geometry (side s = 1): 
                        1
-  Circumradius R = ----------  ~ 1.774732766442111 
+  Circumradius R = ----------  ~ 1.774732766442112 
                          %pi
                    2 sin(---)
                          11
                        1
-  Apothem      r = ----------  ~ 1.702843619444624 
+  Apothem      r = ----------  ~ 1.702843619444625 
                          %pi
                    2 tan(---)
                          11
                        %pi
                    tan(---)
                        11
-  R/r            = --------  = sec(pi/n) = 1.042217116226405 
+  R/r            = --------  = sec(pi/n) = 1.042217116226406 
                        %pi
                    sin(---)
                        11
@@ -3841,14 +3794,14 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
                  2 %pi
              sin(-----)
                   11
-    d[ 2 ] = ----------  ~ 1.918985947228994 
+    d[ 2 ] = ----------  ~ 1.918985947228995 
                   %pi
               sin(---)
                   11
                  3 %pi
              sin(-----)
                   11
-    d[ 3 ] = ----------  ~ 2.682507065662362 
+    d[ 3 ] = ----------  ~ 2.682507065662363 
                   %pi
               sin(---)
                   11
@@ -3869,21 +3822,21 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
                  6 %pi
              sin(-----)
                   11
-    d[ 6 ] = ----------  ~ 3.513337091666135 
+    d[ 6 ] = ----------  ~ 3.513337091666136 
                   %pi
               sin(---)
                   11
                  7 %pi
              sin(-----)
                   11
-    d[ 7 ] = ----------  ~ 3.228707415119565 
+    d[ 7 ] = ----------  ~ 3.228707415119566 
                   %pi
               sin(---)
                   11
                  8 %pi
              sin(-----)
                   11
-    d[ 8 ] = ----------  ~ 2.682507065662362 
+    d[ 8 ] = ----------  ~ 2.682507065662363 
                   %pi
               sin(---)
                   11
@@ -3917,8 +3870,8 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
   Spectral gap = 1 (positive => connected). 
   Cycle C_ 11  Laplacian eigenvalues = 2 - 2 cos(2 pi k/n): 
    [0.0, 0.3174929343376376, 1.169169973996227, 2.28462967654657, 
-3.30972146789057, 3.918985947228994, 3.918985947228995, 3.30972146789057, 
-2.28462967654657, 1.169169973996226, 0.3174929343376385] 
+3.30972146789057, 3.918985947228995, 3.918985947228995, 3.309721467890571, 
+2.284629676546571, 1.169169973996227, 0.3174929343376385] 
   Spectral gap of C_ 11  = 0.3174929343376376 
   [n = 11 ] iteration complete. 
 ------------------------------------------------------------ 
@@ -3941,46 +3894,46 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
   Fractal dimension estimate d_f = log(N)/log(lambda) = 1.089605141280127 
 ------------------------------------------------------------ 
 [n =  11 ] Zeta functions and L-series: 
-  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006935   (exact pi^2/6 = 
+  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006936   (exact pi^2/6 = 
                                                            1.644934066848226 ) 
-  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023676 
+  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023677 
                                                     (Apery's constant ~ 1.202) 
-  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104993 
-  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683453 
+  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104994 
+  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683454 
   Ratio zeta_{Q(sqrt5)}(2) / zeta(2)^2 ~ (class number factor): 
     = 0.4393854233642092 
   Partial L(2, chi_5) ( 40  terms) = 0.7061989804245805 
   Partial L(3, chi_5) ( 40  terms) = 0.8548243026978557 
   Exact L(2, chi_5) = pi^2 / (5 sqrt(5)) ~ 0.8827642540746761 
   Functional equation (numerical check at s=0.7): 
-    L(0.7) = 0.3154812660944506   L(0.3) = 0.140960360039939   ratio = 
+    L(0.7) = 0.3154812660944506   L(0.3) = 0.1409603600399391   ratio = 
                                                              2.238084990738273 
-  Spectral zeta of C_ 11  at s=2: 21.99999999999995 
+  Spectral zeta of C_ 11  at s=2: 21.99999999999996 
   Spectral zeta of C_ 11  at s=3: 63.99999999999977 
 ------------------------------------------------------------ 
 [n =  11 ] Diffusion kernel and heat trace: 
   Heat trace Tr(e^{-t L}) for cycle C_ 11 : 
-    t = 0.01 :  Tr = 10.7832636518707 
+    t = 0.01 :  Tr = 10.78326365187071 
     t = 0.1 :  Tr = 9.096324067977623 
     t = 0.5 :  Tr = 5.12335568363113 
     t = 1.0 :  Tr = 3.393591629140587 
     t = 2.0 :  Tr = 2.277049866690392 
     t = 5.0 :  Tr = 1.414692338865319 
-    t = 10.0 :  Tr = 1.083610840571418 
+    t = 10.0 :  Tr = 1.083610840571419 
     t = 50.0 :  Tr = 1.000000255128235 
   Heat trace Tr(e^{-t L}) for star K_{1, 11 }: 
-    t = 0.01 :  Tr = 11.78741877420883 
-    t = 0.1 :  Tr = 10.34956839227179 
-    t = 0.5 :  Tr = 7.067785349303 
-    t = 1.0 :  Tr = 4.678800555926776 
-    t = 2.0 :  Tr = 2.353352832403878 
-    t = 5.0 :  Tr = 1.067379469990854 
+    t = 0.01 :  Tr = 11.78741877420884 
+    t = 0.1 :  Tr = 10.3495683922718 
+    t = 0.5 :  Tr = 7.067785349303001 
+    t = 1.0 :  Tr = 4.678800555926777 
+    t = 2.0 :  Tr = 2.353352832403879 
+    t = 5.0 :  Tr = 1.067379469990855 
     t = 10.0 :  Tr = 1.000453999297625 
     t = 50.0 :  Tr = 1.0 
   Effective d_s from heat-trace slope (cycle C_ 11 ): 
     t in [ 0.01 , 0.1 ]:  d_s ~ 0.147768599281215 
     t in [ 0.1 , 0.5 ]:  d_s ~ 0.71336799957226 
-    t in [ 0.5 , 1.0 ]:  d_s ~ 1.18855217106381 
+    t in [ 0.5 , 1.0 ]:  d_s ~ 1.188552171063811 
     t in [ 1.0 , 2.0 ]:  d_s ~ 1.151294161880771 
     t in [ 2.0 , 5.0 ]:  d_s ~ 1.038903027970652 
     t in [ 5.0 , 10.0 ]:  d_s ~ 0.7692832090224274 
@@ -3988,18 +3941,18 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
   Short-time heat-trace asymptotics (2D Weyl law): 
     Tr(e^{-tL}) ~ (4 pi t)^{-1} * A + (4 pi t)^{-1/2} * B/6 + ... 
     t = 0.01 :  Weyl leading term = 7.957747154594768 
-    t = 0.05 :  Weyl leading term = 1.591549430918953 
+    t = 0.05 :  Weyl leading term = 1.591549430918954 
     t = 0.1 :  Weyl leading term = 0.7957747154594768 
   Heat kernel K_t(x) on R^2 (Gaussian, d=2): 
     t = 0.1 :  K(0) = 0.7957747154594768   K(1) = 0.0653211664234246   K(2) = 
-                                                          3.612811618862161E-5 
+                                                          3.612811618862162E-5 
     t = 1.0 :  K(0) = 0.07957747154594767   K(1) = 0.06197499715482649   K(2) =
-                                                           0.02927491576215958 
-    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291536 
-                                                   K(2) = 0.007200467388746533 
+                                                           0.02927491576215959 
+    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291537 
+                                                   K(2) = 0.007200467388746534 
   Spectral zeta of C_ 11  at s=1,2,3: 
     s = 1 :  zeta_L = 9.999999999999993 
-    s = 2 :  zeta_L = 21.99999999999995 
+    s = 2 :  zeta_L = 21.99999999999996 
     s = 3 :  zeta_L = 63.99999999999977 
 ------------------------------------------------------------ 
 [n =  11 ] Acceptance-window (cut-and-project) geometry: 
@@ -4007,16 +3960,16 @@ Smallest k with full closure: k = 22   (number of full turns = 9 )
   Unit-cell area A_cell ~ 9.365639906945436 
   Acceptance densities (rho = window inradius): 
     rho = 0.5 :  density = 0.08621651735528474 
-    rho = 1.0 :  density = 0.3448660694211389 
+    rho = 1.0 :  density = 0.344866069421139 
     rho = 1.5 :  density = 0.7759486561975626 
-    rho = 2.0 :  density = 1.379464277684555 
+    rho = 2.0 :  density = 1.379464277684556 
   Window vertices (rho = 1): 
     v[ 0 ] = ( 1.0 , 0.0 ) 
     v[ 1 ] = ( 0.8412535328311812 , 0.5406408174555976 ) 
-    v[ 2 ] = ( 0.4154150130018864 , 0.9096319953545183 ) 
+    v[ 2 ] = ( 0.4154150130018865 , 0.9096319953545183 ) 
     v[ 3 ] = ( - 0.142314838273285 , 0.9898214418809328 ) 
     v[ 4 ] = ( - 0.654860733945285 , 0.7557495743542583 ) 
-    v[ 5 ] = ( - 0.9594929736144973 , 0.28173255684143 ) 
+    v[ 5 ] = ( - 0.9594929736144973 , 0.2817325568414301 ) 
     v[ 6 ] = ( - 0.9594929736144975 , - 0.2817325568414294 ) 
     v[ 7 ] = ( - 0.6548607339452852 , - 0.7557495743542582 ) 
     v[ 8 ] = ( - 0.1423148382732852 , - 0.9898214418809327 ) 
@@ -4072,7 +4025,7 @@ Smallest k>0 with k*theta = (integer)*2*pi:  k = 12 ,  accumulating  5
 ------------------------------------------------------------ 
 [n =  12 ] Angle summary: 
                             5 %pi
-  Interior angle  theta   = -----  = 2.617993877991494  rad = 150.0  deg 
+  Interior angle  theta   = -----  = 2.617993877991495  rad = 150.0  deg 
                               6
                             %pi
   Exterior angle          = ---  = 0.5235987755982988  rad 
@@ -4247,17 +4200,16 @@ Smallest k with full closure: k = 12   (number of full turns = 5 )
                                                      12
                                                                                
 ------------------------------------------------------------ 
-[n =  12 ] Holonomy / spinor cover analysis: 
-  Natural single-vortex fiber order = 12 
-  Z_n single-vortex holonomy (n = 12 ) : 1 
-  Required loop count to close fiber : 12 
-[Anyonic case G = Z_n with n = 12 ]: 
-  single-vortex holonomy = 1 
-  loop order required    = 12  (expected 12 ) 
-[n =  12 ] order(g, n) = n/gcd(g, n) check (g = 0..n-1): 
-  All g in Z_n satisfy order(g) = n/gcd(g, n). 
-[n =  12 ] Composite holonomy: Loop A = 3 , Loop B = 7 , Composite = 10 
-                                                              , Sum mod n = 10 
+[n =  12 ] Holonomy / Z_2 orientation cover analysis: 
+  Fiber / structure group order = 2 
+                                   (Z_2 orientation cover; two sheets + and -) 
+  Single-edge crossing (orientation flip) = 1 
+  Z_2 cover order (loops to return to same sheet) = 2  (expected 2) 
+[n =  12 ] Vertex-loop holonomy (Z_2, orientation flips): 
+  vertex-cycle length = 12  (even) 
+  product of edge-flips around cycle = 0  (trivial holonomy) 
+[n =  12 ] Composite Z_2 holonomy: Loop A = 0 , Loop B = 0 , Composite = 0 
+                                                               , Sum mod 2 = 0 
 ------------------------------------------------------------ 
 [n =  12 ] Cut-and-project ambient lattice Z^n: 
   C_n cyclic shift matrix: 
@@ -4299,13 +4251,13 @@ Smallest k with full closure: k = 12   (number of full turns = 5 )
 0.8660254037844386] 
     w_ 1  (sin) = [0.0, 0.5, 0.8660254037844386, 1.0, 0.8660254037844386, 0.5, 
          0.0, - 0.5, - 0.8660254037844386, - 1.0, - 0.8660254037844386, - 0.5] 
-  V_ 2  (rotation angle 2 pi * 2 /n = 1.047197551196597 ): 
+  V_ 2  (rotation angle 2 pi * 2 /n = 1.047197551196598 ): 
     u_ 2  (cos) = [1.0, 0.5, - 0.5, - 1.0, - 0.5, 0.5, 1.0, 0.5, - 0.5, - 1.0, 
                                                                    - 0.5, 0.5] 
     w_ 2  (sin) = [0.0, 0.8660254037844386, 0.8660254037844386, 0.0, 
 - 0.8660254037844386, - 0.8660254037844386, 0.0, 0.8660254037844386, 
 0.8660254037844386, 0.0, - 0.8660254037844386, - 0.8660254037844386] 
-  V_ 3  (rotation angle 2 pi * 3 /n = 1.570796326794896 ): 
+  V_ 3  (rotation angle 2 pi * 3 /n = 1.570796326794897 ): 
     u_ 3  (cos) = [1.0, 0.0, - 1.0, 0.0, 1.0, 0.0, - 1.0, 0.0, 1.0, 0.0, 
                                                                    - 1.0, 0.0] 
     w_ 3  (sin) = [0.0, 1.0, 0.0, - 1.0, 0.0, 1.0, 0.0, - 1.0, 0.0, 1.0, 0.0, 
@@ -4316,7 +4268,7 @@ Smallest k with full closure: k = 12   (number of full turns = 5 )
     w_ 4  (sin) = [0.0, 0.8660254037844386, - 0.8660254037844386, 0.0, 
 0.8660254037844386, - 0.8660254037844386, 0.0, 0.8660254037844386, 
 - 0.8660254037844386, 0.0, 0.8660254037844386, - 0.8660254037844386] 
-  V_ 5  (rotation angle 2 pi * 5 /n = 2.617993877991494 ): 
+  V_ 5  (rotation angle 2 pi * 5 /n = 2.617993877991495 ): 
     u_ 5  (cos) = [1.0, - 0.8660254037844386, 0.5, 0.0, - 0.5, 
 0.8660254037844386, - 1.0, 0.8660254037844386, - 0.5, 0.0, 0.5, 
 - 0.8660254037844386] 
@@ -4371,12 +4323,12 @@ Smallest k with full closure: k = 12   (number of full turns = 5 )
 ------------------------------------------------------------ 
 [n =  12 ] Polygon geometry (side s = 1): 
                        1
-  Circumradius R = ----------  ~ 1.931851652578136 
+  Circumradius R = ----------  ~ 1.931851652578137 
                          %pi
                    2 sin(---)
                          12
                        1
-  Apothem      r = ----------  ~ 1.866025403784438 
+  Apothem      r = ----------  ~ 1.866025403784439 
                          %pi
                    2 tan(---)
                          12
@@ -4393,17 +4345,17 @@ Smallest k with full closure: k = 12   (number of full turns = 5 )
   Diagonals (k-step chord lengths, unit side): 
     d[ 1 ] = 1  ~ 1.0 
                  1
-    d[ 2 ] = ----------  ~ 1.931851652578136 
+    d[ 2 ] = ----------  ~ 1.931851652578137 
                    %pi
              2 sin(---)
                    12
                     1
-    d[ 3 ] = ----------------  ~ 2.732050807568877 
+    d[ 3 ] = ----------------  ~ 2.732050807568878 
                          %pi
              sqrt(2) sin(---)
                          12
               sqrt(3)
-    d[ 4 ] = ----------  ~ 3.346065214951231 
+    d[ 4 ] = ----------  ~ 3.346065214951232 
                    %pi
              2 sin(---)
                    12
@@ -4415,7 +4367,7 @@ Smallest k with full closure: k = 12   (number of full turns = 5 )
               sin(---)
                   12
                 1
-    d[ 6 ] = --------  ~ 3.863703305156273 
+    d[ 6 ] = --------  ~ 3.863703305156274 
                  %pi
              sin(---)
                  12
@@ -4427,17 +4379,17 @@ Smallest k with full closure: k = 12   (number of full turns = 5 )
               sin(---)
                   12
               sqrt(3)
-    d[ 8 ] = ----------  ~ 3.346065214951231 
+    d[ 8 ] = ----------  ~ 3.346065214951232 
                    %pi
              2 sin(---)
                    12
                     1
-    d[ 9 ] = ----------------  ~ 2.732050807568877 
+    d[ 9 ] = ----------------  ~ 2.732050807568878 
                          %pi
              sqrt(2) sin(---)
                          12
                   1
-    d[ 10 ] = ----------  ~ 1.931851652578136 
+    d[ 10 ] = ----------  ~ 1.931851652578137 
                     %pi
               2 sin(---)
                     12
@@ -4485,25 +4437,25 @@ Smallest k with full closure: k = 12   (number of full turns = 5 )
                                                             9.242646065414708] 
   Converging to PF eigenvalue: 9.242640687119286 
   Tiles after 1 inflation step: 11 
-  Fractal dimension estimate d_f = log(N)/log(lambda) = 1.078273889893818 
+  Fractal dimension estimate d_f = log(N)/log(lambda) = 1.078273889893819 
 ------------------------------------------------------------ 
 [n =  12 ] Zeta functions and L-series: 
-  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006935   (exact pi^2/6 = 
+  Partial Riemann zeta(2) ( 40  terms) = 1.620243963006936   (exact pi^2/6 = 
                                                            1.644934066848226 ) 
-  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023676 
+  Partial Riemann zeta(3) ( 40  terms) = 1.201752118023677 
                                                     (Apery's constant ~ 1.202) 
-  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104993 
-  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683453 
+  Partial Dedekind zeta_{Q(sqrt5)}(2) (primes <= 30) = 1.153470439104994 
+  Partial Dedekind zeta_{Q(sqrt5)}(3) (primes <= 30) = 1.027407641683454 
   Ratio zeta_{Q(sqrt5)}(2) / zeta(2)^2 ~ (class number factor): 
     = 0.4393854233642092 
   Partial L(2, chi_5) ( 40  terms) = 0.7061989804245805 
   Partial L(3, chi_5) ( 40  terms) = 0.8548243026978557 
   Exact L(2, chi_5) = pi^2 / (5 sqrt(5)) ~ 0.8827642540746761 
   Functional equation (numerical check at s=0.7): 
-    L(0.7) = 0.3154812660944506   L(0.3) = 0.140960360039939   ratio = 
+    L(0.7) = 0.3154812660944506   L(0.3) = 0.1409603600399391   ratio = 
                                                              2.238084990738273 
   Spectral zeta of C_ 12  at s=2: 30.7847222222222 
-  Spectral zeta of C_ 12  at s=3: 106.3396990740739 
+  Spectral zeta of C_ 12  at s=3: 106.339699074074 
 ------------------------------------------------------------ 
 [n =  12 ] Diffusion kernel and heat trace: 
   Heat trace Tr(e^{-t L}) for cycle C_ 12 : 
@@ -4511,43 +4463,43 @@ Smallest k with full closure: k = 12   (number of full turns = 5 )
     t = 0.1 :  Tr = 9.923262619611953 
     t = 0.5 :  Tr = 5.589115291128273 
     t = 1.0 :  Tr = 3.702099877965575 
-    t = 2.0 :  Tr = 2.484028150995885 
-    t = 5.0 :  Tr = 1.53739171494153 
-    t = 10.0 :  Tr = 1.13728680053607 
-    t = 50.0 :  Tr = 1.000003037996089 
+    t = 2.0 :  Tr = 2.484028150995886 
+    t = 5.0 :  Tr = 1.537391714941531 
+    t = 10.0 :  Tr = 1.137286800536071 
+    t = 50.0 :  Tr = 1.00000303799609 
   Heat trace Tr(e^{-t L}) for star K_{1, 12 }: 
     t = 0.01 :  Tr = 12.76864360216141 
-    t = 0.1 :  Tr = 11.22574339142956 
-    t = 0.5 :  Tr = 7.673340696031945 
+    t = 0.1 :  Tr = 11.22574339142957 
+    t = 0.5 :  Tr = 7.673340696031946 
     t = 1.0 :  Tr = 5.046676113215272 
     t = 2.0 :  Tr = 2.488688115607849 
     t = 5.0 :  Tr = 1.07411741698994 
-    t = 10.0 :  Tr = 1.000499399227387 
+    t = 10.0 :  Tr = 1.000499399227388 
     t = 50.0 :  Tr = 1.0 
   Effective d_s from heat-trace slope (cycle C_ 12 ): 
     t in [ 0.01 , 0.1 ]:  d_s ~ 0.147768599281215 
     t in [ 0.1 , 0.5 ]:  d_s ~ 0.713367999595758 
     t in [ 0.5 , 1.0 ]:  d_s ~ 1.188552234215578 
     t in [ 1.0 , 2.0 ]:  d_s ~ 1.15132458878407 
-    t in [ 2.0 , 5.0 ]:  d_s ~ 1.04725321632972 
+    t in [ 2.0 , 5.0 ]:  d_s ~ 1.047253216329721 
     t in [ 5.0 , 10.0 ]:  d_s ~ 0.8697773609710744 
-    t in [ 10.0 , 50.0 ]:  d_s ~ 0.15986001968841 
+    t in [ 10.0 , 50.0 ]:  d_s ~ 0.1598600196884101 
   Short-time heat-trace asymptotics (2D Weyl law): 
     Tr(e^{-tL}) ~ (4 pi t)^{-1} * A + (4 pi t)^{-1/2} * B/6 + ... 
     t = 0.01 :  Weyl leading term = 7.957747154594768 
-    t = 0.05 :  Weyl leading term = 1.591549430918953 
+    t = 0.05 :  Weyl leading term = 1.591549430918954 
     t = 0.1 :  Weyl leading term = 0.7957747154594768 
   Heat kernel K_t(x) on R^2 (Gaussian, d=2): 
     t = 0.1 :  K(0) = 0.7957747154594768   K(1) = 0.0653211664234246   K(2) = 
-                                                          3.612811618862161E-5 
+                                                          3.612811618862162E-5 
     t = 1.0 :  K(0) = 0.07957747154594767   K(1) = 0.06197499715482649   K(2) =
-                                                           0.02927491576215958 
-    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291536 
-                                                   K(2) = 0.007200467388746533 
+                                                           0.02927491576215959 
+    t = 10.0 :  K(0) = 0.007957747154594767   K(1) = 0.007761269677291537 
+                                                   K(2) = 0.007200467388746534 
   Spectral zeta of C_ 12  at s=1,2,3: 
     s = 1 :  zeta_L = 11.91666666666666 
     s = 2 :  zeta_L = 30.7847222222222 
-    s = 3 :  zeta_L = 106.3396990740739 
+    s = 3 :  zeta_L = 106.339699074074 
 ------------------------------------------------------------ 
 [n =  12 ] Acceptance-window (cut-and-project) geometry: 
   Acceptance window: regular  12 -gon in perp space 
@@ -4629,7 +4581,7 @@ Smallest k with full closure: k = 12   (number of full turns = 5 )
     phi^ - 3  = -----------  ~  0.2360679774997897   N = - 1 
                 sqrt(5) + 2
                      2
-    phi^ - 2  = -----------  ~  0.3819660112501051   N = 1 
+    phi^ - 2  = -----------  ~  0.3819660112501052   N = 1 
                 sqrt(5) + 3
                      2
     phi^ - 1  = -----------  ~  0.6180339887498948   N = - 1 
@@ -4646,11 +4598,11 @@ Smallest k with full closure: k = 12   (number of full turns = 5 )
     h_0/k_0 = 1/1 = 1.0 
     h_ 1 /k_ 1  = 1 / 2  = 0.5   error = 1.118033988749895 
     h_ 2 /k_ 2  = 2 / 3  = 0.6666666666666666   error = 0.9513673220832283 
-    h_ 3 /k_ 3  = 3 / 5  = 0.6   error = 1.018033988749894 
+    h_ 3 /k_ 3  = 3 / 5  = 0.6   error = 1.018033988749895 
     h_ 4 /k_ 4  = 5 / 8  = 0.625   error = 0.9930339887498949 
-    h_ 5 /k_ 5  = 8 / 13  = 0.6153846153846154   error = 1.002649373365279 
+    h_ 5 /k_ 5  = 8 / 13  = 0.6153846153846154   error = 1.00264937336528 
     h_ 6 /k_ 6  = 13 / 21  = 0.6190476190476191   error = 0.9989863697022758 
-    h_ 7 /k_ 7  = 21 / 34  = 0.6176470588235294   error = 1.000386929926365 
+    h_ 7 /k_ 7  = 21 / 34  = 0.6176470588235294   error = 1.000386929926366 
     h_ 8 /k_ 8  = 34 / 55  = 0.6181818181818182   error = 0.9998521705680767 
     h_ 9 /k_ 9  = 55 / 89  = 0.6179775280898876   error = 1.000056460660007 
     h_ 10 /k_ 10  = 89 / 144  = 0.6180555555555556   error = 0.9999784331943393
@@ -4693,20 +4645,19 @@ pad_right("n",4) | pad_right("deficit",9) | pad_right("k_close",8) | pad_right\
 inArea",9) 
 ----+-----------+---------+----------+----------+----------+---------- 
 pad_right("3",4) | pad_right("0.0",9) | pad_right("6",8) | pad_right("3.0",9) \
-| pad_right("1.099574136735727",9) | pad_right("0.2222222222222222",9) | pad_r\
+| pad_right("1.099574136735728",9) | pad_right("0.2222222222222222",9) | pad_r\
 ight("5.196152422706632",9) 
 pad_right("4",4) | pad_right("0.0",9) | pad_right("4",8) | pad_right("2.0",9) \
-| pad_right("1.288986205361959",9) | pad_right("0.5625",9) | pad_right("4.0",9)
- 
+| pad_right("1.28898620536196",9) | pad_right("0.5625",9) | pad_right("4.0",9) 
 pad_right("5",4) | pad_right("36.0",9) | pad_right("10",8) | pad_right("1.3819\
-66011250105",9) | pad_right("1.555839632012999",9) | pad_right("1.199999999999\
-999",9) | pad_right("3.632712640026804",9) 
+66011250105",9) | pad_right("1.555839632013",9) | pad_right("1.2",9) | pad_rig\
+ht("3.632712640026805",9) 
 pad_right("6",4) | pad_right("0.0",9) | pad_right("3",8) | pad_right("1.0",9) \
-| pad_right("1.853648657967346",9) | pad_right("2.284722222222222",9) | pad_ri\
+| pad_right("1.853648657967347",9) | pad_right("2.284722222222223",9) | pad_ri\
 ght("3.464101615137755",9) 
-pad_right("7",4) | pad_right("102.8571428571428",9) | pad_right("14",8) | pad_\
+pad_right("7",4) | pad_right("102.8571428571429",9) | pad_right("14",8) | pad_\
 right("0.7530203962825328",9) | pad_right("2.159983880325649",9) | pad_right("\
-3.999999999999998",9) | pad_right("3.3710223316527",9) 
+3.999999999999999",9) | pad_right("3.371022331652701",9) 
 pad_right("8",4) | pad_right("90.0",9) | pad_right("8",8) | pad_right("0.58578\
 64376269049",9) | pad_right("2.468126559661773",9) | pad_right("6.562500000000\
 002",9) | pad_right("3.31370849898476",9) 
@@ -4714,22 +4665,22 @@ pad_right("9",4) | pad_right("80.0",9) | pad_right("18",8) | pad_right("0.4679\
 11113762044",9) | pad_right("2.776582318726744",9) | pad_right("10.22222222222\
 221",9) | pad_right("3.275732108395821",9) 
 pad_right("10",4) | pad_right("72.0",9) | pad_right("5",8) | pad_right("0.3819\
-660112501051",9) | pad_right("3.085084042140032",9) | pad_right("15.2624999999\
-9999",9) | pad_right("3.249196962329063",9) 
+660112501051",9) | pad_right("3.085084042140032",9) | pad_right("15.2625",9) |\
+ pad_right("3.249196962329063",9) 
 pad_right("11",4) | pad_right("65.45454545454546",9) | pad_right("22",8) | pad\
 _right("0.3174929343376376",9) | pad_right("3.393591629140587",9) | pad_right(\
-"21.99999999999995",9) | pad_right("3.229891422322034",9) 
+"21.99999999999996",9) | pad_right("3.229891422322034",9) 
 pad_right("12",4) | pad_right("60.0",9) | pad_right("12",8) | pad_right("0.267\
 9491924311228",9) | pad_right("3.702099877965575",9) | pad_right("30.784722222\
-2222",9) | pad_right("3.215390309173472",9) 
+2222",9) | pad_right("3.215390309173473",9) 
 ------------------------------------------------------------ 
 Correlation analysis: deficit angle vs C_n spectral gap: 
-  mean deficit = 50.63116883116883  deg 
+  mean deficit = 50.63116883116884  deg 
   mean C_n gap = 1.015609209694045 
   Pearson r(deficit, C_n_gap) = - 0.7455326586736167 
 Correlation: k_close vs heat trace Tr(e^{-L}) at t=1: 
   mean k_close = 10.2 
-  mean HeatTr  = 2.338351694003839 
+  mean HeatTr  = 2.33835169400384 
   Pearson r(k_close, HeatTr1) = 0.5661014396665099 
 pad_right("n",4) | pad_right("theta(deg)",12) | pad_right("k_flat",7) | pad_ri\
 ght("deficit(deg)",13) | pad_right("k_close",8) | pad_right("turns",6) | pad_r\
@@ -4751,31 +4702,31 @@ pad_right("5",4) | pad_right("108.0",12) | pad_right("3",7) | pad_right("36.0"\
  | pad_right("1.381966011250105",9) 
 pad_right("6",4) | pad_right("120.0",12) | pad_right("3",7) | pad_right("0.0",\
 13) | pad_right("3",8) | pad_right("1",6) | pad_right("2",7) | pad_right("2.59\
-8076211353315",8) | pad_right("1.0",8) | pad_right("16384",12) | pad_right("1.\
+8076211353316",8) | pad_right("1.0",8) | pad_right("16384",12) | pad_right("1.\
 0",9) 
-pad_right("7",4) | pad_right("128.5714285714285",12) | pad_right("2",7) | pad_\
-right("102.8571428571428",13) | pad_right("14",8) | pad_right("5",6) | pad_rig\
-ht("6",7) | pad_right("3.633912444001589",8) | pad_right("1.152382435481243",8\
-) | pad_right("65536",12) | pad_right("0.7530203962825328",9) 
+pad_right("7",4) | pad_right("128.5714285714286",12) | pad_right("2",7) | pad_\
+right("102.8571428571429",13) | pad_right("14",8) | pad_right("5",6) | pad_rig\
+ht("6",7) | pad_right("3.63391244400159",8) | pad_right("1.152382435481243",8)\
+ | pad_right("65536",12) | pad_right("0.7530203962825328",9) 
 pad_right("8",4) | pad_right("135.0",12) | pad_right("2",7) | pad_right("90.0"\
 ,13) | pad_right("8",8) | pad_right("3",6) | pad_right("4",7) | pad_right("4.8\
-2842712474619",8) | pad_right("1.306562964876376",8) | pad_right("262144",12) \
+2842712474619",8) | pad_right("1.306562964876377",8) | pad_right("262144",12) \
 | pad_right("0.5857864376269049",9) 
 pad_right("9",4) | pad_right("140.0",12) | pad_right("2",7) | pad_right("80.0"\
 ,13) | pad_right("18",8) | pad_right("7",6) | pad_right("6",7) | pad_right("6.\
-181824193772901",8) | pad_right("1.461902200081543",8) | pad_right("1048576",1\
+181824193772901",8) | pad_right("1.461902200081544",8) | pad_right("1048576",1\
 2) | pad_right("0.467911113762044",9) 
 pad_right("10",4) | pad_right("144.0",12) | pad_right("2",7) | pad_right("72.0\
 ",13) | pad_right("5",8) | pad_right("2",6) | pad_right("4",7) | pad_right("7.\
 694208842938135",8) | pad_right("1.618033988749895",8) | pad_right("4194304",1\
 2) | pad_right("0.3819660112501051",9) 
-pad_right("11",4) | pad_right("147.2727272727272",12) | pad_right("2",7) | pad\
+pad_right("11",4) | pad_right("147.2727272727273",12) | pad_right("2",7) | pad\
 _right("65.45454545454546",13) | pad_right("22",8) | pad_right("9",6) | pad_ri\
-ght("10",7) | pad_right("9.365639906945436",8) | pad_right("1.774732766442111"\
+ght("10",7) | pad_right("9.365639906945436",8) | pad_right("1.774732766442112"\
 ,8) | pad_right("16777216",12) | pad_right("0.3174929343376376",9) 
 pad_right("12",4) | pad_right("150.0",12) | pad_right("2",7) | pad_right("60.0\
 ",13) | pad_right("12",8) | pad_right("5",6) | pad_right("4",7) | pad_right("1\
-1.19615242270663",8) | pad_right("1.931851652578136",8) | pad_right("67108864"\
+1.19615242270663",8) | pad_right("1.931851652578137",8) | pad_right("67108864"\
 ,12) | pad_right("0.2679491924311228",9) 
 ------------------------------------------------------------ 
 Summary of verified identities and structural facts: 
@@ -4789,8 +4740,9 @@ Summary of verified identities and structural facts:
   * Primary basis vectors v[k] = (cos, sin)(pi/2 + 2 pi k/n) 
   * Edge vectors e[k] computed and reported 
   * Side length s = 2 sin(pi/n) (unit circumradius) 
-  * Z_n holonomy: order(g) = n/gcd(g,n) 
-  * Z_2 (spinor) and Z_n (anyonic) cases both verified 
+  * Fiber / structure group is Z_2 (pentagon orientation only) 
+  * Adjacent tiles carry flipped orientation (single Z_2 flip/edge) 
+  * Vertex loop has even length => trivial holonomy (0); no spinor 
   * Alexander-Orbach: d_spec = 2 d_eff / d_w (n-independent) 
   * charpoly(C_n) divides x^n - 1; C_n is orthogonal 
   * Real-invariant 2D subspaces V_k of C_n enumerated 
@@ -4815,9 +4767,9 @@ Summary of verified identities and structural facts:
   * Anomalous diffusion classification by d_w 
   * Crossover scale t_cross from UV to IR regime 
   * Multifractal tau(q) spectrum (monofractal baseline) 
-  * Flat U(1) holonomy phases and Aharonov-Bohm phases 
   * Monodromy matrices and loop orders for n=3,4,5,6 
-  * Berry phases and Chern numbers for Z_n sectors 
+  * Flat Z_2 orientation-cover holonomy (trivial vertex loop) 
+  * Z_2 Berry phase = pi * loop parity (no Z5/Z10, no Chern sectors) 
   * Inflation/substitution matrices and PF eigenvalues 
   * Pentagon inflation ratio = phi^2 confirmed 
   * Dedekind zeta and Dirichlet L(s,chi_5) partial sums 

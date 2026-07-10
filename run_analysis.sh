@@ -16,9 +16,9 @@ run_maxima() {
       | tee "${log_file}"
 }
 
-run_maxima "smoke_test.mac"
-#run_maxima "analysis.mac"
+#run_maxima "smoke_test.mac"
+run_maxima "analysis.mac"
 run_maxima "experiment.mac"
 #run_maxima "sweep_ngon.mac"
-run_maxima "pinwheels.mac"
-run_maxima "erdos.mac"
+#run_maxima "pinwheels.mac"
+#run_maxima "erdos.mac"

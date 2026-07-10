@@ -2,8 +2,14 @@
    analysis.mac
 
    Maxima analysis and proofs for:
-   "Emergent Fractional Dimensionality and Spinor-Like Holonomy
-    in Multi-Sheeted n-gon Tilings"
+  "Emergent Fractional Dimensionality and Orientation (Z_2) Cover
+   in n-gon Tilings"
+
+  NOTE (sheet_fix.md): The fiber / structure group is Z_2 (pentagon
+  orientation only, two sheets).  Adjacent tiles carry the flipped
+  orientation.  The vertex loop around a pentagon has EVEN length (10),
+  so all edge-flips cancel and the holonomy is TRIVIAL (0).  There is no
+  Z5, no Z10, no signed3 rule, and no spinor / spin-1/2 behavior.
 
    This file generalizes the original pentagon-specific analysis to an
    arbitrary regular n-gon (n >= 3).  The pentagon (n = 5) case is
@@ -23,7 +29,7 @@
      2.  Regular n-gon: angles, deficits, excesses      [generalized]
      3.  n-th roots of unity and the cyclotomic field   [generalized]
      4.  Exact rotations in 2D and basis vectors        [generalized]
-     5.  Holonomy, sheet transitions, spinor cover      [generalized]
+    5.  Holonomy: Z_2 orientation cover (trivial vertex holonomy)
      6.  Emergent dimensions and Alexander-Orbach       [n-independent]
      7.  Cut-and-project: ambient Z^n lattice           [generalized]
      8.  Cellular automaton: regularity and rule count  [generalized]
@@ -434,48 +440,69 @@ print("  Monofractal tau(q) = (q-1)*d_eff (d_eff=2.5):")$
 for q in [-2, -1, 0, 1, 2, 3] do
      print("    q =", q, "  tau(q) =", float(tau_q_monofractal(q, 2.5))) $
 
-/* Z_2 spinor checks (n-independent, run once). */
+/* Z_2 orientation-cover checks (n-independent, run once). */
 print("------------------------------------------------------------")$
-print("Spinor / holonomy checks (Z_2, n-independent, run once):")$
-print("[Spinor case G = Z_2]:")$
-print("  single-loop holonomy =", holonomy_Zn([1], 2),
-       " (expected 1, i.e. tau = -1)")$
-if holonomy_Zn([1], 2) # 1 then error("Z2 holonomy failed")$
-print("  double-loop holonomy =", holonomy_Zn([1,1], 2),
-       " (expected 0)")$
-if holonomy_Zn([1,1], 2) # 0 then error("Z2 double-loop holonomy failed")$
-print("  spinor loop order   =", order_Zn(1, 2),
-       " (expected 2 -- double cover)")$
-if order_Zn(1, 2) # 2 then error("Z2 spinor order != 2")$
+print("Orientation / holonomy checks (Z_2, n-independent, run once):")$
+print("[Orientation cover G = Z_2]:")$
+print("  single-edge flip =", holonomy_Zn([1], 2),
+       " (expected 1, i.e. orientation flips crossing one edge)")$
+if holonomy_Zn([1], 2) # 1 then error("Z2 edge-flip failed")$
+print("  two-edge crossing =", holonomy_Zn([1,1], 2),
+       " (expected 0, two flips cancel)")$
+if holonomy_Zn([1,1], 2) # 0 then error("Z2 two-edge crossing failed")$
+print("  Z_2 cover order (orientation cover) =", order_Zn(1, 2),
+       " (expected 2 -- two sheets, + and -)")$
+if order_Zn(1, 2) # 2 then error("Z2 orientation cover order != 2")$
+/* Trivial vertex holonomy: an even-length loop of edge-flips is identity. */
+print("  Vertex-loop holonomy (even-length loop of flips):")$
+block(
+     [loop_len, flips, hol],
+     /* Pentagon vertex cycle has length 10 (even). */
+     loop_len : 10,
+     flips    : makelist(1, i, 1, loop_len),
+     hol      : holonomy_Zn(flips, 2),
+     print("    loop length =", loop_len,
+           " (even) ; product of edge-flips =", hol,
+           " (expected 0 = trivial holonomy)"),
+     if oddp(loop_len)
+        then error("Vertex loop expected even length"),
+     if hol # 0
+        then error("Even-length flip loop must have trivial Z2 holonomy"))$
 /* ---------------------------------------------------------------
     EXTENDED HOLONOMY / FLAT-BUNDLE ANALYSIS (n-independent)
     --------------------------------------------------------------- */
 print("------------------------------------------------------------")$
 print("Extended flat-bundle / holonomy analysis (n-independent):")$
-/* Holonomy group structure for Z_m covers. */
-print("  Holonomy groups Z_m for m = 2..12:")$
+/* NOTE (sheet_fix.md): the physical fiber is always Z_2 (orientation).
+    The Z_m group tables below are retained ONLY as generic group-theory
+    references for the base adjacency graph / cyclic shifts, NOT as fiber
+    / structure groups of the tiling cover.  Per sheet_fix.md there is NO
+    Z5 / Z10 fiber, NO signed3 rule, NO 2/3 vortex fraction, and NO
+    spinor / spin-1/2 behavior anywhere in the corrected model. */
+print("  Cyclic-group Z_m reference tables (base-graph structure, m = 2..12):")$
 for m : 2 thru 12 do block(
      [gens, orders],
      gens   : makelist(gg, gg, 0, m-1),
      orders : map(lambda([gg], order_Zn(gg, m)), gens),
      print("    Z_", m, ": generators and orders =",
            map(list, gens, orders))) $
-/* Flat U(1) holonomy: phase accumulated around a vortex. */
-/* For a Z_n vortex, the holonomy phase is exp(2 pi i k / n). */
-flat_U1_holonomy(k, n) := exp(2*%pi*%i*k/n) $
-print("  Flat U(1) holonomy phases exp(2 pi i k/n) for n=5:")$
-for k : 0 thru 4 do
-     print("    k =", k, ": phase =",
-           rectform(flat_U1_holonomy(k, 5)),
-           " ~ (", float(realpart(flat_U1_holonomy(k,5))),
-           ",", float(imagpart(flat_U1_holonomy(k,5))), ")") $
-/* Aharonov-Bohm phase: flux Phi through vortex, holonomy = exp(2 pi i Phi/Phi_0). */
-AB_phase(flux_ratio) := exp(2*%pi*%i*flux_ratio) $
-print("  Aharonov-Bohm phases for flux/flux_0 in {0, 1/5, 2/5, 3/5, 4/5, 1}:")$
-for fr in [0, 1/5, 2/5, 3/5, 4/5, 1] do
-     print("    Phi/Phi_0 =", fr, ": phase =",
-           float(realpart(AB_phase(fr))), "+",
-           float(imagpart(AB_phase(fr))), "i") $
+/* Flat holonomy of the Z_2 orientation cover: phase = exp(pi i q), q in Z_2. */
+/* (sheet_fix.md: fiber is Z_2 only; there is no Z5 / Z10 vortex phase.) */
+flat_Z2_holonomy(q) := exp(%pi*%i*mod(q, 2)) $
+print("  Flat Z_2 orientation-cover holonomy phases exp(pi i q), q in Z_2:")$
+for q : 0 thru 1 do
+      print("    q =", q, ": phase =",
+            rectform(flat_Z2_holonomy(q)),
+            " ~ (", float(realpart(flat_Z2_holonomy(q))),
+            ",", float(imagpart(flat_Z2_holonomy(q))), ")",
+            if q = 0 then "  (identity)" else "  (orientation flip)") $
+/* Around a pentagon vertex the loop has EVEN length (10), so the net
+    orientation change is (-1)^10 = +1: holonomy is TRIVIAL. */
+print("  Vertex-loop net phase = exp(pi i * 10) =",
+        rectform(flat_Z2_holonomy(10)),
+        " (trivial holonomy, no Aharonov-Bohm / no spinor)")$
+if ratsimp(flat_Z2_holonomy(10) - 1) # 0
+     then error("Even-length vertex loop must give trivial Z_2 holonomy")$
 /* Monodromy matrix for a 2D representation of Z_n. */
 monodromy_2D(n) := matrix(
      [cos(2*%pi/n), -sin(2*%pi/n)],
@@ -500,19 +527,18 @@ for n_m in [3, 4, 5, 6] do block(
          then found_k : k),
      print("      M^k = I first at k =", found_k, " (expected", n_m, ")")) $
 /* Berry phase for a closed loop in parameter space. */
-/* For a 2-level system with gap Delta, Berry phase = pi * winding_number. */
-berry_phase(winding) := %pi * winding $
-print("  Berry phases for winding numbers 0..4:")$
-for w : 0 thru 4 do
-     print("    w =", w, ": gamma_B =", float(berry_phase(w)),
-           " = ", w, "* pi") $
-/* Chern number from holonomy: C = (1/2pi) * integral of Berry curvature. */
-/* For Z_n holonomy, C = k/n for the k-th sector. */
-chern_number(k, n) := k/n $
-print("  Chern numbers for Z_5 sectors k = 0..4:")$
-for k : 0 thru 4 do
-     print("    k =", k, ": C =", chern_number(k, 5),
-           " =", float(chern_number(k, 5))) $
+/* For the Z_2 orientation cover the only nontrivial closed-loop content
+    is a single orientation flip (winding parity).  Even-length loops
+    (e.g. the pentagon vertex 10-cycle) accumulate zero net phase. */
+berry_phase_Z2(loop_parity) := %pi * mod(loop_parity, 2) $
+print("  Z_2 orientation Berry phase gamma = pi * (loop parity):")$
+for w : 0 thru 3 do
+      print("    loop length parity =", mod(w, 2),
+            ": gamma_B =", float(berry_phase_Z2(w)),
+            if mod(w,2) = 0 then "  (trivial)" else "  (flip)") $
+/* sheet_fix.md: there is no Z5/Z10 fiber and no fractional Chern sector;
+    the orientation cover is Z_2 with trivial vertex holonomy. */
+print("  (No Chern / fractional-sector structure: fiber is Z_2 only.)")$
 
 /* ===================================================================
     MAIN SWEEP LOOP  over n = N_GON_MIN .. N_GON_MAX step N_GON_STEP
@@ -887,41 +913,53 @@ for N_GON : N_GON_MIN thru N_GON_MAX step N_GON_STEP do block(
       SECTION 5.  Holonomy
       ---------------------------------------------------------------- */
    print("------------------------------------------------------------"),
-   print("[n = ", N_GON, "] Holonomy / spinor cover analysis:"),
+   print("[n = ", N_GON, "] Holonomy / Z_2 orientation cover analysis:"),
 
-   fiber_order_n : k_loop_close_n,
-   print("  Natural single-vortex fiber order =", fiber_order_n),
-   print("  Z_n single-vortex holonomy (n =", fiber_order_n, ") :",
-         holonomy_Zn([1], fiber_order_n)),
-   print("  Required loop count to close fiber :",
-         order_Zn(1, fiber_order_n)),
 
-   print("[Anyonic case G = Z_n with n =", n_int, "]:"),
-   print("  single-vortex holonomy =", holonomy_Zn([1], n_int)),
-   print("  loop order required    =", order_Zn(1, n_int),
-         " (expected", n_int, ")"),
-   if order_Zn(1, n_int) # n_int
-      then error("Z_n anyonic order != n at n =", n_int),
 
-   print("[n = ", N_GON, "] order(g, n) = n/gcd(g, n) check (g = 0..n-1):"),
-   for gg:0 thru n_int - 1 do block(
-       [o, expected],
-       o        : order_Zn(gg, n_int),
-       expected : if gg = 0 then 1 else n_int/gcd(gg, n_int),
-       if o # expected
-          then error("order(", gg, ",", n_int, ") =", o,
-                     ", expected ", expected)),
-   print("  All g in Z_n satisfy order(g) = n/gcd(g, n)."),
 
-   h1     : holonomy_Zn([1, 2], n_int),
-   h2     : holonomy_Zn([mod(3, n_int), mod(4, n_int)], n_int),
-   h_comp : holonomy_Zn([1, 2, mod(3, n_int), mod(4, n_int)], n_int),
-   h_sum  : mod(h1 + h2, n_int),
-   print("[n = ", N_GON, "] Composite holonomy: Loop A =", h1,
+   /* The fiber is ALWAYS Z_2 (pentagon orientation).  It is NOT related
+      to k_loop_close_n or to n; adjacent tiles carry flipped orientation. */
+   fiber_order_n : 2,
+   print("  Fiber / structure group order =", fiber_order_n,
+         " (Z_2 orientation cover; two sheets + and -)"),
+   print("  Single-edge crossing (orientation flip) =",
+         holonomy_Zn([1], 2)),
+   print("  Z_2 cover order (loops to return to same sheet) =",
+         order_Zn(1, 2), " (expected 2)"),
+   if order_Zn(1, 2) # 2
+      then error("Z_2 orientation cover order != 2 at n =", n_int),
+
+   /* Vertex-loop holonomy is TRIVIAL: the base vertex cycle has length
+      k_loop_close_n; if that length is even, the product of edge flips
+      is identity in Z_2.  (For the pentagon, k_loop_close = 10.) */
+   print("[n = ", N_GON, "] Vertex-loop holonomy (Z_2, orientation flips):"),
+   block(
+       [loop_len, flips, hol, parity],
+       loop_len : k_loop_close_n,
+       flips    : makelist(1, i, 1, loop_len),
+       hol      : holonomy_Zn(flips, 2),
+       parity   : mod(loop_len, 2),
+       print("  vertex-cycle length =", loop_len,
+             if parity = 0 then " (even)" else " (odd)"),
+       print("  product of edge-flips around cycle =", hol,
+             if parity = 0 then " (trivial holonomy)"
+             else " (nontrivial: odd-length flip loop)"),
+       /* An even loop must give trivial holonomy. */
+       if parity = 0 and hol # 0
+          then error("Even-length vertex loop must be trivial at n =",
+                     n_int)),
+
+   /* Composite Z_2 holonomy: flips are additive mod 2. */
+   h1     : holonomy_Zn([1, 1], 2),
+   h2     : holonomy_Zn([1, 1], 2),
+   h_comp : holonomy_Zn([1, 1, 1, 1], 2),
+   h_sum  : mod(h1 + h2, 2),
+   print("[n = ", N_GON, "] Composite Z_2 holonomy: Loop A =", h1,
          ", Loop B =", h2, ", Composite =", h_comp,
-         ", Sum mod n =", h_sum),
+         ", Sum mod 2 =", h_sum),
    if h_comp # h_sum
-      then error("Composite holonomy failed at n =", n_int),
+      then error("Composite Z_2 holonomy failed at n =", n_int),
 
    /* ----------------------------------------------------------------
       SECTION 7.  Cut-and-project lattice
@@ -1821,8 +1859,9 @@ print("  * R^k traces matched 2 cos(2 pi k/n) for k = 1..n")$
 print("  * Primary basis vectors v[k] = (cos, sin)(pi/2 + 2 pi k/n)")$
 print("  * Edge vectors e[k] computed and reported")$
 print("  * Side length s = 2 sin(pi/n) (unit circumradius)")$
-print("  * Z_n holonomy: order(g) = n/gcd(g,n)")$
-print("  * Z_2 (spinor) and Z_n (anyonic) cases both verified")$
+print("  * Fiber / structure group is Z_2 (pentagon orientation only)")$
+print("  * Adjacent tiles carry flipped orientation (single Z_2 flip/edge)")$
+print("  * Vertex loop has even length => trivial holonomy (0); no spinor")$
 print("  * Alexander-Orbach: d_spec = 2 d_eff / d_w (n-independent)")$
 print("  * charpoly(C_n) divides x^n - 1; C_n is orthogonal")$
 print("  * Real-invariant 2D subspaces V_k of C_n enumerated")$
@@ -1847,9 +1886,9 @@ print("  * Alexander-Orbach phase diagram (d_eff x d_w grid)")$
 print("  * Anomalous diffusion classification by d_w")$
 print("  * Crossover scale t_cross from UV to IR regime")$
 print("  * Multifractal tau(q) spectrum (monofractal baseline)")$
-print("  * Flat U(1) holonomy phases and Aharonov-Bohm phases")$
 print("  * Monodromy matrices and loop orders for n=3,4,5,6")$
-print("  * Berry phases and Chern numbers for Z_n sectors")$
+print("  * Flat Z_2 orientation-cover holonomy (trivial vertex loop)")$
+print("  * Z_2 Berry phase = pi * loop parity (no Z5/Z10, no Chern sectors)")$
 print("  * Inflation/substitution matrices and PF eigenvalues")$
 print("  * Pentagon inflation ratio = phi^2 confirmed")$
 print("  * Dedekind zeta and Dirichlet L(s,chi_5) partial sums")$

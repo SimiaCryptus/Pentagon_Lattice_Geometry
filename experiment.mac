@@ -2,8 +2,16 @@
    experiment.mac
 
    Computational experiments for:
-   "Emergent Fractional Dimensionality and Spinor-Like Holonomy
-    in Multi-Sheeted Pentagon Tilings"
+     "Emergent Fractional Dimensionality on the Z_2 (Double-Cover)
+      Pentagon Tiling"
+
+     CORRECTED per sheet_fix.md (normative): the fiber is Z_2
+     (pentagon orientation only, two sheets).  Adjacent tiles carry
+     FLIPPED orientation.  The 10-step loop around a vertex has EVEN
+     length, so all orientation flips cancel and the vertex holonomy
+     is TRIVIAL (0).  There is NO Z5, NO Z10, NO signed3 rule, and NO
+     spinor / spin-1/2 behavior.  Any residual references to those in
+     comments are historical and superseded by sheet_fix.md.
 
    Where analysis.mac verifies the *symbolic identities* underlying the
    construction (phi-arithmetic, cyclotomic structure, Alexander-Orbach
@@ -21,8 +29,9 @@
          d_spec from P_0(t) ~ t^(-d_spec/2).
      (5) Cross-check d_spec via the Alexander-Orbach relation
          d_spec = 2 d_eff / d_w.
-     (6) Demonstrate holonomy accumulation around a vortex defect
-         for fiber groups G = Z_2 (spinor) and G = Z_5 (anyonic).
+       (6) Demonstrate that the fiber is Z_2 (orientation flip on every
+           edge) and that the holonomy around an even-length vertex
+           loop is trivial (0).  There is NO Z5 or Z10 fiber.
      (7) Run a small Pentagonal-Life-like cellular automaton on the
          constructed graph and observe glider/cluster behavior.
 
@@ -34,11 +43,11 @@
       5. BFS volume growth: connectivity dimension d_eff
       6. Random-walk simulation: d_w and d_spec
       7. Alexander-Orbach cross-check
-      8. Holonomy experiments (Z_2 and Z_5 fibers)
+      8. Holonomy experiments (Z_2 orientation cover only)
       9. Cellular automaton dynamics
       10. Extended ruleset survey (B/S families)
       11. Alternative tau-rules: holonomy and structure comparison
-      12. Extended holonomy: Z_3, Z_4, Z_6, Z_10 fiber groups
+      12. Extended holonomy on the Z_2 cover (loop-length parity)
       13. Structural pattern analysis: clustering, girth, sheet flow
       14. Per-sheet sub-graph analysis
       15. Glider/oscillator hunt under multiple seeds
@@ -213,15 +222,22 @@ print("  Interior angle =", float(theta_int_n * 180 / %pi), "deg")$
 print("  Flat-vertex count k_flat =", k_flat_n)$
 print("  Angular deficit =", float(deficit_n * 180 / %pi), "deg")$
 print("  Loop-closure index k_loop =", k_loop_close_n)$
-/* Natural fiber group order for this n-gon. */
-FIBER_ORDER_N : k_loop_close_n $
-print("  Natural fiber group order =", FIBER_ORDER_N)$
-/* Holonomy fiber groups to survey (always include 2, n_int, and the
-    natural fiber order; deduplicate and sort). */
-FIBER_GROUPS_DEFAULT : sort(listify(setify(
-     append([2, n_int, FIBER_ORDER_N],
-            if n_int <= 12 then [3, 4, 5, 6, 10] else [])))) $
-print("  Fiber groups for holonomy survey:", FIBER_GROUPS_DEFAULT)$
+/* Corrected (sheet_fix.md): the fiber is Z_2 (orientation only).
+    The loop-closure index is a property of the BASE adjacency graph
+    (the vertex-cycle length, e.g. 10 for pentagons), NOT the fiber
+    order.  Since the vertex loop has EVEN length, orientation flips
+    cancel and the holonomy is trivial. */
+FIBER_ORDER_N : 2 $
+VERTEX_LOOP_LEN_N : k_loop_close_n $
+print("  Vertex-cycle (base) length k_loop =", VERTEX_LOOP_LEN_N,
+       if evenp(VERTEX_LOOP_LEN_N) then "  (even => trivial holonomy)"
+       else "  (odd)")$
+print("  Fiber group order =", FIBER_ORDER_N, " (Z_2, orientation only)")$
+/* Corrected: the only fiber group is Z_2.  We keep the list as a
+    singleton so all downstream holonomy surveys report Z_2 only. */
+FIBER_GROUPS_DEFAULT : [2] $
+print("  Fiber group for holonomy survey:", FIBER_GROUPS_DEFAULT,
+       " (Z_2 orientation cover)")$
 
 /* ---------------------------------------------------------------------
      Shared utility: least-squares slope/intercept of (xs, ys) lists.
@@ -282,15 +298,20 @@ log_log_fit_basic(xs, ys) := block(
       TAU_MODE       -- selects the default vortex rule used in the
                         main BFS expansion (Section 3) and downstream
                         analyses.  Values:
-                          "every3"  -- the original didactic rule
-                                       tau(i,k) = [(i+k) ≡ 0 mod 3],
-                                       always +1.
-                          "signed3" -- the signed-3 rule from the
-                                       tau-survey: tau in {-1,0,+1}.
-                                       Produces the largest clusters
-                                       and the most sheets, and gives
-                                       d_eff closest to the predicted
-                                       midpoint 2.5.
+                           "z2"      -- CORRECTED default (sheet_fix.md):
+                                        a single Z_2 orientation flip on
+                                        EVERY edge.  The sheet index is
+                                        the orientation bit in {0,1};
+                                        every edge toggles it.  The
+                                        vertex loop has even length so
+                                        holonomy is trivial.
+                           "every3"  -- historical didactic rule
+                                        tau(i,k) = [(i+k) ≡ 0 mod 3]
+                                        (superseded; kept for reference).
+                           "signed3" -- historical signed-3 rule
+                                        (superseded by sheet_fix.md;
+                                        do NOT use for the corrected
+                                        Z_2 model).
                           "cap"     -- the cut-and-project acceptance
                                        window rule of Section 17:
                                        shift +1 iff exactly one
@@ -302,9 +323,9 @@ log_log_fit_basic(xs, ys) := block(
 EXPERIMENT_PRESET : "huge" $
 if ?boundp('EXPERIMENT_PRESET_OVERRIDE) then
     EXPERIMENT_PRESET : EXPERIMENT_PRESET_OVERRIDE $
-/* Default vortex rule for the main cluster.  Set to "signed3" or
-    "cap" to use the upgraded rules instead of the didactic every3. */
-TAU_MODE : "signed3" $
+/* Default vortex rule for the main cluster.  CORRECTED (sheet_fix.md):
+     the fiber is Z_2 (orientation flip on every edge). */
+TAU_MODE : "z2" $
 if ?boundp('EXPERIMENT_TAU_OVERRIDE) then
     TAU_MODE : EXPERIMENT_TAU_OVERRIDE $
 if EXPERIMENT_PRESET = "tiny" then (
@@ -663,6 +684,12 @@ tau_rule_signedn(i, k) :=
       if mod(i + k, n_int) = 0 then 1
       elseif mod(i + k, n_int) = 1 then -1
       else 0 $
+/* CORRECTED (sheet_fix.md): Z_2 orientation flip on EVERY edge.
+    The sheet index counts parity of orientation; +1 on every edge
+    means the orientation toggles across every edge.  Reduced mod 2
+    this is the non-trivial element of Z_2.  Adjacent tiles always
+    carry the flipped orientation. */
+tau_rule_z2(i, k) := 1 $
 /* The cap-window rule needs `cell_center`, `cell_orient` and the
     `reflected_neighbor_center` / `in_cap_window` helpers; we define
     it as a forward declaration here and bind its body after Section 17
@@ -672,7 +699,8 @@ tau_rule_cap(i, k) := tau_rule_every3(i, k) $   /* placeholder */
     For n != 5 the "every3" and "signed3" modes fall back to the
     general period-n variants so the cluster is non-trivial. */
 tau_rule(i, k) :=
-     if TAU_MODE = "signed3" then tau_rule_signed3(i, k)
+      if TAU_MODE = "z2" then tau_rule_z2(i, k)
+       elseif TAU_MODE = "signed3" then tau_rule_signed3(i, k)
       elseif TAU_MODE = "signedn" then tau_rule_signedn(i, k)
      elseif TAU_MODE = "cap"  then tau_rule_cap(i, k)
       elseif TAU_MODE = "everyn" then tau_rule_everyn(i, k)
@@ -686,7 +714,10 @@ add_neighbor(i, k) := block(
     nc : reflected_neighbor_center(c[1], c[2], chir, k),
     nchir : flip_chir(chir),
     ds : tau_rule(i, k),
-    ns : s + ds,
+     /* CORRECTED (sheet_fix.md): in the Z_2 model the sheet index is
+        the orientation bit; every edge flips it, and we reduce mod 2
+        so the cover has exactly two sheets. */
+     ns : if TAU_MODE = "z2" then mod(s + ds, 2) else s + ds,
     nb_id : get_cell(nc, nchir, ns),
     add_edge(i, nb_id),
     nb_id) $
@@ -1340,11 +1371,18 @@ print("clusters and the cut-and-project window for proper local finiteness.")$
    SECTION 8.  Holonomy experiments
    ---------------------------------------------------------------------
 
-   expansion is non-trivial (every 3rd edge contributes +1), any loop
-   enclosing the origin can show net holonomy.
 
-    Concretely: we look for 3-cycles through the origin and report
-    the raw holonomy and its reduction mod each fiber group.
+
+    CORRECTED (sheet_fix.md): the fiber is Z_2 (orientation only) and
+    every edge flips orientation.  The holonomy of ANY closed loop is
+    therefore just the parity of its length: even-length loops are
+    trivial (0 in Z_2), odd-length loops are non-trivial.  In
+    particular the vertex loop (length 10 for pentagons) is even, so
+    its holonomy is trivial.  There is no Z5/Z10 structure and no
+    spinor / spin-1/2 behavior.
+
+     We look for cycles through the origin and report the Z_2 holonomy
+     (= loop-length parity).
    --------------------------------------------------------------------- */
 
 /* Recover the sheet shift along a directed edge (i -> j). */
@@ -1391,6 +1429,23 @@ if length(small_loop) > 0 then block(
                             else "  (trivial)")))
 else
      print("Section 8: no 3-cycle through origin in cluster.")$
+/* CORRECTED (sheet_fix.md): verify that in the Z_2 model, closed
+    loops have holonomy equal to their length parity, so all
+    even-length loops (in particular the length-10 vertex loop) are
+    trivial.  We test all enumerated small/long loops. */
+if TAU_MODE = "z2" then block(
+      [violations : 0, total : 0, len, hol, seq],
+      for seq in cons(small_loop, []) do
+          if length(seq) > 0 then (
+              total : total + 1,
+              len : length(seq) - 1,
+              hol : mod(loop_holonomy(seq), 2),
+              if hol # mod(len, 2) then violations : violations + 1),
+      print("Z_2 holonomy check: for", total,
+            "loop(s), Z_2 holonomy = length parity;",
+            "violations =", violations, " (should be 0)"),
+      print("  => even-length vertex loop (len",
+            VERTEX_LOOP_LEN_N, ") has TRIVIAL holonomy (0)."))$
 /* Longer-loop holonomy survey: look for 4- and 5-cycles through the
      origin, count how many have non-trivial holonomy for each fiber group. */
 find_cycles_through_origin(maxlen) := block(
@@ -1440,10 +1495,9 @@ if length(long_cycles) > 0 then block(
      samples : 0,
      for cyc in long_cycles do
           if samples < 3 and holonomy_mod(cyc, n_int) # 0 then (
-             print("  example spinor loop:", cyc,
+              print("  example odd-length (non-trivial Z_2) loop:", cyc,
                    "  raw =", loop_holonomy(cyc),
-                    "  Z_2 =", holonomy_mod(cyc, 2),
-                    "  Z_n =", holonomy_mod(cyc, n_int)),
+                     "  Z_2 =", holonomy_mod(cyc, 2)),
              samples : samples + 1))$
 
 /* Sweep over a longer loop: BFS shell-2 cells reachable from origin
@@ -1460,6 +1514,11 @@ print("Total edges in cluster:",
       apply("+", deg_list) / 2)$
 print("Vortex fraction =",
       float(n_vortex_edges_in_cluster / (apply("+", deg_list) / 2)))$
+if TAU_MODE = "z2" then
+      print("  (CORRECTED sheet_fix.md: every edge flips orientation;",
+            "the Z_2 vortex fraction is 1 by definition. Edges whose",
+            "endpoints happen to share a sheet index arise only from",
+            "mod-2 wraparound, not from a signed3/2-of-3 rule.)")$
 /* Per-sheet vortex breakdown. */
 print("Per-sheet cell counts:")$
 for s in sheet_set do block(
@@ -1735,6 +1794,9 @@ tau_signed(i, k)   := if mod(i + k, 3) = 0 then 1
                        elseif mod(i + k, 3) = 1 then -1
                        else 0 $
 tau_fib(i, k)      := if member(mod(i + k, 8), [1, 2, 3, 5]) then 1 else 0 $
+/* CORRECTED (sheet_fix.md): the physical rule is a Z_2 flip on
+    every edge.  Included first so it heads the survey. */
+tau_z2_fn(i, k)    := 1 $
 /* General period-n variants (always meaningful regardless of N_GON). */
 tau_everyn_fn(i, k)  := if mod(i + k, n_int) = 0 then 1 else 0 $
 tau_signedn_fn(i, k) := if mod(i + k, n_int) = 0 then 1
@@ -1743,13 +1805,14 @@ tau_signedn_fn(i, k) := if mod(i + k, n_int) = 0 then 1
 tau_kmodn(i, k)      := if mod(k, n_int) = 0 then 1 else 0 $
 tau_chiralN(i, k)    := if mod(k, n_int) <= floor(n_int/3) then 1 else 0 $
 tau_panel : [
+      ["z2        (correct)",  tau_z2_fn],
      ["none      (flat)",     tau_none],
-     ["every3    (default)",  tau_every3],
+      ["every3    (legacy)",   tau_every3],
      ["every2",               tau_every2],
      ["every5",               tau_every5],
      ["k-parity",             tau_kparity],
      ["chiral",               tau_chiral],
-     ["signed-3",             tau_signed],
+      ["signed-3  (legacy)",   tau_signed],
       ["fibonacci-mod8",       tau_fib],
       ["every-n",              tau_everyn_fn],
       ["signed-n",             tau_signedn_fn],
@@ -1846,15 +1909,16 @@ for r in tau_survey_results do block(
          best_tau_score : score,
          best_tau_label : r[1])) $
 print("")$
-print("Richest-holonomy tau-rule (sum of Z_2/Z_3/Z_5 non-trivial counts):",
+print("Richest-holonomy tau-rule (sum of Z_2 non-trivial counts):",
        best_tau_label,
        "  score =", best_tau_score)$
 /* ---------------------------------------------------------------------
     SECTION 12.  Extended holonomy: more fiber groups
     ---------------------------------------------------------------------
-     Apply Z_m reductions for m in FIBER_GROUPS_DEFAULT to the long_cycles
-     of the main cluster.  m = 2 is the spinor reduction; m = n_int is the
-     anyonic one tied to n-gon symmetry; others are diagnostic.
+     CORRECTED (sheet_fix.md): the only fiber group is Z_2 (orientation).
+     We reduce the long_cycles of the main cluster mod 2; the result is
+     just the loop-length parity.  There is no Z5/Z10 anyonic structure,
+     no signed3 rule, and no spinor / spin-1/2 behavior.
     --------------------------------------------------------------------- */
 print("============================================================")$
 print("SECTION 12: Extended holonomy on main cluster")$
@@ -1878,7 +1942,8 @@ if length(long_cycles) > 0 then block(
      for k : 1 thru length(fiber_groups) do
          print("  Z_", fiber_groups[k],
                ":  non-trivial =", hcounts[k], "/", length(long_cycles),
-               "  residue distribution =", residue_dists[k]))
+               "  residue distribution =", residue_dists[k],
+               "  (Z_2: non-trivial <=> odd-length loop)"))
 else
      print("(no long cycles to analyze)")$
 /* Raw holonomy distribution. */
@@ -1984,7 +2049,9 @@ print("Girth (shortest cycle) through origin =",
 if CHIRAL_ACTIVE and girth_origin > 0 then
      print("  Bipartite-chirality note: any odd-length cycle through",
            "origin carries non-zero net chirality flip; closure",
-           "requires the sheet/holonomy degree of freedom.")$
+            "carries the non-trivial Z_2 orientation element.",
+            "Even-length cycles (e.g. the length-10 vertex loop) are",
+            "trivial in Z_2.")$
 /* Inter-sheet edges and sheet-to-sheet transition matrix. */
 sheet_list : sort(listify(setify(cell_sheet))) $
 n_sheets : length(sheet_list) $
@@ -2162,8 +2229,9 @@ print("  trials =", length(glider_summary),
     ---------------------------------------------------------------------
      Enumerate longer simple cycles through the origin (up to
     LONG_LOOP_MAX steps), and also enumerate cycles anchored at
-    *non-origin* vertices to expose monodromy that depends on the
-    base point.
+     *non-origin* vertices.  CORRECTED (sheet_fix.md): in the Z_2 model
+     the holonomy of any cycle equals its length parity, so it does NOT
+     depend on the base point; this section verifies that.
     --------------------------------------------------------------------- */
 print("============================================================")$
 print("SECTION 16: Long-loop holonomy enumeration")$
@@ -3223,7 +3291,8 @@ print("Preset =", EXPERIMENT_PRESET,
 print("N_GON =", N_GON,
         "  interior angle =", float(theta_int_n * 180 / %pi), "deg",
         "  k_flat =", k_flat_n,
-        "  fiber order =", FIBER_ORDER_N)$
+         "  vertex-loop length =", VERTEX_LOOP_LEN_N,
+         "  fiber order =", FIBER_ORDER_N, "(Z_2)")$
 print("Cluster size N =", N)$
 print("Mean degree =", deg_mean,
        " (", n_int, "-regular target; lower at boundary)")$
@@ -3315,8 +3384,12 @@ print("    method for large clusters where dense eigendecomposition")$
 print("    is infeasible.  Both low-lambda slope and integrated-DOS")$
 print("    slope are reported for cross-validation.")$
 print("  * Same-orientation tiling is geometrically frustrated; this")$
-print("    experiment lets the sheet index absorb the angular deficit,")$
-print("    consistent with the multi-sheeted construction.")$
+print("    experiment lets the orientation bit (Z_2) absorb the edge")$
+print("    flip.  CORRECTED per sheet_fix.md: the cover is Z_2 (two")$
+print("    sheets, orientation only); adjacent tiles flip orientation;")$
+print("    the even-length (10-step) vertex loop has TRIVIAL holonomy.")$
+print("    There is no Z5, no Z10, no signed3 rule, and no spinor")$
+print("    behavior.")$
 print("  * Section 23 catalogs the Erdős distance problem on the")$
 print("    pentagonal lattice: ring table, Fibonacci spacing, Galois")$
 print("    conjugate pairings, and D(P_n) vs log(n) scaling.")$
