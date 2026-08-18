@@ -3,7 +3,7 @@
 ## Status
 
 **Normative.** This document corrects a foundational error that propagated through the
-entire analysis. All other documents (`README.md`, `idea.md`, `analysis.md`,
+entire analysis. All other documents (`README_DEV.md`, `idea.md`, `analysis.md`,
 `experiment.mac`, `sweep_ngon.md`, `affine.md`) must be brought into agreement with the
 statements here. Any claim elsewhere that contradicts this file is a bug to be fixed.
 
@@ -115,7 +115,7 @@ invalid and must be regenerated on the Z₂ (2-sheet) cover with trivial vertex 
 
 ## 5. Required Fixes by File
 
-### `README.md`
+### `README_DEV.md`
 - Replace all "multi-sheeted (n sheets)" language with **"double cover (Z₂, 2 sheets)."**
 - Delete Finding 5 ("Spinor-Like Holonomy") and the spin-½ / 4π analogy in full.
 - Delete "Vortex Fraction as an Arithmetic Invariant" (Finding 4) and the `2/3` constant.

@@ -49,3 +49,14 @@ SECTION 3b: Distance ring pre-computation
 ------------------------------------------------------------ 
 Computing origin-to-all squared distances (N = 3906 )... 
 Computing all-pairs squared distances (cap = 200000 )... 
+WARNING: distance pair computation capped at 200000 
+                          pairs.  Increase DIST_PAIR_CAP for complete catalog. 
+Sorting distance classes... 
+  (pre-computing float keys for 203585 classes...) 
+  (sorting 203585 classes by float key...) 
+Distinct squared distances found: 203585 
+Building sorted-index map... 
+Maxima encountered a Lisp error:
+ Condition in MACSYMA-TOP-LEVEL [or a callee]: INTERNAL-SIMPLE-ERROR: Value stack overflow.
+Automatically continuing.
+To enable the Lisp debugger set *debugger-hook* to nil.

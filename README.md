@@ -230,7 +230,7 @@ solvable toy model** of CDT-style dimensional reduction.
 | `experiment.mac` | Full computational pipeline: geometry → graph → spectra → CA → KPM        |
 | `sweep_ngon.md`  | Cross-polygon sweep results (n = 3..12) and universal observations        |
 | `affine.md`      | Generalization to irregular polygons; algebraic classification framework  |
-| `README.md`      | This file                                                                 |
+| `README_DEV.md`      | This file                                                                 |
 
 ---
 

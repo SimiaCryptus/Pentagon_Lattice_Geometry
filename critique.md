@@ -3,7 +3,7 @@
 This document records a long adversarial dialogue about the project, then
 reconciles that dialogue against what the actual source (`experiment.mac`,
 `experiment.md`, `sweep_ngon.md`, `analysis.mac`) really contains. The
-original exchange was conducted on the strength of the `README.md` preview
+original exchange was conducted on the strength of the `README_DEV.md` preview
 alone. Reading the code changes several conclusions, so this rewrite
 separates **what the critique got right**, **what it got wrong**, and
 **what the code actually shows**.
@@ -12,7 +12,7 @@ separates **what the critique got right**, **what it got wrong**, and
 
 ## 1. The Setup
 
-A skeptical reader was shown the `README.md` and produced a sharp,
+A skeptical reader was shown the `README_DEV.md` and produced a sharp,
 specific critique. The single strongest objection was an **internal
 consistency check**, not a vibe:
 
@@ -79,7 +79,7 @@ README over-sold a number the source already treated with suspicion.
 
 Correct. Nothing in `experiment.mac` derives a connection to quantum
 gravity, anyons, cryptography, or protein networks. Those are
-`README.md`-only prose. The "Z₂ cover, order 2" computation in
+`README_DEV.md`-only prose. The "Z₂ cover, order 2" computation in
 `analysis.mac` is abelian; calling it "non-Abelian anyonic statistics"
 in the README is a genuine overreach the code does not support.
 
@@ -101,7 +101,7 @@ reliable one and explains *why* the others are corrupted (KPM rescaling
 warning, random-walk boundary saturation). This is not a project blind to
 its own fit quality; it is a project that instruments fit quality heavily.
 The skeptic's "they slid from 'script ran' to 'claim proven'" applies to
-the `README.md`, but **not** to `experiment.md`, which is consistently
+the `README_DEV.md`, but **not** to `experiment.md`, which is consistently
 hedged.
 
 ### 3.2 "d_eff marching linearly is just where the line crosses"
