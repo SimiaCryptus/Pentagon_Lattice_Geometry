@@ -20,7 +20,7 @@ unrelated quantities:
 2. The **number of sheets** of the covering space (the size of the fiber / structure
    group).
 
-These are *not the same number*. The first is a property of the adjacency graph; the
+These are _not the same number_. The first is a property of the adjacency graph; the
 second is a property of tile orientation. The analysis incorrectly derived a `Z5` or `Z10`
 fiber structure from the return length and then invented "edge delta rules" (the `signed3`
 rule, sheet shifts in `{−1, 0, +1}`, vortex fractions of `2/3`, etc.) to make that fiber
@@ -69,7 +69,7 @@ Consequences:
 - The 10-step vertex cycle is a **closed, trivial loop**: net orientation change over the
   full cycle is `(−1)^10 = +1`, i.e. identity.
 
-The orientation *does* flip on each individual edge (that is the real Z₂ content), but the
+The orientation _does_ flip on each individual edge (that is the real Z₂ content), but the
 **closed loop around a vertex has even length (10)**, so all flips cancel and holonomy is
 trivial.
 
@@ -80,17 +80,17 @@ trivial.
 The following claims appear across the documents and are all incorrect under the corrected
 model:
 
-| Wrong claim (as currently stated)                                   | Correction                                          |
-|---------------------------------------------------------------------|-----------------------------------------------------|
-| Fiber / structure group is Z5, Z10, or "double cover of Z5"         | Fiber is **Z₂** (orientation only)                  |
-| `signed3` rule assigns sheet shifts ∈ {−1, 0, +1}                   | **No such rule exists**; the only map is a Z₂ flip  |
-| Sheet shifts are "cyclic mod 3"                                     | There is no mod-3 or mod-5 structure                |
-| "Vortex edge fraction = exactly 2/3"                                | **Every** edge flips orientation; fraction = 1 (Z₂) |
-| Single loop around a vertex → sheet shift of −1                     | Single loop → **shift of 0** (holonomy trivial)     |
-| Double loop required to restore identity                            | Identity restored after the **single** 10-cycle     |
-| Spinor-like / spin-½ / 4π holonomy analogy                          | **Delete**; holonomy is trivial, not spinorial      |
-| "10 pentagons × 3 full turns to close a loop" as fiber justification| 10 is the base-cycle length; turns ≠ fiber order    |
-| Vortex fraction as "arithmetic invariant" / topological-defect rule | Delete; artifact of the invented rule               |
+| Wrong claim (as currently stated)                                    | Correction                                          |
+| -------------------------------------------------------------------- | --------------------------------------------------- |
+| Fiber / structure group is Z5, Z10, or "double cover of Z5"          | Fiber is **Z₂** (orientation only)                  |
+| `signed3` rule assigns sheet shifts ∈ {−1, 0, +1}                    | **No such rule exists**; the only map is a Z₂ flip  |
+| Sheet shifts are "cyclic mod 3"                                      | There is no mod-3 or mod-5 structure                |
+| "Vortex edge fraction = exactly 2/3"                                 | **Every** edge flips orientation; fraction = 1 (Z₂) |
+| Single loop around a vertex → sheet shift of −1                      | Single loop → **shift of 0** (holonomy trivial)     |
+| Double loop required to restore identity                             | Identity restored after the **single** 10-cycle     |
+| Spinor-like / spin-½ / 4π holonomy analogy                           | **Delete**; holonomy is trivial, not spinorial      |
+| "10 pentagons × 3 full turns to close a loop" as fiber justification | 10 is the base-cycle length; turns ≠ fiber order    |
+| Vortex fraction as "arithmetic invariant" / topological-defect rule  | Delete; artifact of the invented rule               |
 
 ---
 
@@ -116,6 +116,7 @@ invalid and must be regenerated on the Z₂ (2-sheet) cover with trivial vertex 
 ## 5. Required Fixes by File
 
 ### `README_DEV.md`
+
 - Replace all "multi-sheeted (n sheets)" language with **"double cover (Z₂, 2 sheets)."**
 - Delete Finding 5 ("Spinor-Like Holonomy") and the spin-½ / 4π analogy in full.
 - Delete "Vortex Fraction as an Arithmetic Invariant" (Finding 4) and the `2/3` constant.
@@ -129,22 +130,26 @@ invalid and must be regenerated on the Z₂ (2-sheet) cover with trivial vertex 
   holonomy does not support it.
 
 ### `idea.md`
+
 - Rewrite the fiber definition: fiber = pentagon orientation ∈ {+, −}; group = Z₂.
 - State explicitly: **adjacent tiles carry flipped orientation.**
 - State the holonomy theorem: the vertex loop has length 10 (even) ⇒ net flip = +1 ⇒
   **trivial holonomy.**
 
 ### `analysis.mac` / `analysis.md`
+
 - Remove symbolic "verification" of Z5/Z10 fibers, sheet shifts, and vortex fractions.
 - Add a check that the vertex cycle has **even length (10)** and that the product of edge
   flips around it equals **identity** in Z₂.
 
 ### `experiment.mac` / `sweep_ngon.mac`
+
 - Delete the `signed3` rule and all `{−1,0,+1}` sheet-shift assignment code.
 - Replace with a **single Z₂ orientation flip on every edge**.
 - Recompute all spectral/dimension outputs on the 2-sheet cover.
 
 ### `affine.md`
+
 - The algebraic-field classification may remain as a statement about **base coordinates**,
   but must not be presented as determining a multi-sheet fiber count. The fiber is always
   Z₂ when it exists at all.

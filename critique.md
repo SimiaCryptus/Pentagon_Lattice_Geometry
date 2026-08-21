@@ -35,14 +35,14 @@ The math is.
 
 Correct, and the code agrees. From `experiment.md` (medium preset, n=5):
 
-| Quantity          | Method              | Value  |
-|-------------------|---------------------|--------|
-| `d_eff`           | BFS interior        | 2.369  |
-| `d_w`             | MSD early-time      | 7.62   |
-| `d_spec`          | P₀ decay            | 2.81   |
-| `d_spec`          | Alexander–Orbach    | 0.62   |
-| `d_spec`          | Dense DOS (CDF)     | 1.91   |
-| `d_spec`          | KPM integrated      | 0.26   |
+| Quantity | Method           | Value |
+| -------- | ---------------- | ----- |
+| `d_eff`  | BFS interior     | 2.369 |
+| `d_w`    | MSD early-time   | 7.62  |
+| `d_spec` | P₀ decay         | 2.81  |
+| `d_spec` | Alexander–Orbach | 0.62  |
+| `d_spec` | Dense DOS (CDF)  | 1.91  |
+| `d_spec` | KPM integrated   | 0.26  |
 
 The AO prediction `2·d_eff/d_w = 0.62` does **not** match any of the
 directly-measured `d_spec` values (1.91, 2.81, 0.26). The critique's
@@ -97,7 +97,7 @@ cross-validates them on purpose:
 - `d_spec_kpm` / `d_spec_kpm_cdf` from KPM Chebyshev moments (Section 18).
 
 `experiment.md` explicitly names the **dense DOS estimate (1.91)** as the
-reliable one and explains *why* the others are corrupted (KPM rescaling
+reliable one and explains _why_ the others are corrupted (KPM rescaling
 warning, random-walk boundary saturation). This is not a project blind to
 its own fit quality; it is a project that instruments fit quality heavily.
 The skeptic's "they slid from 'script ran' to 'claim proven'" applies to
@@ -117,10 +117,10 @@ prediction** independent of the fit:
 and the BFS cluster size has an exact combinatorial form
 `N(n) ≈ 1 + n·((n-1)³+1)/(n-2)`. The near-linear march in `n` is then not
 "where the line crosses" — it's `log(n)/log(2)` sampled at integer `n`,
-which is *approximately* linear over `n = 3..8`. The skeptic mistook a
+which is _approximately_ linear over `n = 3..8`. The skeptic mistook a
 predicted log curve for an unconstrained linear fit.
 
-Whether that `d_eff` is a *converged* fractal dimension is a separate
+Whether that `d_eff` is a _converged_ fractal dimension is a separate
 question (see §4.2 below) — but it is not arbitrary.
 
 ### 3.3 "Universal d_spec ≈ 1.1 just means you built a 1D backbone"
@@ -138,7 +138,7 @@ dimension separately from the full walk dimension:
 
 Result (`experiment.md`): `d_w_intra ≈ 3.31` vs `d_w_full ≈ 7.62`, ratio
 `0.435`, with **two-thirds of all walker steps crossing a sheet**. So the
-transport is *not* a quasi-1D backbone — it is dominated by inter-sheet
+transport is _not_ a quasi-1D backbone — it is dominated by inter-sheet
 vortex edges, exactly the degree of freedom the construction adds. The
 "you just built a 1D chain" null hypothesis is directly contradicted by
 the per-sheet diagnostic.
@@ -152,11 +152,11 @@ the per-sheet diagnostic.
 The skeptic asked for three controls. The code's status on each:
 
 - **C1 (square lattice → d=2):** `experiment.mac` supports `N_GON=4`. The
-  sweep reports `d_eff(4) = 2.07` (interior) — *near* 2 but not exactly,
+  sweep reports `d_eff(4) = 2.07` (interior) — _near_ 2 but not exactly,
   and the code's own caveat is that BFS depth 3 is too shallow for a
   clean integer recovery. **Partially addressed; not yet a clean pass.**
 - **C2 (Sierpiński → d_f=1.585, d_w=2.32, d_s=1.365):** **Not present.**
-  `analysis.mac` *references* the Sierpiński values as a symbolic
+  `analysis.mac` _references_ the Sierpiński values as a symbolic
   reference point (`d_spec_AO(log3/log2, log5/log2) ≈ 1.365`) but does
   **not** run the BFS/MSD/KPM pipeline on an actual Sierpiński graph. This
   is the single most important missing control and the dialogue was right
@@ -164,7 +164,7 @@ The skeptic asked for three controls. The code's status on each:
 - **C3 (adjacency audit):** The code includes a **bipartiteness check**
   (every edge connects chirality 0↔1 for odd n; 0 violations reported)
   and a **degree-statistics check**. This is a partial adjacency audit,
-  and it passes. But it does not hand-verify *geometric* locality, which
+  and it passes. But it does not hand-verify _geometric_ locality, which
   is where the dialogue's "path bug" suspicion lives.
 
 ### 4.2 The convergence study (F2) is the real gap
@@ -179,8 +179,7 @@ The decisive test — does `d_eff` / `d_spec` plateau as `N → 2N → 4N → 8N
 
 So the strongest version of the skeptic's objection survives: **we do not
 yet know whether `d_eff = 2.37` is a converged dimension or a depth-3
-snapshot.** The code has the machinery (presets up to `xhuge`, BFS depth
-6) but the convergence sweep across depths has not been assembled into a
+snapshot.** The code has the machinery (presets up to `xhuge`, BFS depth 6) but the convergence sweep across depths has not been assembled into a
 single plateau test.
 
 ### 4.3 The holonomy claim is unmeasured at this scale, by the code's own admission
@@ -221,7 +220,7 @@ Because `tau_rule(i,k)` keys on `i` (discovery order) and `k` (local edge
 index), **the sheet a cell lands on can depend on the order in which
 cells were discovered**, which is the BFS frontier order. This is the
 mechanism behind the "race condition" intuition: it is a real
-order-dependence in the *labeling*, not (necessarily) in the *geometry*.
+order-dependence in the _labeling_, not (necessarily) in the _geometry_.
 
 The clean discriminator proposed in the dialogue — compute the
 smallest-loop holonomy product across several runs and check whether it is
@@ -233,15 +232,15 @@ becomes meaningful only at BFS depth ≥ 5.
 
 ## 5. Revised Verdict
 
-| Claim                                      | Status                                                                 |
-|--------------------------------------------|------------------------------------------------------------------------|
-| AO relation closes on headline numbers     | **False.** Code agrees; flags `d_w≈7` as boundary artifact.            |
-| `d_eff ∈ (2,3)` is meaningful              | **Plausible but unconverged.** Has a `log(n)/log 2` prediction; no plateau test. |
-| `d_spec ≈ 1.1` universal                   | **Overstated.** Best single-run value is DOS≈1.91; KPM noisy. Universality claim rests on the sweep, not this run. |
-| Sub-diffusion (`d_spec < d_eff`)           | **Supported** by the reliable DOS estimate (1.91 < 2.37).              |
-| Spinor holonomy on the graph               | **Unmeasured.** True as symbolic group theory; no cycles at depth 3.   |
-| "Rule-dominated, not polygon-dominated"    | **Genuinely supported** by Section 19/20 controls (intra vs full d_w). |
-| Applications (gravity, anyons, crypto)     | **Cut.** Pure analogy; unsupported by any code.                        |
+| Claim                                   | Status                                                                                                             |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| AO relation closes on headline numbers  | **False.** Code agrees; flags `d_w≈7` as boundary artifact.                                                        |
+| `d_eff ∈ (2,3)` is meaningful           | **Plausible but unconverged.** Has a `log(n)/log 2` prediction; no plateau test.                                   |
+| `d_spec ≈ 1.1` universal                | **Overstated.** Best single-run value is DOS≈1.91; KPM noisy. Universality claim rests on the sweep, not this run. |
+| Sub-diffusion (`d_spec < d_eff`)        | **Supported** by the reliable DOS estimate (1.91 < 2.37).                                                          |
+| Spinor holonomy on the graph            | **Unmeasured.** True as symbolic group theory; no cycles at depth 3.                                               |
+| "Rule-dominated, not polygon-dominated" | **Genuinely supported** by Section 19/20 controls (intra vs full d_w).                                             |
+| Applications (gravity, anyons, crypto)  | **Cut.** Pure analogy; unsupported by any code.                                                                    |
 
 The honest one-line summary: **the construction is real and instrumented
 far more carefully than the README suggests, but its three headline
@@ -257,7 +256,7 @@ invariance check at depth ≥ 5.**
 Ordered by leverage, and cross-referenced to existing code:
 
 1. **Sierpiński control (C2).** Add a graph constructor for the gasket and
-   run the *existing* `bfs_volumes`, MSD, and KPM sections on it. Target:
+   run the _existing_ `bfs_volumes`, MSD, and KPM sections on it. Target:
    reproduce `d_f≈1.585, d_w≈2.32, d_s≈1.365`. This reuses Sections 5, 6,
    18 verbatim; only the graph builder is new. **Highest leverage; not yet
    present.**
@@ -277,9 +276,9 @@ Ordered by leverage, and cross-referenced to existing code:
 
 4. **Fix or canonicalize `tau_rule` keying.** Replace the discovery-order
    dependence (`tau_rule(i,k)` on cell ID `i`) with a coordinate-canonical
-   key so the sheet *labels* are reproducible, leaving only genuine gauge
+   key so the sheet _labels_ are reproducible, leaving only genuine gauge
    freedom. Then re-run step 3: if the holonomy product is invariant
-   before *and* after this change, the holonomy is geometric; if it moves,
+   before _and_ after this change, the holonomy is geometric; if it moves,
    it was a labeling race.
 
 5. **Field-universality of `d_spec`.** Run the convergence sweep for
@@ -291,7 +290,7 @@ Steps 1–2 gate everything. If the pipeline reproduces Sierpiński and the
 pentagon dimensions plateau, there is a clean **methods paper** ("a
 cut-and-project / multi-sheeted pipeline for spectral and walk dimensions
 of polygon covers"). If, in addition, AO genuinely fails to close at
-convergence *and* the loop-holonomy is invariant, there is the sharper,
+convergence _and_ the loop-holonomy is invariant, there is the sharper,
 niche result the dialogue identified: **a controlled construction whose
 gauge structure breaks the Alexander–Orbach relation for an identifiable
 reason.** Both outcomes are real; neither requires the applications
