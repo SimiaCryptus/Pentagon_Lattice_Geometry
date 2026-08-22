@@ -1,0 +1,17 @@
+{
+  "name": "ngon-tiling-experiments",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "ES6 port of the Maxima n-gon tiling / Z_2 orientation-cover experiments",
+  "main": "src/index.js",
+  "bin": { "ngon-exp": "src/cli.js" },
+  "scripts": {
+    "smoke": "node src/cli.js sweep --ns 3,4,5,6 --preset tiny",
+    "lattice": "node src/cli.js lattice --n 5 --preset small",
+    "analysis": "node src/cli.js analysis",
+    "erdos": "node src/cli.js erdos",
+    "pinwheel": "node src/cli.js pinwheel",
+    "serve": "python3 -m http.server 8080"
+  },
+  "license": "MIT"
+}

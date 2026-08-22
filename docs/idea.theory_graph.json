@@ -1,0 +1,741 @@
+{
+  "version": "2.0.0",
+  "generated_at": "2024-06-01T00:00:00Z",
+  "generator": { "op": "analyze.op.md", "model": "manual-extraction" },
+  "corpus": {
+    "documents": [
+      {
+        "id": "idea",
+        "path": "idea.md",
+        "order": 1,
+        "title": "Emergent Fractional Dimensionality and Spinor-Like Holonomy in Multi-Sheeted Pentagon Tilings",
+        "dominant_layers": ["inspiration", "symbolic", "deductive", "numeric"]
+      }
+    ]
+  },
+  "context": {
+    "social": {
+      "program": "Discrete quantum-gravity / emergent-dimensionality research",
+      "references": [
+        { "text": "Causal Dynamical Triangulations (CDT)", "kind": "paper" },
+        { "text": "Loop Quantum Gravity", "kind": "paper" },
+        { "text": "Group Field Theory", "kind": "paper" }
+      ]
+    },
+    "ecological": {
+      "constraints": ["Graph is not vertex-transitive and cannot be flattened into a contiguous memory array."],
+      "affordances": ["Spatial hashing keyed by exact Q(sqrt5) coordinates and sheet index for O(1) neighbor lookups."]
+    }
+  },
+  "nodes": [
+    {
+      "id": "trajectory.emergent-fractional-dimensionality",
+      "kind": "trajectory",
+      "name": "Emergent Fractional Dimensionality from Frustrated Pentagon Tilings",
+      "statement": "The paper's research direction is to derive an emergent, non-integer effective dimension and spinor-like holonomy from a purely local 2D pentagon adjacency rule.",
+      "status": "proposed",
+      "confidence": 0.85,
+      "representation": { "layer": "inspiration", "form": "prose-sketch" },
+      "shape": { "descriptor": "geometric frustration resolved by covering space, not curvature or aperiodicity" },
+      "sources": [{ "file": "idea.md", "heading": "Abstract", "quote": "We present a novel discrete geometric framework based on multi-sheeted, overlapping 2D pentagonal tilings." }]
+    },
+    {
+      "id": "analogy.spinor-double-cover",
+      "kind": "analogy",
+      "name": "Sheet Holonomy as Spinor Double Cover",
+      "statement": "The sheet-index holonomy around a pentagonal vortex is analogous to the SU(2) to SO(3) double cover required by spinors.",
+      "status": "proposed",
+      "confidence": 0.8,
+      "representation": { "layer": "inspiration", "form": "prose-sketch" },
+      "shape": { "descriptor": "two full loops needed to restore identity, like a spinor" },
+      "similar_to": [{ "to": "analogy.anyonic-braid-statistics", "score": 0.6, "basis": "shape", "note": "both concern fractional/discrete phase accumulation around a defect" }],
+      "sources": [{ "file": "idea.md", "heading": "3.2. The Spinor Analogy", "quote": "This requirement of multiple full rotations to achieve identity is the precise discrete geometric analogue of spinor holonomy." }]
+    },
+    {
+      "id": "analogy.anyonic-braid-statistics",
+      "kind": "analogy",
+      "name": "Sheet Transitions as Anyonic Braid Statistics",
+      "statement": "The sheet-transition group resembles a discrete braid group in which a glider looping a defect accumulates a fractional phase, mimicking anyonic statistics.",
+      "status": "proposed",
+      "confidence": 0.75,
+      "representation": { "layer": "inspiration", "form": "prose-sketch" },
+      "sources": [{ "file": "idea.md", "heading": "3.3. Connection to Anyons and Braid Statistics", "quote": "This mimics anyonic statistics observed in condensed matter and offers a fully discrete, coordinate-free toy model for topological quantum computing primitives." }]
+    },
+    {
+      "id": "domain_mapping.pentagon-frustration-to-gauge-bundle",
+      "kind": "domain_mapping",
+      "name": "Pentagon Frustration Mapped onto Discrete Gauge Bundle",
+      "statement": "The systematic correspondence between pentagon edge-matching transitions and a discrete principal G-bundle connection maps geometric frustration onto gauge-theoretic holonomy.",
+      "status": "proposed",
+      "confidence": 0.7,
+      "representation": { "layer": "inspiration", "form": "prose-sketch" },
+      "sources": [{ "file": "idea.md", "heading": "Abstract", "quote": "the resulting structure is a discrete principal $G$-bundle whose monodromy realizes spinor-like holonomy" }]
+    },
+    {
+      "id": "knowledge_gap.continuous-limit-unknown",
+      "kind": "knowledge_gap",
+      "name": "Continuous Limit of the Multi-Sheeted Tiling Is Unknown",
+      "statement": "It is unknown whether the multi-sheeted tiling converges to a smooth non-Euclidean manifold, a singular metric space, or a quantum-gravitational fractal as tile size shrinks.",
+      "status": "proposed",
+      "confidence": 0.7,
+      "representation": { "layer": "inspiration", "form": "prose-sketch" },
+      "sources": [{ "file": "idea.md", "heading": "7.3. Open Questions", "quote": "Does the multi-sheeted tiling converge to a smooth non-Euclidean manifold, a singular metric space, or a quantum-gravitational fractal in the limit of infinitely small tile size?" }]
+    },
+    {
+      "id": "lemma.pentagon-vertex-angle-frustration",
+      "kind": "lemma",
+      "name": "Regular Pentagons Cannot Tile the Plane Flatly Around a Vertex",
+      "statement": "Three regular pentagons at a shared vertex sum to 324 degrees leaving a 36 degree gap, and four sum to 432 degrees producing a 72 degree overlap, so no flat monohedral pentagon tiling exists.",
+      "formal": "3\\times108^\\circ=324^\\circ,\\ \\delta=36^\\circ;\\quad 4\\times108^\\circ=432^\\circ,\\ \\text{excess}=72^\\circ",
+      "status": "accepted",
+      "confidence": 0.95,
+      "representation": { "layer": "deductive", "form": "proof-term", "content": "324deg gap 36deg; 432deg excess 72deg" },
+      "attributes": [
+        { "key": "interior_angle", "value": 108, "unit": "deg" },
+        { "key": "three_pentagon_gap", "value": 36, "unit": "deg" },
+        { "key": "four_pentagon_excess", "value": 72, "unit": "deg" }
+      ],
+      "sources": [{ "file": "idea.md", "heading": "2.1. The Frustration of Pentagonal Packing", "quote": "Three pentagons share a vertex, summing to 324°, leaving an angular deficit of 36°" }]
+    },
+    {
+      "id": "definition.multi-sheeted-covering-space",
+      "kind": "definition",
+      "name": "Multi-Sheeted Covering Space over the Plane",
+      "statement": "A covering space M with projection pi to R^2 consists of an infinite stack of 2D sheets indexed by a discrete fiber group G, with pentagons identified by centroid, orientation and sheet index.",
+      "formal": "\\pi:\\mathcal{M}\\to\\mathbb{R}^2,\\ s\\in G",
+      "status": "accepted",
+      "confidence": 0.9,
+      "representation": { "layer": "symbolic", "form": "definition" },
+      "sources": [{ "file": "idea.md", "heading": "2.2. The Multi-Sheeted Covering Space", "quote": "We define a covering space $\\mathcal{M}$ over the Euclidean plane $\\mathbb{R}^2$." }]
+    },
+    {
+      "id": "rewrite_rule.identical-edge-adjacency",
+      "kind": "rewrite_rule",
+      "name": "Identical Edge Adjacency Rule",
+      "statement": "Two pentagons on possibly different sheets are adjacent iff their projected edges match identically in position and orientation, with the sheet transition governed by a transition function tau(e).",
+      "formal": "\\pi(e_i)=\\pi(e_j),\\ \\tau(e)\\in G",
+      "status": "accepted",
+      "confidence": 0.9,
+      "representation": { "layer": "symbolic", "form": "rewrite-rule" },
+      "sources": [{ "file": "idea.md", "heading": "2.2. The Multi-Sheeted Covering Space", "quote": "Two pentagons $P_{i,s}$ and $P_{j,s'}$ share an edge $e$ if and only if... Their projected edges in $\\mathbb{R}^2$ match identically" }]
+    },
+    {
+      "id": "definition.exact-quadratic-field-representation",
+      "kind": "definition",
+      "name": "Exact Q(sqrt5) Coordinate Representation",
+      "statement": "Pentagon centroids and orientations are represented exactly as elements of the real quadratic field Q(sqrt5), stored as 4-tuples of rationals, to make edge-equality tests exact.",
+      "formal": "x=a+b\\sqrt5,\\ y=c+d\\sqrt5,\\ (a,b,c,d)\\in\\mathbb{Q}^4",
+      "status": "accepted",
+      "confidence": 0.9,
+      "representation": { "layer": "symbolic", "form": "definition" },
+      "sources": [{ "file": "idea.md", "heading": "2.3. Algebraic Foundation", "quote": "we mandate that all coordinates and orientations be represented exactly as elements of the real quadratic field $\\mathbb{Q}(\\sqrt{5})$" }]
+    },
+    {
+      "id": "heuristic.floating-point-topological-tearing",
+      "kind": "heuristic",
+      "name": "Float64 Arithmetic Causes Topological Tearing",
+      "statement": "Naive float64 arithmetic accumulates rounding errors across edge-matching tests that spuriously merge distinct pentagons or miss true matches, tearing the covering space.",
+      "status": "supported",
+      "confidence": 0.6,
+      "representation": { "layer": "fuzzy", "form": "prose-sketch" },
+      "notes": "Asserted as a design pitfall without a formal proof; treated as heuristic risk rather than proven theorem.",
+      "sources": [{ "file": "idea.md", "heading": "2.3. Algebraic Foundation", "quote": "producing _topological tearing_ of the covering space" }]
+    },
+    {
+      "id": "conjecture.cyclotomic-density-trap",
+      "kind": "conjecture",
+      "name": "Unconstrained Sheet-Stacking Densifies Projected Vertices",
+      "statement": "Without a selection window, free orbits of the pentagonal rotation group densify in R^2, causing the projected vertex set to become dense and local finiteness to fail.",
+      "status": "proposed",
+      "confidence": 0.65,
+      "representation": { "layer": "fuzzy", "form": "prose-sketch" },
+      "sources": [{ "file": "idea.md", "heading": "2.4. Topological Regularization", "quote": "free orbits of the pentagonal rotation group densify in $\\mathbb{R}^2$; without restriction, the projected vertex set $\\pi(\\mathcal{V})$ becomes dense" }]
+    },
+    {
+      "id": "definition.cut-and-project-window",
+      "kind": "definition",
+      "name": "Cut-and-Project Acceptance Window",
+      "statement": "A pentagon is admitted into the simulation graph iff its lift into the 5D ambient lattice Z^5 projects within a bounded acceptance window W in the orthogonal complement of the chosen 2D physical subspace.",
+      "formal": "W\\subset\\mathbb{R}^3",
+      "status": "accepted",
+      "confidence": 0.85,
+      "representation": {
+        "layer": "symbolic",
+        "form": "definition",
+        "interfaces": [{ "to": "ecological", "via": "ecological_constraint", "available": true, "target": "constraint.non-vertex-transitive-memory" }]
+      },
+      "sources": [{ "file": "idea.md", "heading": "2.4. Topological Regularization", "quote": "A pentagon labelled by sheet $s$ is admitted into the simulation graph $\\mathcal{G}$ if and only if its lift into $\\mathbb{Z}^5$ projects within $W$." }]
+    },
+    {
+      "id": "lemma.vortex-sheet-holonomy",
+      "kind": "lemma",
+      "name": "Closed Loops Around a Vertex Accumulate Non-Trivial Sheet Holonomy",
+      "statement": "A closed loop of adjacent pentagons around a vertex accumulates a net sheet-index shift given by the sum of transition steps along the path, and for loops enclosing a vortex this net shift is nonzero.",
+      "formal": "s_k=s_1+\\sum_{m=1}^{k-1}\\Delta s(P_m,P_{m+1})",
+      "status": "accepted",
+      "confidence": 0.75,
+      "representation": { "layer": "deductive", "form": "proof-term" },
+      "sources": [{ "file": "idea.md", "heading": "3.1. The Vortex Mechanism", "quote": "For a non-trivial loop enclosing a vortex defect, the net sheet transition $\\Delta s_{\\text{tot}} \\neq 0$." }]
+    },
+    {
+      "id": "definition.connectivity-dimension",
+      "kind": "definition",
+      "name": "Connectivity (Hausdorff-Like) Dimension",
+      "statement": "The connectivity dimension d_eff governs neighborhood volume growth V(r) proportional to r to the d_eff.",
+      "formal": "V(r)\\sim r^{d_{\\text{eff}}}",
+      "status": "accepted",
+      "confidence": 0.85,
+      "representation": { "layer": "symbolic", "form": "definition" },
+      "sources": [{ "file": "idea.md", "heading": "4. Emergent Dimensionality and Fractional Geometry", "quote": "The **connectivity (Hausdorff-like) dimension** $d_{\\text{eff}}$, governing volume growth $V(r) \\sim r^{d_{\\text{eff}}}$." }]
+    },
+    {
+      "id": "definition.spectral-dimension",
+      "kind": "definition",
+      "name": "Spectral Dimension",
+      "statement": "The spectral dimension d_spec governs diffusion and return probabilities P_0(t) proportional to t to the minus d_spec over 2.",
+      "formal": "P_0(t)\\sim t^{-d_{\\text{spec}}/2}",
+      "status": "accepted",
+      "confidence": 0.85,
+      "representation": { "layer": "symbolic", "form": "definition" },
+      "sources": [{ "file": "idea.md", "heading": "4. Emergent Dimensionality and Fractional Geometry", "quote": "The **spectral dimension** $d_{\\text{spec}}$, governing diffusion and return probabilities $P_0(t) \\sim t^{-d_{\\text{spec}}/2}$." }]
+    },
+    {
+      "id": "conjecture.fractional-effective-dimension",
+      "kind": "conjecture",
+      "name": "Effective Dimension Lies Strictly Between 2 and 3",
+      "statement": "Because pentagon overlaps and sheet transitions cannot be regularized into a periodic 3D lattice, the effective connectivity dimension is fractional and strictly between 2 and 3.",
+      "formal": "2 < d_{\\text{eff}} < 3",
+      "status": "proposed",
+      "confidence": 0.6,
+      "representation": { "layer": "fuzzy", "form": "prose-sketch" },
+      "sources": [{ "file": "idea.md", "heading": "4.2. The Fractional Dimension Regime", "quote": "The effective dimension $d_{\\text{eff}}$ is fractional: $2 < d_{\\text{eff}} < 3.$" }]
+    },
+    {
+      "id": "conjecture.spectral-less-than-effective",
+      "kind": "conjecture",
+      "name": "Spectral Dimension Is Strictly Less Than Effective Dimension",
+      "statement": "Vortex-mediated bottlenecks make random walks sub-diffusive with walk dimension greater than 2, so via the Alexander-Orbach relation the spectral dimension is strictly less than the effective dimension and both exhibit dimensional flow.",
+      "formal": "d_{\\text{spec}} = \\frac{2 d_{\\text{eff}}}{d_w},\\quad d_w>2",
+      "status": "proposed",
+      "confidence": 0.6,
+      "representation": { "layer": "fuzzy", "form": "prose-sketch" },
+      "attributes": [{ "key": "walk_dimension_condition", "value": "d_w > 2", "layer": "numeric" }],
+      "sources": [{ "file": "idea.md", "heading": "4.3. Dimensional Decoupling and Anomalous Diffusion", "quote": "we expect a strict inequality $d_{\\text{spec}} < d_{\\text{eff}}$, with both quantities exhibiting **dimensional flow**" }]
+    },
+    {
+      "id": "bound.alexander-orbach-relation",
+      "kind": "bound",
+      "name": "Alexander-Orbach-Type Relation Bounding Spectral Dimension",
+      "statement": "The spectral dimension equals twice the effective dimension divided by the walk dimension.",
+      "formal": "d_{\\text{spec}} = \\frac{2 d_{\\text{eff}}}{d_w}",
+      "status": "proposed",
+      "confidence": 0.7,
+      "representation": { "layer": "numeric", "form": "interval" },
+      "sources": [{ "file": "idea.md", "heading": "4.3. Dimensional Decoupling and Anomalous Diffusion", "quote": "Via the Alexander–Orbach-type relation $d_{\\text{spec}} = \\frac{2 d_{\\text{eff}}}{d_w}$" }]
+    },
+    {
+      "id": "model.isometric-cellular-automaton",
+      "kind": "model",
+      "name": "Isometric Cellular Automaton on the Sheet Graph",
+      "statement": "An isometric cellular automaton assigns each pentagon a state updated by a local transition rule depending on the states of its graph neighbors, naturally suggesting 5-regular outer-totalistic rule families.",
+      "formal": "\\sigma_i^{t+1} = f(\\sigma_i^t, \\{\\sigma_j^t\\}_{j\\in\\mathcal{N}(i)})",
+      "status": "proposed",
+      "confidence": 0.8,
+      "representation": { "layer": "symbolic", "form": "model" },
+      "sources": [{ "file": "idea.md", "heading": "5.1. Formal Definition", "quote": "Each pentagon has exactly 5 edges, suggesting natural _5-regular outer-totalistic_ rule families" }]
+    },
+    {
+      "id": "model.causal-cellular-automaton",
+      "kind": "model",
+      "name": "Causal Extension of the Isometric CA",
+      "statement": "Reinterpreting the sheet stack as a foliation of space-like slices along a directed time axis, with admissible transitions restricted to respect causal ordering, converts the ICA into a causal cellular automaton analogous to CDT.",
+      "status": "proposed",
+      "confidence": 0.65,
+      "representation": { "layer": "symbolic", "form": "model" },
+      "sources": [{ "file": "idea.md", "heading": "5.2. Causal Extension", "quote": "This converts the ICA into a **Causal Cellular Automaton**, analogous to the time-oriented building rules of CDT." }]
+    },
+    {
+      "id": "proto_pattern.glider-splitting-and-vortex-scattering",
+      "kind": "proto_pattern",
+      "name": "Gliders Split and Scatter at Sheet Transitions and Vortices",
+      "statement": "Gliders traveling along a sheet can split at matching edges into components continuing on the same sheet and components jumping to another sheet, and vortex defects scatter gliders analogously to Aharonov-Bohm scattering.",
+      "status": "pre_formal",
+      "confidence": 0.55,
+      "representation": { "layer": "fuzzy", "form": "prose-sketch" },
+      "shape": { "descriptor": "topological defect as scattering center for discrete signal propagation" },
+      "sources": [{ "file": "idea.md", "heading": "5.3. Dynamical Properties", "quote": "Vortex Scattering**: Topological defects act as scattering centers for gliders, rotating their direction of propagation or shifting their sheet index" }]
+    },
+    {
+      "id": "constraint.non-vertex-transitive-memory",
+      "kind": "constraint",
+      "name": "Graph Is Not Vertex-Transitive, Barring Array Flattening",
+      "statement": "Because the sheet graph is not vertex-transitive, it cannot be flattened into a contiguous memory array, requiring lazy generation and spatial hashing for simulation.",
+      "status": "accepted",
+      "confidence": 0.85,
+      "representation": { "layer": "ecological", "form": "prose-sketch" },
+      "sources": [{ "file": "idea.md", "heading": "5.4. Computational Considerations", "quote": "Because $\\mathcal{G}$ is _not vertex-transitive_, it cannot be flattened into a contiguous memory array as ordinary 2D CA can." }]
+    },
+    {
+      "id": "open_question.domino-problem-decidability",
+      "kind": "open_question",
+      "name": "Global Consistency of Arbitrary Transition Choices Is Undecidable",
+      "statement": "Determining whether an arbitrary choice of transition function tau yields a globally consistent infinite cover is undecidable in general, a variant of the Domino Problem, which the cut-and-project construction sidesteps.",
+      "status": "pre_formal",
+      "confidence": 0.6,
+      "representation": { "layer": "fuzzy", "form": "prose-sketch" },
+      "sources": [{ "file": "idea.md", "heading": "5.4. Computational Considerations", "quote": "determining whether an arbitrary choice of $\\tau$ yields a globally consistent infinite cover is undecidable in general (a variant of the Domino Problem)" }]
+    },
+    {
+      "id": "model.adjacency-oracle",
+      "kind": "model",
+      "name": "Exact Adjacency Oracle",
+      "statement": "The adjacency oracle computes a cell's edges exactly over Q(sqrt5), looks up matching edges by exact rational comparison, and filters candidates by the cut-and-project acceptance window.",
+      "status": "accepted",
+      "confidence": 0.85,
+      "representation": {
+        "layer": "symbolic",
+        "form": "model",
+        "content": "def get_neighbors(cell_id): ... exact rational comparisons ...",
+        "interfaces": [{ "to": "numeric", "via": "evaluate", "available": true, "target": "experiment.bfs-volume-growth" }]
+      },
+      "sources": [{ "file": "idea.md", "heading": "6.1. The Adjacency Oracle", "quote": "All coordinates live in Q(sqrt(5))^2; comparisons are exact." }]
+    },
+    {
+      "id": "experiment.bfs-volume-growth",
+      "kind": "experiment",
+      "name": "BFS Volume-Growth Measurement of Connectivity Dimension",
+      "statement": "A breadth-first search from an origin cell out to radius R records the number of unique cells within each distance, and a log-log linear regression of N(r) against r yields the effective connectivity dimension via finite-size scaling across origins.",
+      "formal": "\\ln N(r) = d_{\\text{eff}} \\ln r + \\ln C",
+      "status": "proposed",
+      "confidence": 0.75,
+      "representation": { "layer": "numeric", "form": "benchmark-row" },
+      "sources": [{ "file": "idea.md", "heading": "6.2. Connectivity Dimension via Expansion Bounds", "quote": "perform a linear regression on the log-log data: $\\ln N(r) = d_{\\text{eff}} \\ln r + \\ln C$." }]
+    },
+    {
+      "id": "experiment.random-walk-spectral-dimension",
+      "kind": "experiment",
+      "name": "Random-Walk Estimate of Spectral and Walk Dimension",
+      "statement": "M independent random walks from an origin cell yield mean-squared displacement and return-probability statistics from which d_spec and d_w are fit, though the method is noisy at long times.",
+      "formal": "\\langle \\Delta x^2(t) \\rangle \\sim t^{2/d_w}",
+      "status": "proposed",
+      "confidence": 0.7,
+      "representation": { "layer": "numeric", "form": "benchmark-row" },
+      "sources": [{ "file": "idea.md", "heading": "6.3. Spectral Dimension via Random Walks", "quote": "Random-walk estimates of $P_0(t)$ are, however, noisy at long times; we recommend treating them as a sanity check" }]
+    },
+    {
+      "id": "model.kpm-graph-laplacian",
+      "kind": "model",
+      "name": "KPM Spectral Analysis of the Graph Laplacian",
+      "statement": "The graph Laplacian Delta = D - A is expanded in Chebyshev polynomials via the Kernel Polynomial Method to reconstruct the density of states, whose low-energy power-law scaling gives a high-precision spectral dimension, cross-checked with shift-invert Lanczos and finite-size scaling.",
+      "formal": "\\rho(\\lambda) \\sim \\lambda^{d_{\\text{spec}}/2 - 1}",
+      "status": "proposed",
+      "confidence": 0.75,
+      "representation": { "layer": "symbolic", "form": "model" },
+      "sources": [{ "file": "idea.md", "heading": "6.4. Spectral Dimension via the Graph Laplacian and KPM", "quote": "We expand $\\rho(\\lambda)$ in Chebyshev polynomials via the **Kernel Polynomial Method (KPM)**" }]
+    },
+    {
+      "id": "research_program.discrete-quantum-gravity-toy-model",
+      "kind": "research_program",
+      "name": "Discrete Toy Model for Emergent Spacetime Dimensional Flow",
+      "statement": "The predicted dimensional flow of d_spec(t) is proposed as a tractable discrete toy model analogous to IR dimensional reduction in CDT and asymptotic safety scenarios for quantum gravity.",
+      "status": "proposed",
+      "confidence": 0.7,
+      "representation": { "layer": "social", "form": "prose-sketch" },
+      "social": { "program": "Emergent spacetime / dimensional flow research", "references": [{ "text": "Causal Dynamical Triangulations", "kind": "paper" }, { "text": "Asymptotic safety", "kind": "paper" }] },
+      "sources": [{ "file": "idea.md", "heading": "7.1. Connection to Quantum Gravity and Anyons", "quote": "suggesting the framework as a tractable toy model for emergent spacetime" }]
+    },
+    {
+      "id": "open_question.sheet-transition-group-classification",
+      "kind": "open_question",
+      "name": "Algebraic Classification of Sheet-Transition Groups Is Open",
+      "statement": "It is unknown what algebraic structure the group generated by sheet transitions has, whether it is finitely presented, and which choices of G and tau yield decidable, locally finite covers.",
+      "status": "pre_formal",
+      "confidence": 0.7,
+      "representation": { "layer": "fuzzy", "form": "prose-sketch" },
+      "sources": [{ "file": "idea.md", "heading": "7.3. Open Questions", "quote": "What is the algebraic structure of the group generated by the sheet transitions?" }]
+    },
+    {
+      "id": "open_question.ca-universality-classes",
+      "kind": "open_question",
+      "name": "Whether Standard CA Rules Remain Stable Under Fractional-Dimensional Lift",
+      "statement": "It is open whether standard 2D CA rules such as Conway's Game of Life remain active and stable when lifted to this fractional-dimensional geometry, and whether 5-regular outer-totalistic rules can be tuned to Turing-universal behavior.",
+      "status": "pre_formal",
+      "confidence": 0.65,
+      "representation": { "layer": "fuzzy", "form": "prose-sketch" },
+      "sources": [{ "file": "idea.md", "heading": "7.3. Open Questions", "quote": "Can 5-regular outer-totalistic rules be tuned to Turing-universal behavior?" }]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e.lemma.pentagon-vertex-angle-frustration.motivates.definition.multi-sheeted-covering-space",
+      "from": "lemma.pentagon-vertex-angle-frustration",
+      "to": "definition.multi-sheeted-covering-space",
+      "relation": "motivates",
+      "confidence": 0.85,
+      "sources": [{ "file": "idea.md", "heading": "2.2. The Multi-Sheeted Covering Space", "quote": "we resolve this constraint by lifting the tiling to a multi-sheeted covering space" }]
+    },
+    {
+      "id": "e.definition.multi-sheeted-covering-space.assumes.rewrite_rule.identical-edge-adjacency",
+      "from": "definition.multi-sheeted-covering-space",
+      "to": "rewrite_rule.identical-edge-adjacency",
+      "relation": "assumes",
+      "confidence": 0.8,
+      "sources": [{ "file": "idea.md", "heading": "2.2. The Multi-Sheeted Covering Space", "quote": "We impose the following rules: ... Identical Edge Adjacency" }]
+    },
+    {
+      "id": "e.heuristic.floating-point-topological-tearing.motivates.definition.exact-quadratic-field-representation",
+      "from": "heuristic.floating-point-topological-tearing",
+      "to": "definition.exact-quadratic-field-representation",
+      "relation": "motivates",
+      "confidence": 0.8,
+      "sources": [{ "file": "idea.md", "heading": "2.3. Algebraic Foundation", "quote": "We therefore mandate that all coordinates and orientations be represented exactly" }]
+    },
+    {
+      "id": "e.conjecture.cyclotomic-density-trap.motivates.definition.cut-and-project-window",
+      "from": "conjecture.cyclotomic-density-trap",
+      "to": "definition.cut-and-project-window",
+      "relation": "motivates",
+      "confidence": 0.8,
+      "sources": [{ "file": "idea.md", "heading": "2.4. Topological Regularization", "quote": "The remedy, well-known from quasicrystal theory, is the **cut-and-project method**." }]
+    },
+    {
+      "id": "e.definition.cut-and-project-window.constrains.conjecture.fractional-effective-dimension",
+      "from": "definition.cut-and-project-window",
+      "to": "conjecture.fractional-effective-dimension",
+      "relation": "constrains",
+      "confidence": 0.6,
+      "sources": [{ "file": "idea.md", "heading": "2.4. Topological Regularization", "quote": "Keeps $d_{\\text{eff}}$ bounded strictly inside $(2,3)$." }]
+    },
+    {
+      "id": "e.rewrite_rule.identical-edge-adjacency.implies.lemma.vortex-sheet-holonomy",
+      "from": "rewrite_rule.identical-edge-adjacency",
+      "to": "lemma.vortex-sheet-holonomy",
+      "relation": "implies",
+      "confidence": 0.75,
+      "sources": [{ "file": "idea.md", "heading": "3.1. The Vortex Mechanism", "quote": "the total accumulated angle after returning to the starting projected position is not $2\\pi$" }]
+    },
+    {
+      "id": "e.lemma.pentagon-vertex-angle-frustration.depends_on.lemma.vortex-sheet-holonomy",
+      "from": "lemma.vortex-sheet-holonomy",
+      "to": "lemma.pentagon-vertex-angle-frustration",
+      "relation": "depends_on",
+      "confidence": 0.75,
+      "sources": [{ "file": "idea.md", "heading": "3.1. The Vortex Mechanism", "quote": "Because the angular sum around a vertex of packed pentagons is not equal to $360^\\circ$" }]
+    },
+    {
+      "id": "e.lemma.vortex-sheet-holonomy.abstracts.analogy.spinor-double-cover",
+      "from": "lemma.vortex-sheet-holonomy",
+      "to": "analogy.spinor-double-cover",
+      "relation": "abstracts",
+      "confidence": 0.7,
+      "sources": [{ "file": "idea.md", "heading": "3.2. The Spinor Analogy", "quote": "Choosing $G = \\mathbb{Z}_2$ recovers the canonical spinor double cover exactly" }]
+    },
+    {
+      "id": "e.analogy.spinor-double-cover.analogous_to.analogy.anyonic-braid-statistics",
+      "from": "analogy.spinor-double-cover",
+      "to": "analogy.anyonic-braid-statistics",
+      "relation": "analogous_to",
+      "confidence": 0.6,
+      "sources": [{ "file": "idea.md", "heading": "3.3. Connection to Anyons and Braid Statistics", "quote": "The sheet-transition group is structurally close to a discrete braid group" }]
+    },
+    {
+      "id": "e.lemma.pentagon-vertex-angle-frustration.motivates.conjecture.fractional-effective-dimension",
+      "from": "lemma.pentagon-vertex-angle-frustration",
+      "to": "conjecture.fractional-effective-dimension",
+      "relation": "motivates",
+      "confidence": 0.65,
+      "sources": [{ "file": "idea.md", "heading": "4.2. The Fractional Dimension Regime", "quote": "because regular pentagons cannot tile the plane periodically, the overlaps and sheet transitions cannot be regularized into a clean, periodic 3D lattice" }]
+    },
+    {
+      "id": "e.conjecture.fractional-effective-dimension.implies.conjecture.spectral-less-than-effective",
+      "from": "conjecture.fractional-effective-dimension",
+      "to": "conjecture.spectral-less-than-effective",
+      "relation": "implies",
+      "confidence": 0.55,
+      "sources": [{ "file": "idea.md", "heading": "4.3. Dimensional Decoupling and Anomalous Diffusion", "quote": "we expect a strict inequality $d_{\\text{spec}} < d_{\\text{eff}}$" }]
+    },
+    {
+      "id": "e.bound.alexander-orbach-relation.supports.conjecture.spectral-less-than-effective",
+      "from": "bound.alexander-orbach-relation",
+      "to": "conjecture.spectral-less-than-effective",
+      "relation": "supports",
+      "confidence": 0.7,
+      "sources": [{ "file": "idea.md", "heading": "4.3. Dimensional Decoupling and Anomalous Diffusion", "quote": "Via the Alexander–Orbach-type relation" }]
+    },
+    {
+      "id": "e.definition.connectivity-dimension.tests.experiment.bfs-volume-growth",
+      "from": "experiment.bfs-volume-growth",
+      "to": "definition.connectivity-dimension",
+      "relation": "measures",
+      "confidence": 0.8,
+      "sources": [{ "file": "idea.md", "heading": "6.2. Connectivity Dimension via Expansion Bounds", "quote": "The slope yields the effective connectivity dimension." }]
+    },
+    {
+      "id": "e.experiment.random-walk-spectral-dimension.measures.definition.spectral-dimension",
+      "from": "experiment.random-walk-spectral-dimension",
+      "to": "definition.spectral-dimension",
+      "relation": "measures",
+      "confidence": 0.7,
+      "sources": [{ "file": "idea.md", "heading": "6.3. Spectral Dimension via Random Walks", "quote": "Fit exponents to extract $d_{\\text{spec}}$ and $d_w$." }]
+    },
+    {
+      "id": "e.model.kpm-graph-laplacian.refines.experiment.random-walk-spectral-dimension",
+      "from": "model.kpm-graph-laplacian",
+      "to": "experiment.random-walk-spectral-dimension",
+      "relation": "refines",
+      "confidence": 0.7,
+      "sources": [{ "file": "idea.md", "heading": "6.4. Spectral Dimension via the Graph Laplacian and KPM", "quote": "avoids the noise inherent in Monte Carlo random walks" }]
+    },
+    {
+      "id": "e.model.adjacency-oracle.depends_on.definition.exact-quadratic-field-representation",
+      "from": "model.adjacency-oracle",
+      "to": "definition.exact-quadratic-field-representation",
+      "relation": "depends_on",
+      "confidence": 0.85,
+      "sources": [{ "file": "idea.md", "heading": "6.1. The Adjacency Oracle", "quote": "All coordinates live in Q(sqrt(5))^2; comparisons are exact." }]
+    },
+    {
+      "id": "e.model.adjacency-oracle.depends_on.definition.cut-and-project-window",
+      "from": "model.adjacency-oracle",
+      "to": "definition.cut-and-project-window",
+      "relation": "depends_on",
+      "confidence": 0.8,
+      "sources": [{ "file": "idea.md", "heading": "6.1. The Adjacency Oracle", "quote": "admissibility is further filtered by the cut-and-project window" }]
+    },
+    {
+      "id": "e.constraint.non-vertex-transitive-memory.constrains.model.isometric-cellular-automaton",
+      "from": "constraint.non-vertex-transitive-memory",
+      "to": "model.isometric-cellular-automaton",
+      "relation": "constrains",
+      "confidence": 0.75,
+      "sources": [{ "file": "idea.md", "heading": "5.4. Computational Considerations", "quote": "Efficient simulation requires: Lazy graph generation... Spatial hashing" }]
+    },
+    {
+      "id": "e.model.isometric-cellular-automaton.refines.model.causal-cellular-automaton",
+      "from": "model.causal-cellular-automaton",
+      "to": "model.isometric-cellular-automaton",
+      "relation": "generalizes",
+      "confidence": 0.6,
+      "sources": [{ "file": "idea.md", "heading": "5.2. Causal Extension", "quote": "This converts the ICA into a **Causal Cellular Automaton**" }]
+    },
+    {
+      "id": "e.model.isometric-cellular-automaton.motivates.proto_pattern.glider-splitting-and-vortex-scattering",
+      "from": "model.isometric-cellular-automaton",
+      "to": "proto_pattern.glider-splitting-and-vortex-scattering",
+      "relation": "motivates",
+      "confidence": 0.6,
+      "sources": [{ "file": "idea.md", "heading": "5.3. Dynamical Properties", "quote": "Because the neighborhood relation is purely local in the graph $\\mathcal{G}$, the CA rules are locally 2D." }]
+    },
+    {
+      "id": "e.lemma.vortex-sheet-holonomy.motivates.proto_pattern.glider-splitting-and-vortex-scattering",
+      "from": "lemma.vortex-sheet-holonomy",
+      "to": "proto_pattern.glider-splitting-and-vortex-scattering",
+      "relation": "motivates",
+      "confidence": 0.55,
+      "sources": [{ "file": "idea.md", "heading": "5.3. Dynamical Properties", "quote": "Vortex Scattering**: Topological defects act as scattering centers for gliders" }]
+    },
+    {
+      "id": "e.definition.cut-and-project-window.motivates.open_question.domino-problem-decidability",
+      "from": "definition.cut-and-project-window",
+      "to": "open_question.domino-problem-decidability",
+      "relation": "motivates",
+      "confidence": 0.55,
+      "sources": [{ "file": "idea.md", "heading": "5.4. Computational Considerations", "quote": "the cut-and-project construction sidesteps this by providing an _a priori_ consistent rule family" }]
+    },
+    {
+      "id": "e.open_question.domino-problem-decidability.motivates.open_question.sheet-transition-group-classification",
+      "from": "open_question.domino-problem-decidability",
+      "to": "open_question.sheet-transition-group-classification",
+      "relation": "motivates",
+      "confidence": 0.5,
+      "sources": [{ "file": "idea.md", "heading": "7.3. Open Questions", "quote": "Which choices of $G$ and $\\tau$ yield decidable, locally finite covers?" }]
+    },
+    {
+      "id": "e.model.isometric-cellular-automaton.motivates.open_question.ca-universality-classes",
+      "from": "model.isometric-cellular-automaton",
+      "to": "open_question.ca-universality-classes",
+      "relation": "motivates",
+      "confidence": 0.6,
+      "sources": [{ "file": "idea.md", "heading": "7.3. Open Questions", "quote": "Do standard 2D CA rules (like Conway's Game of Life) remain active and stable when lifted to this fractional-dimensional geometry" }]
+    },
+    {
+      "id": "e.conjecture.spectral-less-than-effective.steers.research_program.discrete-quantum-gravity-toy-model",
+      "from": "conjecture.spectral-less-than-effective",
+      "to": "research_program.discrete-quantum-gravity-toy-model",
+      "relation": "motivates",
+      "confidence": 0.6,
+      "sources": [{ "file": "idea.md", "heading": "7.1. Connection to Quantum Gravity and Anyons", "quote": "The dimensional flow $d_{\\text{spec}}(t)$ predicted in Section 4.3 is qualitatively analogous to the IR dimensional reduction observed in CDT" }]
+    },
+    {
+      "id": "e.trajectory.emergent-fractional-dimensionality.steers.domain_mapping.pentagon-frustration-to-gauge-bundle",
+      "from": "trajectory.emergent-fractional-dimensionality",
+      "to": "domain_mapping.pentagon-frustration-to-gauge-bundle",
+      "relation": "steers",
+      "confidence": 0.6,
+      "sources": [{ "file": "idea.md", "heading": "Abstract", "quote": "In this space, overlapping pentagons are assigned to distinct sheets" }]
+    },
+    {
+      "id": "e.trajectory.emergent-fractional-dimensionality.steers.knowledge_gap.continuous-limit-unknown",
+      "from": "trajectory.emergent-fractional-dimensionality",
+      "to": "knowledge_gap.continuous-limit-unknown",
+      "relation": "steers",
+      "confidence": 0.5,
+      "sources": [{ "file": "idea.md", "heading": "7.3. Open Questions", "quote": "Continuous Limit" }]
+    }
+  ],
+  "morphisms": [
+    {
+      "id": "m.definition.multi-sheeted-covering-space.embed.lemma.vortex-sheet-holonomy",
+      "kind": "embed",
+      "from": "definition.multi-sheeted-covering-space",
+      "to": "lemma.vortex-sheet-holonomy",
+      "state": "performed",
+      "confidence": 0.7,
+      "sources": [{ "file": "idea.md", "heading": "3. Spinor-Like Holonomy and Topological Defects", "quote": "Formally, $\\mathcal{M}$ is a discrete principal $G$-bundle over the punctured plane" }]
+    },
+    {
+      "id": "m.lemma.vortex-sheet-holonomy.abstract.analogy.spinor-double-cover",
+      "kind": "abstract",
+      "from": "lemma.vortex-sheet-holonomy",
+      "to": "analogy.spinor-double-cover",
+      "state": "performed",
+      "loss": "drops the exact G=Z_n transition structure, keeps only the double-cover intuition",
+      "confidence": 0.65,
+      "sources": [{ "file": "idea.md", "heading": "3.2. The Spinor Analogy", "quote": "Choosing $G = \\mathbb{Z}_2$ recovers the canonical spinor double cover exactly" }]
+    },
+    {
+      "id": "m.conjecture.cyclotomic-density-trap.formalize_symbolic.definition.cut-and-project-window",
+      "kind": "formalize_symbolic",
+      "from": "conjecture.cyclotomic-density-trap",
+      "to": "definition.cut-and-project-window",
+      "state": "performed",
+      "confidence": 0.7,
+      "sources": [{ "file": "idea.md", "heading": "2.4. Topological Regularization", "quote": "The remedy, well-known from quasicrystal theory, is the **cut-and-project method**." }]
+    },
+    {
+      "id": "m.model.adjacency-oracle.evaluate.experiment.bfs-volume-growth",
+      "kind": "evaluate",
+      "from": "model.adjacency-oracle",
+      "to": "experiment.bfs-volume-growth",
+      "state": "intended",
+      "cost": { "measure": "developer-effort", "note": "pipeline outlined but not reported as run" },
+      "confidence": 0.6,
+      "sources": [{ "file": "idea.md", "heading": "6.2. Connectivity Dimension via Expansion Bounds", "quote": "Perform a Breadth-First Search (BFS) up to a maximum radius $R$." }]
+    },
+    {
+      "id": "m.experiment.bfs-volume-growth.fit.conjecture.fractional-effective-dimension",
+      "kind": "fit",
+      "from": "experiment.bfs-volume-growth",
+      "to": "conjecture.fractional-effective-dimension",
+      "state": "intended",
+      "loss": "no reported numerical fit values, only the proposed regression procedure",
+      "confidence": 0.55,
+      "sources": [{ "file": "idea.md", "heading": "6.2. Connectivity Dimension via Expansion Bounds", "quote": "Assuming a power-law growth $N(r) \\sim C r^{d_{\\text{eff}}}$" }]
+    },
+    {
+      "id": "m.constraint.non-vertex-transitive-memory.ecological_constraint.model.isometric-cellular-automaton",
+      "kind": "ecological_constraint",
+      "from": "constraint.non-vertex-transitive-memory",
+      "to": "model.isometric-cellular-automaton",
+      "state": "performed",
+      "confidence": 0.7,
+      "sources": [{ "file": "idea.md", "heading": "5.4. Computational Considerations", "quote": "Efficient simulation requires: Lazy graph generation... Spatial hashing" }]
+    }
+  ],
+  "coherence": [
+    {
+      "id": "c.semantic.laplacian-dos-vs-connectivity-dimension",
+      "kind": "semantic",
+      "refs": ["definition.spectral-dimension", "model.kpm-graph-laplacian", "experiment.bfs-volume-growth"],
+      "requirement": "The KPM-derived density-of-states scaling for d_spec must be numerically consistent with the BFS-derived d_eff via the Alexander-Orbach relation.",
+      "status": "pending",
+      "cost": { "measure": "developer-effort", "note": "no numerical results are reported in the notes; only the pipeline is proposed" },
+      "confidence": 0.6,
+      "sources": [{ "file": "idea.md", "heading": "6.4. Spectral Dimension via the Graph Laplacian and KPM", "quote": "Combined with FSS over cluster radii $R$, this yields tight, reproducible estimates of $d_{\\text{spec}}$" }]
+    },
+    {
+      "id": "c.logical.adjacency-rule-vs-holonomy-lemma",
+      "kind": "logical",
+      "refs": ["rewrite_rule.identical-edge-adjacency", "lemma.vortex-sheet-holonomy"],
+      "requirement": "The identical-edge-adjacency rewrite rule must preserve the derivability of nonzero net sheet holonomy around vortices.",
+      "status": "pending",
+      "confidence": 0.5,
+      "sources": [{ "file": "idea.md", "heading": "3.1. The Vortex Mechanism", "quote": "The sheet index transitions along the path according to..." }]
+    },
+    {
+      "id": "c.analytic.fractional-dimension-conjecture-vs-numerics",
+      "kind": "analytic",
+      "refs": ["conjecture.fractional-effective-dimension", "experiment.bfs-volume-growth", "model.kpm-graph-laplacian"],
+      "requirement": "The proof-free claim 2 < d_eff < 3 must be certified by the proposed BFS and KPM numerical pipeline before being treated as established.",
+      "status": "pending",
+      "cost": { "measure": "compute-time", "note": "requires large-radius BFS and KPM runs with finite-size scaling, not yet performed" },
+      "confidence": 0.6,
+      "sources": [{ "file": "idea.md", "heading": "6. Numerical Methodology for Dimension Estimation", "quote": "To verify the fractional dimensionality of the multi-sheeted pentagon tiling, we propose a rigorous numerical pipeline" }]
+    }
+  ],
+  "clusters": [
+    {
+      "id": "cluster.frustration-to-holonomy-descent",
+      "name": "From Angular Frustration to Spinor-Like Holonomy",
+      "kind": "descent_chain",
+      "root": "lemma.vortex-sheet-holonomy",
+      "members": [
+        "lemma.pentagon-vertex-angle-frustration",
+        "definition.multi-sheeted-covering-space",
+        "rewrite_rule.identical-edge-adjacency",
+        "lemma.vortex-sheet-holonomy",
+        "analogy.spinor-double-cover"
+      ],
+      "layers": ["deductive", "symbolic", "inspiration"],
+      "summary": "The exact angular mismatch of pentagon packing forces a covering-space construction whose adjacency rule produces nonzero sheet holonomy, later read as a discrete spinor double cover."
+    },
+    {
+      "id": "cluster.dimension-estimation-pipeline",
+      "name": "Numerical Pipeline for Fractional Dimension",
+      "kind": "benchmark_family",
+      "root": "model.adjacency-oracle",
+      "members": [
+        "model.adjacency-oracle",
+        "experiment.bfs-volume-growth",
+        "experiment.random-walk-spectral-dimension",
+        "model.kpm-graph-laplacian",
+        "conjecture.fractional-effective-dimension",
+        "conjecture.spectral-less-than-effective"
+      ],
+      "layers": ["symbolic", "numeric", "fuzzy"],
+      "summary": "The exact adjacency oracle feeds BFS, random-walk and KPM procedures proposed to numerically certify the fractional connectivity and spectral dimension conjectures."
+    }
+  ],
+  "unresolved": [
+    {
+      "kind": "layer_ambiguity",
+      "description": "The angular frustration facts (Section 2.1) are exact arithmetic consequences stated as derivations without a formal deductive apparatus; classified here as a lemma, but could be read as a mere numeric/geometric observation.",
+      "refs": ["lemma.pentagon-vertex-angle-frustration"],
+      "layers": ["deductive", "numeric"]
+    },
+    {
+      "kind": "ambiguous_statement",
+      "description": "\"Floating-point topological tearing\" is asserted as an inevitable failure mode but no experiment or benchmark in the notes actually demonstrates it; kept as a heuristic pending empirical confirmation.",
+      "refs": ["heuristic.floating-point-topological-tearing"]
+    },
+    {
+      "kind": "missing_source",
+      "description": "Section 7.2 (Fractional Statistical Mechanics) proposes Metropolis-Hastings Ising/XY simulations but gives no concrete claim, experiment, or citation precise enough to extract as a node.",
+      "refs": []
+    },
+    {
+      "kind": "unattributed_claim",
+      "description": "References to CDT, Loop Quantum Gravity, and Group Field Theory in the Introduction are named research programs with no citation details (no author, year, or venue given), so only a generic research_program/reference context is recorded rather than dedicated reference nodes.",
+      "refs": ["research_program.discrete-quantum-gravity-toy-model"],
+      "layers": ["social"]
+    }
+  ],
+  "stats": {
+    "documents": 1,
+    "nodes": 30,
+    "edges": 26,
+    "morphisms": 6,
+    "obligations": 3,
+    "cross_layer_edges": 18
+  }
+}

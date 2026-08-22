@@ -1,4 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>n-gon tiling experiment harness</title>
+    <link rel="stylesheet" href="./ui/style.css" />
+  </head>
+  <body>
+    <!--
+      Data-oriented harness for the ported Maxima experiments.
+      Deliberately non-graphical: pick an experiment, set parameters,
+      run, then inspect the log / structured JSON / tables (CSV export).
+      Visualisation lives elsewhere.
 
-<!-- Port the maxima experiments into modular ES6 -->
-<!-- These should be node-consumable, but also used by this file, which provides an per-experiment UI to generate/expore results -->
-<!-- Do not concentrat on this being a highly graphical ui that visualizes the problem. It should be a simple harness for data-based math experiment runs. The visualizatition is explored elsewhere. -->
+      ES modules require an http origin:
+          cd js_port && python3 -m http.server 8080
+    -->
+    <header>
+      <h1>n-gon tiling experiment harness</h1>
+      <p class="sub">
+        ES6 port of <code>experiment.mac</code>, <code>analysis.mac</code>,
+        <code>erdos.mac</code>, <code>pinwheels.mac</code>,
+        <code>sweep_ngon.mac</code>, <code>smoke_test.mac</code>.
+        Fiber = <strong>Z_2</strong> (orientation only); even vertex loop
+        &rArr; trivial holonomy (sheet_fix.md).
+      </p>
+    </header>
+
+    <main>
+      <aside id="panel">
+        <label class="field">
+          <span>Experiment</span>
+          <select id="experiment"></select>
+        </label>
+        <p id="description" class="desc"></p>
+
+        <form id="params"></form>
+
+        <div class="buttons">
+          <button id="run" type="button">Run</button>
+          <button id="reset" type="button">Reset params</button>
+        </div>
+
+        <div class="buttons">
+          <button id="dl-json" type="button" disabled>Download JSON</button>
+          <button id="dl-csv" type="button" disabled>Download CSV</button>
+          <button id="dl-log" type="button" disabled>Download log</button>
+        </div>
+
+        <div id="status" class="status">idle</div>
+      </aside>
+
+      <section id="output">
+        <nav class="tabs">
+          <button class="tab active" data-tab="log">Log</button>
+          <button class="tab" data-tab="tables">Tables</button>
+          <button class="tab" data-tab="json">JSON</button>
+        </nav>
+        <div id="tab-log" class="pane active"><pre id="log"></pre></div>
+        <div id="tab-tables" class="pane"><div id="tables"></div></div>
+        <div id="tab-json" class="pane"><pre id="json"></pre></div>
+      </section>
+    </main>
+
+    <script type="module" src="./ui/app.js"></script>
+  </body>
+</html>

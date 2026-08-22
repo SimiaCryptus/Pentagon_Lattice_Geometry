@@ -1,0 +1,842 @@
+{
+  "$schema": "./theory_graph.schema.ts",
+  "version": "2.0.0",
+  "generated_at": "2024-06-01T00:00:00Z",
+  "generator": { "op": "analyze.op.md" },
+  "corpus": {
+    "documents": [
+      {
+        "id": "analysis",
+        "path": "./analysis.md",
+        "order": 1,
+        "dominant_layers": ["deductive", "numeric", "symbolic"]
+      }
+    ]
+  },
+  "context": {
+    "ecological": {
+      "resources": ["Maxima computer algebra system"],
+      "constraints": ["numerical checks must pass within 1e-10 tolerance or abort"],
+      "substrate": "Maxima CAS batch run producing analysis.log"
+    }
+  },
+  "nodes": [
+    {
+      "id": "resource.maxima-cas",
+      "kind": "resource",
+      "name": "Maxima Computer Algebra System",
+      "statement": "The analysis is carried out in Maxima, providing exact symbolic arithmetic without float64 drift.",
+      "status": "accepted",
+      "confidence": 0.9,
+      "sources": [{ "file": "analysis.md", "heading": "1. Scope and Methodology", "quote": "Exact symbolic arithmetic in Maxima (no `float64` drift)" }]
+    },
+    {
+      "id": "artifact.analysis-mac",
+      "kind": "artifact",
+      "name": "analysis.mac Source Script",
+      "statement": "analysis.mac is the parameterized Maxima script that sweeps n = N_GON_MIN..N_GON_MAX performing all symbolic and numeric checks.",
+      "status": "accepted",
+      "confidence": 0.9,
+      "sources": [{ "file": "analysis.md", "heading": "1. Scope and Methodology", "quote": "`analysis.mac` is organized as a parameterized sweep over n = N_GON_MIN..N_GON_MAX" }]
+    },
+    {
+      "id": "artifact.analysis-log",
+      "kind": "artifact",
+      "name": "analysis.log Executed Transcript",
+      "statement": "analysis.log records the executed transcript of analysis.mac, confirming every check passed.",
+      "status": "accepted",
+      "confidence": 0.9,
+      "sources": [{ "file": "analysis.md", "heading": "20. Status", "quote": "analysis.mac : all checks passed for n = 3 to 12 step 1" }]
+    },
+    {
+      "id": "norm.exact-arithmetic-mandate",
+      "kind": "norm",
+      "name": "Exact Arithmetic Eliminates Floating-Point Tearing",
+      "statement": "The notes adopt a methodological norm that exact arithmetic over Q, Q(sqrt5), or the maximal real cyclotomic subfield is required to eliminate the floating-point topological tearing failure mode of the Adjacency Oracle.",
+      "status": "accepted",
+      "confidence": 0.7,
+      "sources": [{ "file": "analysis.md", "heading": "2. Pentagon Benchmarks", "quote": "exact arithmetic over Q(√5) eliminates the floating-point topological tearing failure mode" }]
+    },
+    {
+      "id": "theorem.phi-minimal-polynomial",
+      "kind": "theorem",
+      "name": "Golden Ratio Minimal Polynomial Identities",
+      "statement": "The golden ratio phi and its conjugate psi satisfy phi^2 - phi - 1 = 0, 1/phi = phi - 1, phi + psi = 1, phi*psi = -1, and phi^2 + psi^2 = 3.",
+      "formal": "x^2 - x - 1 = 0",
+      "status": "accepted",
+      "confidence": 0.85,
+      "representation": { "layer": "deductive", "form": "proof-term", "content": "phi^2 - (phi+1) = 0; minimal polynomial x^2 - x - 1 vanishes at phi, psi" },
+      "sources": [{ "file": "analysis.md", "heading": "2. Pentagon Benchmarks", "quote": "φ² − (φ + 1) = 0" }]
+    },
+    {
+      "id": "theorem.binet-formula",
+      "kind": "theorem",
+      "name": "Binet's Formula Verified for n = 1..8",
+      "statement": "The Fibonacci numbers satisfy Fn = (phi^n - psi^n)/sqrt(5) for n = 1 through 8, verified symbolically.",
+      "formal": "F_n = (\\phi^n - \\psi^n)/\\sqrt{5}",
+      "status": "accepted",
+      "confidence": 0.85,
+      "representation": { "layer": "deductive", "form": "proof-term" },
+      "sources": [{ "file": "analysis.md", "heading": "2. Pentagon Benchmarks", "quote": "Binet: Fₙ = (φⁿ − ψⁿ)/√5 for n = 1..8" }]
+    },
+    {
+      "id": "model.z-phi-arithmetic",
+      "kind": "model",
+      "name": "Z[phi] Pair-Multiplication Arithmetic",
+      "statement": "Integer arithmetic in Z[phi] is implemented as pair multiplication [a,b]*[c,d] = [ac+bd, ad+bc+bd], with phi^n corresponding to Fibonacci pairs [F_{n-1}, F_n].",
+      "status": "accepted",
+      "confidence": 0.8,
+      "representation": { "layer": "symbolic", "form": "model", "content": "[a,b]*[c,d] = [ac+bd, ad+bc+bd]" },
+      "sources": [{ "file": "analysis.md", "heading": "2. Pentagon Benchmarks", "quote": "Z[φ] integer arithmetic (Section 10) is implemented as pair multiplication" }]
+    },
+    {
+      "id": "theorem.norm-phi-unit",
+      "kind": "theorem",
+      "name": "phi^n Is a Unit of Norm (-1)^n",
+      "statement": "For n = 1..7, N(phi^n) = (-1)^n, so phi^n is a unit in Z[phi], with N(a+b*phi) = a^2 + ab - b^2 matching the Galois norm.",
+      "formal": "N(\\phi^n) = (-1)^n",
+      "status": "accepted",
+      "confidence": 0.8,
+      "sources": [{ "file": "analysis.md", "heading": "2. Pentagon Benchmarks", "quote": "N(φⁿ) = (−1)ⁿ (φⁿ is a unit) for n = 1..7" }]
+    },
+    {
+      "id": "observation.prime-splitting-table",
+      "kind": "observation",
+      "name": "Prime Splitting in Z[phi] by Legendre Symbol",
+      "statement": "For primes p in {2,3,5,7,11,13,17,19,23,29,31}, the splitting type in Z[phi] matches the Legendre symbol (5/p), giving split, inert, or ramified (at p=5) behavior.",
+      "status": "accepted",
+      "confidence": 0.8,
+      "representation": { "layer": "numeric", "form": "table" },
+      "sources": [{ "file": "analysis.md", "heading": "2.1 Extended Z[φ] Number Theory", "quote": "Prime splitting by the Legendre symbol `(5/p)`" }]
+    },
+    {
+      "id": "experiment.wall-sun-sun-search",
+      "kind": "experiment",
+      "name": "Wall–Sun–Sun Prime Search",
+      "statement": "F_{p-(5/p)} mod p^2 is evaluated for small primes and no Wall-Sun-Sun primes are found, consistent with known empirical absence below standard search bounds.",
+      "status": "tested",
+      "confidence": 0.75,
+      "representation": { "layer": "numeric", "form": "benchmark-row" },
+      "sources": [{ "file": "analysis.md", "heading": "2.1 Extended Z[φ] Number Theory", "quote": "no Wall-Sun-Sun primes found (consistent with the known empirical absence below the standard search bounds)" }]
+    },
+    {
+      "id": "definition.loop-closure-index",
+      "kind": "definition",
+      "name": "Loop-Closure Index k_close",
+      "statement": "The loop-closure index is defined as k_close = 2n / gcd(2n, n-2), the minimum loop length needed to return the sheet index to identity.",
+      "formal": "k_{close} = 2n / \\gcd(2n, n-2)",
+      "status": "accepted",
+      "confidence": 0.85,
+      "representation": { "layer": "symbolic", "form": "definition" },
+      "sources": [{ "file": "analysis.md", "heading": "3. n-gon Angle and Closure Structure", "quote": "Loop-closure index `k_close = 2n / gcd(2n, n−2)`" }]
+    },
+    {
+      "id": "observation.pentagon-angle-deficit",
+      "kind": "observation",
+      "name": "Pentagon Angular Deficit of 36 Degrees",
+      "statement": "For n=5, the interior angle is 108 degrees, k_flat=3 flat-packed pentagons leave a deficit of 36 degrees, and k_close = 10 with 3 full turns.",
+      "status": "accepted",
+      "confidence": 0.85,
+      "attributes": [
+        { "key": "interior_angle", "value": 108, "unit": "deg" },
+        { "key": "deficit", "value": 36, "unit": "deg" },
+        { "key": "k_close", "value": 10 },
+        { "key": "turns", "value": 3 }
+      ],
+      "sources": [{ "file": "analysis.md", "heading": "3. n-gon Angle and Closure Structure", "quote": "5 | 108 | 3 | 36 | 10 | 3" }]
+    },
+    {
+      "id": "theorem.cyclotomic-real-subfield",
+      "kind": "theorem",
+      "name": "Q(sqrt5) Is the Real Subfield of Q[zeta_5]",
+      "statement": "2cos(72deg) = (sqrt5 - 1)/2 and 2cos(144deg) = -(sqrt5+1)/2, identifying Q(sqrt5) as the real subfield of the 5th cyclotomic field.",
+      "formal": "2\\cos(72^\\circ) = (\\sqrt5 - 1)/2",
+      "status": "accepted",
+      "confidence": 0.85,
+      "representation": { "layer": "deductive", "form": "proof-term" },
+      "sources": [{ "file": "analysis.md", "heading": "4. Cyclotomic Substrate", "quote": "This rigorously identifies Q(√5) as the real subfield of Q[ζ_5]" }]
+    },
+    {
+      "id": "model.rotation-matrix",
+      "kind": "model",
+      "name": "Symbolic n-gon Rotation Matrix R",
+      "statement": "The rotation matrix R = R(2pi/n) is constructed symbolically with det(R)=1 and tr(R)=2cos(2pi/n), and R^n = I is verified.",
+      "formal": "R^n = I",
+      "status": "accepted",
+      "confidence": 0.8,
+      "representation": { "layer": "symbolic", "form": "model" },
+      "sources": [{ "file": "analysis.md", "heading": "5. Rotation Matrices and Basis Vectors", "quote": "`Rⁿ = I` is verified to machine precision" }]
+    },
+    {
+      "id": "theorem.rotation-trace-identity",
+      "kind": "theorem",
+      "name": "Trace of Rotation Powers Matches Cyclotomic Trace",
+      "statement": "tr(R^k) = 2cos(2*pi*k/n) for k=1..n, verified within 1e-10 for every n in the sweep.",
+      "formal": "\\mathrm{tr}(R^k) = 2\\cos(2\\pi k/n)",
+      "status": "accepted",
+      "confidence": 0.8,
+      "attributes": [{ "key": "tolerance", "value": 1e-10 }],
+      "sources": [{ "file": "analysis.md", "heading": "5. Rotation Matrices and Basis Vectors", "quote": "`tr(Rᵏ) = 2 cos(2πk/n)` for k = 1..n (verified within 1e-10)" }]
+    },
+    {
+      "id": "theorem.z2-spinor-cover",
+      "kind": "theorem",
+      "name": "Z2 Spinor Cover Holonomy",
+      "statement": "A single 2*pi loop in the pre-loop Z2 cover yields holonomy tau = -1, double-loop holonomy is 0, and the loop order is 2, the exact discrete realization of the spinor analogy.",
+      "status": "accepted",
+      "confidence": 0.8,
+      "representation": { "layer": "deductive", "form": "proof-term" },
+      "sources": [{ "file": "analysis.md", "heading": "6. Holonomy, Z_n Covers, and the Spinor Analogue", "quote": "a single 2π loop yields τ = −1, and 4π is required to restore identity" }]
+    },
+    {
+      "id": "theorem.zn-anyonic-cover",
+      "kind": "theorem",
+      "name": "Z_n Sheet-Shift Holonomy Is a Homomorphism",
+      "statement": "For all g in Z_n, order(g,n) = n/gcd(g,n), and composite holonomy satisfies H(gamma_A . gamma_B) = H(gamma_A) + H(gamma_B) mod n, verified for sample loops at every n.",
+      "formal": "\\mathrm{order}(g,n) = n/\\gcd(g,n)",
+      "status": "accepted",
+      "confidence": 0.8,
+      "sources": [{ "file": "analysis.md", "heading": "6.2 Z_n anyonic / sheet-shift cover", "quote": "order(g, n) = n / gcd(g, n)" }]
+    },
+    {
+      "id": "model.flat-u1-bundle",
+      "kind": "model",
+      "name": "Flat U(1) Holonomy, Berry Phase and Chern Number",
+      "statement": "The extended pre-loop block tabulates flat U(1) holonomy phases exp(2*pi*i*k/n), Aharonov-Bohm phases, 2D monodromy matrices, Berry phases gamma_B = pi*w, and Chern numbers C = k/n for the Z_5 sectors.",
+      "status": "accepted",
+      "confidence": 0.7,
+      "representation": { "layer": "symbolic", "form": "model" },
+      "sources": [{ "file": "analysis.md", "heading": "6.3 Extended flat-bundle analysis", "quote": "Chern numbers C = k/n for the k-th sector of Z_5" }]
+    },
+    {
+      "id": "definition.alexander-orbach-relation",
+      "kind": "definition",
+      "name": "Alexander–Orbach Spectral Dimension Relation",
+      "statement": "The spectral dimension relation is defined as d_spec(d_eff, d_w) = 2*d_eff/d_w, saturating at d_spec = d_eff when d_w = 2.",
+      "formal": "d_{spec} = 2 d_{eff} / d_w",
+      "status": "accepted",
+      "confidence": 0.85,
+      "representation": { "layer": "symbolic", "form": "definition" },
+      "sources": [{ "file": "analysis.md", "heading": "7. Emergent Dimensions and Alexander–Orbach Relation", "quote": "`d_spec(d_eff, d_w) = 2 d_eff / d_w` (Alexander–Orbach)" }]
+    },
+    {
+      "id": "observation.sierpinski-reference",
+      "kind": "observation",
+      "name": "Sierpinski Gasket Reference Point",
+      "statement": "For the Sierpinski gasket, d_eff = log3/log2 ~ 1.585 and d_w = log5/log2 ~ 2.322, giving d_spec ~ 1.365.",
+      "status": "accepted",
+      "confidence": 0.8,
+      "attributes": [
+        { "key": "d_eff", "value": 1.585 },
+        { "key": "d_w", "value": 2.322 },
+        { "key": "d_spec", "value": 1.365 }
+      ],
+      "sources": [{ "file": "analysis.md", "heading": "7. Emergent Dimensions", "quote": "Sierpiński gasket reference: d_eff = log 3/log 2 ≈ 1.585, d_w = log 5/log 2 ≈ 2.322 ⇒ d_spec ≈ 1.365" }]
+    },
+    {
+      "id": "definition.paper-regime-predicate",
+      "kind": "definition",
+      "name": "In-Paper-Regime Predicate",
+      "statement": "The predicate in_paper_regime(d_eff, d_w) holds iff 2 < d_eff < 3 and d_w > 2 and d_spec < d_eff, and is confirmed at the regime claimed for the fractional-dimensionality theory.",
+      "formal": "2 < d_{eff} < 3 \\wedge d_w > 2 \\wedge d_{spec} < d_{eff}",
+      "status": "accepted",
+      "confidence": 0.8,
+      "sources": [{ "file": "analysis.md", "heading": "7. Emergent Dimensions", "quote": "Paper-regime predicate `in_paper_regime(d_eff, d_w)`" }]
+    },
+    {
+      "id": "model.dimensional-flow-interpolator",
+      "kind": "model",
+      "name": "Dimensional Flow Interpolator",
+      "statement": "The interpolator d_spec(t) = d_IR + (d_UV - d_IR)*exp(-t/t_0) is evaluated at several t with d_UV=2.5, d_IR=1.7, t_0=10, exhibiting a smooth crossover analogous to CDT-style dimensional reduction.",
+      "formal": "d_{spec}(t) = d_{IR} + (d_{UV}-d_{IR})e^{-t/t_0}",
+      "status": "tested",
+      "confidence": 0.75,
+      "representation": { "layer": "numeric", "form": "benchmark-row" },
+      "sources": [{ "file": "analysis.md", "heading": "7. Emergent Dimensions", "quote": "exhibiting smooth crossover — the discrete analogue of CDT-style dimensional reduction" }]
+    },
+    {
+      "id": "model.cut-and-project-lattice",
+      "kind": "model",
+      "name": "Cut-and-Project Ambient Lattice Z^n",
+      "statement": "The cyclic shift matrix C_n satisfies charpoly(C_n) = plus-or-minus (x^n - 1), C_n^n = I, C_n is orthogonal, and the projectors P_diag and P_perp are idempotent, orthogonal, and sum to I with rank(P_perp) = n-1.",
+      "status": "accepted",
+      "confidence": 0.8,
+      "representation": { "layer": "symbolic", "form": "model" },
+      "sources": [{ "file": "analysis.md", "heading": "8. Cut-and-Project Ambient Lattice Z^n", "quote": "rank(P_perp) = n − 1 (verified)" }]
+    },
+    {
+      "id": "observation.physical-plane-embedding",
+      "kind": "observation",
+      "name": "Physical-Plane Embedding for n=5",
+      "statement": "For n=5, V_1 is the physical 2D plane, V_2 is a 2D internal plane, plus the diagonal, realizing the cut-and-project decomposition Z^5 = E_parallel + E_perp with norm ||pi_perp(e_1)||^2 = (n-1)/n.",
+      "status": "accepted",
+      "confidence": 0.75,
+      "attributes": [{ "key": "n", "value": 5 }],
+      "sources": [{ "file": "analysis.md", "heading": "8. Cut-and-Project Ambient Lattice Z^n", "quote": "this realizes the 5D hypercubic embedding explicitly invoked by `idea.md`" }]
+    },
+    {
+      "id": "bound.outer-totalistic-rule-count",
+      "kind": "bound",
+      "name": "Outer-Totalistic CA Rule Space Size",
+      "statement": "The binary outer-totalistic rule count is 2^(2(n+1)), giving 4096 rules at n=5 and 262144 at n=8, confirming the Pentagonal Game of Life rule space of 4096.",
+      "formal": "2^{2(n+1)}",
+      "status": "accepted",
+      "confidence": 0.85,
+      "attributes": [
+        { "key": "rule_count_n5", "value": 4096 },
+        { "key": "rule_count_n8", "value": 262144 }
+      ],
+      "sources": [{ "file": "analysis.md", "heading": "9. Cellular Automaton Rule Counts", "quote": "The \"Pentagonal Game of Life\" rule space size of 4096 is confirmed" }]
+    },
+    {
+      "id": "theorem.pentagram-self-similarity",
+      "kind": "theorem",
+      "name": "Pentagram Self-Similarity Identity",
+      "statement": "For n=5, (d/s)^2 = phi^2 and 1/phi^2 = 2 - phi, both verified by ratsimp reduction to zero.",
+      "formal": "1/\\phi^2 = 2 - \\phi",
+      "status": "accepted",
+      "confidence": 0.85,
+      "sources": [{ "file": "analysis.md", "heading": "10. Polygon Geometry and Diagonal Identities", "quote": "1/φ² = 2 − φ (pentagram self-similarity, verified)" }]
+    },
+    {
+      "id": "theorem.dihedral-relation",
+      "kind": "theorem",
+      "name": "Dihedral Relation S R S = R^{-1}",
+      "statement": "The reflection S_0 = diag(1,-1) is an involution with det=-1, and SRS = R^{-1} is verified both symbolically and numerically for every n, confirming D_n as the full isometry group of the tile.",
+      "formal": "SRS = R^{-1}",
+      "status": "accepted",
+      "confidence": 0.8,
+      "sources": [{ "file": "analysis.md", "heading": "11. Dihedral Group D_n", "quote": "Dihedral relation S R S = R⁻¹ verified symbolically" }]
+    },
+    {
+      "id": "model.graph-laplacian-spectra",
+      "kind": "model",
+      "name": "Star and Cycle Graph Laplacian Spectra",
+      "statement": "The star K_{1,n} Laplacian has spectrum {0, 1 (multiplicity n), n+1} with spectral gap 1, and the cycle C_n Laplacian has eigenvalues lambda_k = 2 - 2cos(2*pi*k/n) with a spectral gap that decreases monotonically with n from 3.0 at n=3 to 0.268 at n=12.",
+      "status": "accepted",
+      "confidence": 0.8,
+      "attributes": [
+        { "key": "spectral_gap_n3", "value": 3.0 },
+        { "key": "spectral_gap_n12", "value": 0.268 }
+      ],
+      "sources": [{ "file": "analysis.md", "heading": "12. Graph Laplacian Spectra", "quote": "Spectral gap `2 − 2 cos(2π/n)` decreases monotonically with n (3.0 at n=3 down to 0.268 at n=12)" }]
+    },
+    {
+      "id": "model.substitution-inflation-system",
+      "kind": "model",
+      "name": "Two-Type Substitution/Inflation System",
+      "statement": "A 2-type substitution matrix M is constructed per n; for n=5, M = [[2,1],[1,1]] is the Penrose substitution with Perron-Frobenius eigenvalue lambda_PF = phi^2 confirmed to within 1e-8 of the symbolic value.",
+      "formal": "M = \\begin{pmatrix}2&1\\\\1&1\\end{pmatrix}, \\lambda_{PF} = \\phi^2",
+      "status": "accepted",
+      "confidence": 0.8,
+      "attributes": [{ "key": "lambda_PF_n5", "value": 2.618 }],
+      "sources": [{ "file": "analysis.md", "heading": "13. Inflation / Substitution Systems", "quote": "n = 5: λ_PF = φ² ≈ 2.618, confirmed to ≤ 1e-8 against the symbolic value φ²" }]
+    },
+    {
+      "id": "observation.zeta-dedekind-partial-sums",
+      "kind": "observation",
+      "name": "Zeta, Dedekind Zeta and Dirichlet L Partial Sums",
+      "statement": "Partial sums of Riemann zeta(2), zeta(3), the Dedekind zeta of Q(sqrt5), and the Dirichlet L-series L(s, chi_5) are computed with 40 terms, with the ratio zeta_Q(sqrt5)(2)/zeta(2)^2 approximately 0.439 matching the expected class-number/regulator factor.",
+      "status": "accepted",
+      "confidence": 0.75,
+      "attributes": [{ "key": "zeta_ratio", "value": 0.439 }],
+      "sources": [{ "file": "analysis.md", "heading": "14. Zeta Functions and L-Series", "quote": "Ratio ζ_{Q(√5)}(2) / ζ(2)² ≈ 0.439" }]
+    },
+    {
+      "id": "experiment.heat-trace-diffusion",
+      "kind": "experiment",
+      "name": "Heat-Trace Spectral Dimension Crossover",
+      "statement": "The heat trace Tr(e^{-tL}) is computed for the cycle C_n and star K_{1,n} across eight time scales, and the effective spectral dimension is shown to cross over from Weyl-dominated short-time behavior toward approximately 1.19 at intermediate times for larger n.",
+      "status": "tested",
+      "confidence": 0.7,
+      "attributes": [{ "key": "d_s_intermediate", "value": 1.19 }],
+      "sources": [{ "file": "analysis.md", "heading": "15. Diffusion Kernel and Heat Trace", "quote": "approaching ≈ 1.19 in the intermediate window for larger n" }]
+    },
+    {
+      "id": "model.acceptance-window-geometry",
+      "kind": "model",
+      "name": "Acceptance-Window Geometry and Penrose Inflation Scaling",
+      "statement": "The acceptance window is a regular n-gon of inradius rho in perp space; under one Penrose inflation step the window scales by 1/phi and the area ratio equals 1/phi^2 approximately 0.3820, verified to machine precision.",
+      "formal": "1/\\phi^2 \\approx 0.3820",
+      "status": "accepted",
+      "confidence": 0.8,
+      "attributes": [{ "key": "area_ratio", "value": 0.382 }],
+      "sources": [{ "file": "analysis.md", "heading": "16. Acceptance-Window Geometry", "quote": "the log verifies that the area ratio equals 1/φ² (≈ 0.3820) to machine precision" }]
+    },
+    {
+      "id": "model.fibonacci-word-symbolic-dynamics",
+      "kind": "model",
+      "name": "Fibonacci Word and Related Symbolic Sequences",
+      "statement": "The Fibonacci word under a->ab, b->a is iterated to depth 8 with length(depth k) = F_{k+1}; at n=5 the depth-6 word has length F_8 = 21, alongside Thue-Morse and Rudin-Shapiro sequence baselines and a Fibonacci substitution matrix with PF eigenvalue phi.",
+      "formal": "|\\text{word}(k)| = F_{k+1}",
+      "status": "accepted",
+      "confidence": 0.8,
+      "sources": [{ "file": "analysis.md", "heading": "17. Fibonacci Word and Symbolic-Dynamics Sequences", "quote": "verifies length = F_8 = 21 — this is the symbolic encoding of the long/short edge sequence on Penrose tiling lines" }]
+    },
+    {
+      "id": "observation.cross-section-correlations",
+      "kind": "observation",
+      "name": "Cross-Section Correlation Table",
+      "statement": "Pearson correlations across the n-sweep show r(deficit, C_n_gap) approximately -0.746 (strong negative) and r(k_close, HeatTr(t=1)) approximately +0.566 (moderate positive).",
+      "status": "accepted",
+      "confidence": 0.75,
+      "attributes": [
+        { "key": "r_deficit_gap", "value": -0.746 },
+        { "key": "r_kclose_heattrace", "value": 0.566 }
+      ],
+      "sources": [{ "file": "analysis.md", "heading": "18.2 Cross-section correlation table", "quote": "r(deficit, C_n_gap) ≈ −0.746" }]
+    },
+    {
+      "id": "certificate.all-checks-passed",
+      "kind": "certificate",
+      "name": "All Checks Passed for n = 3..12",
+      "statement": "The analysis.mac script terminates with the message that all checks passed for n = 3 to 12, every assertion enforced by a symbolic ratsimp-to-zero test or a numerical tolerance check that aborts on failure.",
+      "status": "accepted",
+      "confidence": 0.9,
+      "representation": { "layer": "numeric", "form": "benchmark-row", "content": "analysis.mac : all checks passed for n = 3 to 12 step 1" },
+      "sources": [{ "file": "analysis.md", "heading": "20. Status", "quote": "analysis.mac : all checks passed for n = 3 to 12 step 1" }]
+    },
+    {
+      "id": "constraint.numerical-tolerance",
+      "kind": "constraint",
+      "name": "Numerical Abort Tolerance of 1e-10",
+      "statement": "Numerical cross-checks for symbolic results use abort-on-error tolerances of at most 1e-10.",
+      "status": "accepted",
+      "confidence": 0.8,
+      "attributes": [{ "key": "tolerance", "value": 1e-10 }],
+      "sources": [{ "file": "analysis.md", "heading": "1. Scope and Methodology", "quote": "Numerical cross-checks for symbolic results, with abort-on-error tolerances (≤ 1e-10)" }]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e.norm.exact-arithmetic-mandate.selects_for.model.z-phi-arithmetic",
+      "from": "norm.exact-arithmetic-mandate",
+      "to": "model.z-phi-arithmetic",
+      "relation": "selects_for",
+      "confidence": 0.7,
+      "sources": [{ "file": "analysis.md", "heading": "2.1 Extended Z[φ] Number Theory", "quote": "exact arithmetic over Q(√5) eliminates the floating-point topological tearing failure mode" }]
+    },
+    {
+      "id": "e.theorem.phi-minimal-polynomial.depends_on.resource.maxima-cas",
+      "from": "theorem.phi-minimal-polynomial",
+      "to": "resource.maxima-cas",
+      "relation": "depends_on",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "1. Scope and Methodology", "quote": "Exact symbolic arithmetic in Maxima" }]
+    },
+    {
+      "id": "e.theorem.phi-minimal-polynomial.supports.theorem.binet-formula",
+      "from": "theorem.phi-minimal-polynomial",
+      "to": "theorem.binet-formula",
+      "relation": "supports",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "2. Pentagon Benchmarks", "quote": "φⁿ = Fₙ·φ + Fₙ₋₁ for n = 2..8" }]
+    },
+    {
+      "id": "e.theorem.binet-formula.instantiates.model.z-phi-arithmetic",
+      "from": "theorem.binet-formula",
+      "to": "model.z-phi-arithmetic",
+      "relation": "instantiates",
+      "confidence": 0.65,
+      "sources": [{ "file": "analysis.md", "heading": "2.1 Extended Z[φ] Number Theory", "quote": "φⁿ ↔ [Fₙ₋₁, Fₙ] (Fibonacci pairs)" }]
+    },
+    {
+      "id": "e.model.z-phi-arithmetic.implies.theorem.norm-phi-unit",
+      "from": "model.z-phi-arithmetic",
+      "to": "theorem.norm-phi-unit",
+      "relation": "implies",
+      "confidence": 0.7,
+      "sources": [{ "file": "analysis.md", "heading": "2.1 Extended Z[φ] Number Theory", "quote": "Norm formula `N(a + bφ) = a² + ab − b²` matches the symbolic Galois norm" }]
+    },
+    {
+      "id": "e.model.z-phi-arithmetic.motivates.observation.prime-splitting-table",
+      "from": "model.z-phi-arithmetic",
+      "to": "observation.prime-splitting-table",
+      "relation": "motivates",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "2.1 Extended Z[φ] Number Theory", "quote": "Prime splitting by the Legendre symbol `(5/p)`" }]
+    },
+    {
+      "id": "e.observation.prime-splitting-table.tests.experiment.wall-sun-sun-search",
+      "from": "observation.prime-splitting-table",
+      "to": "experiment.wall-sun-sun-search",
+      "relation": "tests",
+      "confidence": 0.5,
+      "sources": [{ "file": "analysis.md", "heading": "2.1 Extended Z[φ] Number Theory", "quote": "Wall-Sun-Sun search: F_{p − (5/p)} mod p² evaluated for small primes" }]
+    },
+    {
+      "id": "e.observation.pentagon-angle-deficit.motivates.definition.loop-closure-index",
+      "from": "observation.pentagon-angle-deficit",
+      "to": "definition.loop-closure-index",
+      "relation": "motivates",
+      "confidence": 0.65,
+      "sources": [{ "file": "analysis.md", "heading": "3. n-gon Angle and Closure Structure", "quote": "k_close is the minimum loop length needed to return the sheet index to identity" }]
+    },
+    {
+      "id": "e.definition.loop-closure-index.depends_on.theorem.cyclotomic-real-subfield",
+      "from": "definition.loop-closure-index",
+      "to": "theorem.cyclotomic-real-subfield",
+      "relation": "depends_on",
+      "confidence": 0.5,
+      "sources": [{ "file": "analysis.md", "heading": "4. Cyclotomic Substrate", "quote": "This rigorously identifies Q(√5) as the real subfield of Q[ζ_5]" }]
+    },
+    {
+      "id": "e.theorem.cyclotomic-real-subfield.supports.model.rotation-matrix",
+      "from": "theorem.cyclotomic-real-subfield",
+      "to": "model.rotation-matrix",
+      "relation": "supports",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "5. Rotation Matrices and Basis Vectors", "quote": "tr(R) = 2 cos(2π/n) (matches the cyclotomic invariant)" }]
+    },
+    {
+      "id": "e.model.rotation-matrix.implies.theorem.rotation-trace-identity",
+      "from": "model.rotation-matrix",
+      "to": "theorem.rotation-trace-identity",
+      "relation": "implies",
+      "confidence": 0.7,
+      "sources": [{ "file": "analysis.md", "heading": "5. Rotation Matrices and Basis Vectors", "quote": "tr(Rᵏ) = 2 cos(2πk/n) for k = 1..n (verified within 1e-10)" }]
+    },
+    {
+      "id": "e.theorem.rotation-trace-identity.supports.theorem.zn-anyonic-cover",
+      "from": "theorem.rotation-trace-identity",
+      "to": "theorem.zn-anyonic-cover",
+      "relation": "supports",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "6.2 Z_n anyonic / sheet-shift cover", "quote": "prove the homomorphism property of the discrete connection" }]
+    },
+    {
+      "id": "e.theorem.z2-spinor-cover.analogous_to.theorem.zn-anyonic-cover",
+      "from": "theorem.z2-spinor-cover",
+      "to": "theorem.zn-anyonic-cover",
+      "relation": "generalizes",
+      "confidence": 0.55,
+      "sources": [{ "file": "analysis.md", "heading": "6. Holonomy, Z_n Covers, and the Spinor Analogue", "quote": "Two complementary fiber structures are analyzed" }]
+    },
+    {
+      "id": "e.theorem.zn-anyonic-cover.instantiates.model.flat-u1-bundle",
+      "from": "theorem.zn-anyonic-cover",
+      "to": "model.flat-u1-bundle",
+      "relation": "instantiates",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "6.3 Extended flat-bundle analysis", "quote": "tie it to the familiar U(1) Berry/Chern language used in condensed-matter physics" }]
+    },
+    {
+      "id": "e.definition.alexander-orbach-relation.tests.observation.sierpinski-reference",
+      "from": "definition.alexander-orbach-relation",
+      "to": "observation.sierpinski-reference",
+      "relation": "tests",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "7. Emergent Dimensions", "quote": "Sierpiński gasket reference" }]
+    },
+    {
+      "id": "e.definition.alexander-orbach-relation.implies.definition.paper-regime-predicate",
+      "from": "definition.alexander-orbach-relation",
+      "to": "definition.paper-regime-predicate",
+      "relation": "implies",
+      "confidence": 0.65,
+      "sources": [{ "file": "analysis.md", "heading": "7. Emergent Dimensions", "quote": "in_paper_regime(d_eff, d_w) ≡ (2 < d_eff < 3 ∧ d_w > 2 ∧ d_spec < d_eff)" }]
+    },
+    {
+      "id": "e.definition.paper-regime-predicate.motivates.model.dimensional-flow-interpolator",
+      "from": "definition.paper-regime-predicate",
+      "to": "model.dimensional-flow-interpolator",
+      "relation": "motivates",
+      "confidence": 0.55,
+      "sources": [{ "file": "analysis.md", "heading": "7. Emergent Dimensions", "quote": "Dimensional flow interpolator ... exhibiting smooth crossover" }]
+    },
+    {
+      "id": "e.model.dimensional-flow-interpolator.tests.experiment.heat-trace-diffusion",
+      "from": "model.dimensional-flow-interpolator",
+      "to": "experiment.heat-trace-diffusion",
+      "relation": "tests",
+      "confidence": 0.55,
+      "sources": [{ "file": "analysis.md", "heading": "15. Diffusion Kernel and Heat Trace", "quote": "a clean discrete analogue of the anomalous diffusion crossover" }]
+    },
+    {
+      "id": "e.model.cut-and-project-lattice.depends_on.model.rotation-matrix",
+      "from": "model.cut-and-project-lattice",
+      "to": "model.rotation-matrix",
+      "relation": "depends_on",
+      "confidence": 0.5,
+      "sources": [{ "file": "analysis.md", "heading": "8. Cut-and-Project Ambient Lattice Z^n", "quote": "The real-invariant 2D subspaces V_k ... are enumerated with explicit cos/sin eigenbases" }]
+    },
+    {
+      "id": "e.model.cut-and-project-lattice.instantiates.observation.physical-plane-embedding",
+      "from": "model.cut-and-project-lattice",
+      "to": "observation.physical-plane-embedding",
+      "relation": "instantiates",
+      "confidence": 0.65,
+      "sources": [{ "file": "analysis.md", "heading": "8. Cut-and-Project Ambient Lattice Z^n", "quote": "this realizes the 5D hypercubic embedding" }]
+    },
+    {
+      "id": "e.observation.physical-plane-embedding.supports.model.acceptance-window-geometry",
+      "from": "observation.physical-plane-embedding",
+      "to": "model.acceptance-window-geometry",
+      "relation": "supports",
+      "confidence": 0.55,
+      "sources": [{ "file": "analysis.md", "heading": "16. Acceptance-Window Geometry", "quote": "the exact internal-space contraction that underlies §2.4" }]
+    },
+    {
+      "id": "e.model.substitution-inflation-system.supports.model.acceptance-window-geometry",
+      "from": "model.substitution-inflation-system",
+      "to": "model.acceptance-window-geometry",
+      "relation": "supports",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "16. Acceptance-Window Geometry", "quote": "under one Penrose inflation step, the perp-space window scales by 1/φ" }]
+    },
+    {
+      "id": "e.model.substitution-inflation-system.motivates.model.fibonacci-word-symbolic-dynamics",
+      "from": "model.substitution-inflation-system",
+      "to": "model.fibonacci-word-symbolic-dynamics",
+      "relation": "motivates",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "17. Fibonacci Word and Symbolic-Dynamics Sequences", "quote": "the symbolic encoding of the long/short edge sequence on Penrose tiling lines" }]
+    },
+    {
+      "id": "e.theorem.pentagram-self-similarity.supports.model.substitution-inflation-system",
+      "from": "theorem.pentagram-self-similarity",
+      "to": "model.substitution-inflation-system",
+      "relation": "supports",
+      "confidence": 0.55,
+      "sources": [{ "file": "analysis.md", "heading": "13. Inflation / Substitution Systems", "quote": "this matches the Penrose self-similarity ratio" }]
+    },
+    {
+      "id": "e.model.graph-laplacian-spectra.tests.experiment.heat-trace-diffusion",
+      "from": "model.graph-laplacian-spectra",
+      "to": "experiment.heat-trace-diffusion",
+      "relation": "tests",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "15. Diffusion Kernel and Heat Trace", "quote": "the heat trace Tr(e^{−tL}) is computed for both Cycle C_n ... Star K_{1,n}" }]
+    },
+    {
+      "id": "e.observation.zeta-dedekind-partial-sums.measures.model.graph-laplacian-spectra",
+      "from": "observation.zeta-dedekind-partial-sums",
+      "to": "model.graph-laplacian-spectra",
+      "relation": "measures",
+      "confidence": 0.5,
+      "sources": [{ "file": "analysis.md", "heading": "14. Zeta Functions and L-Series", "quote": "Spectral zeta ζ_L(s) of the cycle C_n at s = 1, 2, 3" }]
+    },
+    {
+      "id": "e.observation.pentagon-angle-deficit.measures.observation.cross-section-correlations",
+      "from": "observation.pentagon-angle-deficit",
+      "to": "observation.cross-section-correlations",
+      "relation": "measures",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "18.2 Cross-section correlation table", "quote": "r(deficit, C_n_gap) ≈ −0.746" }]
+    },
+    {
+      "id": "e.definition.loop-closure-index.measures.observation.cross-section-correlations",
+      "from": "definition.loop-closure-index",
+      "to": "observation.cross-section-correlations",
+      "relation": "measures",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "18.2 Cross-section correlation table", "quote": "r(k_close, HeatTr(t=1)) ≈ +0.566" }]
+    },
+    {
+      "id": "e.constraint.numerical-tolerance.constrains.certificate.all-checks-passed",
+      "from": "constraint.numerical-tolerance",
+      "to": "certificate.all-checks-passed",
+      "relation": "constrains",
+      "confidence": 0.7,
+      "sources": [{ "file": "analysis.md", "heading": "20. Status", "quote": "any failure would abort via `error(...)`" }]
+    },
+    {
+      "id": "e.artifact.analysis-mac.cites.artifact.analysis-log",
+      "from": "artifact.analysis-mac",
+      "to": "artifact.analysis-log",
+      "relation": "depends_on",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "1. Scope and Methodology", "quote": "recorded in `analysis.log` (executed transcript)" }]
+    },
+    {
+      "id": "e.bound.outer-totalistic-rule-count.motivates.model.acceptance-window-geometry",
+      "from": "bound.outer-totalistic-rule-count",
+      "to": "model.acceptance-window-geometry",
+      "relation": "motivates",
+      "confidence": 0.4,
+      "notes": "Weak inferred link: both are cited as parameter spaces for future CA/tiling work; connection not explicit in the text beyond the summary table.",
+      "sources": [{ "file": "analysis.md", "heading": "9. Cellular Automaton Rule Counts", "quote": "establishing the parameter space for §5.1 of `idea.md`" }]
+    }
+  ],
+  "morphisms": [
+    {
+      "id": "m.theorem.rotation-trace-identity.evaluate.theorem.rotation-trace-identity",
+      "kind": "evaluate",
+      "from": "model.rotation-matrix",
+      "to": "theorem.rotation-trace-identity",
+      "state": "performed",
+      "confidence": 0.7,
+      "sources": [{ "file": "analysis.md", "heading": "5. Rotation Matrices and Basis Vectors", "quote": "verified within 1e-10" }]
+    },
+    {
+      "id": "m.experiment.wall-sun-sun-search.certify.theorem.norm-phi-unit",
+      "kind": "certify",
+      "from": "experiment.wall-sun-sun-search",
+      "to": "theorem.norm-phi-unit",
+      "state": "intended",
+      "loss": "the search only rules out small counterexamples; it does not certify a general theorem",
+      "confidence": 0.4,
+      "notes": "Inferred: the notes treat the exhaustive search as evidentiary support for number-theoretic soundness of the Z[phi] arithmetic, but do not explicitly frame it as certifying norm-phi-unit.",
+      "sources": [{ "file": "analysis.md", "heading": "2.1 Extended Z[φ] Number Theory", "quote": "no Wall-Sun-Sun primes found" }]
+    },
+    {
+      "id": "m.definition.alexander-orbach-relation.evaluate.model.dimensional-flow-interpolator",
+      "kind": "evaluate",
+      "from": "definition.alexander-orbach-relation",
+      "to": "model.dimensional-flow-interpolator",
+      "state": "performed",
+      "confidence": 0.6,
+      "sources": [{ "file": "analysis.md", "heading": "7. Emergent Dimensions", "quote": "evaluated at t = 0.1, 1, 10, 100" }]
+    },
+    {
+      "id": "m.experiment.heat-trace-diffusion.fit.model.dimensional-flow-interpolator",
+      "kind": "fit",
+      "from": "experiment.heat-trace-diffusion",
+      "to": "model.dimensional-flow-interpolator",
+      "state": "performed",
+      "loss": "log-log slope estimation discards fine-time detail",
+      "confidence": 0.55,
+      "sources": [{ "file": "analysis.md", "heading": "15. Diffusion Kernel and Heat Trace", "quote": "Effective spectral dimension d_s(t_i, t_{i+1}) from the log-log slope" }]
+    },
+    {
+      "id": "m.model.substitution-inflation-system.bound.model.substitution-inflation-system-df",
+      "kind": "bound",
+      "from": "model.substitution-inflation-system",
+      "to": "model.substitution-inflation-system",
+      "state": "performed",
+      "loss": "fractal dimension estimate uses only one inflation step",
+      "confidence": 0.4,
+      "notes": "Self-referential morphism recording the deductive-to-numeric derivation of d_f from lambda_PF; kept coarse due to lack of a separate d_f node.",
+      "sources": [{ "file": "analysis.md", "heading": "13. Inflation / Substitution Systems", "quote": "Fractal dimension estimate d_f = log N_tiles / log λ_PF after one inflation step" }]
+    }
+  ],
+  "coherence": [
+    {
+      "id": "c.semantic.rotation-trace-vs-cyclotomic",
+      "kind": "semantic",
+      "refs": ["theorem.cyclotomic-real-subfield", "theorem.rotation-trace-identity"],
+      "requirement": "The numerically evaluated trace of R^k must equal the symbolic cyclotomic value 2cos(2*pi*k/n).",
+      "status": "discharged",
+      "cost": { "measure": "developer-effort", "note": "checked within 1e-10 for every n in the sweep" },
+      "confidence": 0.7,
+      "sources": [{ "file": "analysis.md", "heading": "5. Rotation Matrices and Basis Vectors", "quote": "verified within 1e-10" }]
+    },
+    {
+      "id": "c.logical.phi-arithmetic-vs-norm",
+      "kind": "logical",
+      "refs": ["model.z-phi-arithmetic", "theorem.norm-phi-unit"],
+      "requirement": "The rewrite-based Z[phi] pair multiplication must preserve the norm identity N(phi^n) = (-1)^n.",
+      "status": "discharged",
+      "confidence": 0.65,
+      "sources": [{ "file": "analysis.md", "heading": "2.1 Extended Z[φ] Number Theory", "quote": "N(φⁿ) = (−1)ⁿ (φⁿ is a unit) for n = 1..7" }]
+    },
+    {
+      "id": "c.analytic.substitution-vs-fractal-dimension",
+      "kind": "analytic",
+      "refs": ["model.substitution-inflation-system", "m.model.substitution-inflation-system.bound.model.substitution-inflation-system-df"],
+      "requirement": "The Perron-Frobenius eigenvalue derivation must guarantee the convergence of the fractal-dimension estimate d_f across further inflation steps.",
+      "status": "pending",
+      "cost": { "measure": "developer-effort", "note": "only one inflation step is used to estimate d_f; convergence across depth is not checked" },
+      "confidence": 0.5,
+      "sources": [{ "file": "analysis.md", "heading": "13. Inflation / Substitution Systems", "quote": "Fractal dimension estimate d_f = log N_tiles / log λ_PF after one inflation step" }]
+    },
+    {
+      "id": "c.semantic.heat-trace-vs-spectral-zeta",
+      "kind": "semantic",
+      "refs": ["observation.zeta-dedekind-partial-sums", "experiment.heat-trace-diffusion"],
+      "requirement": "The Mellin-transform relationship between spectral zeta values and the heat trace must hold consistently across time scales.",
+      "status": "pending",
+      "confidence": 0.45,
+      "notes": "The document calls the spectral zeta a 'Mellin-transform sibling' of the heat trace but does not report an explicit cross-check between the two.",
+      "sources": [{ "file": "analysis.md", "heading": "15. Diffusion Kernel and Heat Trace", "quote": "reprinted here as a Mellin-transform sibling of the heat trace" }]
+    }
+  ],
+  "clusters": [
+    {
+      "id": "cluster.pentagon-algebraic-substrate",
+      "name": "Golden-Ratio Algebraic Substrate",
+      "kind": "descent_chain",
+      "root": "theorem.phi-minimal-polynomial",
+      "members": [
+        "theorem.phi-minimal-polynomial",
+        "theorem.binet-formula",
+        "model.z-phi-arithmetic",
+        "theorem.norm-phi-unit",
+        "observation.prime-splitting-table",
+        "experiment.wall-sun-sun-search"
+      ],
+      "layers": ["deductive", "symbolic", "numeric"],
+      "summary": "The exact Q(sqrt5)/Z[phi] number-theoretic substrate underwriting the Adjacency Oracle's exact-arithmetic mandate."
+    },
+    {
+      "id": "cluster.holonomy-and-covers",
+      "name": "Discrete Holonomy and Spinor/Anyonic Covers",
+      "kind": "analogy_family",
+      "root": "theorem.z2-spinor-cover",
+      "members": ["theorem.z2-spinor-cover", "theorem.zn-anyonic-cover", "model.flat-u1-bundle", "theorem.rotation-trace-identity"],
+      "layers": ["deductive", "symbolic"],
+      "summary": "Z2 and Z_n covers plus the U(1) Berry/Chern extension realizing the spinor and anyonic analogies."
+    },
+    {
+      "id": "cluster.spectral-dimension-pipeline",
+      "name": "Spectral Dimension and Diffusion Pipeline",
+      "kind": "descent_chain",
+      "root": "definition.alexander-orbach-relation",
+      "members": [
+        "definition.alexander-orbach-relation",
+        "observation.sierpinski-reference",
+        "definition.paper-regime-predicate",
+        "model.dimensional-flow-interpolator",
+        "model.graph-laplacian-spectra",
+        "experiment.heat-trace-diffusion",
+        "observation.zeta-dedekind-partial-sums"
+      ],
+      "layers": ["symbolic", "numeric"],
+      "summary": "The chain from the Alexander-Orbach definition through Laplacian spectra and heat-trace experiments to observed spectral-dimension crossover."
+    },
+    {
+      "id": "cluster.tiling-inflation-benchmark",
+      "name": "Tiling, Substitution and Acceptance-Window Benchmark",
+      "kind": "benchmark_family",
+      "root": "model.cut-and-project-lattice",
+      "members": [
+        "model.cut-and-project-lattice",
+        "observation.physical-plane-embedding",
+        "model.substitution-inflation-system",
+        "model.acceptance-window-geometry",
+        "model.fibonacci-word-symbolic-dynamics",
+        "theorem.pentagram-self-similarity"
+      ],
+      "layers": ["symbolic", "numeric"],
+      "summary": "The cut-and-project, inflation and symbolic-dynamics machinery calibrating the Penrose-tiling substrate."
+    }
+  ],
+  "unresolved": [
+    {
+      "kind": "dangling_reference",
+      "description": "Multiple sections cite `idea.md` (e.g. §2.1, §3.2, §4.2, §6.1) as the target document being verified, but idea.md was not among the input documents matched for extraction, so those cross-document claims could not be turned into nodes of their own.",
+      "refs": ["norm.exact-arithmetic-mandate", "theorem.z2-spinor-cover", "definition.paper-regime-predicate"],
+      "layers": ["inspiration"]
+    },
+    {
+      "kind": "missing_morphism",
+      "description": "The extended flat-bundle model (Berry phase, Chern number) is described as concretizing the 'discrete principal G-bundle abstraction' of an inspiration-layer idea, but no fuzzy/inspiration source node exists in this corpus to formalize from.",
+      "refs": ["model.flat-u1-bundle"],
+      "layers": ["inspiration", "symbolic"]
+    },
+    {
+      "kind": "layer_ambiguity",
+      "description": "The fractal-dimension estimate d_f from one inflation step is treated as if numerically stable, but no separate numeric node was created for it (folded into model.substitution-inflation-system); its true layer (symbolic derivation vs. numeric estimate) is ambiguous.",
+      "refs": ["model.substitution-inflation-system"],
+      "layers": ["symbolic", "numeric"]
+    }
+  ],
+  "stats": {
+    "documents": 1,
+    "nodes": 39,
+    "edges": 30,
+    "morphisms": 5,
+    "obligations": 4,
+    "cross_layer_edges": 18
+  }
+}

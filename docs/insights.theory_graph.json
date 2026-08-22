@@ -1,0 +1,676 @@
+{
+  "$schema": "../../../ops/theory_graph.schema.ts",
+  "version": "2.0.0",
+  "generated_at": "2024-06-01T00:00:00Z",
+  "generator": { "op": "analyze.op.md" },
+  "corpus": {
+    "documents": [
+      {
+        "id": "insights",
+        "path": "./insights.md",
+        "order": 1,
+        "title": "Insights and Open Questions: Multi-Sheeted n-gon Tilings",
+        "dominant_layers": ["inspiration", "fuzzy", "deductive"]
+      }
+    ]
+  },
+  "context": {
+    "social": {
+      "program": "Multi-sheeted n-gon tiling framework",
+      "norms": ["insights must be traceable to idea.md, affine.md, polyhedra.md, pinwheels.md, erdos.md, sweep_ngon.md, analysis.md, experiment.md, README_DEV.md"]
+    }
+  },
+  "nodes": [
+    {
+      "id": "trajectory.classify-by-algebraic-field",
+      "kind": "trajectory",
+      "name": "Classify Expansion Families by Algebraic Field, Not Shape",
+      "statement": "The research direction is to treat the pair of algebraic field and fiber group, rather than the polygon's shape, as the true classification object for expansion families.",
+      "status": "proposed",
+      "confidence": 0.7,
+      "shape": { "descriptor": "reclassify geometric objects by their underlying algebra" },
+      "sources": [
+        { "file": "insights.md", "heading": "1.1 The Algebraic Field is the True Invariant", "quote": "The proper classification object for the entire framework is not the polygon, nor the polytope, but the pair $(\\mathbb{F}, G)$" }
+      ]
+    },
+    {
+      "id": "observation.field-recurrence-across-corpus",
+      "kind": "observation",
+      "name": "Same Fields Recur Across 2D and 3D Constructions",
+      "statement": "The pentagon, dodecahedron, icosahedron, cube, octahedron and tetrahedron all reduce to reconnection or distance-set conditions over a small set of recurring algebraic fields.",
+      "status": "supported",
+      "confidence": 0.75,
+      "representation": { "layer": "numeric", "form": "prose-sketch" },
+      "sources": [
+        { "file": "insights.md", "heading": "1.1 The Algebraic Field is the True Invariant", "quote": "the dodecahedron and icosahedron both over $\\mathbb{Q}(\\sqrt{5})$, the cube/octahedron over $\\mathbb{Q}$, the tetrahedron over $\\mathbb{Q}(\\sqrt{2})$" }
+      ]
+    },
+    {
+      "id": "conjecture.field-group-pair-invariant",
+      "kind": "conjecture",
+      "name": "Two Polygons Over the Same (Field, Group) Are Dimensionally Equivalent",
+      "statement": "Two different polygons that share the same algebraic field and fiber group generate dimensionally equivalent expansion families.",
+      "status": "proposed",
+      "confidence": 0.6,
+      "representation": { "layer": "fuzzy", "form": "prose-sketch" },
+      "sources": [
+        { "file": "insights.md", "heading": "1.1 The Algebraic Field is the True Invariant", "quote": "Two different polygons over the same $(\\mathbb{F}, G)$ generate dimensionally equivalent expansion families." }
+      ],
+      "notes": "Inferred as the crux conjecture underlying insight 1.1; not phrased as a standalone claim in the text."
+    },
+    {
+      "id": "e.observation.field-recurrence-across-corpus.supports.conjecture.field-group-pair-invariant",
+      "from": "observation.field-recurrence-across-corpus",
+      "to": "conjecture.field-group-pair-invariant",
+      "relation": "supports",
+      "strength": 0.6,
+      "confidence": 0.6,
+      "sources": [{ "file": "insights.md", "heading": "1.1 The Algebraic Field is the True Invariant", "quote": "The evidence is overwhelming" }]
+    },
+    {
+      "id": "e.conjecture.field-group-pair-invariant.motivates.trajectory.classify-by-algebraic-field",
+      "from": "conjecture.field-group-pair-invariant",
+      "to": "trajectory.classify-by-algebraic-field",
+      "relation": "motivates",
+      "confidence": 0.6,
+      "sources": [{ "file": "insights.md", "heading": "1.1 The Algebraic Field is the True Invariant", "quote": "The proper classification object for the entire framework" }]
+    },
+
+    {
+      "id": "conjecture.q-sqrt5-universal-across-dimensions",
+      "kind": "conjecture",
+      "name": "Golden Ratio Field Is the Universal Substrate for 5-Fold Symmetry",
+      "statement": "The golden ratio is the unique quadratic irrational solving the 5-fold symmetry condition in any dimension, so any framework requiring 5-fold symmetry inherits the Q(sqrt(5)) arithmetic substrate.",
+      "status": "proposed",
+      "confidence": 0.65,
+      "formal": "\\mathbb{Q}(\\sqrt{5})",
+      "representation": { "layer": "fuzzy", "form": "prose-sketch" },
+      "sources": [
+        { "file": "insights.md", "heading": "1.2 The Universality of Q(√5) Across Dimensions", "quote": "the golden ratio $\\phi$ is the unique quadratic irrational that solves the 5-fold symmetry condition in any dimension" }
+      ]
+    },
+    {
+      "id": "e.conjecture.q-sqrt5-universal-across-dimensions.generalizes.observation.field-recurrence-across-corpus",
+      "from": "conjecture.q-sqrt5-universal-across-dimensions",
+      "to": "observation.field-recurrence-across-corpus",
+      "relation": "generalizes",
+      "confidence": 0.5,
+      "sources": [{ "file": "insights.md", "heading": "1.2 The Universality of Q(√5) Across Dimensions", "quote": "This is not a coincidence of the small examples" }]
+    },
+
+    {
+      "id": "observation.spectral-dimension-rule-invariant",
+      "kind": "observation",
+      "name": "Spectral Dimension ~1.1 Is Roughly Constant Across n=3..12",
+      "statement": "Under the signed3 vortex rule, the KPM-measured spectral dimension is approximately 1.0 to 1.2 across polygons with n from 3 to 12, independent of n.",
+      "status": "supported",
+      "confidence": 0.7,
+      "attributes": [
+        { "key": "d_spec_kpm_min", "value": 1.0, "layer": "numeric" },
+        { "key": "d_spec_kpm_max", "value": 1.2, "layer": "numeric" },
+        { "key": "n_range_min", "value": 3 },
+        { "key": "n_range_max", "value": 12 }
+      ],
+      "representation": { "layer": "numeric", "form": "benchmark-row" },
+      "sources": [
+        { "file": "insights.md", "heading": "1.3 The Spectral Dimension is Rule-Dominated, Geometry-Decorative", "quote": "across $n = 3..12$, $d_{\\text{spec}}^{\\text{KPM}} \\approx 1.0–1.2$ regardless of polygon" }
+      ]
+    },
+    {
+      "id": "conjecture.spectral-rule-dominance",
+      "kind": "conjecture",
+      "name": "Vortex Rule Dominates Spectral Dimension, Polygon Is Decorative",
+      "statement": "The vortex rule controls the spectral dimension of a multi-sheeted n-gon cover while the polygon geometry controls only the effective dimension.",
+      "status": "proposed",
+      "confidence": 0.65,
+      "sources": [
+        { "file": "insights.md", "heading": "1.3 The Spectral Dimension is Rule-Dominated, Geometry-Decorative", "quote": "the polygon controlling $d_{\\text{eff}}$ and the vortex rule controlling $d_{\\text{spec}}$" }
+      ]
+    },
+    {
+      "id": "e.observation.spectral-dimension-rule-invariant.supports.conjecture.spectral-rule-dominance",
+      "from": "observation.spectral-dimension-rule-invariant",
+      "to": "conjecture.spectral-rule-dominance",
+      "relation": "supports",
+      "strength": 0.65,
+      "confidence": 0.6,
+      "sources": [{ "file": "insights.md", "heading": "1.3 The Spectral Dimension is Rule-Dominated, Geometry-Decorative", "quote": "startling empirical fact" }]
+    },
+    {
+      "id": "e.conjecture.spectral-rule-dominance.abstracts.trajectory.classify-by-algebraic-field",
+      "from": "conjecture.spectral-rule-dominance",
+      "to": "trajectory.classify-by-algebraic-field",
+      "relation": "abstracts",
+      "confidence": 0.4,
+      "sources": [{ "file": "insights.md", "heading": "1.3 The Spectral Dimension is Rule-Dominated, Geometry-Decorative", "quote": "a clean separation of geometric and spectral degrees of freedom" }]
+    },
+
+    {
+      "id": "definition.pinwheel-object",
+      "kind": "definition",
+      "name": "Pinwheel Is Polygon Plus Active Edge Set",
+      "statement": "The mathematical object of interest is the polygon together with its active edge set, not the polygon alone.",
+      "status": "accepted",
+      "confidence": 0.75,
+      "representation": { "layer": "symbolic", "form": "term-graph", "content": "(P, E_A)" },
+      "sources": [
+        { "file": "insights.md", "heading": "1.4 Pinwheels and the Design Space", "quote": "the polygon together with its active edge set $E_A$, not the polygon alone, is the mathematical object" }
+      ]
+    },
+    {
+      "id": "conjecture.pinwheel-hierarchy-organizing-principle",
+      "kind": "conjecture",
+      "name": "Four-Level Pinwheel Hierarchy Is the Framework's Organizing Principle",
+      "statement": "The four-level hierarchy of full reconnection, multi-sheeted full reconnection, edge-restricted reconnection, and non-reconnective tree is the natural classification of the entire framework, with edge restriction as the mechanism moving between levels.",
+      "status": "proposed",
+      "confidence": 0.6,
+      "sources": [
+        { "file": "insights.md", "heading": "1.4 Pinwheels and the Design Space", "quote": "This hierarchy should be the organizing principle of any future systematic study." }
+      ]
+    },
+    {
+      "id": "e.definition.pinwheel-object.motivates.conjecture.pinwheel-hierarchy-organizing-principle",
+      "from": "definition.pinwheel-object",
+      "to": "conjecture.pinwheel-hierarchy-organizing-principle",
+      "relation": "motivates",
+      "confidence": 0.6,
+      "sources": [{ "file": "insights.md", "heading": "1.4 Pinwheels and the Design Space", "quote": "This shift opens a vast design space" }]
+    },
+
+    {
+      "id": "conjecture.erdos-log-n-distances",
+      "kind": "conjecture",
+      "name": "Pentagonal Lattice Achieves Theta(log n) Distinct Distances",
+      "statement": "The number of distinct distances among n vertices of the pentagonal lattice is Theta(log n), in contrast to Theta(n / sqrt(log n)) for the integer lattice.",
+      "formal": "D(\\mathcal{P}_n) = \\Theta(\\log n)",
+      "status": "proposed",
+      "confidence": 0.7,
+      "representation": { "layer": "fuzzy", "form": "prose-sketch" },
+      "attributes": [{ "key": "comparison_bound", "value": "Theta(n / sqrt(log n))", "layer": "numeric" }],
+      "sources": [
+        { "file": "insights.md", "heading": "1.5 The Erdős Connection: A Concrete Falsifiable Prediction", "quote": "$$D(\\mathcal{P}_n) = \\Theta(\\log n)$$" }
+      ]
+    },
+    {
+      "id": "knowledge_gap.erdos-prediction-untested",
+      "kind": "knowledge_gap",
+      "name": "Erdős Prediction Not Yet Tested at Scale",
+      "statement": "The high-multiplicity ring prediction from norm-multiplicativity has not yet been checked computationally at scale.",
+      "status": "pre_formal",
+      "confidence": 0.6,
+      "sources": [
+        { "file": "insights.md", "heading": "1.5 The Erdős Connection: A Concrete Falsifiable Prediction", "quote": "an immediate computational target" }
+      ]
+    },
+    {
+      "id": "e.knowledge_gap.erdos-prediction-untested.motivates.conjecture.erdos-log-n-distances",
+      "from": "knowledge_gap.erdos-prediction-untested",
+      "to": "conjecture.erdos-log-n-distances",
+      "relation": "motivates",
+      "confidence": 0.5,
+      "sources": [{ "file": "insights.md", "heading": "1.5 The Erdős Connection: A Concrete Falsifiable Prediction", "quote": "The Erdős prediction is testable now with the existing computational infrastructure." }]
+    },
+
+    {
+      "id": "open_question.dspec-stability-vs-flow",
+      "kind": "open_question",
+      "name": "Is Spectral Dimension Universality an Artifact of Finite Cluster Size?",
+      "statement": "It is unclear whether the observed constancy of the spectral dimension is an artifact of finite BFS depth or reflects an exhausted dimensional flow at that scale.",
+      "status": "pre_formal",
+      "confidence": 0.6,
+      "sources": [
+        { "file": "insights.md", "heading": "2.1 d_spec Stability vs. Dimensional Flow", "quote": "Larger clusters and a careful $t$-dependent KPM analysis are needed." }
+      ]
+    },
+    {
+      "id": "e.observation.spectral-dimension-rule-invariant.contradicts.open_question.dspec-stability-vs-flow",
+      "from": "observation.spectral-dimension-rule-invariant",
+      "to": "open_question.dspec-stability-vs-flow",
+      "relation": "contradicts",
+      "confidence": 0.5,
+      "sources": [{ "file": "insights.md", "heading": "2.1 d_spec Stability vs. Dimensional Flow", "quote": "reports $d_{\\text{spec}} \\approx 1.1$ as a constant across polygons, with no flow visible" }]
+    },
+
+    {
+      "id": "open_question.field-universality-of-dspec",
+      "kind": "open_question",
+      "name": "Is Spectral Dimension Universal Across All Real Quadratic Fields?",
+      "statement": "It is unknown whether the spectral dimension of approximately 1.1 is specific to the sqrt(5)-class of fields or universal across all real quadratic fields.",
+      "status": "pre_formal",
+      "confidence": 0.6,
+      "sources": [
+        { "file": "insights.md", "heading": "2.2 Q(√5) Universality vs. Higher Real Quadratic Fields", "quote": "Is the spectral dimension $d_{\\text{spec}} \\approx 1.1$ specific to the $\\sqrt{5}$-class, or is it universal across all real quadratic fields" }
+      ]
+    },
+    {
+      "id": "e.conjecture.q-sqrt5-universal-across-dimensions.contradicts.open_question.field-universality-of-dspec",
+      "from": "conjecture.q-sqrt5-universal-across-dimensions",
+      "to": "open_question.field-universality-of-dspec",
+      "relation": "motivates",
+      "confidence": 0.45,
+      "sources": [{ "file": "insights.md", "heading": "2.2 Q(√5) Universality vs. Higher Real Quadratic Fields", "quote": "the octagon and dodecagon are equally valid \"simple quadratic\" cases" }]
+    },
+
+    {
+      "id": "open_question.hierarchy-lattice-structure",
+      "kind": "open_question",
+      "name": "Is the Pinwheel Hierarchy a Lattice Rather Than a Chain?",
+      "statement": "It is unknown whether the four-level pinwheel hierarchy is an order-theoretic lattice with incomparable elements at each level rather than a totally ordered chain.",
+      "status": "pre_formal",
+      "confidence": 0.55,
+      "sources": [
+        { "file": "insights.md", "heading": "2.3 The Hierarchy is Strict, but the Boundaries are Fuzzy", "quote": "Is the hierarchy actually a lattice ... with multiple incomparable elements at each level" }
+      ]
+    },
+    {
+      "id": "e.conjecture.pinwheel-hierarchy-organizing-principle.contradicts.open_question.hierarchy-lattice-structure",
+      "from": "conjecture.pinwheel-hierarchy-organizing-principle",
+      "to": "open_question.hierarchy-lattice-structure",
+      "relation": "motivates",
+      "confidence": 0.5,
+      "sources": [{ "file": "insights.md", "heading": "2.3 The Hierarchy is Strict, but the Boundaries are Fuzzy", "quote": "the transitions between levels are not sharp" }]
+    },
+
+    {
+      "id": "conjecture.multisheeted-cutandproject-equivalence",
+      "kind": "conjecture",
+      "name": "Multi-Sheeted Covers and Cut-and-Project Are Equivalent Constructions",
+      "statement": "The multi-sheeted covering-space construction and the cut-and-project construction are claimed to be equivalent, yielding the same graph, spectrum and dimensions.",
+      "status": "proposed",
+      "confidence": 0.5,
+      "sources": [
+        { "file": "insights.md", "heading": "2.4 Multi-Sheeted vs. Cut-and-Project: Same or Different?", "quote": "These are claimed to be equivalent, but the equivalence is asserted rather than proved." }
+      ]
+    },
+    {
+      "id": "open_question.equivalence-unproved",
+      "kind": "open_question",
+      "name": "Is the Multi-Sheeted/Cut-and-Project Equivalence Rigorously Provable?",
+      "statement": "It is unresolved whether a rigorous functorial dictionary exists between the multi-sheeted covering construction and the cut-and-project construction.",
+      "status": "pre_formal",
+      "confidence": 0.55,
+      "sources": [
+        { "file": "insights.md", "heading": "2.4 Multi-Sheeted vs. Cut-and-Project: Same or Different?", "quote": "A rigorous functorial dictionary between them is needed." }
+      ]
+    },
+    {
+      "id": "e.conjecture.multisheeted-cutandproject-equivalence.motivates.open_question.equivalence-unproved",
+      "from": "conjecture.multisheeted-cutandproject-equivalence",
+      "to": "open_question.equivalence-unproved",
+      "relation": "motivates",
+      "confidence": 0.5,
+      "sources": [{ "file": "insights.md", "heading": "2.4 Multi-Sheeted vs. Cut-and-Project: Same or Different?", "quote": "asserted rather than proved" }]
+    },
+
+    {
+      "id": "heuristic.ca-phase-transition-rule-scaling",
+      "kind": "heuristic",
+      "name": "CA Phase Transition Is Induced by Rule Scaling, Not Geometry",
+      "statement": "The CA rule scales as B floor(n/3) over S, so the observed phase transition at n=5/6 is induced by rule scaling rather than by polygon geometry, and a fixed rule should track spectral universality.",
+      "status": "proposed",
+      "confidence": 0.55,
+      "sources": [
+        { "file": "insights.md", "heading": "2.5 CA Phase Transition vs. Spectral Universality", "quote": "the phase transition is induced by the rule scaling, not by the polygon geometry" }
+      ]
+    },
+    {
+      "id": "e.heuristic.ca-phase-transition-rule-scaling.refutes.open_question.dspec-stability-vs-flow",
+      "from": "heuristic.ca-phase-transition-rule-scaling",
+      "to": "open_question.dspec-stability-vs-flow",
+      "relation": "refutes",
+      "confidence": 0.3,
+      "notes": "Weak inferred link: the rule-scaling resolution partially addresses the apparent contradiction in 2.1/2.5 but the text frames it as a separate tension resolution.",
+      "sources": [{ "file": "insights.md", "heading": "2.5 CA Phase Transition vs. Spectral Universality", "quote": "This is testable." }]
+    },
+
+    {
+      "id": "open_question.fiber-group-classification",
+      "kind": "open_question",
+      "name": "What Is the Minimal Fiber Group for a Given Field?",
+      "statement": "For each algebraic field admitting a finite orientation group, it is unknown what the minimal fiber group is that yields a locally finite, globally consistent expansion family.",
+      "status": "pre_formal",
+      "confidence": 0.55,
+      "sources": [
+        { "file": "insights.md", "heading": "3.1 Algebraic Questions", "quote": "Is there a general formula $G = G(\\mathbb{F})$?" }
+      ]
+    },
+    {
+      "id": "open_question.galois-action-on-distance-set",
+      "kind": "open_question",
+      "name": "How Does Galois Conjugation Lift to the Multi-Sheeted Graph?",
+      "statement": "It is unknown how the Galois conjugation sending phi to psi on Q(sqrt(5)) lifts to an automorphism of the multi-sheeted graph pairing conjugate vertices on different sheets.",
+      "status": "pre_formal",
+      "confidence": 0.55,
+      "sources": [
+        { "file": "insights.md", "heading": "3.1 Algebraic Questions", "quote": "Is there a Galois automorphism of $\\mathcal{G}$ that pairs each vertex with a \"conjugate\" vertex on a different sheet?" }
+      ]
+    },
+    {
+      "id": "open_question.higher-dim-pinwheels",
+      "kind": "open_question",
+      "name": "What Is the Canonical 4D Pinwheel for Each Regular Polytope?",
+      "statement": "It is unknown what explicit active-face structure maximizes the spectral gap of a 4D expander built from the 120-cell or 600-cell, and whether a canonical pinwheel exists for each regular 4D polytope.",
+      "status": "pre_formal",
+      "confidence": 0.5,
+      "sources": [
+        { "file": "insights.md", "heading": "3.2 Geometric Questions", "quote": "Is there a canonical \"canonical pinwheel\" for each regular 4D polytope?" }
+      ]
+    },
+    {
+      "id": "open_question.exact-universality-class",
+      "kind": "open_question",
+      "name": "What Determines the Exact Value of the Spectral Dimension?",
+      "statement": "It is unknown what rule-independent quantity determines the precise value of the spectral dimension under the signed-3 rule.",
+      "status": "pre_formal",
+      "confidence": 0.55,
+      "sources": [
+        { "file": "insights.md", "heading": "3.3 Spectral Questions", "quote": "Is it a simple function of the vortex density (2/3) and the field $\\mathbb{F}$?" }
+      ]
+    },
+    {
+      "id": "e.conjecture.spectral-rule-dominance.motivates.open_question.exact-universality-class",
+      "from": "conjecture.spectral-rule-dominance",
+      "to": "open_question.exact-universality-class",
+      "relation": "motivates",
+      "confidence": 0.5,
+      "sources": [{ "file": "insights.md", "heading": "3.3 Spectral Questions", "quote": "Exact universality class of $d_{\\text{spec}} \\approx 1.1$" }]
+    },
+
+    {
+      "id": "open_question.glider-turing-universality",
+      "kind": "open_question",
+      "name": "Are 5-Regular OT Rules Turing-Universal?",
+      "statement": "It is unknown whether there is a theoretical obstruction to gliders on multi-sheeted pentagonal graphs, or whether their absence in current sweeps is purely a finite-size limitation.",
+      "status": "pre_formal",
+      "confidence": 0.5,
+      "sources": [
+        { "file": "insights.md", "heading": "3.4 Dynamical Questions", "quote": "The current sweeps find no gliders, but only at modest BFS depth." }
+      ]
+    },
+
+    {
+      "id": "open_question.erdos-exact-exponent",
+      "kind": "open_question",
+      "name": "What Is the Exact Erdős Exponent for Pentagonal Vertices?",
+      "statement": "The exact exponent alpha such that the distinct-distance count is Theta((log n)^alpha) for n pentagonal vertices is unknown, though analysis suggests alpha = 1.",
+      "formal": "D(\\mathcal{P}_n) = \\Theta((\\log n)^\\alpha)",
+      "status": "pre_formal",
+      "confidence": 0.55,
+      "sources": [
+        { "file": "insights.md", "heading": "3.5 Combinatorial Questions", "quote": "the analysis in erdos.md §3.2 suggests $\\alpha = 1$, but norm-multiplicativity could reduce it" }
+      ]
+    },
+    {
+      "id": "e.conjecture.erdos-log-n-distances.specializes.open_question.erdos-exact-exponent",
+      "from": "conjecture.erdos-log-n-distances",
+      "to": "open_question.erdos-exact-exponent",
+      "relation": "specializes",
+      "confidence": 0.5,
+      "sources": [{ "file": "insights.md", "heading": "3.5 Combinatorial Questions", "quote": "Erdős exponent for $\\mathcal{P}_n$" }]
+    },
+
+    {
+      "id": "open_question.functor-equivalence-statement",
+      "kind": "open_question",
+      "name": "Is There a Category-Theoretic Statement of the Two-Construction Equivalence?",
+      "statement": "It is unknown whether a category-theoretic natural transformation exists between the multi-sheeted construction and the cut-and-project construction.",
+      "status": "pre_formal",
+      "confidence": 0.5,
+      "sources": [
+        { "file": "insights.md", "heading": "3.7 Foundational Questions", "quote": "What is the natural transformation between them?" }
+      ]
+    },
+    {
+      "id": "e.open_question.equivalence-unproved.specializes.open_question.functor-equivalence-statement",
+      "from": "open_question.equivalence-unproved",
+      "to": "open_question.functor-equivalence-statement",
+      "relation": "specializes",
+      "confidence": 0.45,
+      "sources": [{ "file": "insights.md", "heading": "3.7 Foundational Questions", "quote": "Functor between multi-sheeted and cut-and-project" }]
+    },
+
+    {
+      "id": "invariance_hypothesis.reconnection-algebraic-invariant-duality",
+      "kind": "invariance_hypothesis",
+      "name": "Reconnection Type Should Correspond to a Single Algebraic Invariant",
+      "statement": "There ought to be a unifying theorem of the form 'reconnection type corresponds to algebraic invariant' subsuming the cube, pentagon, dodecahedron and Sierpiński cases into a single classification.",
+      "status": "pre_formal",
+      "confidence": 0.5,
+      "sources": [
+        { "file": "insights.md", "heading": "3.7 Foundational Questions", "quote": "Is there a single theorem of the form \"reconnection type ↔ algebraic invariant\"" }
+      ]
+    },
+    {
+      "id": "e.trajectory.classify-by-algebraic-field.steers.invariance_hypothesis.reconnection-algebraic-invariant-duality",
+      "from": "trajectory.classify-by-algebraic-field",
+      "to": "invariance_hypothesis.reconnection-algebraic-invariant-duality",
+      "relation": "steers",
+      "confidence": 0.5,
+      "sources": [{ "file": "insights.md", "heading": "3.7 Foundational Questions", "quote": "A unifying theorem" }]
+    },
+
+    {
+      "id": "research_program.suggested-next-steps",
+      "kind": "research_program",
+      "name": "Six Suggested Next Steps for the Framework",
+      "statement": "The highest-value next steps are running the Erdős catalog at the huge preset, sweeping spectral dimension over multiple fields, implementing a pinwheel oracle, constructing the dodecahedral multi-sheeted cover, proving or disproving the multi-sheeted/cut-and-project equivalence, and searching for gliders at large BFS depth.",
+      "status": "proposed",
+      "confidence": 0.7,
+      "representation": { "layer": "social", "form": "prose-sketch" },
+      "sources": [
+        { "file": "insights.md", "heading": "4. Suggested Next Steps", "quote": "the highest-value next steps are" }
+      ]
+    },
+    {
+      "id": "e.research_program.suggested-next-steps.tests.conjecture.erdos-log-n-distances",
+      "from": "research_program.suggested-next-steps",
+      "to": "conjecture.erdos-log-n-distances",
+      "relation": "tests",
+      "confidence": 0.6,
+      "sources": [{ "file": "insights.md", "heading": "4. Suggested Next Steps", "quote": "Run the Erdős catalog at the huge preset" }]
+    },
+    {
+      "id": "e.research_program.suggested-next-steps.tests.open_question.field-universality-of-dspec",
+      "from": "research_program.suggested-next-steps",
+      "to": "open_question.field-universality-of-dspec",
+      "relation": "tests",
+      "confidence": 0.6,
+      "sources": [{ "file": "insights.md", "heading": "4. Suggested Next Steps", "quote": "Sweep $d_{\\text{spec}}$ over multiple fields" }]
+    },
+    {
+      "id": "e.research_program.suggested-next-steps.tests.conjecture.pinwheel-hierarchy-organizing-principle",
+      "from": "research_program.suggested-next-steps",
+      "to": "conjecture.pinwheel-hierarchy-organizing-principle",
+      "relation": "tests",
+      "confidence": 0.55,
+      "sources": [{ "file": "insights.md", "heading": "4. Suggested Next Steps", "quote": "Implement the pinwheel oracle" }]
+    },
+    {
+      "id": "e.research_program.suggested-next-steps.tests.open_question.higher-dim-pinwheels",
+      "from": "research_program.suggested-next-steps",
+      "to": "open_question.higher-dim-pinwheels",
+      "relation": "tests",
+      "confidence": 0.55,
+      "sources": [{ "file": "insights.md", "heading": "4. Suggested Next Steps", "quote": "Construct the dodecahedral multi-sheeted cover" }]
+    },
+    {
+      "id": "e.research_program.suggested-next-steps.tests.conjecture.multisheeted-cutandproject-equivalence",
+      "from": "research_program.suggested-next-steps",
+      "to": "conjecture.multisheeted-cutandproject-equivalence",
+      "relation": "tests",
+      "confidence": 0.55,
+      "sources": [{ "file": "insights.md", "heading": "4. Suggested Next Steps", "quote": "Prove or disprove the equivalence" }]
+    },
+    {
+      "id": "e.research_program.suggested-next-steps.tests.open_question.glider-turing-universality",
+      "from": "research_program.suggested-next-steps",
+      "to": "open_question.glider-turing-universality",
+      "relation": "tests",
+      "confidence": 0.55,
+      "sources": [{ "file": "insights.md", "heading": "4. Suggested Next Steps", "quote": "Search for gliders at large BFS depth" }]
+    },
+
+    {
+      "id": "theory.algebraic-to-geometric-functor",
+      "kind": "theory",
+      "name": "The Framework Is a Functor from Algebraic Data to Geometric Structures",
+      "statement": "The entire framework describes a functor from the category of algebraic data (field, fiber group, vortex rule) to the category of geometric structures (multi-sheeted covers, quasicrystals, expander graphs, fractals), with the polygon serving only as a convenient parametrization of the field.",
+      "status": "proposed",
+      "confidence": 0.55,
+      "representation": { "layer": "deductive", "form": "prose-sketch" },
+      "sources": [
+        { "file": "insights.md", "heading": "5. Meta-Insight: What the Framework Really Is", "quote": "a functor from the category of algebraic data ... to the category of geometric structures" }
+      ]
+    },
+    {
+      "id": "e.theory.algebraic-to-geometric-functor.abstracts.trajectory.classify-by-algebraic-field",
+      "from": "theory.algebraic-to-geometric-functor",
+      "to": "trajectory.classify-by-algebraic-field",
+      "relation": "generalizes",
+      "confidence": 0.5,
+      "sources": [{ "file": "insights.md", "heading": "5. Meta-Insight: What the Framework Really Is", "quote": "This perspective unifies all the apparent diversity" }]
+    },
+    {
+      "id": "e.theory.algebraic-to-geometric-functor.motivates.open_question.functor-equivalence-statement",
+      "from": "theory.algebraic-to-geometric-functor",
+      "to": "open_question.functor-equivalence-statement",
+      "relation": "motivates",
+      "confidence": 0.5,
+      "sources": [{ "file": "insights.md", "heading": "5. Meta-Insight: What the Framework Really Is", "quote": "Understanding this map ... is the real research program implicit in the corpus." }]
+    },
+    {
+      "id": "e.theory.algebraic-to-geometric-functor.instantiates.invariance_hypothesis.reconnection-algebraic-invariant-duality",
+      "from": "invariance_hypothesis.reconnection-algebraic-invariant-duality",
+      "to": "theory.algebraic-to-geometric-functor",
+      "relation": "specializes",
+      "confidence": 0.4,
+      "sources": [{ "file": "insights.md", "heading": "5. Meta-Insight: What the Framework Really Is", "quote": "The square is the trivial case" }]
+    }
+  ],
+  "morphisms": [
+    {
+      "id": "m.observation.field-recurrence-across-corpus.abstract.conjecture.field-group-pair-invariant",
+      "kind": "abstract",
+      "from": "observation.field-recurrence-across-corpus",
+      "to": "conjecture.field-group-pair-invariant",
+      "state": "performed",
+      "loss": "drops the per-example detail of which field belongs to which solid",
+      "confidence": 0.5,
+      "sources": [{ "file": "insights.md", "heading": "1.1 The Algebraic Field is the True Invariant", "quote": "The evidence is overwhelming" }]
+    },
+    {
+      "id": "m.observation.spectral-dimension-rule-invariant.abstract.conjecture.spectral-rule-dominance",
+      "kind": "abstract",
+      "from": "observation.spectral-dimension-rule-invariant",
+      "to": "conjecture.spectral-rule-dominance",
+      "state": "performed",
+      "confidence": 0.55,
+      "sources": [{ "file": "insights.md", "heading": "1.3 The Spectral Dimension is Rule-Dominated, Geometry-Decorative", "quote": "This is the opposite of the usual paradigm in lattice physics" }]
+    },
+    {
+      "id": "m.conjecture.erdos-log-n-distances.formalize_numeric.knowledge_gap.erdos-prediction-untested",
+      "kind": "formalize_numeric",
+      "from": "conjecture.erdos-log-n-distances",
+      "to": "knowledge_gap.erdos-prediction-untested",
+      "state": "intended",
+      "confidence": 0.45,
+      "notes": "The prediction is stated but the confirming experiment is only proposed, not yet run.",
+      "sources": [{ "file": "insights.md", "heading": "1.5 The Erdős Connection: A Concrete Falsifiable Prediction", "quote": "The Erdős prediction is testable now with the existing computational infrastructure." }]
+    }
+  ],
+  "coherence": [
+    {
+      "id": "c.analytic.spectral-dimension-vs-dimensional-flow",
+      "kind": "analytic",
+      "refs": ["observation.spectral-dimension-rule-invariant", "open_question.dspec-stability-vs-flow"],
+      "requirement": "The claimed dimensional-flow theory must guarantee the convergence behavior it predicts, matching the observed constancy of measured spectral dimension.",
+      "status": "violated",
+      "cost": { "measure": "developer-effort", "note": "requires larger clusters and t-dependent KPM analysis to resolve" },
+      "confidence": 0.5,
+      "sources": [{ "file": "insights.md", "heading": "2.1 d_spec Stability vs. Dimensional Flow", "quote": "no flow visible" }]
+    }
+  ],
+  "clusters": [
+    {
+      "id": "cluster.field-invariance-descent",
+      "name": "Field Invariance: Observation to Trajectory",
+      "kind": "descent_chain",
+      "root": "trajectory.classify-by-algebraic-field",
+      "members": [
+        "observation.field-recurrence-across-corpus",
+        "conjecture.field-group-pair-invariant",
+        "trajectory.classify-by-algebraic-field"
+      ],
+      "layers": ["numeric", "fuzzy", "inspiration"]
+    },
+    {
+      "id": "cluster.spectral-universality-thread",
+      "name": "Spectral Universality Thread",
+      "kind": "thread",
+      "root": "conjecture.spectral-rule-dominance",
+      "members": [
+        "observation.spectral-dimension-rule-invariant",
+        "conjecture.spectral-rule-dominance",
+        "open_question.dspec-stability-vs-flow",
+        "open_question.field-universality-of-dspec",
+        "open_question.exact-universality-class",
+        "heuristic.ca-phase-transition-rule-scaling"
+      ],
+      "layers": ["numeric", "fuzzy"]
+    },
+    {
+      "id": "cluster.erdos-thread",
+      "name": "Erdős Distance Thread",
+      "kind": "thread",
+      "root": "conjecture.erdos-log-n-distances",
+      "members": [
+        "conjecture.erdos-log-n-distances",
+        "knowledge_gap.erdos-prediction-untested",
+        "open_question.erdos-exact-exponent"
+      ],
+      "layers": ["fuzzy", "inspiration"]
+    },
+    {
+      "id": "cluster.meta-functor-thread",
+      "name": "Unifying Functor Thread",
+      "kind": "analogy_family",
+      "root": "theory.algebraic-to-geometric-functor",
+      "members": [
+        "theory.algebraic-to-geometric-functor",
+        "invariance_hypothesis.reconnection-algebraic-invariant-duality",
+        "open_question.functor-equivalence-statement",
+        "conjecture.multisheeted-cutandproject-equivalence",
+        "open_question.equivalence-unproved"
+      ],
+      "layers": ["deductive", "inspiration"]
+    }
+  ],
+  "unresolved": [
+    {
+      "kind": "layer_ambiguity",
+      "description": "Section 1.1's central claim is framed as an 'insight' asserted with confidence, but it is unproved and hedged elsewhere in the corpus; treated here as a fuzzy-layer conjecture rather than an accepted theorem.",
+      "refs": ["conjecture.field-group-pair-invariant"],
+      "layers": ["fuzzy", "deductive"]
+    },
+    {
+      "kind": "missing_morphism",
+      "description": "The notes assert equivalence between multi-sheeted and cut-and-project constructions but never perform or name the morphism realizing it.",
+      "refs": ["conjecture.multisheeted-cutandproject-equivalence"],
+      "layers": ["fuzzy", "deductive"]
+    },
+    {
+      "kind": "unattributed_claim",
+      "description": "The universality of Q(sqrt(5)) is asserted as a number-theoretic fact ('5 is the smallest prime p ≡ 1 mod 4') without citation to a source document beyond this synthesis note.",
+      "refs": ["conjecture.q-sqrt5-universal-across-dimensions"],
+      "layers": ["fuzzy"]
+    }
+  ],
+  "stats": {
+    "documents": 1,
+    "nodes": 27,
+    "edges": 20,
+    "morphisms": 3,
+    "obligations": 1,
+    "cross_layer_edges": 14
+  }
+}
