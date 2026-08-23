@@ -124,7 +124,11 @@ els.run.addEventListener('click', async () => {
 
   const t0 = performance.now();
   try {
-    const logger = new Logger({ sink: (line) => { els.log.textContent += line + '\n'; } });
+    const logger = new Logger({
+      sink: (line) => {
+        els.log.textContent += line + '\n';
+      },
+    });
     const result = exp.run({ ...defaultParams(current), ...params }, logger);
     lastResult = result;
     els.log.textContent = result.log || logger.text();
@@ -132,7 +136,10 @@ els.run.addEventListener('click', async () => {
     renderTables(result.tables || []);
     const dt = (performance.now() - t0).toFixed(0);
     const failed = result.passed === false || (result.failures && result.failures.length);
-    setStatus(`${exp.id} finished in ${dt} ms` + (failed ? ' — FAILURES present' : ''), failed ? 'err' : 'ok');
+    setStatus(
+      `${exp.id} finished in ${dt} ms` + (failed ? ' — FAILURES present' : ''),
+      failed ? 'err' : 'ok'
+    );
     setDownloads(true);
   } catch (err) {
     console.error(err);
@@ -218,10 +225,12 @@ function setDownloads(on) {
 }
 
 els.dlJson.addEventListener('click', () =>
-  download(`${current}.json`, JSON.stringify(stripLog(lastResult), replacer, 2), 'application/json'));
+  download(`${current}.json`, JSON.stringify(stripLog(lastResult), replacer, 2), 'application/json')
+);
 
 els.dlLog.addEventListener('click', () =>
-  download(`${current}.log.txt`, lastResult.log || '', 'text/plain'));
+  download(`${current}.log.txt`, lastResult.log || '', 'text/plain')
+);
 
 els.dlCsv.addEventListener('click', () => {
   const csv = lastResult.csv || tablesToCsv(lastResult.tables || []);
@@ -230,7 +239,11 @@ els.dlCsv.addEventListener('click', () => {
 
 function tablesToCsv(tables) {
   return tables
-    .map((t) => [`# ${t.title}`, t.columns.join(','), ...t.rows.map((r) => r.map(csvCell).join(','))].join('\n'))
+    .map((t) =>
+      [`# ${t.title}`, t.columns.join(','), ...t.rows.map((r) => r.map(csvCell).join(','))].join(
+        '\n'
+      )
+    )
     .join('\n\n');
 }
 

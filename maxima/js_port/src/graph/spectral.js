@@ -32,12 +32,17 @@ export function laplacianSpectrum(nbrs, { maxN = 1200 } = {}) {
 /* N(<= lambda) ~ lambda^{d_spec/2}. */
 export function dosFit(eig, fractions = [0.05, 0.1, 0.2, 0.3, 0.4]) {
   const lamMax = eig[eig.length - 1];
-  const xs = [], ys = [], samples = [];
+  const xs = [],
+    ys = [],
+    samples = [];
   for (const f of fractions) {
     const thr = f * lamMax;
     const cnt = eig.filter((l) => l <= thr).length;
     samples.push({ lambda: thr, count: cnt });
-    if (thr > 0 && cnt > 0) { xs.push(thr); ys.push(cnt); }
+    if (thr > 0 && cnt > 0) {
+      xs.push(thr);
+      ys.push(cnt);
+    }
   }
   if (xs.length < 2) return { samples, slope: 0, dSpec: 0 };
   const fit = logLogFit(xs, ys);
@@ -84,18 +89,25 @@ export function kpmMoments(nbrs, { moments = 128, samples = 16, a, b, rng }) {
   return Array.from(mu, (m) => m / samples);
 }
 
-const dot = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * b[i]; return s; };
+const dot = (a, b) => {
+  let s = 0;
+  for (let i = 0; i < a.length; i++) s += a[i] * b[i];
+  return s;
+};
 
 export function jacksonKernel(k, M) {
   const Mp = M + 1;
-  return ((Mp - k) / Mp) * Math.cos((Math.PI * k) / Mp)
-    + (Math.sin((Math.PI * k) / Mp) / Math.tan(Math.PI / Mp)) / Mp;
+  return (
+    ((Mp - k) / Mp) * Math.cos((Math.PI * k) / Mp) +
+    Math.sin((Math.PI * k) / Mp) / Math.tan(Math.PI / Mp) / Mp
+  );
 }
 
 export function kpmDensityAt(x, mu) {
   const M = mu.length;
   let s = mu[0];
-  let tPrev = 1, tCurr = x;
+  let tPrev = 1,
+    tCurr = x;
   if (M > 1) s += 2 * jacksonKernel(1, M) * mu[1] * x;
   for (let k = 2; k < M; k++) {
     const tNext = 2 * x * tCurr - tPrev;
@@ -118,26 +130,35 @@ export function runKpm(cluster, { moments = 128, samples = 16, rng, degreeMean, 
   }
 
   // Low-lambda tail: rho ~ lambda^{d_s/2 - 1}
-  const tx = [], ty = [];
+  const tx = [],
+    ty = [];
   for (let x = -0.999; x <= -0.8; x += 0.002) {
     const lam = a + x * b;
     const rho = kpmDensityAt(x, mu);
-    if (lam > 1e-3 && rho > 1e-6) { tx.push(lam); ty.push(rho); }
+    if (lam > 1e-3 && rho > 1e-6) {
+      tx.push(lam);
+      ty.push(rho);
+    }
   }
   const tail = tx.length >= 4 ? logLogFit(tx, ty) : { slope: 0, n: tx.length };
   const dSpecTail = tx.length >= 4 ? 2 * (tail.slope + 1) : 0;
 
   // Integrated DOS: N(<=lambda) ~ lambda^{d_s/2}
-  const gx = [], grho = [];
+  const gx = [],
+    grho = [];
   for (let x = -0.999; x <= 0.99; x += 0.002) {
     gx.push(a + x * b);
     grho.push(Math.max(kpmDensityAt(x, mu), 0));
   }
-  const cx = [], cy = [];
+  const cx = [],
+    cy = [];
   let cdf = 0;
   for (let k = 1; k < gx.length; k++) {
     cdf += 0.5 * (grho[k] + grho[k - 1]) * (gx[k] - gx[k - 1]);
-    if (gx[k] > 0.05 && gx[k] < 2.0 && cdf > 1e-6) { cx.push(gx[k]); cy.push(cdf); }
+    if (gx[k] > 0.05 && gx[k] < 2.0 && cdf > 1e-6) {
+      cx.push(gx[k]);
+      cy.push(cdf);
+    }
   }
   const cdfFit = cx.length >= 4 ? logLogFit(cx, cy) : { slope: 0, n: cx.length };
 

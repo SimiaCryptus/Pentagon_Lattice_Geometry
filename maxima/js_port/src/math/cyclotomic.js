@@ -72,8 +72,12 @@ export class CycRing {
     }
   }
 
-  zero() { return new Array(this.deg).fill(0); }
-  one() { return this.fromPower(0); }
+  zero() {
+    return new Array(this.deg).fill(0);
+  }
+  one() {
+    return this.fromPower(0);
+  }
 
   /* Reduce an arbitrary-length polynomial modulo Phi_n (monic). */
   reduce(p) {
@@ -98,11 +102,21 @@ export class CycRing {
     return red.slice();
   }
 
-  add(a, b) { return a.map((x, i) => x + b[i]); }
-  sub(a, b) { return a.map((x, i) => x - b[i]); }
-  scale(a, s) { return a.map((x) => x * s); }
-  neg(a) { return a.map((x) => -x); }
-  mul(a, b) { return this.reduce(polyMul(a, b)); }
+  add(a, b) {
+    return a.map((x, i) => x + b[i]);
+  }
+  sub(a, b) {
+    return a.map((x, i) => x - b[i]);
+  }
+  scale(a, s) {
+    return a.map((x) => x * s);
+  }
+  neg(a) {
+    return a.map((x) => -x);
+  }
+  mul(a, b) {
+    return this.reduce(polyMul(a, b));
+  }
 
   /* Galois automorphism zeta -> zeta^g (g coprime to n). */
   galois(a, g) {
@@ -115,15 +129,24 @@ export class CycRing {
   }
 
   /* Complex conjugation: zeta -> zeta^{-1}. */
-  conj(a) { return this.galois(a, this.n - 1); }
+  conj(a) {
+    return this.galois(a, this.n - 1);
+  }
 
-  isZero(a) { return a.every((x) => x === 0); }
-  equals(a, b) { return a.every((x, i) => x === b[i]); }
-  key(a) { return a.join(','); }
+  isZero(a) {
+    return a.every((x) => x === 0);
+  }
+  equals(a, b) {
+    return a.every((x, i) => x === b[i]);
+  }
+  key(a) {
+    return a.join(',');
+  }
 
   /* Map to the plane: zeta^k -> (cos, sin)(2 pi k / n). */
   toXY(a) {
-    let x = 0, y = 0;
+    let x = 0,
+      y = 0;
     for (let k = 0; k < this.deg; k++) {
       if (!a[k]) continue;
       x += a[k] * this._cos[k];
@@ -133,7 +156,11 @@ export class CycRing {
   }
 
   /* |a|^2 = a * conj(a), exactly, as a ring element (real subfield). */
-  absSquared(a) { return this.mul(a, this.conj(a)); }
+  absSquared(a) {
+    return this.mul(a, this.conj(a));
+  }
 
-  realValue(a) { return this.toXY(a)[0]; }
+  realValue(a) {
+    return this.toXY(a)[0];
+  }
 }

@@ -19,14 +19,14 @@ import { CycRing } from '../math/cyclotomic.js';
 import { loopClosureIndex } from '../geometry/ngon.js';
 
 export const TAU_MODES = [
-  'z2',        // corrected: Z_2 orientation flip on every edge
-  'none',      // flat, no sheet structure
-  'every3',    // legacy didactic rule
-  'signed3',   // legacy signed rule (superseded)
-  'everyn',    // period-n generalisation
-  'signedn',   // signed period-n generalisation
+  'z2', // corrected: Z_2 orientation flip on every edge
+  'none', // flat, no sheet structure
+  'every3', // legacy didactic rule
+  'signed3', // legacy signed rule (superseded)
+  'everyn', // period-n generalisation
+  'signedn', // signed period-n generalisation
   'kmodn',
-  'cap',       // cut-and-project acceptance window
+  'cap', // cut-and-project acceptance window
 ];
 
 /* Cut-and-project "phantom" projection and n-fold acceptance window. */
@@ -39,7 +39,8 @@ export function phantomProjection(x, y, n) {
 
 export function inAcceptanceWindow(x, y, n, threshold = 0.3) {
   const [px, py] = phantomProjection(x, y, n);
-  const dx = px - 0.5, dy = py - 0.5;
+  const dx = px - 0.5,
+    dy = py - 0.5;
   const r2 = dx * dx + dy * dy;
   if (r2 < 1e-12) return true;
   const c2 = (dx * dx - dy * dy) / r2;
@@ -48,13 +49,26 @@ export function inAcceptanceWindow(x, y, n, threshold = 0.3) {
 
 export function makeTau(mode, n, ctx = {}) {
   switch (mode) {
-    case 'z2': return () => 1;
-    case 'none': return () => 0;
-    case 'every3': return (i, k) => ((i + k) % 3 === 0 ? 1 : 0);
-    case 'signed3': return (i, k) => { const m = (i + k) % 3; return m === 0 ? 1 : m === 1 ? -1 : 0; };
-    case 'everyn': return (i, k) => ((i + k) % n === 0 ? 1 : 0);
-    case 'signedn': return (i, k) => { const m = (i + k) % n; return m === 0 ? 1 : m === 1 ? -1 : 0; };
-    case 'kmodn': return (i, k) => (k % n === 0 ? 1 : 0);
+    case 'z2':
+      return () => 1;
+    case 'none':
+      return () => 0;
+    case 'every3':
+      return (i, k) => ((i + k) % 3 === 0 ? 1 : 0);
+    case 'signed3':
+      return (i, k) => {
+        const m = (i + k) % 3;
+        return m === 0 ? 1 : m === 1 ? -1 : 0;
+      };
+    case 'everyn':
+      return (i, k) => ((i + k) % n === 0 ? 1 : 0);
+    case 'signedn':
+      return (i, k) => {
+        const m = (i + k) % n;
+        return m === 0 ? 1 : m === 1 ? -1 : 0;
+      };
+    case 'kmodn':
+      return (i, k) => (k % n === 0 ? 1 : 0);
     case 'cap':
       return (i, k, from, to) => {
         const a = inAcceptanceWindow(from[0], from[1], n, ctx.capThreshold ?? 0.3);
@@ -123,9 +137,10 @@ export function buildCluster({
         const [nx, ny] = R.toXY(center);
         const chir = chiralActive ? 1 - cell.chir : 0;
         const ds = tau(i, k, [cell.x, cell.y], [nx, ny]);
-        const sheet = sheetModulus > 0
-          ? (((cell.sheet + ds) % sheetModulus) + sheetModulus) % sheetModulus
-          : cell.sheet + ds;
+        const sheet =
+          sheetModulus > 0
+            ? (((cell.sheet + ds) % sheetModulus) + sheetModulus) % sheetModulus
+            : cell.sheet + ds;
         const before = cells.length;
         const j = addCell(center, chir, sheet);
         addEdge(i, j);
@@ -154,8 +169,7 @@ export function buildCluster({
 }
 
 /* Sheet shift on a directed edge (derived from cell sheet labels). */
-export const edgeSheetShift = (cluster, i, j) =>
-  cluster.cells[j].sheet - cluster.cells[i].sheet;
+export const edgeSheetShift = (cluster, i, j) => cluster.cells[j].sheet - cluster.cells[i].sheet;
 
 export function clusterStats(cluster) {
   const { nbrs, cells } = cluster;
@@ -188,7 +202,10 @@ export function clusterStats(cluster) {
     perSheet,
     bipartiteViolations,
     chiralityCounts: cluster.chiralActive
-      ? { up: cells.filter((c) => c.chir === 0).length, down: cells.filter((c) => c.chir === 1).length }
+      ? {
+          up: cells.filter((c) => c.chir === 0).length,
+          down: cells.filter((c) => c.chir === 1).length,
+        }
       : { up: cells.length, down: 0 },
   };
 }

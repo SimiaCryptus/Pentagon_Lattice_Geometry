@@ -3,8 +3,9 @@
 import { bfsDistances } from '../graph/analysis.js';
 
 export function makeRule(B, S) {
-  const b = new Set(B), s = new Set(S);
-  return (self, sum) => (self === 1 ? (s.has(sum) ? 1 : 0) : (b.has(sum) ? 1 : 0));
+  const b = new Set(B),
+    s = new Set(S);
+  return (self, sum) => (self === 1 ? (s.has(sum) ? 1 : 0) : b.has(sum) ? 1 : 0);
 }
 
 export function step(nbrs, state, rule) {
@@ -26,13 +27,18 @@ export function runRule(nbrs, seed, B, S, T) {
   const seen = new Map([[stateKey(seed), 0]]);
   let state = seed;
   const pops = [population(seed)];
-  let period = 0, transient = T;
+  let period = 0,
+    transient = T;
   for (let t = 1; t <= T; t++) {
     state = step(nbrs, state, rule);
     pops.push(population(state));
     const key = stateKey(state);
     const prev = seen.get(key);
-    if (prev !== undefined) { period = t - prev; transient = prev; break; }
+    if (prev !== undefined) {
+      period = t - prev;
+      transient = prev;
+      break;
+    }
     seen.set(key, t);
   }
   const finalPop = pops[pops.length - 1];
@@ -50,15 +56,26 @@ export function makeSeed(cluster, shape = 'triple') {
   const s = new Uint8Array(cluster.N);
   const nb = cluster.nbrs[cluster.originId];
   switch (shape) {
-    case 'single': s[cluster.originId] = 1; break;
-    case 'pair': s[cluster.originId] = 1; if (nb[0] !== undefined) s[nb[0]] = 1; break;
+    case 'single':
+      s[cluster.originId] = 1;
+      break;
+    case 'pair':
+      s[cluster.originId] = 1;
+      if (nb[0] !== undefined) s[nb[0]] = 1;
+      break;
     case 'triple':
       s[cluster.originId] = 1;
       for (let i = 0; i < Math.min(2, nb.length); i++) s[nb[i]] = 1;
       break;
-    case 'petal': for (const j of nb) s[j] = 1; break;
-    case 'all': s[cluster.originId] = 1; for (const j of nb) s[j] = 1; break;
-    default: s[cluster.originId] = 1;
+    case 'petal':
+      for (const j of nb) s[j] = 1;
+      break;
+    case 'all':
+      s[cluster.originId] = 1;
+      for (const j of nb) s[j] = 1;
+      break;
+    default:
+      s[cluster.originId] = 1;
   }
   return s;
 }
@@ -73,20 +90,32 @@ export function rulePanel(n) {
     [[b + 1], [b, b + 1]],
     [[b], [b - 1, b, b + 1]],
     [[b + 1], [b - 1, b, b + 1]],
-    [[b, b + 1], [b, b + 1]],
+    [
+      [b, b + 1],
+      [b, b + 1],
+    ],
     [[1], [1, 2]],
     [[1], [1]],
     [[b], [b + 1]],
     [[b + 1], [b + 1]],
-    [[b, h], [b - 1, b, b + 1]],
+    [
+      [b, h],
+      [b - 1, b, b + 1],
+    ],
     [[h], [h - 1, h]],
-    [[b - 1, b], [b - 1, b]],
+    [
+      [b - 1, b],
+      [b - 1, b],
+    ],
     [[b + 1], [b, b + 1, b + 2]],
     [[b], Array.from({ length: b + 2 }, (_, i) => i + 1)],
   ];
   return raw
     .filter(([Bs, Ss]) => Bs.every((x) => x >= 0) && Ss.every((x) => x >= 0))
-    .map(([Bs, Ss]) => ({ B: [...new Set(Bs)].sort((x, y) => x - y), S: [...new Set(Ss)].sort((x, y) => x - y) }))
+    .map(([Bs, Ss]) => ({
+      B: [...new Set(Bs)].sort((x, y) => x - y),
+      S: [...new Set(Ss)].sort((x, y) => x - y),
+    }))
     .map((r) => ({ ...r, label: `B${r.B.join('')}/S${r.S.join('')}` }));
 }
 
@@ -104,16 +133,25 @@ export function surveyRules(cluster, { T = 8, seedShape = 'triple' } = {}) {
   }
   let best = null;
   for (const r of results)
-    if (r.fate !== 'extinct' && r.maxPop < cluster.N / 2 && (!best || r.maxPop > best.maxPop)) best = r;
+    if (r.fate !== 'extinct' && r.maxPop < cluster.N / 2 && (!best || r.maxPop > best.maxPop))
+      best = r;
   return { results, classify, best };
 }
 
 /* Glider / oscillator hunt: look for periodic orbits that also move. */
-export function gliderHunt(cluster, { T = 8, shapes = ['single', 'pair', 'triple', 'petal', 'all'], maxRules = 5 } = {}) {
+export function gliderHunt(
+  cluster,
+  { T = 8, shapes = ['single', 'pair', 'triple', 'petal', 'all'], maxRules = 5 } = {}
+) {
   const dist = bfsDistances(cluster.nbrs, cluster.originId);
   const meanDist = (s) => {
-    let tot = 0, cnt = 0;
-    for (let i = 0; i < s.length; i++) if (s[i]) { tot += dist[i] < 0 ? 0 : dist[i]; cnt++; }
+    let tot = 0,
+      cnt = 0;
+    for (let i = 0; i < s.length; i++)
+      if (s[i]) {
+        tot += dist[i] < 0 ? 0 : dist[i];
+        cnt++;
+      }
     return cnt ? tot / cnt : 0;
   };
   const panel = rulePanel(cluster.n).slice(0, maxRules);
@@ -125,16 +163,22 @@ export function gliderHunt(cluster, { T = 8, shapes = ['single', 'pair', 'triple
       const seen = new Map([[seed.join(''), 0]]);
       let state = seed;
       const dists = [meanDist(seed)];
-      let period = 0, transient = 0;
+      let period = 0,
+        transient = 0;
       for (let t = 1; t <= T; t++) {
         state = step(cluster.nbrs, state, rf);
         dists.push(meanDist(state));
         const key = state.join('');
         const prev = seen.get(key);
-        if (prev !== undefined) { period = t - prev; transient = prev; break; }
+        if (prev !== undefined) {
+          period = t - prev;
+          transient = prev;
+          break;
+        }
         seen.set(key, t);
       }
-      let amplitude = 0, drift = 0;
+      let amplitude = 0,
+        drift = 0;
       if (period > 1) {
         const seg = dists.slice(transient);
         amplitude = Math.max(...seg) - Math.min(...seg);

@@ -27,15 +27,22 @@ export function bfsVolumes(nbrs, root) {
   for (const d of dist) if (d >= 0) shells[d]++;
   const cumulative = [];
   let acc = 0;
-  for (const s of shells) { acc += s; cumulative.push(acc); }
+  for (const s of shells) {
+    acc += s;
+    cumulative.push(acc);
+  }
   return { shells, cumulative, radius: maxD };
 }
 
 /* d_eff from N(r) ~ r^d_eff. `interior` drops the outermost shell. */
 export function estimateDeff(cumulative, { interior = true } = {}) {
   const hi = interior ? cumulative.length - 1 : cumulative.length;
-  const xs = [], ys = [];
-  for (let r = 1; r < hi; r++) { xs.push(r); ys.push(cumulative[r]); }
+  const xs = [],
+    ys = [];
+  for (let r = 1; r < hi; r++) {
+    xs.push(r);
+    ys.push(cumulative[r]);
+  }
   if (xs.length < 2) return { slope: 0, intercept: 0, n: xs.length };
   return logLogFit(xs, ys);
 }
@@ -49,7 +56,11 @@ export function connectedComponents(nbrs) {
     const comp = [s];
     seen[s] = 1;
     for (let h = 0; h < comp.length; h++) {
-      for (const u of nbrs[comp[h]]) if (!seen[u]) { seen[u] = 1; comp.push(u); }
+      for (const u of nbrs[comp[h]])
+        if (!seen[u]) {
+          seen[u] = 1;
+          comp.push(u);
+        }
     }
     comps.push(comp);
   }
@@ -78,7 +89,10 @@ export function meanClustering(nbrs) {
       for (let b = a + 1; b < d; b++) if (sets[nbrs[i][a]].has(nbrs[i][b])) links++;
     coeffs.push(links / ((d * (d - 1)) / 2));
   }
-  return { mean: coeffs.length ? coeffs.reduce((s, x) => s + x, 0) / coeffs.length : 0, count: coeffs.length };
+  return {
+    mean: coeffs.length ? coeffs.reduce((s, x) => s + x, 0) / coeffs.length : 0,
+    count: coeffs.length,
+  };
 }
 
 /* Simple cycles through `root` up to maxLen edges (deduped by direction). */
@@ -145,7 +159,8 @@ export function perSheetStats(cluster) {
   return sheets.map((s) => {
     const nodes = cluster.cells.filter((c) => c.sheet === s).map((c) => c.id);
     let degSum = 0;
-    for (const i of nodes) for (const j of cluster.nbrs[i]) if (cluster.cells[j].sheet === s) degSum++;
+    for (const i of nodes)
+      for (const j of cluster.nbrs[i]) if (cluster.cells[j].sheet === s) degSum++;
     return {
       sheet: s,
       nodes: nodes.length,

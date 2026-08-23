@@ -7,9 +7,7 @@ export class Logger {
   }
 
   log(...parts) {
-    const line = parts
-      .map((p) => (typeof p === 'string' ? p : fmt(p)))
-      .join(' ');
+    const line = parts.map((p) => (typeof p === 'string' ? p : fmt(p))).join(' ');
     this.lines.push(line);
     if (this.echo) console.log(line);
     if (this.sink) this.sink(line);

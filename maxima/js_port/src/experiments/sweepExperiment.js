@@ -6,15 +6,27 @@ import { TAU_MODES } from '../graph/lattice.js';
 
 export const sweepParamSchema = [
   { key: 'ns', label: 'n values (csv)', type: 'text', default: '3,4,5,6,7,8,10,12' },
-  { key: 'preset', label: 'preset', type: 'select', default: 'small', options: ['tiny', 'small', 'medium', 'large'] },
+  {
+    key: 'preset',
+    label: 'preset',
+    type: 'select',
+    default: 'small',
+    options: ['tiny', 'small', 'medium', 'large'],
+  },
   { key: 'tauMode', label: 'TAU_MODE', type: 'select', default: 'z2', options: TAU_MODES },
   { key: 'runErdos', label: 'Erdos catalog', type: 'boolean', default: false },
   { key: 'runCA', label: 'CA survey', type: 'boolean', default: false },
   { key: 'seed', label: 'RNG seed', type: 'number', default: 20250101 },
 ];
 
-const parseNs = (v) => (Array.isArray(v) ? v : String(v).split(/[,\s]+/).filter(Boolean).map(Number))
-  .filter((n) => Number.isInteger(n) && n >= 3);
+const parseNs = (v) =>
+  (Array.isArray(v)
+    ? v
+    : String(v)
+        .split(/[,\s]+/)
+        .filter(Boolean)
+        .map(Number)
+  ).filter((n) => Number.isInteger(n) && n >= 3);
 
 export function runSweepExperiment(opts = {}, logger = new Logger()) {
   const ns = parseNs(opts.ns ?? '3,4,5,6,7,8,10,12');
@@ -28,50 +40,82 @@ export function runSweepExperiment(opts = {}, logger = new Logger()) {
   for (const n of ns) {
     logger.rule('*');
     logger.log('*** sweep iteration: n =', n);
-    let res = null, status = 'OK', error = null;
+    let res = null,
+      status = 'OK',
+      error = null;
     try {
-      res = runLatticeExperiment({
-        ...opts, n, preset, tauMode,
-        runErdos: opts.runErdos === true,
-        runWebs: false,
-        runCA: opts.runCA === true,
-        runKPM: true,
-      }, new Logger());
+      res = runLatticeExperiment(
+        {
+          ...opts,
+          n,
+          preset,
+          tauMode,
+          runErdos: opts.runErdos === true,
+          runWebs: false,
+          runCA: opts.runCA === true,
+          runKPM: true,
+        },
+        new Logger()
+      );
     } catch (e) {
       status = 'ERR';
       error = String(e.message || e);
       logger.log('*** ERROR:', error);
     }
-    const row = res ? {
-      n,
-      N: res.cluster.N,
-      meanDeg: res.cluster.degreeMean,
-      dEff: res.dimensions.dEff,
-      dEffFull: res.dimensions.dEffFull,
-      dW: res.dimensions.dW,
-      dSpecP0: res.dimensions.dSpecP0,
-      dSpecAO: res.dimensions.dSpecAO,
-      dSpecKPM: res.dimensions.dSpecKPMTail,
-      dSpecKPMCdf: res.dimensions.dSpecKPMCdf,
-      vortexEdges: res.cluster.vortexEdges,
-      vortexFraction: res.cluster.vortexFraction,
-      triangles: res.structure.triangles,
-      girth: res.structure.girth,
-      sheets: res.cluster.sheets.length,
-      caFinalPop: res.automaton ? res.automaton.defaultRule.finalPop : null,
-      deficitDeg: res.geometry.deficitDeg,
-      loopClosure: res.geometry.loopClosure,
-      status,
-    } : { n, status, error };
+    const row = res
+      ? {
+          n,
+          N: res.cluster.N,
+          meanDeg: res.cluster.degreeMean,
+          dEff: res.dimensions.dEff,
+          dEffFull: res.dimensions.dEffFull,
+          dW: res.dimensions.dW,
+          dSpecP0: res.dimensions.dSpecP0,
+          dSpecAO: res.dimensions.dSpecAO,
+          dSpecKPM: res.dimensions.dSpecKPMTail,
+          dSpecKPMCdf: res.dimensions.dSpecKPMCdf,
+          vortexEdges: res.cluster.vortexEdges,
+          vortexFraction: res.cluster.vortexFraction,
+          triangles: res.structure.triangles,
+          girth: res.structure.girth,
+          sheets: res.cluster.sheets.length,
+          caFinalPop: res.automaton ? res.automaton.defaultRule.finalPop : null,
+          deficitDeg: res.geometry.deficitDeg,
+          loopClosure: res.geometry.loopClosure,
+          status,
+        }
+      : { n, status, error };
     rows.push(row);
     logger.log('*** row:', JSON.stringify(row));
   }
 
-  const columns = ['n', 'N', 'meanDeg', 'dEff', 'dEffFull', 'dW', 'dSpecP0', 'dSpecAO',
-    'dSpecKPM', 'dSpecKPMCdf', 'vortexEdges', 'vortexFraction', 'triangles', 'girth',
-    'sheets', 'caFinalPop', 'deficitDeg', 'loopClosure', 'status'];
+  const columns = [
+    'n',
+    'N',
+    'meanDeg',
+    'dEff',
+    'dEffFull',
+    'dW',
+    'dSpecP0',
+    'dSpecAO',
+    'dSpecKPM',
+    'dSpecKPMCdf',
+    'vortexEdges',
+    'vortexFraction',
+    'triangles',
+    'girth',
+    'sheets',
+    'caFinalPop',
+    'deficitDeg',
+    'loopClosure',
+    'status',
+  ];
   const csv = [columns.join(',')]
-    .concat(rows.map((r) => columns.map((c) => (r[c] === undefined || r[c] === null ? '' : r[c])).join(',')))
+    .concat(
+      rows.map((r) =>
+        columns.map((c) => (r[c] === undefined || r[c] === null ? '' : r[c])).join(',')
+      )
+    )
     .join('\n');
 
   logger.rule('=');
@@ -81,8 +125,11 @@ export function runSweepExperiment(opts = {}, logger = new Logger()) {
   return {
     experiment: 'sweep',
     params: { ns, preset, tauMode },
-    rows, csv,
-    tables: [{ title: 'Sweep summary', columns, rows: rows.map((r) => columns.map((c) => r[c] ?? '')) }],
+    rows,
+    csv,
+    tables: [
+      { title: 'Sweep summary', columns, rows: rows.map((r) => columns.map((c) => r[c] ?? '')) },
+    ],
     log: logger.text(),
   };
 }
@@ -115,15 +162,28 @@ export function runSmokeTest(opts = {}, logger = new Logger()) {
     logger.rule();
     logger.log('test case n =', c.n);
     try {
-      const res = runLatticeExperiment({
-        n: c.n, preset, tauMode: 'z2',
-        runErdos: false, runWebs: false, runCA: false, runKPM: false,
-      }, new Logger());
+      const res = runLatticeExperiment(
+        {
+          n: c.n,
+          preset,
+          tauMode: 'z2',
+          runErdos: false,
+          runWebs: false,
+          runCA: false,
+          runKPM: false,
+        },
+        new Logger()
+      );
       assertRange(`d_eff[n=${c.n}]`, res.dimensions.dEff, c.dEff[0], c.dEff[1]);
       assertRange(`N[n=${c.n}]`, res.cluster.N, 4, 5000);
       assertRange(`vortex_frac[n=${c.n}]`, res.cluster.vortexFraction, c.vortex[0], c.vortex[1]);
       assertRange(`holonomy parity mismatches[n=${c.n}]`, res.holonomy.parityMismatches, 0, 0);
-      results.push({ n: c.n, N: res.cluster.N, dEff: res.dimensions.dEff, vortexFraction: res.cluster.vortexFraction });
+      results.push({
+        n: c.n,
+        N: res.cluster.N,
+        dEff: res.dimensions.dEff,
+        vortexFraction: res.cluster.vortexFraction,
+      });
     } catch (e) {
       failures.push(`n=${c.n} crashed: ${e.message || e}`);
       logger.log('  FAIL crash:', e.message || e);
@@ -140,7 +200,13 @@ export function runSmokeTest(opts = {}, logger = new Logger()) {
     passed: failures.length === 0,
     failures,
     results,
-    tables: [{ title: 'Smoke results', columns: ['n', 'N', 'd_eff', 'vortexFraction'], rows: results.map((r) => [r.n, r.N, r.dEff, r.vortexFraction]) }],
+    tables: [
+      {
+        title: 'Smoke results',
+        columns: ['n', 'N', 'd_eff', 'vortexFraction'],
+        rows: results.map((r) => [r.n, r.N, r.dEff, r.vortexFraction]),
+      },
+    ],
     log: logger.text(),
   };
 }

@@ -14,7 +14,10 @@ import { simpleCycles, cycleLengthHistogram } from '../graph/analysis.js';
 export const mod = (a, n) => ((a % n) + n) % n;
 
 export function holonomyZn(shifts, n) {
-  return mod(shifts.reduce((a, b) => a + b, 0), n);
+  return mod(
+    shifts.reduce((a, b) => a + b, 0),
+    n
+  );
 }
 
 export function orderZn(g, n) {
@@ -44,7 +47,10 @@ export function monodromyOrder(n) {
   return -1;
 }
 
-export function analyzeHolonomy(cluster, { maxLen = 6, groups = [2], root = cluster.originId } = {}) {
+export function analyzeHolonomy(
+  cluster,
+  { maxLen = 6, groups = [2], root = cluster.originId } = {}
+) {
   const cycles = simpleCycles(cluster.nbrs, root, maxLen);
   const perGroup = groups.map((g) => ({
     group: g,
@@ -71,7 +77,11 @@ export function analyzeHolonomy(cluster, { maxLen = 6, groups = [2], root = clus
     perGroup,
     parityMismatches,
     rawStats: raws.length
-      ? { min: Math.min(...raws), max: Math.max(...raws), mean: raws.reduce((a, b) => a + b, 0) / raws.length }
+      ? {
+          min: Math.min(...raws),
+          max: Math.max(...raws),
+          mean: raws.reduce((a, b) => a + b, 0) / raws.length,
+        }
       : null,
     examples: cycles.slice(0, 3),
     vertexLoopLength: cluster.vertexLoopLength,

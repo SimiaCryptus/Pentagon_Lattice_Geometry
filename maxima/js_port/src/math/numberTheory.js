@@ -4,8 +4,13 @@ export const PHI = (1 + Math.sqrt(5)) / 2;
 export const PSI = (1 - Math.sqrt(5)) / 2;
 
 export function gcd(a, b) {
-  a = Math.abs(a); b = Math.abs(b);
-  while (b) { const t = a % b; a = b; b = t; }
+  a = Math.abs(a);
+  b = Math.abs(b);
+  while (b) {
+    const t = a % b;
+    a = b;
+    b = t;
+  }
   return a;
 }
 
@@ -32,7 +37,8 @@ export function totient(n) {
 
 export function moebius(n) {
   if (n === 1) return 1;
-  let m = n, primes = 0;
+  let m = n,
+    primes = 0;
   for (let p = 2; p * p <= m; p++) {
     if (m % p === 0) {
       m /= p;
@@ -46,9 +52,14 @@ export function moebius(n) {
 
 /* Fibonacci with F_0 = 0, F_1 = 1. Exact for n <= 78. */
 export function fib(n) {
-  if (n < 0) return ((-1) ** (n + 1)) * fib(-n);
-  let a = 0, b = 1;
-  for (let i = 0; i < n; i++) { const t = a + b; a = b; b = t; }
+  if (n < 0) return (-1) ** (n + 1) * fib(-n);
+  let a = 0,
+    b = 1;
+  for (let i = 0; i < n; i++) {
+    const t = a + b;
+    a = b;
+    b = t;
+  }
   return a;
 }
 
@@ -84,10 +95,12 @@ export function kronecker5(n) {
 }
 
 export function pisanoPeriod(m) {
-  let a = 0, b = 1;
+  let a = 0,
+    b = 1;
   for (let i = 1; i <= 6 * m; i++) {
     const c = (a + b) % m;
-    a = b; b = c;
+    a = b;
+    b = c;
     if (a === 0 && b === 1) return i;
   }
   return 0;
@@ -96,12 +109,18 @@ export function pisanoPeriod(m) {
 /* Continued-fraction convergents of phi: h_k / k_k. */
 export function phiConvergents(count) {
   const out = [];
-  let pPrev = 0, pCurr = 1, qPrev = 1, qCurr = 1;
+  let pPrev = 0,
+    pCurr = 1,
+    qPrev = 1,
+    qCurr = 1;
   for (let i = 1; i <= count; i++) {
-    const pNext = pCurr + pPrev, qNext = qCurr + qPrev;
+    const pNext = pCurr + pPrev,
+      qNext = qCurr + qPrev;
     out.push({ i, h: pNext, k: qNext, value: pNext / qNext, error: Math.abs(pNext / qNext - PHI) });
-    pPrev = pCurr; pCurr = pNext;
-    qPrev = qCurr; qCurr = qNext;
+    pPrev = pCurr;
+    pCurr = pNext;
+    qPrev = qCurr;
+    qCurr = qNext;
   }
   return out;
 }
@@ -110,11 +129,17 @@ export function phiConvergents(count) {
 export function rationalMultipleOfPi(theta, maxDenom = 120, tol = 1e-9) {
   const r = theta / Math.PI;
   if (Math.abs(r) < 1e-13) return { rational: true, p: 0, q: 1, order: 1 };
-  let bestQ = 0, bestP = 0, bestErr = Infinity;
+  let bestQ = 0,
+    bestP = 0,
+    bestErr = Infinity;
   for (let q = 1; q <= maxDenom; q++) {
     const p = Math.round(r * q);
     const err = Math.abs(r - p / q);
-    if (err < bestErr) { bestErr = err; bestQ = q; bestP = p; }
+    if (err < bestErr) {
+      bestErr = err;
+      bestQ = q;
+      bestP = p;
+    }
   }
   if (bestErr > tol) return { rational: false, p: 0, q: 0, order: Infinity };
   const order = bestP === 0 ? 1 : (2 * bestQ) / gcd(2 * bestQ, Math.abs(bestP));
@@ -167,13 +192,18 @@ export function fibonacciWord(depth) {
 }
 
 export function thueMorse(n) {
-  let bits = 0, m = n;
-  while (m > 0) { bits ^= m & 1; m >>= 1; }
+  let bits = 0,
+    m = n;
+  while (m > 0) {
+    bits ^= m & 1;
+    m >>= 1;
+  }
   return bits;
 }
 
 export function rudinShapiro(n) {
-  let cnt = 0, m = n;
+  let cnt = 0,
+    m = n;
   while (m > 1) {
     if ((m & 3) === 3) cnt++;
     m >>= 1;

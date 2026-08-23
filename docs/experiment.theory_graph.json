@@ -30,7 +30,13 @@
       "statement": "The paper idea.md predicts fractional effective dimensionality and spinor-like holonomy for multi-sheeted pentagon tilings, which experiment.mac tests numerically.",
       "status": "accepted",
       "confidence": 0.85,
-      "sources": [{ "file": "experiment.md", "heading": "Experiment Summary: Multi-Sheeted N-Gon Tilings", "quote": "for the paper _Emergent Fractional Dimensionality and Spinor-Like Holonomy in Multi-Sheeted Pentagon Tilings_ (`idea.md`)" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "Experiment Summary: Multi-Sheeted N-Gon Tilings",
+          "quote": "for the paper _Emergent Fractional Dimensionality and Spinor-Like Holonomy in Multi-Sheeted Pentagon Tilings_ (`idea.md`)"
+        }
+      ]
     },
     {
       "id": "resource.medium-preset-config",
@@ -48,7 +54,12 @@
         { "key": "kpm_samples", "value": 16 },
         { "key": "long_loop_max", "value": 7 }
       ],
-      "sources": [{ "file": "experiment.md", "quote": "used the **`medium`** preset with the **`signed3`** vortex rule for $N\\_GON = 5$" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "quote": "used the **`medium`** preset with the **`signed3`** vortex rule for $N\\_GON = 5$"
+        }
+      ]
     },
     {
       "id": "model.multi-sheeted-pentagon-cluster",
@@ -61,14 +72,25 @@
         "layer": "symbolic",
         "form": "term-graph",
         "interfaces": [
-          { "to": "numeric", "via": "evaluate", "available": true, "target": "observation.cluster-size-and-sheets" }
+          {
+            "to": "numeric",
+            "via": "evaluate",
+            "available": true,
+            "target": "observation.cluster-size-and-sheets"
+          }
         ]
       },
       "attributes": [
         { "key": "cluster_size", "value": 156 },
         { "key": "sheets_occupied", "value": 7 }
       ],
-      "sources": [{ "file": "experiment.md", "heading": "1. Cluster Construction (Sections 1–3)", "quote": "BFS expansion to depth 3 under the **signed-3** vortex rule produced" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "1. Cluster Construction (Sections 1–3)",
+          "quote": "BFS expansion to depth 3 under the **signed-3** vortex rule produced"
+        }
+      ]
     },
     {
       "id": "experiment.medium-signed3-depth3-run",
@@ -78,7 +100,12 @@
       "status": "accepted",
       "confidence": 0.9,
       "representation": { "layer": "numeric", "form": "benchmark-row" },
-      "sources": [{ "file": "experiment.md", "quote": "`experiment.mac` performs _constructive numerical experiments_ on concrete instances of the multi-sheeted n-gon graph" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "quote": "`experiment.mac` performs _constructive numerical experiments_ on concrete instances of the multi-sheeted n-gon graph"
+        }
+      ]
     },
     {
       "id": "observation.cluster-size-and-sheets",
@@ -94,7 +121,13 @@
         { "key": "vortex_fraction", "value": 0.665 },
         { "key": "sheets_occupied", "value": 7 }
       ],
-      "sources": [{ "file": "experiment.md", "heading": "1. Cluster Construction (Sections 1–3)", "quote": "Vortex fraction | 0.665" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "1. Cluster Construction (Sections 1–3)",
+          "quote": "Vortex fraction | 0.665"
+        }
+      ]
     },
     {
       "id": "observation.chirality-bipartite",
@@ -103,7 +136,13 @@
       "statement": "Every edge in the signed-3 depth-3 cluster connects an up-chirality pentagon to a down-chirality pentagon, with zero same-chirality edges detected.",
       "status": "accepted",
       "confidence": 0.9,
-      "sources": [{ "file": "experiment.md", "heading": "1. Cluster Construction (Sections 1–3)", "quote": "every edge connects \"up\" to \"down\" pentagons (0 same-chirality edges detected)" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "1. Cluster Construction (Sections 1–3)",
+          "quote": "every edge connects \"up\" to \"down\" pentagons (0 same-chirality edges detected)"
+        }
+      ]
     },
     {
       "id": "observation.spectral-gap-and-eigen-range",
@@ -116,7 +155,13 @@
         { "key": "spectral_gap", "value": 0.02656 },
         { "key": "largest_eigenvalue", "value": 9.162 }
       ],
-      "sources": [{ "file": "experiment.md", "heading": "2. Spectral Analysis (Section 4)", "quote": "**Spectral gap** (algebraic connectivity) | $0.02656$" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "2. Spectral Analysis (Section 4)",
+          "quote": "**Spectral gap** (algebraic connectivity) | $0.02656$"
+        }
+      ]
     },
     {
       "id": "observation.spectral-cdf-dimension",
@@ -126,7 +171,13 @@
       "status": "accepted",
       "confidence": 0.85,
       "attributes": [{ "key": "d_spec_dos", "value": 1.907 }],
-      "sources": [{ "file": "experiment.md", "heading": "2. Spectral Analysis (Section 4)", "quote": "Spectral-CDF $d_{\\text{spec}}^{\\text{DOS}}$ | **1.907**" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "2. Spectral Analysis (Section 4)",
+          "quote": "Spectral-CDF $d_{\\text{spec}}^{\\text{DOS}}$ | **1.907**"
+        }
+      ]
     },
     {
       "id": "observation.bfs-volume-growth",
@@ -135,7 +186,13 @@
       "statement": "Cumulative BFS volumes from the origin are N(<=0)=1, N(<=1)=6, N(<=2)=31, N(<=3)=156.",
       "status": "accepted",
       "confidence": 0.95,
-      "sources": [{ "file": "experiment.md", "heading": "3. BFS Volume Growth: Connectivity Dimension", "quote": "$N(\\le r)$ | 1   | 6   | 31  | 156" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "3. BFS Volume Growth: Connectivity Dimension",
+          "quote": "$N(\\le r)$ | 1   | 6   | 31  | 156"
+        }
+      ]
     },
     {
       "id": "bound.deff-interior",
@@ -145,7 +202,13 @@
       "status": "accepted",
       "confidence": 0.85,
       "attributes": [{ "key": "d_eff_interior", "value": 2.369 }],
-      "sources": [{ "file": "experiment.md", "heading": "3. BFS Volume Growth: Connectivity Dimension", "quote": "**Interior fit** ($r \\in [1,2]$): $d_{\\text{eff}} \\approx 2.369$" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "3. BFS Volume Growth: Connectivity Dimension",
+          "quote": "**Interior fit** ($r \\in [1,2]$): $d_{\\text{eff}} \\approx 2.369$"
+        }
+      ]
     },
     {
       "id": "bound.deff-full",
@@ -155,7 +218,13 @@
       "status": "accepted",
       "confidence": 0.85,
       "attributes": [{ "key": "d_eff_full", "value": 2.901 }],
-      "sources": [{ "file": "experiment.md", "heading": "3. BFS Volume Growth: Connectivity Dimension", "quote": "**Full-range fit** ($r \\in [1,3]$): $d_{\\text{eff}} \\approx 2.901$" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "3. BFS Volume Growth: Connectivity Dimension",
+          "quote": "**Full-range fit** ($r \\in [1,3]$): $d_{\\text{eff}} \\approx 2.901$"
+        }
+      ]
     },
     {
       "id": "theory.fractional-dimensionality-window",
@@ -165,7 +234,13 @@
       "status": "supported",
       "confidence": 0.6,
       "notes": "Inferred from the experiment's framing of the prediction rather than a direct quote of the theory itself; the theory lives in idea.md, not experiment.md.",
-      "sources": [{ "file": "experiment.md", "heading": "3. BFS Volume Growth: Connectivity Dimension", "quote": "Both estimates lie inside the paper's predicted fractional window $2 < d_{\\text{eff}} < 3$" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "3. BFS Volume Growth: Connectivity Dimension",
+          "quote": "Both estimates lie inside the paper's predicted fractional window $2 < d_{\\text{eff}} < 3$"
+        }
+      ]
     },
     {
       "id": "theory.subdiffusive-spectral-dimension",
@@ -174,7 +249,13 @@
       "statement": "The paper predicts that vortex-mediated sub-diffusion causes the spectral dimension to be strictly less than the effective dimension.",
       "status": "supported",
       "confidence": 0.6,
-      "sources": [{ "file": "experiment.md", "heading": "Conclusion", "quote": "consistent with the paper's prediction $d_{\\text{spec}} < d_{\\text{eff}}$ for vortex-mediated sub-diffusion" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "Conclusion",
+          "quote": "consistent with the paper's prediction $d_{\\text{spec}} < d_{\\text{eff}}$ for vortex-mediated sub-diffusion"
+        }
+      ]
     },
     {
       "id": "observation.random-walk-diffusion",
@@ -188,7 +269,13 @@
         { "key": "d_spec_p0", "value": 2.81 }
       ],
       "notes": "Values explicitly flagged by the notes as finite-size/boundary-saturation artifacts.",
-      "sources": [{ "file": "experiment.md", "heading": "4. Random Walks", "quote": "MSD early-time slope | 0.262 ⇒ $d_w \\approx 7.62$" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "4. Random Walks",
+          "quote": "MSD early-time slope | 0.262 ⇒ $d_w \\approx 7.62$"
+        }
+      ]
     },
     {
       "id": "observation.alexander-orbach-discrepancy",
@@ -201,7 +288,13 @@
         { "key": "alexander_orbach_ratio", "value": 0.622 },
         { "key": "ao_discrepancy", "value": 2.19 }
       ],
-      "sources": [{ "file": "experiment.md", "heading": "4. Random Walks", "quote": "Direct vs. AO discrepancy | $2.19$" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "4. Random Walks",
+          "quote": "Direct vs. AO discrepancy | $2.19$"
+        }
+      ]
     },
     {
       "id": "constraint.bfs-depth3-boundary-saturation",
@@ -210,7 +303,13 @@
       "statement": "At BFS radius 3 random walkers, distance catalogs and pinwheel statistics saturate the cluster boundary almost immediately, truncating diffusive and asymptotic regimes.",
       "status": "accepted",
       "confidence": 0.85,
-      "sources": [{ "file": "experiment.md", "heading": "4. Random Walks", "quote": "with BFS radius 3 the walker saturates the cluster almost immediately, truncating the diffusive regime" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "4. Random Walks",
+          "quote": "with BFS radius 3 the walker saturates the cluster almost immediately, truncating the diffusive regime"
+        }
+      ]
     },
     {
       "id": "observation.no-holonomy-detected",
@@ -223,7 +322,13 @@
         { "key": "triangle_count", "value": 0 },
         { "key": "mean_clustering_coefficient", "value": 0.0 }
       ],
-      "sources": [{ "file": "experiment.md", "heading": "5. Holonomy (Sections 8, 12, 16)", "quote": "the **3-cycle search through origin returned no cycles** (girth $> 8$ through origin)" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "5. Holonomy (Sections 8, 12, 16)",
+          "quote": "the **3-cycle search through origin returned no cycles** (girth $> 8$ through origin)"
+        }
+      ]
     },
     {
       "id": "open_question.holonomy-requires-larger-bfs",
@@ -232,7 +337,13 @@
       "statement": "It is unclear whether genuine spinor-like or anyonic holonomy under the signed-3 rule requires BFS depth 4 or greater to produce cycles.",
       "status": "pre_formal",
       "confidence": 0.6,
-      "sources": [{ "file": "experiment.md", "heading": "5. Holonomy (Sections 8, 12, 16)", "quote": "To observe genuine spinor/anyonic holonomy with this rule, the `large` preset (BFS 4+) is required." }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "5. Holonomy (Sections 8, 12, 16)",
+          "quote": "To observe genuine spinor/anyonic holonomy with this rule, the `large` preset (BFS 4+) is required."
+        }
+      ]
     },
     {
       "id": "observation.ca-panel-results",
@@ -246,7 +357,13 @@
         { "key": "still_life_rules", "value": 6 },
         { "key": "gliders_found", "value": 0 }
       ],
-      "sources": [{ "file": "experiment.md", "heading": "6. Cellular Automata (Sections 9, 10, 15)", "quote": "The glider hunt (5 rules × 5 seed shapes, 25 trials) found **0 oscillators** and **0 gliders** on this small cluster" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "6. Cellular Automata (Sections 9, 10, 15)",
+          "quote": "The glider hunt (5 rules × 5 seed shapes, 25 trials) found **0 oscillators** and **0 gliders** on this small cluster"
+        }
+      ]
     },
     {
       "id": "observation.tau-rule-sheet-comparison",
@@ -255,8 +372,17 @@
       "statement": "Across twelve compared tau-rules at BFS depth 3, the signed-3 and signed-n rules each produce 7 sheets while all other rules produce 4 sheets, with identical cell count 156 and mean degree 1.99 for every rule.",
       "status": "accepted",
       "confidence": 0.9,
-      "attributes": [{ "key": "max_sheets_signed_rules", "value": 7 }, { "key": "sheets_other_rules", "value": 4 }],
-      "sources": [{ "file": "experiment.md", "heading": "7. Alternative $\\tau$-Rules and Holonomy Comparison (Section 11)", "quote": "The **signed-3** and **signed-n** rules tie for the most sheets (7); all other rules produce 4 sheets." }]
+      "attributes": [
+        { "key": "max_sheets_signed_rules", "value": 7 },
+        { "key": "sheets_other_rules", "value": 4 }
+      ],
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "7. Alternative $\\tau$-Rules and Holonomy Comparison (Section 11)",
+          "quote": "The **signed-3** and **signed-n** rules tie for the most sheets (7); all other rules produce 4 sheets."
+        }
+      ]
     },
     {
       "id": "observation.erdos-distance-catalog",
@@ -270,7 +396,13 @@
         { "key": "distinct_distances", "value": 12195 },
         { "key": "distance_ratio", "value": 2415 }
       ],
-      "sources": [{ "file": "experiment.md", "heading": "13. Erdős Distance Catalog (Section 23)", "quote": "The very large $D(P_n)$ ratio (expected $O(1)$ for the pentagonal lattice) indicates strong boundary effects" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "13. Erdős Distance Catalog (Section 23)",
+          "quote": "The very large $D(P_n)$ ratio (expected $O(1)$ for the pentagonal lattice) indicates strong boundary effects"
+        }
+      ]
     },
     {
       "id": "observation.distance-web-degeneracy",
@@ -279,7 +411,13 @@
       "statement": "The first six distance webs W_k all share an identical degenerate structure of 34 edges and 129 components because near-zero algebraic residuals collapse the first six distance classes at this scale.",
       "status": "accepted",
       "confidence": 0.8,
-      "sources": [{ "file": "experiment.md", "heading": "14. Distance Web Analysis (Section 24)", "quote": "The first 6 distance webs $W_k$ all share identical degenerate structure (34 edges, 129 components)" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "14. Distance Web Analysis (Section 24)",
+          "quote": "The first 6 distance webs $W_k$ all share identical degenerate structure (34 edges, 129 components)"
+        }
+      ]
     },
     {
       "id": "observation.pinwheel-not-detected",
@@ -288,8 +426,17 @@
       "statement": "None of the first 8 examined distance classes exhibit pinwheel structure; each has a maximum angular gap of 1.85 rad, well above the pinwheel threshold of about 0.628 rad.",
       "status": "accepted",
       "confidence": 0.8,
-      "attributes": [{ "key": "pinwheel_classes_detected", "value": 0 }, { "key": "classes_examined", "value": 8 }],
-      "sources": [{ "file": "experiment.md", "heading": "15. Pinwheel Phenomenon (Section 25)", "quote": "No pinwheel detected." }]
+      "attributes": [
+        { "key": "pinwheel_classes_detected", "value": 0 },
+        { "key": "classes_examined", "value": 8 }
+      ],
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "15. Pinwheel Phenomenon (Section 25)",
+          "quote": "No pinwheel detected."
+        }
+      ]
     },
     {
       "id": "observation.commute-time-scaling",
@@ -298,8 +445,14 @@
       "statement": "Commute-time estimates from the origin to targets at BFS distance 1-3 fit a log-log slope of approximately 0.50, shallower than the slope greater than 1 expected for an extensive fractal with d_w greater than 2.",
       "status": "accepted",
       "confidence": 0.8,
-      "attributes": [{ "key": "commute_time_slope", "value": 0.50 }],
-      "sources": [{ "file": "experiment.md", "heading": "16. Commute-Time Sampling (Section 21)", "quote": "Log-log slope $\\approx 0.50$." }]
+      "attributes": [{ "key": "commute_time_slope", "value": 0.5 }],
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "16. Commute-Time Sampling (Section 21)",
+          "quote": "Log-log slope $\\approx 0.50$."
+        }
+      ]
     },
     {
       "id": "observation.kpm-spectral-dimension",
@@ -310,7 +463,13 @@
       "confidence": 0.75,
       "attributes": [{ "key": "d_spec_kpm", "value": 0.26 }],
       "notes": "The notes explicitly flag this estimate as unreliable due to the rescaling warning.",
-      "sources": [{ "file": "experiment.md", "heading": "10. KPM Spectral Density (Section 18)", "quote": "$$d_{\\text{spec}}^{\\text{KPM, CDF}} \\approx 0.26,$$" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "10. KPM Spectral Density (Section 18)",
+          "quote": "$$d_{\\text{spec}}^{\\text{KPM, CDF}} \\approx 0.26,$$"
+        }
+      ]
     },
     {
       "id": "observation.kpm-rescale-warning",
@@ -319,7 +478,13 @@
       "statement": "The rescaled spectral bound lambda_max over kpm_b is approximately 1.43, slightly exceeding the valid range [-1,1], triggering a warning that kpm_b should be increased for cleaner DOS reconstruction.",
       "status": "accepted",
       "confidence": 0.85,
-      "sources": [{ "file": "experiment.md", "heading": "10. KPM Spectral Density (Section 18)", "quote": "a warning was emitted; for cleaner DOS reconstruction on this cluster, `kpm_b` should be increased" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "10. KPM Spectral Density (Section 18)",
+          "quote": "a warning was emitted; for cleaner DOS reconstruction on this cluster, `kpm_b` should be increased"
+        }
+      ]
     },
     {
       "id": "observation.intra-sheet-diffusion",
@@ -332,7 +497,13 @@
         { "key": "d_w_intra", "value": 3.31 },
         { "key": "sheet_crossing_fraction", "value": 0.666 }
       ],
-      "sources": [{ "file": "experiment.md", "heading": "11. Per-Sheet Walk Diagnostics (Section 19)", "quote": "**Two-thirds of all walker steps cross a sheet** — vortex edges dominate transport completely under signed-3." }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "11. Per-Sheet Walk Diagnostics (Section 19)",
+          "quote": "**Two-thirds of all walker steps cross a sheet** — vortex edges dominate transport completely under signed-3."
+        }
+      ]
     },
     {
       "id": "norm.large-preset-required-for-reliability",
@@ -341,7 +512,13 @@
       "statement": "The notes hold that quantitatively reliable dimensional, holonomy, glider and Erdős-catalog estimates require the large or huge preset at BFS depth 5 or more, rather than the medium preset used here.",
       "status": "accepted",
       "confidence": 0.9,
-      "sources": [{ "file": "experiment.md", "heading": "Conclusion", "quote": "For publication-quality dimensional estimates and meaningful holonomy / glider / Erdős statistics, **the `large` or `huge` presets at BFS depth $\\ge 5$ are required.**" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "Conclusion",
+          "quote": "For publication-quality dimensional estimates and meaningful holonomy / glider / Erdős statistics, **the `large` or `huge` presets at BFS depth $\\ge 5$ are required.**"
+        }
+      ]
     }
   ],
   "edges": [
@@ -351,7 +528,12 @@
       "to": "experiment.medium-signed3-depth3-run",
       "relation": "motivates",
       "confidence": 0.8,
-      "sources": [{ "file": "experiment.md", "quote": "for the paper _Emergent Fractional Dimensionality and Spinor-Like Holonomy in Multi-Sheeted Pentagon Tilings_" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "quote": "for the paper _Emergent Fractional Dimensionality and Spinor-Like Holonomy in Multi-Sheeted Pentagon Tilings_"
+        }
+      ]
     },
     {
       "id": "e.resource.medium-preset-config.constrains.experiment.medium-signed3-depth3-run",
@@ -395,7 +577,13 @@
       "relation": "supports",
       "strength": 0.8,
       "confidence": 0.85,
-      "sources": [{ "file": "experiment.md", "heading": "3. BFS Volume Growth: Connectivity Dimension", "quote": "**Interior fit** ($r \\in [1,2]$): $d_{\\text{eff}} \\approx 2.369$" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "3. BFS Volume Growth: Connectivity Dimension",
+          "quote": "**Interior fit** ($r \\in [1,2]$): $d_{\\text{eff}} \\approx 2.369$"
+        }
+      ]
     },
     {
       "id": "e.observation.bfs-volume-growth.supports.bound.deff-full",
@@ -412,7 +600,13 @@
       "relation": "supports",
       "strength": 0.7,
       "confidence": 0.75,
-      "sources": [{ "file": "experiment.md", "heading": "3. BFS Volume Growth: Connectivity Dimension", "quote": "Both estimates lie inside the paper's predicted fractional window $2 < d_{\\text{eff}} < 3$" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "3. BFS Volume Growth: Connectivity Dimension",
+          "quote": "Both estimates lie inside the paper's predicted fractional window $2 < d_{\\text{eff}} < 3$"
+        }
+      ]
     },
     {
       "id": "e.bound.deff-full.supports.theory.fractional-dimensionality-window",
@@ -429,7 +623,13 @@
       "relation": "supports",
       "strength": 0.75,
       "confidence": 0.8,
-      "sources": [{ "file": "experiment.md", "heading": "Conclusion", "quote": "confirming the paper's central prediction" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "Conclusion",
+          "quote": "confirming the paper's central prediction"
+        }
+      ]
     },
     {
       "id": "e.observation.kpm-spectral-dimension.supports.theory.subdiffusive-spectral-dimension",
@@ -495,7 +695,13 @@
       "to": "open_question.holonomy-requires-larger-bfs",
       "relation": "motivates",
       "confidence": 0.85,
-      "sources": [{ "file": "experiment.md", "heading": "5. Holonomy (Sections 8, 12, 16)", "quote": "To observe genuine spinor/anyonic holonomy with this rule, the `large` preset (BFS 4+) is required." }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "5. Holonomy (Sections 8, 12, 16)",
+          "quote": "To observe genuine spinor/anyonic holonomy with this rule, the `large` preset (BFS 4+) is required."
+        }
+      ]
     },
     {
       "id": "e.observation.tau-rule-sheet-comparison.refines.model.multi-sheeted-pentagon-cluster",
@@ -535,7 +741,13 @@
       "to": "observation.cluster-size-and-sheets",
       "state": "performed",
       "confidence": 0.85,
-      "sources": [{ "file": "experiment.md", "heading": "1. Cluster Construction (Sections 1–3)", "quote": "BFS expansion to depth 3 under the **signed-3** vortex rule produced" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "1. Cluster Construction (Sections 1–3)",
+          "quote": "BFS expansion to depth 3 under the **signed-3** vortex rule produced"
+        }
+      ]
     },
     {
       "id": "m.observation.bfs-volume-growth.fit.bound.deff-interior",
@@ -545,7 +757,13 @@
       "state": "performed",
       "loss": "collapses the full per-shell volume table into a single power-law exponent and prefactor",
       "confidence": 0.8,
-      "sources": [{ "file": "experiment.md", "heading": "3. BFS Volume Growth: Connectivity Dimension", "quote": "Log-log fits" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "3. BFS Volume Growth: Connectivity Dimension",
+          "quote": "Log-log fits"
+        }
+      ]
     },
     {
       "id": "m.observation.spectral-gap-and-eigen-range.fit.observation.spectral-cdf-dimension",
@@ -555,7 +773,13 @@
       "state": "performed",
       "confidence": 0.6,
       "notes": "Inferred: the dense eigendecomposition feeds both the raw spectrum and the derived spectral-CDF dimension; the notes do not narrate this transport explicitly.",
-      "sources": [{ "file": "experiment.md", "heading": "2. Spectral Analysis (Section 4)", "quote": "The graph Laplacian $L = D - A$ was diagonalized in full" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "2. Spectral Analysis (Section 4)",
+          "quote": "The graph Laplacian $L = D - A$ was diagonalized in full"
+        }
+      ]
     }
   ],
   "coherence": [
@@ -565,9 +789,18 @@
       "refs": ["theory.fractional-dimensionality-window", "bound.deff-interior", "bound.deff-full"],
       "requirement": "The paper's proof/argument for a fractional effective dimension in (2,3) must guarantee that BFS-volume-based numeric estimates converge into that window as depth grows.",
       "status": "pending",
-      "cost": { "measure": "developer-effort", "note": "Only two shells are available at depth 3; the notes state a longer BFS depth is needed for a tight check." },
+      "cost": {
+        "measure": "developer-effort",
+        "note": "Only two shells are available at depth 3; the notes state a longer BFS depth is needed for a tight check."
+      },
       "confidence": 0.6,
-      "sources": [{ "file": "experiment.md", "heading": "3. BFS Volume Growth: Connectivity Dimension", "quote": "At BFS depth 3 the interior fit only spans two shells; the larger `xhuge` preset should give a much tighter fit." }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "3. BFS Volume Growth: Connectivity Dimension",
+          "quote": "At BFS depth 3 the interior fit only spans two shells; the larger `xhuge` preset should give a much tighter fit."
+        }
+      ]
     },
     {
       "id": "c.semantic.kpm-vs-dense-dos-spectral-dimension",
@@ -575,9 +808,18 @@
       "refs": ["observation.kpm-spectral-dimension", "observation.spectral-cdf-dimension"],
       "requirement": "The KPM-based numeric estimate of the spectral dimension must agree with the dense-eigenvalue DOS estimate of the same quantity.",
       "status": "violated",
-      "cost": { "measure": "developer-effort", "note": "kpm_b needs to be increased; the current rescaling warning explains the mismatch." },
+      "cost": {
+        "measure": "developer-effort",
+        "note": "kpm_b needs to be increased; the current rescaling warning explains the mismatch."
+      },
       "confidence": 0.7,
-      "sources": [{ "file": "experiment.md", "heading": "10. KPM Spectral Density (Section 18)", "quote": "quantitatively very low due to the cluster size and the rescaling warning" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "10. KPM Spectral Density (Section 18)",
+          "quote": "quantitatively very low due to the cluster size and the rescaling warning"
+        }
+      ]
     }
   ],
   "clusters": [
@@ -611,12 +853,22 @@
       "kind": "unattributed_claim",
       "description": "\"the rigorous regime of §2.4\" is cited for the cap-window dimension collapsing toward 2 at larger BFS depth, but no corresponding node for §2.4's content exists in this document.",
       "refs": [],
-      "sources": [{ "file": "experiment.md", "heading": "9. Cut-and-Project Acceptance Window (Section 17)", "quote": "the rigorous regime of §2.4" }]
+      "sources": [
+        {
+          "file": "experiment.md",
+          "heading": "9. Cut-and-Project Acceptance Window (Section 17)",
+          "quote": "the rigorous regime of §2.4"
+        }
+      ]
     },
     {
       "kind": "coherence_violation",
       "description": "KPM integrated spectral dimension (0.26) and dense-DOS spectral dimension (1.91) disagree sharply; the notes attribute this to a rescaling warning rather than resolving it numerically.",
-      "refs": ["c.semantic.kpm-vs-dense-dos-spectral-dimension", "observation.kpm-spectral-dimension", "observation.spectral-cdf-dimension"],
+      "refs": [
+        "c.semantic.kpm-vs-dense-dos-spectral-dimension",
+        "observation.kpm-spectral-dimension",
+        "observation.spectral-cdf-dimension"
+      ],
       "layers": ["numeric"]
     }
   ],

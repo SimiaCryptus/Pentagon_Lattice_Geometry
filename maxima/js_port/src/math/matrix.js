@@ -11,7 +11,9 @@ export function identity(n) {
 }
 
 export function matMul(A, B) {
-  const n = A.length, k = B.length, m = B[0].length;
+  const n = A.length,
+    k = B.length,
+    m = B[0].length;
   const C = zeros(n, m);
   for (let i = 0; i < n; i++)
     for (let p = 0; p < k; p++) {
@@ -45,12 +47,14 @@ export function jacobiEigenvalues(Ain, { maxSweeps = 100, tol = 1e-11 } = {}) {
         const c = 1 / Math.sqrt(t * t + 1);
         const s = t * c;
         for (let k = 0; k < n; k++) {
-          const akp = A[k][p], akq = A[k][q];
+          const akp = A[k][p],
+            akq = A[k][q];
           A[k][p] = c * akp - s * akq;
           A[k][q] = s * akp + c * akq;
         }
         for (let k = 0; k < n; k++) {
-          const apk = A[p][k], aqk = A[q][k];
+          const apk = A[p][k],
+            aqk = A[q][k];
           A[p][k] = c * apk - s * aqk;
           A[q][k] = s * apk + c * aqk;
         }
@@ -76,7 +80,9 @@ export function applyMat2(M, v) {
 
 export function mulMat2(A, B) {
   return [
-    A[0] * B[0] + A[1] * B[2], A[0] * B[1] + A[1] * B[3],
-    A[2] * B[0] + A[3] * B[2], A[2] * B[1] + A[3] * B[3],
+    A[0] * B[0] + A[1] * B[2],
+    A[0] * B[1] + A[1] * B[3],
+    A[2] * B[0] + A[3] * B[2],
+    A[2] * B[1] + A[3] * B[3],
   ];
 }

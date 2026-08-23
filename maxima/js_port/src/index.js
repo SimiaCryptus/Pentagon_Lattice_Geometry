@@ -21,4 +21,9 @@ export { runAnalysisExperiment } from './experiments/analysisExperiment.js';
 export { runErdosExperiment } from './experiments/erdosExperiment.js';
 export { runPinwheelExperiment } from './experiments/pinwheelExperiment.js';
 export { runSweepExperiment, runSmokeTest } from './experiments/sweepExperiment.js';
-export { EXPERIMENTS, getExperiment, defaultParams, runExperiment } from './experiments/registry.js';
+export {
+  EXPERIMENTS,
+  getExperiment,
+  defaultParams,
+  runExperiment,
+} from './experiments/registry.js';

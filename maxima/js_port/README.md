@@ -2,22 +2,22 @@
 
 ES6 port of the Maxima experiment suite:
 
-| Maxima file      | JS experiment id | module                                   |
-|------------------|------------------|------------------------------------------|
-| `experiment.mac` | `lattice`        | `src/experiments/latticeExperiment.js`   |
-| `analysis.mac`   | `analysis`       | `src/experiments/analysisExperiment.js`  |
-| `erdos.mac`      | `erdos`          | `src/experiments/erdosExperiment.js`     |
-| `pinwheels.mac`  | `pinwheel`       | `src/experiments/pinwheelExperiment.js`  |
-| `sweep_ngon.mac` | `sweep`          | `src/experiments/sweepExperiment.js`     |
-| `smoke_test.mac` | `smoke`          | `src/experiments/sweepExperiment.js`     |
+| Maxima file      | JS experiment id | module                                  |
+| ---------------- | ---------------- | --------------------------------------- |
+| `experiment.mac` | `lattice`        | `src/experiments/latticeExperiment.js`  |
+| `analysis.mac`   | `analysis`       | `src/experiments/analysisExperiment.js` |
+| `erdos.mac`      | `erdos`          | `src/experiments/erdosExperiment.js`    |
+| `pinwheels.mac`  | `pinwheel`       | `src/experiments/pinwheelExperiment.js` |
+| `sweep_ngon.mac` | `sweep`          | `src/experiments/sweepExperiment.js`    |
+| `smoke_test.mac` | `smoke`          | `src/experiments/sweepExperiment.js`    |
 
 ## Corrections carried over (sheet_fix.md)
 
 The fiber / structure group is **Z_2** (pentagon orientation only, two
-sheets).  Every edge flips orientation.  The vertex loop has **even**
+sheets). Every edge flips orientation. The vertex loop has **even**
 length (10 for pentagons) so all flips cancel and the vertex holonomy
-is **trivial**.  There is no Z5, no Z10, no signed-3 rule and no
-spinor behaviour.  Legacy tau-rules are retained only as comparison
+is **trivial**. There is no Z5, no Z10, no signed-3 rule and no
+spinor behaviour. Legacy tau-rules are retained only as comparison
 baselines and are labelled as such.
 
 ## Exact arithmetic
@@ -25,7 +25,7 @@ baselines and are labelled as such.
 Centroids live in the cyclotomic ring `Z[zeta_n]` (`src/math/cyclotomic.js`).
 A tile centroid is an integer coefficient vector modulo the cyclotomic
 polynomial `Phi_n`, so cell identity, reflection and squared distances
-are all *exact* — no floating-point hashing.  Reflection of a tile
+are all _exact_ — no floating-point hashing. Reflection of a tile
 across its k-th edge sends `c -> c + zeta^k + zeta^{k+1}` (conjugated
 for the mirrored chirality class), which stays inside the ring.
 

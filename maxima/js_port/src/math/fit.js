@@ -3,7 +3,10 @@
 export function linearFit(xs, ys) {
   const n = xs.length;
   if (n < 2) return { slope: 0, intercept: n === 1 ? ys[0] : 0, n };
-  let sx = 0, sy = 0, sxx = 0, sxy = 0;
+  let sx = 0,
+    sy = 0,
+    sxx = 0,
+    sxy = 0;
   for (let i = 0; i < n; i++) {
     sx += xs[i];
     sy += ys[i];
@@ -18,7 +21,8 @@ export function linearFit(xs, ys) {
 
 /* Fit log(y) = slope*log(x) + intercept over strictly positive samples. */
 export function logLogFit(xs, ys) {
-  const lx = [], ly = [];
+  const lx = [],
+    ly = [];
   for (let i = 0; i < xs.length; i++) {
     if (xs[i] > 0 && ys[i] > 0) {
       lx.push(Math.log(xs[i]));
@@ -38,8 +42,11 @@ export function variance(a) {
 export function pearson(xs, ys) {
   const n = Math.min(xs.length, ys.length);
   if (n < 2) return 0;
-  const mx = mean(xs), my = mean(ys);
-  let cov = 0, vx = 0, vy = 0;
+  const mx = mean(xs),
+    my = mean(ys);
+  let cov = 0,
+    vx = 0,
+    vy = 0;
   for (let i = 0; i < n; i++) {
     cov += (xs[i] - mx) * (ys[i] - my);
     vx += (xs[i] - mx) ** 2;

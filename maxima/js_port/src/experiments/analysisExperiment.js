@@ -4,14 +4,37 @@
 
 import { Logger } from '../util/logger.js';
 import {
-  PHI, PSI, fib, totient, moebius, gcd, legendre5, kronecker5, pisanoPeriod,
-  phiConvergents, zphiMul, zphiNorm, zphiConj, zphiDiv, zphiPow,
-  fibonacciWord, thueMorse, rudinShapiro, primesUpTo, nextPrime,
+  PHI,
+  PSI,
+  fib,
+  totient,
+  moebius,
+  gcd,
+  legendre5,
+  kronecker5,
+  pisanoPeriod,
+  phiConvergents,
+  zphiMul,
+  zphiNorm,
+  zphiConj,
+  zphiDiv,
+  zphiPow,
+  fibonacciWord,
+  thueMorse,
+  rudinShapiro,
+  primesUpTo,
+  nextPrime,
 } from '../math/numberTheory.js';
 import {
-  ngonSummary, cycleLaplacianEigenvalues, starLaplacianSpectrum,
-  heatTraceCycle, heatTraceStar, spectralZetaCycle, diagonal,
-  outerTotalisticRules, totalisticRules,
+  ngonSummary,
+  cycleLaplacianEigenvalues,
+  starLaplacianSpectrum,
+  heatTraceCycle,
+  heatTraceStar,
+  spectralZetaCycle,
+  diagonal,
+  outerTotalisticRules,
+  totalisticRules,
 } from '../geometry/ngon.js';
 import { CycRing } from '../math/cyclotomic.js';
 import { pf2x2 } from '../math/matrix.js';
@@ -71,8 +94,14 @@ export function runAnalysisExperiment(opts = {}, logger = new Logger()) {
     dW: Math.log(5) / Math.log(2),
   };
   sierpinski.dSpec = dSpecAO(sierpinski.dEff, sierpinski.dW);
-  logger.log('Sierpinski gasket reference: d_eff =', sierpinski.dEff,
-    ' d_w =', sierpinski.dW, ' d_spec =', sierpinski.dSpec);
+  logger.log(
+    'Sierpinski gasket reference: d_eff =',
+    sierpinski.dEff,
+    ' d_w =',
+    sierpinski.dW,
+    ' d_spec =',
+    sierpinski.dSpec
+  );
 
   /* ---- volume-growth sanity ---- */
   const radii = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -84,7 +113,7 @@ export function runAnalysisExperiment(opts = {}, logger = new Logger()) {
   logger.rule();
   logger.log('Z_2 orientation cover (sheet_fix.md)');
   check('single edge flips orientation', ((1 % 2) + 2) % 2 === 1);
-  check('two flips cancel', ((1 + 1) % 2) === 0);
+  check('two flips cancel', (1 + 1) % 2 === 0);
   check('Z_2 cover order = 2', orderZn(1, 2) === 2);
   check('even (length 10) vertex loop is trivial', flatZ2Phase(10) === 1);
   check('Berry phase parity rule', approx(berryPhaseZ2(10), 0) && approx(berryPhaseZ2(3), Math.PI));
@@ -99,13 +128,25 @@ export function runAnalysisExperiment(opts = {}, logger = new Logger()) {
     const R = new CycRing(n);
 
     // roots of unity checks
-    let sumX = 0, sumY = 0;
-    for (let k = 0; k < n; k++) { sumX += Math.cos((2 * Math.PI * k) / n); sumY += Math.sin((2 * Math.PI * k) / n); }
+    let sumX = 0,
+      sumY = 0;
+    for (let k = 0; k < n; k++) {
+      sumX += Math.cos((2 * Math.PI * k) / n);
+      sumY += Math.sin((2 * Math.PI * k) / n);
+    }
     check(`n=${n}: sum of n-th roots = 0`, Math.abs(sumX) < 1e-9 && Math.abs(sumY) < 1e-9);
-    let px = 0, py = 0;
-    for (let k = 1; k < n; k++) if (gcd(k, n) === 1) { px += Math.cos((2 * Math.PI * k) / n); py += Math.sin((2 * Math.PI * k) / n); }
-    check(`n=${n}: sum of primitive roots = mu(n)`, Math.abs(px - moebius(n)) < 1e-9 && Math.abs(py) < 1e-9,
-      `mu=${moebius(n)}`);
+    let px = 0,
+      py = 0;
+    for (let k = 1; k < n; k++)
+      if (gcd(k, n) === 1) {
+        px += Math.cos((2 * Math.PI * k) / n);
+        py += Math.sin((2 * Math.PI * k) / n);
+      }
+    check(
+      `n=${n}: sum of primitive roots = mu(n)`,
+      Math.abs(px - moebius(n)) < 1e-9 && Math.abs(py) < 1e-9,
+      `mu=${moebius(n)}`
+    );
     check(`n=${n}: deg Phi_n = totient(n)`, R.deg === totient(n));
 
     // rotation / monodromy
@@ -117,16 +158,35 @@ export function runAnalysisExperiment(opts = {}, logger = new Logger()) {
 
     // graph Laplacians
     const star = starLaplacianSpectrum(n);
-    check(`n=${n}: star spectrum {0, 1^(n-1), n+1}`,
-      star[0] === 0 && star[star.length - 1] === n + 1 && star.length === n + 1);
+    check(
+      `n=${n}: star spectrum {0, 1^(n-1), n+1}`,
+      star[0] === 0 && star[star.length - 1] === n + 1 && star.length === n + 1
+    );
     const cyc = cycleLaplacianEigenvalues(n);
-    check(`n=${n}: cycle gap = 2-2cos(2pi/n)`, approx(Math.min(...cyc.filter((x) => x > 1e-12)), g.cycleGap, 1e-9));
+    check(
+      `n=${n}: cycle gap = 2-2cos(2pi/n)`,
+      approx(Math.min(...cyc.filter((x) => x > 1e-12)), g.cycleGap, 1e-9)
+    );
 
     // rule counts
     check(`n=${n}: OT rule count = 2^(2(n+1))`, outerTotalisticRules(n) === 2 ** (2 * (n + 1)));
 
     // inflation / substitution
-    const M = n === 3 ? [[1, 0], [0, 1]] : n === 5 ? [[2, 1], [1, 1]] : [[2, 1], [n - 3, n - 4]];
+    const M =
+      n === 3
+        ? [
+            [1, 0],
+            [0, 1],
+          ]
+        : n === 5
+          ? [
+              [2, 1],
+              [1, 1],
+            ]
+          : [
+              [2, 1],
+              [n - 3, n - 4],
+            ];
     const lambda = n === 3 ? 1 : pf2x2(M);
     let v = [1, 0];
     const orbit = [];
@@ -134,9 +194,14 @@ export function runAnalysisExperiment(opts = {}, logger = new Logger()) {
       v = [M[0][0] * v[0] + M[0][1] * v[1], M[1][0] * v[0] + M[1][1] * v[1]];
       orbit.push({ depth: d, counts: [...v], total: v[0] + v[1] });
     }
-    if (n === 5) check('pentagon inflation ratio = phi^2', approx(lambda, PHI * PHI, 1e-8), lambda.toFixed(6));
+    if (n === 5)
+      check('pentagon inflation ratio = phi^2', approx(lambda, PHI * PHI, 1e-8), lambda.toFixed(6));
 
-    const heat = [0.01, 0.1, 1, 10].map((t) => ({ t, cycle: heatTraceCycle(n, t), star: heatTraceStar(n, t) }));
+    const heat = [0.01, 0.1, 1, 10].map((t) => ({
+      t,
+      cycle: heatTraceCycle(n, t),
+      star: heatTraceStar(n, t),
+    }));
     const zeta = [1, 2, 3].map((s) => ({ s, value: spectralZetaCycle(n, s) }));
 
     const row = {
@@ -151,10 +216,12 @@ export function runAnalysisExperiment(opts = {}, logger = new Logger()) {
       cycleEigenvalues: cyc,
     };
     sweep.push(row);
-    logger.log(`n=${n}: theta=${g.interiorAngleDeg.toFixed(3)}deg k_flat=${g.kFlat}`,
+    logger.log(
+      `n=${n}: theta=${g.interiorAngleDeg.toFixed(3)}deg k_flat=${g.kFlat}`,
       `deficit=${g.deficitDeg.toFixed(3)}deg k_close=${g.loopClosure}`,
       `phi(n)=${g.totient} area=${g.area.toFixed(4)} gap=${g.cycleGap.toFixed(4)}`,
-      `lambda_PF=${lambda.toFixed(5)}`);
+      `lambda_PF=${lambda.toFixed(5)}`
+    );
   }
 
   /* ---- Section 19: substitution sequences ---- */
@@ -164,7 +231,10 @@ export function runAnalysisExperiment(opts = {}, logger = new Logger()) {
   const nb = fw.length - na;
   check('Fibonacci word length = F_{k+2}', fw.length === fib(inflationDepth + 2), `${fw.length}`);
   check('|a|/|b| -> phi', Math.abs(na / nb - PHI) < 0.1, (na / nb).toFixed(6));
-  const fibMatrix = [[1, 1], [1, 0]];
+  const fibMatrix = [
+    [1, 1],
+    [1, 0],
+  ];
   check('Fibonacci substitution PF eigenvalue = phi', approx(pf2x2(fibMatrix), PHI, 1e-9));
   const tm = Array.from({ length: 16 }, (_, k) => thueMorse(k));
   const rs = Array.from({ length: 16 }, (_, k) => rudinShapiro(k));
@@ -183,7 +253,8 @@ export function runAnalysisExperiment(opts = {}, logger = new Logger()) {
   check('phi^2 / phi = phi', JSON.stringify(zphiDiv([1, 1], [0, 1])) === '[0,1]');
 
   const splitting = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31].map((p) => ({
-    p, legendre: legendre5(p),
+    p,
+    legendre: legendre5(p),
     type: legendre5(p) === 0 ? 'ramified' : legendre5(p) === 1 ? 'splits' : 'inert',
   }));
   const pisano = Array.from({ length: 14 }, (_, i) => ({ m: i + 2, period: pisanoPeriod(i + 2) }));
@@ -212,10 +283,13 @@ export function runAnalysisExperiment(opts = {}, logger = new Logger()) {
   };
   const dedekind = (s, pMax) => primesUpTo(pMax).reduce((acc, p) => acc * eulerFactor(p, s), 1);
   const zetaData = {
-    riemann2: zetaPartial(2, zetaTerms), riemann3: zetaPartial(3, zetaTerms),
+    riemann2: zetaPartial(2, zetaTerms),
+    riemann3: zetaPartial(3, zetaTerms),
     exactZeta2: Math.PI ** 2 / 6,
-    dedekind2: dedekind(2, 30), dedekind3: dedekind(3, 30),
-    L2: LChi5(2, zetaTerms), L3: LChi5(3, zetaTerms),
+    dedekind2: dedekind(2, 30),
+    dedekind3: dedekind(3, 30),
+    L2: LChi5(2, zetaTerms),
+    L3: LChi5(3, zetaTerms),
     exactL2: Math.PI ** 2 / (5 * Math.sqrt(5)),
   };
   logger.log('zeta(2) partial =', zetaData.riemann2, ' exact =', zetaData.exactZeta2);
@@ -236,26 +310,63 @@ export function runAnalysisExperiment(opts = {}, logger = new Logger()) {
 
   const failures = checks.filter((c) => !c.ok);
   logger.rule('=');
-  logger.log(failures.length === 0
-    ? `analysis: all ${checks.length} checks passed`
-    : `analysis: ${failures.length}/${checks.length} checks FAILED`);
+  logger.log(
+    failures.length === 0
+      ? `analysis: all ${checks.length} checks passed`
+      : `analysis: ${failures.length}/${checks.length} checks FAILED`
+  );
 
   return {
     experiment: 'analysis',
     params: { nMin, nMax, nStep, inflationDepth, zetaTerms },
-    checks, failures,
+    checks,
+    failures,
     alexanderOrbachGrid: aoGrid,
     sierpinski,
     sweep,
-    substitution: { fibonacciWord: fw.slice(0, 64), lengths: fw.length, a: na, b: nb, ratio: na / nb, thueMorse: tm, rudinShapiro: rs },
+    substitution: {
+      fibonacciWord: fw.slice(0, 64),
+      lengths: fw.length,
+      a: na,
+      b: nb,
+      ratio: na / nb,
+      thueMorse: tm,
+      rudinShapiro: rs,
+    },
     numberTheory: { splitting, pisano, convergents, wallSunSun },
     zeta: zetaData,
     correlations,
     tables: [
       {
         title: 'n-gon sweep',
-        columns: ['n', 'theta(deg)', 'k_flat', 'deficit(deg)', 'k_close', 'turns', 'phi(n)', 'area', 'R', 'OT_rules', 'C_n_gap', 'lambda_PF'],
-        rows: sweep.map((r) => [r.n, r.interiorAngleDeg, r.kFlat, r.deficitDeg, r.loopClosure, r.turns, r.totient, r.area, r.circumradius, r.otRules, r.cycleGap, r.inflationRatio]),
+        columns: [
+          'n',
+          'theta(deg)',
+          'k_flat',
+          'deficit(deg)',
+          'k_close',
+          'turns',
+          'phi(n)',
+          'area',
+          'R',
+          'OT_rules',
+          'C_n_gap',
+          'lambda_PF',
+        ],
+        rows: sweep.map((r) => [
+          r.n,
+          r.interiorAngleDeg,
+          r.kFlat,
+          r.deficitDeg,
+          r.loopClosure,
+          r.turns,
+          r.totient,
+          r.area,
+          r.circumradius,
+          r.otRules,
+          r.cycleGap,
+          r.inflationRatio,
+        ]),
       },
       {
         title: 'Alexander-Orbach grid',

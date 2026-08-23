@@ -7,7 +7,7 @@ export const exteriorAngle = (n) => (2 * Math.PI) / n;
 export const sumInteriorAngles = (n) => (n - 2) * Math.PI;
 export const circumradius = (n) => 1 / (2 * Math.sin(Math.PI / n));
 export const apothem = (n) => 1 / (2 * Math.tan(Math.PI / n));
-export const area = (n) => (n / 4) / Math.tan(Math.PI / n);
+export const area = (n) => n / 4 / Math.tan(Math.PI / n);
 export const sideForUnitCircumradius = (n) => 2 * Math.sin(Math.PI / n);
 export const diagonal = (n, k) => Math.sin((k * Math.PI) / n) / Math.sin(Math.PI / n);
 

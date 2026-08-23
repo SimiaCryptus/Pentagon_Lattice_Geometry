@@ -15,33 +15,54 @@ import { mulMat2, applyMat2 } from '../math/matrix.js';
 
 export const POLYGONS = {
   CR_triangle: {
-    vertices: [[0, 0], [1, 0], [0, 2]],
+    vertices: [
+      [0, 0],
+      [1, 0],
+      [0, 2],
+    ],
     edges: ['leg1', 'hyp', 'leg2'],
     field: 'Q',
     note: 'Conway-Radin pinwheel triangle (legs 1, 2; hyp sqrt 5)',
   },
   tri_1_sqrt3: {
-    vertices: [[0, 0], [1, 0], [0, Math.sqrt(3)]],
+    vertices: [
+      [0, 0],
+      [1, 0],
+      [0, Math.sqrt(3)],
+    ],
     edges: ['leg1', 'hyp', 'leg2'],
     field: 'Q(sqrt 3)',
     note: '30-60-90 triangle targeting the triangular lattice',
   },
   L_tromino: {
-    vertices: [[0, 0], [2, 0], [2, 1], [1, 1], [1, 2], [0, 2]],
+    vertices: [
+      [0, 0],
+      [2, 0],
+      [2, 1],
+      [1, 1],
+      [1, 2],
+      [0, 2],
+    ],
     edges: ['long_b', 'short_r1', 'long_t1', 'short_r2', 'long_t2', 'short_l'],
     field: 'Q',
     note: 'L-tromino, Level 2 with trivial fiber',
   },
   half_penrose_kite: {
-    vertices: [[0, 0], [1, 0],
-      [(1 + PHI * Math.cos((2 * Math.PI) / 5)) / 2, (PHI * Math.sin((2 * Math.PI) / 5)) / 2]],
+    vertices: [
+      [0, 0],
+      [1, 0],
+      [(1 + PHI * Math.cos((2 * Math.PI) / 5)) / 2, (PHI * Math.sin((2 * Math.PI) / 5)) / 2],
+    ],
     edges: ['short', 'long1', 'long2'],
     field: 'Q(sqrt 5)',
     note: 'Half-Penrose kite (1, phi, phi)',
   },
   half_penrose_dart: {
-    vertices: [[0, 0], [1, 0],
-      [(1 + Math.cos((2 * Math.PI) / 5) / PHI) / 2, Math.sin((2 * Math.PI) / 5) / (2 * PHI)]],
+    vertices: [
+      [0, 0],
+      [1, 0],
+      [(1 + Math.cos((2 * Math.PI) / 5) / PHI) / 2, Math.sin((2 * Math.PI) / 5) / (2 * PHI)],
+    ],
     edges: ['long', 'short1', 'short2'],
     field: 'Q(sqrt 5)',
     note: 'Half-Penrose dart',
@@ -57,17 +78,31 @@ export function edgePartition(polyType, mode) {
   const weak = new Array(n).fill(false);
   const all = () => active.fill(true);
   if (polyType === 'CR_triangle' || polyType === 'tri_1_sqrt3') {
-    if (mode === 'legs_only') { active[0] = true; active[2] = true; }
-    else if (mode === 'with_hyp') { active[0] = true; active[2] = true; weak[1] = true; }
-    else all();
+    if (mode === 'legs_only') {
+      active[0] = true;
+      active[2] = true;
+    } else if (mode === 'with_hyp') {
+      active[0] = true;
+      active[2] = true;
+      weak[1] = true;
+    } else all();
   } else if (polyType === 'L_tromino') {
     if (mode === 'all_edges') all();
-    else { active[0] = true; active[2] = true; active[4] = true; }
+    else {
+      active[0] = true;
+      active[2] = true;
+      active[4] = true;
+    }
   } else {
     // half-Penrose kite / dart: long edges active, short edge weak
-    if (mode === 'legs_only') { active[1] = true; active[2] = true; }
-    else if (mode === 'with_hyp') { active[1] = true; active[2] = true; weak[0] = true; }
-    else all();
+    if (mode === 'legs_only') {
+      active[1] = true;
+      active[2] = true;
+    } else if (mode === 'with_hyp') {
+      active[1] = true;
+      active[2] = true;
+      weak[0] = true;
+    } else all();
   }
   return { active, weak, labels: poly.edges };
 }
@@ -120,7 +155,8 @@ export function orientationGroupAnalysis(polyType, mode) {
 
 const reflectionMatrix = (dx, dy) => {
   const t = Math.atan2(dy, dx);
-  const c = Math.cos(2 * t), s = Math.sin(2 * t);
+  const c = Math.cos(2 * t),
+    s = Math.sin(2 * t);
   return [c, s, s, -c];
 };
 
@@ -180,12 +216,15 @@ export function buildPinwheelCluster({
         if (!active[k] && !weak[k]) continue;
         const p1 = worldVertex(cell, k);
         const p2 = worldVertex(cell, (k + 1) % nEdges);
-        const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
+        const dx = p2[0] - p1[0],
+          dy = p2[1] - p1[1];
         const len2 = dx * dx + dy * dy;
         if (len2 < 1e-18) continue;
         // reflect the centre across the edge line
-        const vx = cell.x - p1[0], vy = cell.y - p1[1];
-        const nx = -dy / Math.sqrt(len2), ny = dx / Math.sqrt(len2);
+        const vx = cell.x - p1[0],
+          vy = cell.y - p1[1];
+        const nx = -dy / Math.sqrt(len2),
+          ny = dx / Math.sqrt(len2);
         const dot = vx * nx + vy * ny;
         const cx = cell.x - 2 * dot * nx;
         const cy = cell.y - 2 * dot * ny;
@@ -207,9 +246,18 @@ export function buildPinwheelCluster({
   const nWeak = weak.filter(Boolean).length;
 
   return {
-    polyType, activeMode, depth, fiberOrder,
-    cells, nbrs, originId, N: cells.length,
-    active, weak, nActive, nWeak,
+    polyType,
+    activeMode,
+    depth,
+    fiberOrder,
+    cells,
+    nbrs,
+    originId,
+    N: cells.length,
+    active,
+    weak,
+    nActive,
+    nWeak,
     observedOrientations: orientations.size,
     sheets: [...new Set(cells.map((c) => c.sheet))].sort((a, b) => a - b),
   };
@@ -243,7 +291,13 @@ export function pinwheelHolonomy(cluster, { maxLen = 5 } = {}) {
   };
 }
 
-export function hierarchyLevel({ allRational, nWeak, dEff, observedOrientations, maxOrientations = 64 }) {
+export function hierarchyLevel({
+  allRational,
+  nWeak,
+  dEff,
+  observedOrientations,
+  maxOrientations = 64,
+}) {
   if (!allRational || observedOrientations > maxOrientations)
     return 'Level 3 (non-reconnective: orientation group dense in SO(2))';
   if (nWeak === 0) {

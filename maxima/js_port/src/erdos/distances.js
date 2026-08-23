@@ -42,11 +42,14 @@ export function distanceCatalog(cluster, { maxPairs = 60000 } = {}) {
   }
 
   // all pairs (capped)
-  let pairs = 0, capped = false;
-  outer:
-  for (let i = 0; i < cells.length; i++) {
+  let pairs = 0,
+    capped = false;
+  outer: for (let i = 0; i < cells.length; i++) {
     for (let j = i + 1; j < cells.length; j++) {
-      if (pairs >= maxPairs) { capped = true; break outer; }
+      if (pairs >= maxPairs) {
+        capped = true;
+        break outer;
+      }
       const { key, coeffs, value } = sq(i, j);
       if (Math.abs(value) < 1e-12) continue;
       record(key, coeffs, value, i, j);
@@ -103,7 +106,8 @@ function detectFibonacci([r, s], tol = 1e-6) {
 export function fibonacciSpacing(classes) {
   const ratios = [];
   for (let k = 0; k < classes.length - 1; k++) {
-    const a = classes[k].value, b = classes[k + 1].value;
+    const a = classes[k].value,
+      b = classes[k + 1].value;
     if (a > 1e-9) ratios.push({ k: k + 1, ratio: b / a });
   }
   const mean = ratios.length ? ratios.reduce((s, r) => s + r.ratio, 0) / ratios.length : 0;
@@ -117,7 +121,8 @@ export function multiplicityAnalysis(classes, n) {
   return {
     meanRing,
     threshold,
-    highMultiplicity: classes.filter((c) => c.ringSize >= threshold)
+    highMultiplicity: classes
+      .filter((c) => c.ringSize >= threshold)
       .map((c) => ({ index: c.index, value: c.value, ringSize: c.ringSize })),
   };
 }
@@ -133,8 +138,10 @@ export function galoisPairs(cluster, classes, g = 2) {
     const partner = byKey.get(img);
     if (partner && partner.index > c.index) {
       pairs.push({
-        a: c.index, b: partner.index,
-        valueA: c.value, valueB: partner.value,
+        a: c.index,
+        b: partner.index,
+        valueA: c.value,
+        valueB: partner.value,
         product: c.value * partner.value,
       });
     }
@@ -151,7 +158,8 @@ export function pythagoreanTriples(cluster, classes, limit = 12) {
     for (let j = i; j < sub.length; j++) {
       const sum = R.key(R.add(sub[i].coeffs, sub[j].coeffs));
       const hit = byKey.get(sum);
-      if (hit && hit.index >= sub[j].index) out.push({ a: sub[i].index, b: sub[j].index, c: hit.index });
+      if (hit && hit.index >= sub[j].index)
+        out.push({ a: sub[i].index, b: sub[j].index, c: hit.index });
     }
   return out;
 }
@@ -161,7 +169,8 @@ export function distinctDistanceScaling(N, D) {
   if (N < 2) return null;
   const logN = Math.log(N);
   return {
-    N, D,
+    N,
+    D,
     ratioToLogN: D / logN,
     integerLatticeBound: N / Math.sqrt(logN),
     pentagonUpper: logN,
@@ -177,14 +186,20 @@ export function distanceWeb(cluster, cls) {
   for (let i = 0; i < cells.length; i++)
     for (let j = i + 1; j < cells.length; j++) {
       const d = R.sub(cells[j].center, cells[i].center);
-      if (R.key(R.absSquared(d)) === cls.key) { web[i].push(j); web[j].push(i); }
+      if (R.key(R.absSquared(d)) === cls.key) {
+        web[i].push(j);
+        web[j].push(i);
+      }
     }
   const degrees = web.map((l) => l.length);
   const comps = connectedComponents(web);
   const sets = web.map((l) => new Set(l));
   let tri = 0;
   for (let i = 0; i < web.length; i++)
-    for (const j of web[i]) { if (j <= i) continue; for (const k of web[j]) if (k > j && sets[i].has(k)) tri++; }
+    for (const j of web[i]) {
+      if (j <= i) continue;
+      for (const k of web[j]) if (k > j && sets[i].has(k)) tri++;
+    }
   const uniqueDeg = [...new Set(degrees)];
   return {
     index: cls.index,
@@ -230,10 +245,19 @@ export function directionAnalysis(cluster, classes, { count = 8, tol = 1e-4 } = 
     });
   }
   const fitData = out.filter((o) => o.value > 0 && o.directions > 0);
-  const fit = fitData.length >= 3
-    ? logLogFit(fitData.map((o) => o.value), fitData.map((o) => o.directions))
-    : { slope: 0 };
-  return { threshold, classes: out, pinwheelCount: out.filter((o) => o.pinwheel).length, growthSlope: fit.slope };
+  const fit =
+    fitData.length >= 3
+      ? logLogFit(
+          fitData.map((o) => o.value),
+          fitData.map((o) => o.directions)
+        )
+      : { slope: 0 };
+  return {
+    threshold,
+    classes: out,
+    pinwheelCount: out.filter((o) => o.pinwheel).length,
+    growthSlope: fit.slope,
+  };
 }
 
 const norm2pi = (a) => (a < 0 ? a + 2 * Math.PI : a);
@@ -242,7 +266,11 @@ function dedupeAngles(angles, tol) {
   const s = [...angles].sort((a, b) => a - b);
   const out = [];
   let prev = -Infinity;
-  for (const a of s) if (a - prev > tol) { out.push(a); prev = a; }
+  for (const a of s)
+    if (a - prev > tol) {
+      out.push(a);
+      prev = a;
+    }
   return out;
 }
 
