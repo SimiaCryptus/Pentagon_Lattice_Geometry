@@ -1,24 +1,13 @@
 {
     "id": "pentagon-lattice-geometry",
     "title": "Pentagonal Lattice Geometry",
-    "description": "A multi-sheeted covering construction in which the regular pentagon develops fractional dimension (d ≈ 2.37) and spinor-like holonomy — a discrete model where a single loop requires two passes to return to identity.",
-    "tags": [
-        "geometry",
-        "quasicrystals",
-        "golden-ratio",
-        "covering-spaces",
-        "holonomy",
-        "fractal-dimension",
-        "cellular-automata",
-        "quadratic-fields"
-    ],
-    "category": "labs",
+    "pitch": "A multi-sheeted covering construction in which the regular pentagon develops fractional dimension (d ≈ 2.37) and spinor-like holonomy — a discrete model where a single loop requires two passes to return to identity.",
+    "category": "lab",
     "href": "index.html",
     "readme": "README.md",
     "video": "/videos/Pentagon_Lattice_Geometry.mp4",
     "order": 0,
     "section": "featured",
     "icon": "PL",
-    "launchLabel": "Open the Pentagonal Lattice Geometry lab",
-    "pitch": "A multi-sheeted covering construction in which the regular pentagon develops fractional dimension (d ≈ 2.37) and spinor-like holonomy — a discrete model where a single loop requires two passes to return to identity."
+    "launchLabel": "Open the Pentagonal Lattice Geometry lab"
 }
